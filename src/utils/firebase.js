@@ -38,5 +38,11 @@ const uploadImage = async (img) => {
   return downloadUrl;
 };
 
+// const createActivity = async (data) => {
+//   const activityData = db.collection("activityData").doc();
+//   await activityData.set(data);
+// };
+
 export { getActivityData };
 export { uploadImage };
+// export { createActivity };
