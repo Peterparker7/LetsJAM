@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import MyComponent from "./Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
+import { uploadImage } from "./utils/firebase";
 
 // var firebaseConfig = {
 //   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -31,6 +32,8 @@ function Create() {
   let limit = 0;
   let comment = "";
   let youtubeUrl = "";
+  let imgSource = "";
+  let imageUrl = "";
 
   //   const [requirement, setRequirement] = useState("");
   const host = "user123";
@@ -63,15 +66,28 @@ function Create() {
       convertDateTime().formatTimeHour,
       convertDateTime().formatTimeSecond
     );
-    console.log(timestamp);
-    console.log(time);
 
-    console.log(new Date(1620864000000));
-    console.log(new Date(date));
-    console.log(type);
+    // const uploadImage = async () => {
+    //   const path = imgSource.name;
+
+    //   // 取得 storage 對應的位置
+    //   const storageReference = window.firebase.storage().ref(path);
+    //   // .put() 方法把東西丟到該位置裡
+    //   const task = await storageReference.put(imgSource);
+    //   const fileRef = window.firebase.storage().ref(path);
+
+    //   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
+    //     return url;
+    //   });
+    //   imageUrl = await downloadUrl;
+    // };
+    imageUrl = await uploadImage(imgSource);
+    console.log(imageUrl);
+
+    const activityData = db.collection("activityData").doc();
 
     let newData = {
-      id: 5,
+      id: activityData.id,
       title: title,
       type: type,
       limit: limit,
@@ -85,13 +101,13 @@ function Create() {
       appliers: [],
       comment: comment,
       youtubeSource: youtubeUrl,
-      fileSource: "",
+      fileSource: imageUrl,
       status: true,
     };
 
-    const activityData = db.collection("activityData").doc();
     await activityData.set(newData);
   };
+
   const [requirement, setRequirement] = useState([]);
   const options = [
     { label: "Vocal", value: "Vocal" },
@@ -155,6 +171,10 @@ function Create() {
       );
     }
   };
+
+  function handleUploadImage(e) {
+    imgSource = e.target.files[0];
+  }
 
   return (
     <Container>
@@ -272,7 +292,13 @@ function Create() {
       </div>
       <div>
         <label>上傳活動照片</label>
-        <input type="file" accept="image/*"></input>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            handleUploadImage(e);
+          }}
+        ></input>
       </div>
       <div>
         <label>上傳Youtube連結</label>
