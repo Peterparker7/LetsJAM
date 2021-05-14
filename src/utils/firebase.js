@@ -23,6 +23,14 @@ const getActivityData = async () => {
   return allActivities;
 };
 
+const getSpecificData = async (id) => {
+  let docRef = db.collection("activityData").doc(id);
+  const data = await docRef.get().then((data) => {
+    return data.data();
+  });
+  return data;
+};
+
 const uploadImage = async (img) => {
   const path = img.name;
 
@@ -43,6 +51,33 @@ const uploadImage = async (img) => {
 //   await activityData.set(data);
 // };
 
+const joinActivity = async (activityId, userId) => {
+  let docRef = db.collection("activityData").doc(activityId);
+  //firebase update方法
+  const data = await docRef
+    .update({
+      applicants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+    })
+    .then(() => {
+      console.log(`update applicants ${userId} to firebase`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
+const getUserData = async (userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const userData = await docRef.get().then((data) => {
+    return data.data();
+  });
+
+  return userData;
+};
+
 export { getActivityData };
+export { getSpecificData };
+export { joinActivity };
+export { getUserData };
 export { uploadImage };
 // export { createActivity };

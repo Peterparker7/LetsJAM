@@ -99,7 +99,7 @@ function Create() {
       level: level,
       host: host, //or id?
       attendents: [],
-      appliers: [],
+      applicants: [],
       comment: comment,
       youtubeSource: youtubeUrl,
       fileSource: imageUrl,
