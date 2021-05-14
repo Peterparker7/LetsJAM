@@ -1,6 +1,7 @@
 import "./App.css";
 // import styled from "styled-components";
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import { getActivityData } from "./utils/firebase";
 
@@ -52,8 +53,10 @@ function Main() {
   const ActivityHTML = data.map((item, index) => {
     return (
       <div>
-        <div>{item.id}</div>
-        <img src={item.fileSource} alt="" />
+        <Link to={`/activities/${item.id}`}>
+          <div>{item.id}</div>
+          <img src={item.fileSource} alt="" />
+        </Link>
       </div>
     );
   });
