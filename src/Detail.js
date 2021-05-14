@@ -1,5 +1,5 @@
 import "./App.css";
-// import styled from "styled-components";
+import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSpecificData } from "./utils/firebase";
@@ -15,39 +15,25 @@ function Detail() {
 
   const getData = async () => {
     let data = await getSpecificData(id);
-    // activityDetail = data;
-    console.log(data);
 
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
-    console.log(data.host);
     const host = await getUserData(data.host);
-    console.log(host);
-    // console.log(data.applicants);
-    // const applicants = data.applicants.map(async (data) => {
-    //   const eachData = await getUserData(data);
-    //   console.log(eachData);
-    //   return eachData;
-    // });
-    // console.log(applicants);
 
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
     data.applicants.forEach((applicants) => {
       const promise = getUserData(applicants).then((data) => {
-        console.log(data);
         return data;
       });
       applicantsDetailArray.push(promise);
     });
     const allApplicants = await Promise.all(applicantsDetailArray);
-    console.log(allApplicants);
+
     //把有detail的host & applicants塞到useState
     data.host = host;
     data.applicants = allApplicants;
-    console.log(data);
-    // host = data.host;
+
     setDetailData(data);
-    console.log(detailData);
   };
 
   console.log(detailData);
@@ -79,15 +65,31 @@ function Detail() {
     );
   };
 
-  const userData = async () => {
-    console.log("!!");
-    let data = await getUserData(userId);
-    console.log(data);
-  };
+  //   const userData = async () => {
+  //     console.log("!!");
+  //     let data = await getUserData(userId);
+  //     console.log(data);
+  //   };
 
-  userData();
+  //   userData();
 
-  const renderHost = async () => {
+  const renderHost = () => {
+    console.log(detailData.host.name);
+    console.log(detailData.applicants);
+    const applicantsHTML = Object.values(detailData.applicants).map((data) => {
+      console.log(data);
+      console.log(data.name);
+      return <div>{data.name}</div>;
+    });
+    return (
+      <div>
+        <div>揪團主</div>
+        <div>{detailData.host.name}</div>
+        <div>出席成員</div>
+        {applicantsHTML}
+      </div>
+    );
+
     console.log(detailData.host);
   };
   const handleJoin = () => {
@@ -121,6 +123,7 @@ function Detail() {
       >
         我要報名
       </button>
+      {renderHost()}
     </div>
   );
 }
