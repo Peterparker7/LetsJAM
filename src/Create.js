@@ -3,6 +3,9 @@ import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
 import MyComponent from "./Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import MultiSelect from "react-multi-select-component";
+import { uploadImage } from "./utils/firebase";
+import { createActivity } from "./utils/firebase";
 
 // var firebaseConfig = {
 //   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -17,15 +20,23 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 // window.firebase.initializeApp(firebaseConfig);
 
 const db = window.firebase.firestore();
-console.log(db);
+let checked = false;
+
 function Create() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [type, setType] = useState("");
-  const [limit, setLimit] = useState("");
+  // const [limit, setLimit] = useState("");
   const [level, setLevel] = useState("");
-  const [requirement, setRequirement] = useState("");
+  const [checked, setChecked] = useState(false);
+  let limit = 0;
+  let comment = "";
+  let youtubeUrl = "";
+  let imgSource = "";
+  let imageUrl = "";
+
+  //   const [requirement, setRequirement] = useState("");
   const host = "user123";
 
   const refContainer = useRef("");
@@ -56,35 +67,115 @@ function Create() {
       convertDateTime().formatTimeHour,
       convertDateTime().formatTimeSecond
     );
-    console.log(timestamp);
-    console.log(time);
 
-    console.log(new Date(1620864000000));
-    console.log(new Date(date));
-    console.log(type);
+    // const uploadImage = async () => {
+    //   const path = imgSource.name;
+
+    //   // 取得 storage 對應的位置
+    //   const storageReference = window.firebase.storage().ref(path);
+    //   // .put() 方法把東西丟到該位置裡
+    //   const task = await storageReference.put(imgSource);
+    //   const fileRef = window.firebase.storage().ref(path);
+
+    //   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
+    //     return url;
+    //   });
+    //   imageUrl = await downloadUrl;
+    // };
+    imageUrl = await uploadImage(imgSource);
+    console.log(imageUrl);
+
+    const activityData = db.collection("activityData").doc();
 
     let newData = {
-      id: 5,
+      id: activityData.id,
       title: title,
       type: type,
       limit: limit,
       timestamp: timestamp, //firebase內建timestamp
       location: "AppWork School 3F",
       geo: ["10", "10"],
-      requirement: ["vocal", "guitar"],
+      requirement: requirementArray,
       level: level,
       host: host, //or id?
       attendents: [],
       appliers: [],
-      comment: "帶零食",
-      youtubeSource: "youtube url",
-      fileSource: "",
+      comment: comment,
+      youtubeSource: youtubeUrl,
+      fileSource: imageUrl,
       status: true,
     };
 
-    // const activityData = db.collection("activityData").doc();
-    // await activityData.set(newData);
+    await activityData.set(newData);
   };
+
+  const [requirement, setRequirement] = useState([]);
+  const options = [
+    { label: "Vocal", value: "Vocal" },
+    { label: "吉他", value: "吉他" },
+    { label: "木箱鼓", value: "木箱鼓" },
+    { label: "烏克麗麗", value: "烏克麗麗" },
+    { label: "電吉他", value: "電吉他" },
+  ];
+
+  let requirementArray = [];
+  requirement.forEach((data) => {
+    requirementArray.push(data.value);
+  });
+
+  function handleChange(e, changeType) {
+    if (changeType === "title") {
+      setTitle(e.target.value);
+      console.log(e.target.value);
+    }
+    if (changeType === "date") {
+      setDate(e.target.value);
+    }
+    if (changeType === "time") {
+      setTime(e.target.value);
+    }
+    if (changeType === "type") {
+      setType(e.target.value);
+    }
+    if (changeType === "level") {
+      setLevel(e.target.value);
+    }
+  }
+
+  const LimitboxHTML = () => {
+    if (checked) {
+      return (
+        <div>
+          <Inputfield
+            type="number"
+            defaultValue=""
+            disabled={checked}
+            onChange={(e) => {
+              limit = e.target.value;
+            }}
+          ></Inputfield>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Inputfield
+            type="number"
+            defaultValue="1"
+            min="1"
+            max="20"
+            onChange={(e) => {
+              limit = e.target.value;
+            }}
+          ></Inputfield>
+        </div>
+      );
+    }
+  };
+
+  function handleUploadImage(e) {
+    imgSource = e.target.files[0];
+  }
 
   return (
     <Container>
@@ -93,9 +184,8 @@ function Create() {
       <div>
         <Label>活動名稱</Label>
         <Inputfield
-          ref={refContainer}
           onChange={(e) => {
-            setTitle(e.target.value);
+            handleChange(e, "title");
           }}
         ></Inputfield>
       </div>
@@ -104,7 +194,7 @@ function Create() {
         <Inputfield
           type="date"
           onChange={(e) => {
-            setDate(e.target.value);
+            handleChange(e, "date");
           }}
         ></Inputfield>
       </div>
@@ -113,7 +203,7 @@ function Create() {
         <Inputfield
           type="time"
           onChange={(e) => {
-            setTime(e.target.value);
+            handleChange(e, "time");
           }}
         ></Inputfield>
       </div>
@@ -126,8 +216,7 @@ function Create() {
         ></Inputfield> */}
         <select
           onChange={(e) => {
-            setType(e.target.value);
-            console.log(type);
+            handleChange(e, "type");
           }}
         >
           <option value="" disabled selected>
@@ -140,31 +229,53 @@ function Create() {
       </div>
       <div>
         <Label>樂器需求</Label>
-        <Inputfield
-          onChange={(e) => {
-            setRequirement(e.target.value);
-          }}
-        ></Inputfield>
+        <MultiSelect
+          options={options}
+          value={requirement}
+          onChange={setRequirement}
+          labelledBy="Select"
+        />
       </div>
-      <div>
+      <LimitDiv>
         <label>人數限制</label>
-        <Inputfield
+        {/* <Inputfield
           type="number"
           defaultValue="1"
           min="1"
           max="20"
+          id="limitValue"
           onChange={(e) => {
             setLimit(e.target.value);
           }}
-        ></Inputfield>
-        <input type="checkbox" id="noLimit" />
+        ></Inputfield> */}
+        <LimitboxHTML></LimitboxHTML>
+        <input
+          type="checkbox"
+          id="noLimit"
+          onChange={() => setChecked(!checked)}
+        />
+        {/* <input
+          type="checkbox"
+          id="noLimit"
+          onChange={(e) => {
+            console.dir(e);
+            if (e.target.checked) {
+              setLimit("none");
+              console.log(limit);
+              const ttt = document.querySelector("#limitValue");
+              ttt.disabled = true;
+              ttt.value = "";
+            }
+          }}
+        /> */}
         <label for="noLimit">無</label>
-      </div>
+      </LimitDiv>
       <div>
         <Label>建議程度</Label>
         <Inputfield
+          placeholder="請描述"
           onChange={(e) => {
-            setLevel(e.target.value);
+            handleChange(e, "level");
           }}
         ></Inputfield>
       </div>
@@ -173,12 +284,31 @@ function Create() {
         <Inputfield class="location"></Inputfield>
       </div>
       <div>
+        <label>備註</label>
+        <Inputfield
+          onChange={(e) => {
+            comment = e.target.value;
+          }}
+        ></Inputfield>
+      </div>
+      <div>
         <label>上傳活動照片</label>
-        <input type="file" accept="image/*"></input>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            handleUploadImage(e);
+          }}
+        ></input>
       </div>
       <div>
         <label>上傳Youtube連結</label>
-        <Inputfield type="url"></Inputfield>
+        <Inputfield
+          type="url"
+          onChange={(e) => {
+            youtubeUrl = e.target.value;
+          }}
+        ></Inputfield>
       </div>
       <Button
         class="createBtn"
@@ -200,6 +330,10 @@ const Container = styled.div`
 
 const Inputfield = styled.input`
   border: 1px solid #979797;
+`;
+
+const LimitDiv = styled.div`
+  display: flex;
 `;
 const Label = styled.label`
   width: 120px;
