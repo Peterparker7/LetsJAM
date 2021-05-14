@@ -48,20 +48,33 @@ function Detail() {
     });
     let activityTime = detailData.timestamp.toDate().toString();
     console.log(activityTime.slice(0, 24));
+    let limit = "";
+    if (detailData.limit === 0) {
+      limit = "無";
+    } else {
+      limit = detailData.limit;
+    }
 
     return (
-      <div>
-        <div>{detailData.title}</div>
-        <div>{detailData.type}</div>
-        <div>{detailData.comment}</div>
-        {/* <div>{detailData.timestamp}</div> */}
-        <div>需求樂器： {requirementHTML}</div>
-        <div>適合程度： {detailData.level}</div>
-        <div>人數限制： {detailData.limit}</div>
-        <div>地點： {detailData.location}</div>
-        <img src={`${detailData.fileSource}`} alt=""></img>
-        <div>{detailData.id}</div>
-      </div>
+      <ActivityContainer>
+        <ActivityDetail>
+          <div>{detailData.title}</div>
+          <div>{detailData.type}</div>
+          <div>{detailData.comment}</div>
+          {/* <div>{detailData.timestamp}</div> */}
+          <div>需求樂器： {requirementHTML}</div>
+          <div>適合程度： {detailData.level}</div>
+          <div>人數限制： {limit}</div>
+          <div>地點： {detailData.location}</div>
+          <div>{detailData.id}</div>
+        </ActivityDetail>
+        <ImageContainer>
+          <ActivityImage
+            src={`${detailData.fileSource}`}
+            alt=""
+          ></ActivityImage>
+        </ImageContainer>
+      </ActivityContainer>
     );
   };
 
@@ -128,4 +141,19 @@ function Detail() {
   );
 }
 
+const ActivityContainer = styled.div`
+  width: 960px;
+  display: flex;
+  margin: 0 auto;
+`;
+const ActivityDetail = styled.div`
+  width: 480px;
+`;
+const ImageContainer = styled.div`
+  /* width: calc(100%-480px); */
+  width: 360px;
+`;
+const ActivityImage = styled.img`
+  width: 100%;
+`;
 export default Detail;
