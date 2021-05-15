@@ -75,9 +75,31 @@ const getUserData = async (userId) => {
   return userData;
 };
 
+const updateUserData = async (newData, userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const data = await docRef
+    .set(
+      {
+        name: newData.name,
+        intro: newData.intro,
+        preferType: newData.preferType,
+        skill: newData.skill,
+        //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
+      },
+      { merge: true }
+    )
+    .then(() => {
+      console.log(`update ${userId} userData to firebase`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
 export { getActivityData };
 export { getSpecificData };
 export { joinActivity };
 export { getUserData };
+export { updateUserData };
 export { uploadImage };
 // export { createActivity };
