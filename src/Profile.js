@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 // import { joinActivity } from "./utils/firebase";
 import { getUserData } from "./utils/firebase";
 import { updateUserData } from "./utils/firebase";
+import { getUserHostActivities } from "./utils/firebase";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 
@@ -33,6 +34,15 @@ const InputFieldDiv = styled.div``;
 const InputFieldInput = styled.input`
   border: 1px solid #979797;
 `;
+const ProfileContainer = styled.div`
+  display: flex;
+  width: 960px;
+  justify-content: space-around;
+  margin: 0 auto;
+`;
+const ProfileCol = styled.div`
+  width: 360px;
+`;
 function FancyModalButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
@@ -40,10 +50,10 @@ function FancyModalButton() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   let defaultPreferType = "";
   let skillFormat = [];
+  let skillArray = [];
 
   const [skill, setSkill] = useState(skillFormat);
 
-  let skillArray = [];
   skill.forEach((data) => {
     skillArray.push(data.value);
   });
@@ -58,12 +68,12 @@ function FancyModalButton() {
     { label: "木箱鼓", value: "木箱鼓" },
     { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
-    { label: "Mango 🥭", value: "mango" },
   ];
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
     console.log(data);
+    //處理skill格式 讓default值可顯示於select
     data.skill.forEach((data) => {
       let skill = {
         label: data,
@@ -143,12 +153,12 @@ function FancyModalButton() {
 
   return (
     <div>
-      <button onClick={toggleModal}>Open modal</button>
+      <button onClick={toggleModal}>編輯個人檔案</button>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
         beforeClose={beforeClose}
-        onBackgroundClick={toggleModal}
+        // onBackgroundClick={toggleModal}
         onEscapeKeydown={toggleModal}
         opacity={opacity}
         backgroundProps={{ opacity }}
@@ -203,11 +213,6 @@ function FancyModalButton() {
             options={options}
             value={skill}
             onChange={setSkill}
-            // onChange={(e) => {
-            //   console.log(e);
-            //   setRequirement();
-            //   //   handleProfileChange(e, "skill");
-            // }}
             labelledBy="Select"
           />
         </InputFieldContainer>
@@ -218,15 +223,63 @@ function FancyModalButton() {
   );
 }
 
+function EditActivitiesButton() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [opacity, setOpacity] = useState(0);
+
+  function toggleModal(e) {
+    setOpacity(0);
+    setIsOpen(!isOpen);
+  }
+
+  function afterOpen() {
+    setTimeout(() => {
+      setOpacity(1);
+    }, 100);
+  }
+
+  function beforeClose() {
+    return new Promise((resolve) => {
+      setOpacity(0);
+      setTimeout(resolve, 300);
+    });
+  }
+
+  return (
+    <div>
+      <button onClick={toggleModal}>編輯活動</button>
+      <StyledModal
+        isOpen={isOpen}
+        afterOpen={afterOpen}
+        beforeClose={beforeClose}
+        onBackgroundClick={toggleModal}
+        onEscapeKeydown={toggleModal}
+        opacity={opacity}
+        backgroundProps={{ opacity }}
+      >
+        <button onClick={toggleModal}>Close me</button>
+      </StyledModal>
+    </div>
+  );
+}
+
 function Profile() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   const [userData, setUserData] = useState();
+  const [userActivities, setUserActivities] = useState();
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
     console.log(data);
     setUserData(data);
   };
+
+  const getUserActivitiesData = async () => {
+    const data = await getUserHostActivities(userId);
+    console.log(data);
+    setUserActivities(data);
+  };
+
   const renderProfile = () => {
     console.log(userData);
     return (
@@ -247,18 +300,41 @@ function Profile() {
   useEffect(() => {
     console.log("><");
     getUserProfileData();
+    getUserActivitiesData();
   }, []);
 
   if (!userData) {
     return "isLoading";
   }
+  if (!userActivities) {
+    return "isLoading";
+  }
+
+  const activitiesHTML = userActivities.map((data) => {
+    return (
+      <div>
+        <div>{data.title}</div>
+        <div>{data.host}</div>
+        <div>{data.id}</div>
+        <div>
+          <EditActivitiesButton />
+          <button>查看申請</button>
+        </div>
+      </div>
+    );
+  });
 
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
       <div>
         <div>this is profile page</div>
-        {renderProfile()}
-        <FancyModalButton />
+        <ProfileContainer>
+          {activitiesHTML}
+          <ProfileCol>
+            {renderProfile()}
+            <FancyModalButton />
+          </ProfileCol>
+        </ProfileContainer>
       </div>
     </ModalProvider>
   );

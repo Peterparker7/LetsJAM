@@ -96,10 +96,27 @@ const updateUserData = async (newData, userId) => {
     });
 };
 
+const getUserHostActivities = async (userId) => {
+  let docRef = db.collection("activityData");
+  let hostActivitiesArray = [];
+  const hostActivities = await docRef
+    .where("host", "==", userId)
+    .get()
+    .then((data) => {
+      data.forEach((item) => {
+        console.log(item.data());
+        hostActivitiesArray.push(item.data());
+      });
+    });
+  console.log(hostActivitiesArray);
+  return hostActivitiesArray;
+};
+
 export { getActivityData };
 export { getSpecificData };
 export { joinActivity };
 export { getUserData };
 export { updateUserData };
+export { getUserHostActivities };
 export { uploadImage };
 // export { createActivity };
