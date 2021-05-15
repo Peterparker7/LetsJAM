@@ -263,6 +263,55 @@ function EditActivitiesButton() {
   );
 }
 
+function EditActivitiesMemberButton(props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [opacity, setOpacity] = useState(0);
+  console.log(props.applicants);
+
+  function toggleModal(e) {
+    setOpacity(0);
+    setIsOpen(!isOpen);
+  }
+
+  function afterOpen() {
+    setTimeout(() => {
+      setOpacity(1);
+    }, 100);
+  }
+
+  function beforeClose() {
+    return new Promise((resolve) => {
+      setOpacity(0);
+      setTimeout(resolve, 300);
+    });
+  }
+
+  if (!props.applicants) {
+    return "isLoading";
+  }
+
+  const applicantsHTML = props.applicants.map((item) => {
+    return <div>{item}</div>;
+  });
+
+  return (
+    <div>
+      <button onClick={toggleModal}>查看申請</button>
+      <StyledModal
+        isOpen={isOpen}
+        afterOpen={afterOpen}
+        beforeClose={beforeClose}
+        onBackgroundClick={toggleModal}
+        onEscapeKeydown={toggleModal}
+        opacity={opacity}
+        backgroundProps={{ opacity }}
+      >
+        <div>{applicantsHTML}</div>
+        <button onClick={toggleModal}>Close me</button>
+      </StyledModal>
+    </div>
+  );
+}
 function Profile() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   const [userData, setUserData] = useState();
@@ -318,7 +367,7 @@ function Profile() {
         <div>{data.id}</div>
         <div>
           <EditActivitiesButton />
-          <button>查看申請</button>
+          <EditActivitiesMemberButton applicants={data.applicants} />
         </div>
       </div>
     );
