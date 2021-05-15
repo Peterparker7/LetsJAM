@@ -27,7 +27,7 @@ a {
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
   --rmsc-h: 20px !important; /* Height */
-  width: 50%;
+  width: 100%;
 }
 
 .App {
