@@ -50,6 +50,12 @@ const ProfileCol = styled.div`
 const ActivitiesCol = styled.div`
   display: flex;
   flex-direction: column;
+  width: 600px;
+`;
+const Btn = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: pointer;
 `;
 const MyHostTitle = styled.div`
   font-size: 20px;
@@ -75,7 +81,8 @@ function FancyModalButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
 
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  //   let userId = "vfjMHzp45ckI3o3kqDmO";
+  let userId = "SM7VM6CFOJOZwIDA6fjB";
   let defaultPreferType = "";
   let skillFormat = [];
   let skillArray = [];
@@ -181,7 +188,7 @@ function FancyModalButton() {
 
   return (
     <div>
-      <button onClick={toggleModal}>編輯個人檔案</button>
+      <Btn onClick={toggleModal}>編輯個人檔案</Btn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -426,7 +433,8 @@ function EditActivitiesMemberButton(props) {
   );
 }
 function Profile() {
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  //   let userId = "vfjMHzp45ckI3o3kqDmO";
+  let userId = "SM7VM6CFOJOZwIDA6fjB";
   const [userData, setUserData] = useState();
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
@@ -483,36 +491,50 @@ function Profile() {
 
   console.log(userJoinActivities);
 
-  const activitiesHTML = userActivities.map((data) => {
-    return (
-      <div>
-        <div>{data.title}</div>
-        <div>{data.host}</div>
-        <div>{data.id}</div>
-        <div>
-          <EditActivitiesButton />
-          <EditActivitiesMemberButton
-            applicants={data.applicants}
-            attendants={data.attendants}
-            activityId={data.id}
-          />
-        </div>
-      </div>
-    );
-  });
+  const renderHostActivities = () => {
+    if (userActivities.length !== 0) {
+      const activitiesHTML = userActivities.map((data) => {
+        return (
+          <div>
+            <div>{data.title}</div>
+            <div>{data.host}</div>
+            <div>{data.id}</div>
+            <div>
+              <EditActivitiesButton />
+              <EditActivitiesMemberButton
+                applicants={data.applicants}
+                attendants={data.attendants}
+                activityId={data.id}
+              />
+            </div>
+          </div>
+        );
+      });
+      return activitiesHTML;
+    } else {
+      return <div>沒有開團</div>;
+    }
+  };
 
-  const joinActivitiesHTML = userJoinActivities.map((data) => {
-    return (
-      <div>
-        <div>{data.title}</div>
-        <div>{data.host}</div>
-        <div>{data.id}</div>
-        <div>
-          <button>查看活動</button>
-        </div>
-      </div>
-    );
-  });
+  const renderJoinActivities = () => {
+    if (userJoinActivities.length !== 0) {
+      const joinActivitiesHTML = userJoinActivities.map((data) => {
+        return (
+          <div>
+            <div>{data.title}</div>
+            <div>{data.host}</div>
+            <div>{data.id}</div>
+            <div>
+              <button>查看活動</button>
+            </div>
+          </div>
+        );
+      });
+      return joinActivitiesHTML;
+    } else {
+      return <div>未有活動</div>;
+    }
+  };
 
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
@@ -521,10 +543,10 @@ function Profile() {
         <ProfileContainer>
           <ActivitiesCol>
             <MyHostTitle>我的開團</MyHostTitle>
-            <MyHost>{activitiesHTML}</MyHost>
+            <MyHost>{renderHostActivities()}</MyHost>
 
             <MyJoinTitle>我的跟團</MyJoinTitle>
-            <MyJoin>{joinActivitiesHTML}</MyJoin>
+            <MyJoin>{renderJoinActivities()}</MyJoin>
           </ActivitiesCol>
 
           <ProfileCol>
