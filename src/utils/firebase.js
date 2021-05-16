@@ -66,6 +66,36 @@ const joinActivity = async (activityId, userId) => {
     });
 };
 
+const agreeJoinActivity = async (activityId, userId) => {
+  let docRef = db.collection("activityData").doc(activityId);
+  //firebase update方法
+  const data = await docRef
+    .update({
+      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+    })
+    .then(() => {
+      console.log(`update attendants ${userId} to firebase`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
+const kickActivity = async (activityId, userId) => {
+  let docRef = db.collection("activityData").doc(activityId);
+  const data = await docRef
+    .update({
+      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+    })
+    .then(() => {
+      console.log(`remove attendants ${userId} from firebase`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
 const getUserData = async (userId) => {
   let docRef = db.collection("userData").doc(userId);
   const userData = await docRef.get().then((data) => {
@@ -111,12 +141,47 @@ const getUserHostActivities = async (userId) => {
   console.log(hostActivitiesArray);
   return hostActivitiesArray;
 };
+const getUserJoinActivities = async (userId) => {
+  let docRef = db.collection("activityData");
+  let joinActivitiesArray = [];
+  const joinActivities = await docRef
+    .where("attendants", "array-contains", userId)
+    .get()
+    .then((data) => {
+      data.forEach((item) => {
+        console.log(item.data());
+        joinActivitiesArray.push(item.data());
+      });
+    });
+  console.log(joinActivitiesArray);
+  return joinActivitiesArray;
+};
+
+const getUserApplyActivities = async (userId) => {
+  let docRef = db.collection("activityData");
+  let applyActivitiesArray = [];
+  const applyActivities = await docRef
+    .where("applicants", "array-contains", userId)
+    .get()
+    .then((data) => {
+      data.forEach((item) => {
+        console.log(item.data());
+        applyActivitiesArray.push(item.data());
+      });
+    });
+  console.log(applyActivitiesArray);
+  return applyActivitiesArray;
+};
 
 export { getActivityData };
 export { getSpecificData };
 export { joinActivity };
+export { agreeJoinActivity };
+export { kickActivity };
 export { getUserData };
 export { updateUserData };
 export { getUserHostActivities };
+export { getUserJoinActivities };
+export { getUserApplyActivities };
 export { uploadImage };
 // export { createActivity };

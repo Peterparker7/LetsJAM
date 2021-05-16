@@ -7,6 +7,10 @@ import React, { useEffect, useState } from "react";
 import { getUserData } from "./utils/firebase";
 import { updateUserData } from "./utils/firebase";
 import { getUserHostActivities } from "./utils/firebase";
+import { getUserJoinActivities } from "./utils/firebase";
+import { getUserApplyActivities } from "./utils/firebase";
+import { agreeJoinActivity } from "./utils/firebase";
+import { kickActivity } from "./utils/firebase";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 
@@ -42,6 +46,30 @@ const ProfileContainer = styled.div`
 `;
 const ProfileCol = styled.div`
   width: 360px;
+`;
+const ActivitiesCol = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const MyHostTitle = styled.div`
+  font-size: 20px;
+  border-bottom: 1px solid #979797;
+  text-align: left;
+  margin: 0 auto;
+  width: 100%;
+`;
+const MyJoinTitle = styled.div`
+  font-size: 20px;
+  border-bottom: 1px solid #979797;
+  text-align: left;
+  margin: 0 auto;
+  width: 100%;
+`;
+const MyHost = styled.div`
+  display: flex;
+`;
+const MyJoin = styled.div`
+  display: flex;
 `;
 function FancyModalButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -267,6 +295,49 @@ function EditActivitiesMemberButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
   console.log(props.applicants);
+  console.log(props.attendants);
+  const [applicantsData, setApplicantsData] = useState([]);
+  const [attendantsData, setAttendantsData] = useState([]);
+  let applicantsArray = [];
+  let attendantsArray = [];
+
+  const getApplicantsDetail = async () => {
+    props.applicants.forEach((applicant) => {
+      const promise = getUserData(applicant).then((data) => {
+        return data;
+      });
+      applicantsArray.push(promise);
+    });
+    const allApplicants = await Promise.all(applicantsArray);
+    console.log(allApplicants);
+    setApplicantsData(allApplicants);
+  };
+  const getAttendantsDetail = async () => {
+    props.attendants.forEach((attendant) => {
+      const promise = getUserData(attendant).then((data) => {
+        return data;
+      });
+      attendantsArray.push(promise);
+    });
+    const allAttendants = await Promise.all(attendantsArray);
+    console.log(allAttendants);
+    setAttendantsData(allAttendants);
+  };
+
+  const handleAgree = (e) => {
+    console.log(e.userId);
+    agreeJoinActivity(props.activityId, e.userId);
+  };
+  const handleKick = (e) => {
+    console.log(e.userId);
+    kickActivity(props.activityId, e.userId);
+  };
+
+  useEffect(() => {
+    console.log("><");
+    getApplicantsDetail();
+    getAttendantsDetail();
+  }, []);
 
   function toggleModal(e) {
     setOpacity(0);
@@ -286,13 +357,53 @@ function EditActivitiesMemberButton(props) {
     });
   }
 
-  if (!props.applicants) {
+  if (!applicantsData || !attendantsData) {
     return "isLoading";
   }
 
-  const applicantsHTML = props.applicants.map((item) => {
-    return <div>{item}</div>;
-  });
+  const renderApplicants = () => {
+    if (applicantsData.length !== 0) {
+      const applicantsHTML = applicantsData.map((item) => {
+        return (
+          <div>
+            <div>{item.name}</div>
+            <button
+              onClick={() => {
+                handleAgree(item);
+              }}
+            >
+              同意
+            </button>
+          </div>
+        );
+      });
+      return applicantsHTML;
+    } else {
+      return <div>沒有申請者</div>;
+    }
+  };
+
+  const renderAttendants = () => {
+    if (attendantsData.length !== 0) {
+      const attendantsHTML = attendantsData.map((item) => {
+        return (
+          <div>
+            <div>{item.name}</div>
+            <button
+              onClick={() => {
+                handleKick(item);
+              }}
+            >
+              踢
+            </button>
+          </div>
+        );
+      });
+      return attendantsHTML;
+    } else {
+      return <div>尚未有出席者</div>;
+    }
+  };
 
   return (
     <div>
@@ -306,7 +417,9 @@ function EditActivitiesMemberButton(props) {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
-        <div>{applicantsHTML}</div>
+        <div>{renderApplicants()}</div>
+        <div>{renderAttendants()}</div>
+
         <button onClick={toggleModal}>Close me</button>
       </StyledModal>
     </div>
@@ -316,6 +429,7 @@ function Profile() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   const [userData, setUserData] = useState();
   const [userActivities, setUserActivities] = useState();
+  const [userJoinActivities, setUserJoinActivities] = useState([]);
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
@@ -326,6 +440,30 @@ function Profile() {
   const getUserActivitiesData = async () => {
     const data = await getUserHostActivities(userId);
     console.log(data);
+
+    const attendActivities = await getUserJoinActivities(userId);
+    console.log(attendActivities);
+    const applyActivities = await getUserApplyActivities(userId);
+    console.log(applyActivities);
+    setUserJoinActivities((a) => [...a, ...attendActivities]);
+    setUserJoinActivities((a) => [...a, ...applyActivities]);
+
+    //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進userActivities 裡面以便之後取用
+    // const applicantsDetailArray = [];
+    // data.forEach(async (item) => {
+    //   console.log(item);
+    //   console.log(item.applicants);
+    //   item.applicants.forEach((data) => {
+    //     const promise = getUserData(data).then((data) => {
+    //       return data;
+    //     });
+    //     applicantsDetailArray.push(promise);
+    //   });
+    //   const allApplicants = await Promise.all(applicantsDetailArray);
+    //   console.log(allApplicants);
+    //   data.applicants = allApplicants;
+    // });
+
     setUserActivities(data);
   };
 
@@ -355,9 +493,11 @@ function Profile() {
   if (!userData) {
     return "isLoading";
   }
-  if (!userActivities) {
+  if (!userActivities || !userJoinActivities) {
     return "isLoading";
   }
+
+  console.log(userJoinActivities);
 
   const activitiesHTML = userActivities.map((data) => {
     return (
@@ -367,7 +507,24 @@ function Profile() {
         <div>{data.id}</div>
         <div>
           <EditActivitiesButton />
-          <EditActivitiesMemberButton applicants={data.applicants} />
+          <EditActivitiesMemberButton
+            applicants={data.applicants}
+            attendants={data.attendants}
+            activityId={data.id}
+          />
+        </div>
+      </div>
+    );
+  });
+
+  const joinActivitiesHTML = userJoinActivities.map((data) => {
+    return (
+      <div>
+        <div>{data.title}</div>
+        <div>{data.host}</div>
+        <div>{data.id}</div>
+        <div>
+          <button>查看活動</button>
         </div>
       </div>
     );
@@ -378,7 +535,14 @@ function Profile() {
       <div>
         <div>this is profile page</div>
         <ProfileContainer>
-          {activitiesHTML}
+          <ActivitiesCol>
+            <MyHostTitle>我的開團</MyHostTitle>
+            <MyHost>{activitiesHTML}</MyHost>
+
+            <MyJoinTitle>我的跟團</MyJoinTitle>
+            <MyJoin>{joinActivitiesHTML}</MyJoin>
+          </ActivitiesCol>
+
           <ProfileCol>
             {renderProfile()}
             <FancyModalButton />
