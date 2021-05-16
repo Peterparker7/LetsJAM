@@ -308,6 +308,12 @@ function EditActivitiesButton(props) {
 
   const handleActivityChange = (e, type) => {};
 
+  const handleDelete = () => {
+    alert("已刪除活動");
+    setOpacity(0);
+    setIsOpen(!isOpen);
+  };
+
   const renderEditActivityField = () => {
     return (
       <EditActivityCol>
@@ -400,6 +406,13 @@ function EditActivitiesButton(props) {
           onChange={setRequirement}
           labelledBy="Select"
         />
+        <button
+          onClick={(e) => {
+            handleDelete();
+          }}
+        >
+          刪除活動
+        </button>
       </EditActivityCol>
     );
   };
