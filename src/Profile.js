@@ -34,7 +34,9 @@ const InputFieldContainer = styled.div`
   display: flex;
 `;
 
-const InputFieldDiv = styled.div``;
+const InputFieldDiv = styled.div`
+  text-align: left;
+`;
 const InputFieldInput = styled.input`
   border: 1px solid #979797;
 `;
@@ -51,6 +53,16 @@ const ActivitiesCol = styled.div`
   display: flex;
   flex-direction: column;
   width: 600px;
+`;
+const EditActivityCol = styled.div`
+  margin: 0 auto;
+`;
+const Label = styled.label`
+  margin-right: 10px;
+`;
+const ProfileImage = styled.img`
+  width: 100px;
+  margin-bottom: 20px;
 `;
 const Btn = styled.button`
   border: 1px solid #979797;
@@ -199,6 +211,10 @@ function FancyModalButton() {
         backgroundProps={{ opacity }}
       >
         <InputFieldContainer>
+          {/* <label for="name">大頭照</label> */}
+          <ProfileImage src={`${userData.profileImage}`} alt=""></ProfileImage>
+        </InputFieldContainer>
+        <InputFieldContainer>
           <label for="name">名稱</label>
           <InputFieldInput
             id="name"
@@ -258,10 +274,11 @@ function FancyModalButton() {
   );
 }
 
-function EditActivitiesButton() {
+function EditActivitiesButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
 
+  console.log(props.data);
   function toggleModal(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
@@ -280,6 +297,113 @@ function EditActivitiesButton() {
     });
   }
 
+  const [requirement, setRequirement] = useState([]);
+  const options = [
+    { label: "Vocal", value: "Vocal" },
+    { label: "吉他", value: "吉他" },
+    { label: "木箱鼓", value: "木箱鼓" },
+    { label: "烏克麗麗", value: "烏克麗麗" },
+    { label: "電吉他", value: "電吉他" },
+  ];
+
+  const handleActivityChange = (e, type) => {};
+
+  const renderEditActivityField = () => {
+    return (
+      <EditActivityCol>
+        <InputFieldDiv>
+          <Label for="title">活動名稱</Label>
+          <InputFieldInput
+            id="title"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.title}
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "title");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="date">活動日期</Label>
+          <InputFieldInput
+            id="date"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.date}
+            type="date"
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "date");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="time">活動時間</Label>
+          <InputFieldInput
+            id="time"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.time}
+            type="time"
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "time");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="type">音樂類型</Label>
+          {/* <InputFieldInput
+            id="type"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.type}
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "type");
+            }}
+          ></InputFieldInput> */}
+          <select
+            defaultValue={props.data.type}
+            onChange={(e) => {
+              handleActivityChange(e, "type");
+            }}
+          >
+            <option>流行</option>
+            <option>嘻哈</option>
+            <option>古典</option>
+          </select>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="limit">人數限制</Label>
+          <InputFieldInput
+            id="limit"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.limit}
+            type="number"
+            min="1"
+            max="20"
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "limit");
+            }}
+          ></InputFieldInput>
+          <input id="nolimit" type="checkbox" />
+          <label for="nolimit">無</label>
+        </InputFieldDiv>
+        <Label>樂器需求</Label>
+        <MultiSelect
+          options={options}
+          value={props.data.requirement}
+          onChange={setRequirement}
+          labelledBy="Select"
+        />
+      </EditActivityCol>
+    );
+  };
+
   return (
     <div>
       <button onClick={toggleModal}>編輯活動</button>
@@ -292,6 +416,7 @@ function EditActivitiesButton() {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
+        <div>{renderEditActivityField()}</div>
         <button onClick={toggleModal}>Close me</button>
       </StyledModal>
     </div>
@@ -463,12 +588,12 @@ function Profile() {
     console.log(userData);
     return (
       <div>
-        <div>{userData.profileImage}</div>
+        <img src={`${userData.profileImage}`} />
         <div>{userData.name}</div>
         <div>{userData.intro}</div>
         <div>{userData.email}</div>
-        <div>{userData.preferType}</div>
-        <div>{userData.skill}</div>
+        <div>類型偏好：{userData.preferType}</div>
+        <div>會的樂器：{userData.skill}</div>
         <div>{userData.favSinger}</div>
       </div>
     );
@@ -500,7 +625,7 @@ function Profile() {
             <div>{data.host}</div>
             <div>{data.id}</div>
             <div>
-              <EditActivitiesButton />
+              <EditActivitiesButton data={data} />
               <EditActivitiesMemberButton
                 applicants={data.applicants}
                 attendants={data.attendants}
