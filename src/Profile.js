@@ -448,22 +448,6 @@ function Profile() {
     setUserJoinActivities((a) => [...a, ...attendActivities]);
     setUserJoinActivities((a) => [...a, ...applyActivities]);
 
-    //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進userActivities 裡面以便之後取用
-    // const applicantsDetailArray = [];
-    // data.forEach(async (item) => {
-    //   console.log(item);
-    //   console.log(item.applicants);
-    //   item.applicants.forEach((data) => {
-    //     const promise = getUserData(data).then((data) => {
-    //       return data;
-    //     });
-    //     applicantsDetailArray.push(promise);
-    //   });
-    //   const allApplicants = await Promise.all(applicantsDetailArray);
-    //   console.log(allApplicants);
-    //   data.applicants = allApplicants;
-    // });
-
     setUserActivities(data);
   };
 
