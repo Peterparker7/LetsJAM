@@ -31,6 +31,13 @@ const getSpecificData = async (id) => {
   return data;
 };
 
+const deleteActivityData = async (id) => {
+  let docRef = db.collection("activityData").doc(id);
+  docRef.delete().then(() => {
+    console.log(`delete activity ${id}`);
+  });
+};
+
 const uploadImage = async (img) => {
   const path = img.name;
 
@@ -175,6 +182,7 @@ const getUserApplyActivities = async (userId) => {
 
 export { getActivityData };
 export { getSpecificData };
+export { deleteActivityData };
 export { joinActivity };
 export { agreeJoinActivity };
 export { kickActivity };

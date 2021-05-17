@@ -23,6 +23,9 @@ function App() {
           <Route exact path="/activities/:id">
             <Detail />
           </Route>
+          <Route path="/">
+            <Main />
+          </Route>
         </Switch>
       </Router>
     </div>

@@ -1,5 +1,5 @@
 import "./App.css";
-// import styled from "styled-components";
+import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
@@ -52,19 +52,23 @@ function Main() {
   }, []);
   const ActivityHTML = data.map((item, index) => {
     return (
-      <div>
-        <Link to={`/activities/${item.id}`}>
+      <Link to={`/activities/${item.id}`}>
+        <ActivityItem>
           <div>{item.id}</div>
-          <img src={item.fileSource} alt="" />
-        </Link>
-      </div>
+          <div>{item.title}</div>
+          <ActivityImage src={item.fileSource} alt=""></ActivityImage>
+        </ActivityItem>
+      </Link>
     );
   });
 
   return (
     <div>
       this is main page
-      <div>{ActivityHTML}</div>
+      <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
+      <Link to={`/activities/create`}>
+        <div>start a group</div>
+      </Link>
     </div>
   );
   {
@@ -73,5 +77,17 @@ function Main() {
   frameborder="0"></iframe>; */
   }
 }
+
+const ActivitiesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const ActivityItem = styled.div`
+  border: 1px solid #979797;
+`;
+const ActivityImage = styled.img`
+  width: 300px;
+`;
 
 export default Main;
