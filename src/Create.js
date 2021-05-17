@@ -37,7 +37,7 @@ function Create() {
   let imageUrl = "";
 
   //   const [requirement, setRequirement] = useState("");
-  const host = "user123";
+  const host = "vfjMHzp45ckI3o3kqDmO";
 
   const refContainer = useRef("");
 
@@ -98,7 +98,7 @@ function Create() {
       requirement: requirementArray,
       level: level,
       host: host, //or id?
-      attendents: [],
+      attendants: [],
       applicants: [],
       comment: comment,
       youtubeSource: youtubeUrl,

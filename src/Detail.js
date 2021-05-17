@@ -129,13 +129,13 @@ function Detail() {
     <div>
       this is detail page
       {renderDetail()}
-      <button
+      <JoinButton
         onClick={() => {
           handleJoin();
         }}
       >
         我要報名
-      </button>
+      </JoinButton>
       {renderHost()}
     </div>
   );
@@ -155,5 +155,10 @@ const ImageContainer = styled.div`
 `;
 const ActivityImage = styled.img`
   width: 100%;
+`;
+const JoinButton = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: pointer;
 `;
 export default Detail;

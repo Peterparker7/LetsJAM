@@ -85,6 +85,7 @@ const MyJoinTitle = styled.div`
 `;
 const MyHost = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 const MyJoin = styled.div`
   display: flex;
@@ -93,8 +94,8 @@ function FancyModalButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
 
-  //   let userId = "vfjMHzp45ckI3o3kqDmO";
-  let userId = "SM7VM6CFOJOZwIDA6fjB";
+  let userId = "vfjMHzp45ckI3o3kqDmO";
+  //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   let defaultPreferType = "";
   let skillFormat = [];
   let skillArray = [];
@@ -512,13 +513,13 @@ function EditActivitiesMemberButton(props) {
         return (
           <div>
             <div>{item.name}</div>
-            <button
+            <Btn
               onClick={() => {
                 handleAgree(item);
               }}
             >
               同意
-            </button>
+            </Btn>
           </div>
         );
       });
@@ -534,13 +535,13 @@ function EditActivitiesMemberButton(props) {
         return (
           <div>
             <div>{item.name}</div>
-            <button
+            <Btn
               onClick={() => {
                 handleKick(item);
               }}
             >
               踢
-            </button>
+            </Btn>
           </div>
         );
       });
@@ -571,8 +572,8 @@ function EditActivitiesMemberButton(props) {
   );
 }
 function Profile() {
-  //   let userId = "vfjMHzp45ckI3o3kqDmO";
-  let userId = "SM7VM6CFOJOZwIDA6fjB";
+  let userId = "vfjMHzp45ckI3o3kqDmO";
+  //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   const [userData, setUserData] = useState();
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
@@ -657,6 +658,17 @@ function Profile() {
   const renderJoinActivities = () => {
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
+        console.log(data.status);
+        console.log(data.attendants);
+        const applicantionStatusHTML = () => {
+          if (data.attendants.includes(userId)) {
+            return <div>已加入</div>;
+          } else if (data.applicants.includes(userId)) {
+            return <div>申請中</div>;
+          }
+          return applicantionStatusHTML;
+        };
+
         return (
           <div>
             <div>{data.title}</div>
@@ -665,6 +677,7 @@ function Profile() {
             <div>
               <button>查看活動</button>
             </div>
+            <div>{applicantionStatusHTML()}</div>
           </div>
         );
       });
