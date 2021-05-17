@@ -11,8 +11,10 @@ import { getUserJoinActivities } from "./utils/firebase";
 import { getUserApplyActivities } from "./utils/firebase";
 import { agreeJoinActivity } from "./utils/firebase";
 import { kickActivity } from "./utils/firebase";
+import { deleteActivityData } from "./utils/firebase";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -89,6 +91,7 @@ const MyHost = styled.div`
 `;
 const MyJoin = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `;
 function FancyModalButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -309,7 +312,8 @@ function EditActivitiesButton(props) {
 
   const handleActivityChange = (e, type) => {};
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
     setOpacity(0);
     setIsOpen(!isOpen);
@@ -658,15 +662,13 @@ function Profile() {
   const renderJoinActivities = () => {
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
-        console.log(data.status);
-        console.log(data.attendants);
-        const applicantionStatusHTML = () => {
+        const applyStatusHTML = () => {
           if (data.attendants.includes(userId)) {
-            return <div>已加入</div>;
+            return <div style={{ backgroundColor: "green" }}>已加入</div>;
           } else if (data.applicants.includes(userId)) {
-            return <div>申請中</div>;
+            return <div style={{ backgroundColor: "yellow" }}>申請中</div>;
           }
-          return applicantionStatusHTML;
+          return applyStatusHTML;
         };
 
         return (
@@ -675,9 +677,11 @@ function Profile() {
             <div>{data.host}</div>
             <div>{data.id}</div>
             <div>
-              <button>查看活動</button>
+              <Link to={`/activities/${data.id}`}>
+                <button>查看活動</button>
+              </Link>
             </div>
-            <div>{applicantionStatusHTML()}</div>
+            <div>{applyStatusHTML()}</div>
           </div>
         );
       });
