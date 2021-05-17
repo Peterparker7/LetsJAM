@@ -104,9 +104,13 @@ function Create() {
       youtubeSource: youtubeUrl,
       fileSource: imageUrl,
       status: true,
+      date: date,
+      time: time,
     };
 
     await activityData.set(newData);
+    window.location.replace("./");
+    console.log("???????");
   };
 
   const [requirement, setRequirement] = useState([]);

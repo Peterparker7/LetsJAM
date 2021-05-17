@@ -53,9 +53,11 @@ function Main() {
   const ActivityHTML = data.map((item, index) => {
     return (
       <Link to={`/activities/${item.id}`}>
-        <div>{item.id}</div>
-        <div>{item.title}</div>
-        <ActivityImage src={item.fileSource} alt=""></ActivityImage>
+        <ActivityItem>
+          <div>{item.id}</div>
+          <div>{item.title}</div>
+          <ActivityImage src={item.fileSource} alt=""></ActivityImage>
+        </ActivityItem>
       </Link>
     );
   });
@@ -64,6 +66,9 @@ function Main() {
     <div>
       this is main page
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
+      <Link to={`/activities/create`}>
+        <div>start a group</div>
+      </Link>
     </div>
   );
   {
@@ -78,6 +83,9 @@ const ActivitiesContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+const ActivityItem = styled.div`
+  border: 1px solid #979797;
+`;
 const ActivityImage = styled.img`
   width: 300px;
 `;

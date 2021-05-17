@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
-import { getUserData } from "./utils/firebase";
+import { getSpecificData, getUserData } from "./utils/firebase";
 import { updateUserData } from "./utils/firebase";
 import { getUserHostActivities } from "./utils/firebase";
 import { getUserJoinActivities } from "./utils/firebase";
@@ -282,6 +282,35 @@ function EditActivitiesButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
 
+  const [oneactivityData, setActivityData] = useState();
+  let limitCheck = "";
+  const [checked, setChecked] = useState(limitCheck);
+
+  const getActivity = async () => {
+    const data = await getSpecificData(props.data.id);
+    console.log(data);
+    setActivityData(data);
+  };
+
+  //   function resetLimit() {
+  //     if (props.data.limit === 0) {
+  //       limitCheck = true;
+  //     } else if (props.data.limit !== 0) {
+  //       limitCheck = false;
+  //     }
+  //     console.log(limitCheck);
+  //   }
+  //   resetLimit();
+
+  useEffect(() => {
+    getActivity();
+  }, []);
+
+  console.log(checked);
+
+  let activityData = props.data;
+  console.log(activityData);
+
   console.log(props.data);
   function toggleModal(e) {
     setOpacity(0);
@@ -301,7 +330,32 @@ function EditActivitiesButton(props) {
     });
   }
 
-  const [requirement, setRequirement] = useState([]);
+  const editConfirm = () => {
+    // if (checked) {
+    //   oneactivityData.limit = 0;
+    // }
+    let data = {
+      title: oneactivityData.title,
+      limit: oneactivityData.limit,
+      date: oneactivityData.date,
+      time: oneactivityData.time,
+      type: oneactivityData.type,
+      level: oneactivityData.level,
+      location: oneactivityData.location,
+      comment: oneactivityData.comment,
+      requirement: requirementArray,
+    };
+    console.log(data);
+  };
+
+  let requirementFormat = [];
+  let requirementArray = [];
+  const [requirement, setRequirement] = useState(requirementFormat);
+  console.log(props.data.requirement);
+  requirement.forEach((data) => {
+    requirementArray.push(data.value);
+  });
+
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -310,7 +364,50 @@ function EditActivitiesButton(props) {
     { label: "電吉他", value: "電吉他" },
   ];
 
-  const handleActivityChange = (e, type) => {};
+  props.data.requirement.forEach((data) => {
+    let requirement = {
+      label: data,
+      value: data,
+    };
+    requirementFormat.push(requirement);
+  });
+
+  const handleActivityChange = (e, type) => {
+    if (type === "title") {
+      console.log(e);
+      oneactivityData.title = e;
+      console.log(oneactivityData.title);
+    }
+    // if (type === "limit") {
+    //   if (checked) {
+    //     activityData.limit = 0;
+    //   } else {
+    //     activityData.limit = e;
+    //   }
+    //   console.log(activityData.limit);
+    // }
+    if (type === "date") {
+      oneactivityData.date = e;
+    }
+    if (type === "time") {
+      oneactivityData.time = e;
+    }
+    if (type === "type") {
+      oneactivityData.type = e;
+    }
+    if (type === "level") {
+      oneactivityData.level = e;
+    }
+    if (type === "location") {
+      oneactivityData.location = e;
+    }
+    if (type === "comment") {
+      oneactivityData.comment = e;
+    }
+    console.log(oneactivityData);
+  };
+
+  const handleNolimtChange = () => {};
 
   const handleDelete = async () => {
     const deleteActivity = await deleteActivityData(props.data.id);
@@ -319,6 +416,49 @@ function EditActivitiesButton(props) {
     setIsOpen(!isOpen);
   };
 
+  if (!props.data) {
+    return "isLoading";
+  }
+  if (!oneactivityData) {
+    return "isLoading";
+  }
+
+  if (oneactivityData.limit === 0) {
+    limitCheck = true;
+  } else if (oneactivityData.limit !== 0) {
+    limitCheck = false;
+  }
+
+  const LimitboxHTML = () => {
+    if (checked) {
+      return (
+        <div>
+          <InputFieldInput
+            type="number"
+            defaultValue=""
+            disabled={checked}
+            onChange={(e) => {
+              oneactivityData.limit = 0;
+            }}
+          ></InputFieldInput>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <InputFieldInput
+            type="number"
+            defaultValue={props.data.limit}
+            min="1"
+            max="20"
+            onChange={(e) => {
+              oneactivityData.limit = e.target.value;
+            }}
+          ></InputFieldInput>
+        </div>
+      );
+    }
+  };
   const renderEditActivityField = () => {
     return (
       <EditActivityCol>
@@ -378,7 +518,7 @@ function EditActivitiesButton(props) {
           <select
             defaultValue={props.data.type}
             onChange={(e) => {
-              handleActivityChange(e, "type");
+              handleActivityChange(e.target.value, "type");
             }}
           >
             <option>流行</option>
@@ -388,7 +528,7 @@ function EditActivitiesButton(props) {
         </InputFieldDiv>
         <InputFieldDiv>
           <Label for="limit">人數限制</Label>
-          <InputFieldInput
+          {/* <InputFieldInput
             id="limit"
             contentEditable="true"
             suppressContentEditableWarning={true}
@@ -400,31 +540,87 @@ function EditActivitiesButton(props) {
               console.log(e.target.value);
               handleActivityChange(e.target.value, "limit");
             }}
-          ></InputFieldInput>
-          <input id="nolimit" type="checkbox" />
+          ></InputFieldInput> */}
+          {LimitboxHTML()}
+          <input
+            id="nolimit"
+            type="checkbox"
+            checked={checked}
+            onChange={() => setChecked(!checked)}
+          />
           <label for="nolimit">無</label>
         </InputFieldDiv>
         <Label>樂器需求</Label>
         <MultiSelect
           options={options}
-          value={props.data.requirement}
+          value={requirement}
           onChange={setRequirement}
           labelledBy="Select"
         />
-        <button
+        <InputFieldDiv>
+          <Label for="level">建議程度</Label>
+          <InputFieldInput
+            id="level"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.level}
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "level");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="location">活動地點</Label>
+          <InputFieldInput
+            id="location"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.location}
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "location");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        <InputFieldDiv>
+          <Label for="comment">備註說明</Label>
+          <InputFieldInput
+            id="comment"
+            contentEditable="true"
+            suppressContentEditableWarning={true}
+            defaultValue={props.data.comment}
+            onInput={(e) => {
+              console.log(e.target.value);
+              handleActivityChange(e.target.value, "comment");
+            }}
+          ></InputFieldInput>
+        </InputFieldDiv>
+        {/* <InputFieldDiv>
+          <Label for="activityImage">上傳照片</Label>
+          <InputFieldInput type="file" id="activityImage"></InputFieldInput>
+        </InputFieldDiv> */}
+        <Btn
+          onClick={(e) => {
+            editConfirm();
+          }}
+        >
+          確認修改
+        </Btn>
+        <Btn
           onClick={(e) => {
             handleDelete();
           }}
         >
           刪除活動
-        </button>
+        </Btn>
       </EditActivityCol>
     );
   };
 
   return (
     <div>
-      <button onClick={toggleModal}>編輯活動</button>
+      <Btn onClick={toggleModal}>編輯活動</Btn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -557,7 +753,7 @@ function EditActivitiesMemberButton(props) {
 
   return (
     <div>
-      <button onClick={toggleModal}>查看申請</button>
+      <Btn onClick={toggleModal}>查看申請</Btn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
