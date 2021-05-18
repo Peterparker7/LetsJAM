@@ -15,6 +15,7 @@ import { deleteActivityData } from "./utils/firebase";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -93,10 +94,15 @@ const MyJoin = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
-function FancyModalButton() {
+function FancyModalButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
 
+  const userDataRedux = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
+
+  console.log(userDataRedux);
+  console.log(props.data);
   let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   let defaultPreferType = "";
@@ -123,7 +129,7 @@ function FancyModalButton() {
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
-    console.log(data);
+
     //處理skill格式 讓default值可顯示於select
     data.skill.forEach((data) => {
       let skill = {
@@ -132,13 +138,11 @@ function FancyModalButton() {
       };
       skillFormat.push(skill);
     });
-    console.log(skillFormat);
 
     setUserData(data);
   };
 
   useEffect(() => {
-    console.log("><");
     getUserProfileData();
   }, []);
   if (!userData) {
@@ -156,6 +160,9 @@ function FancyModalButton() {
     console.log(data);
     console.log(userData.name);
     updateUserData(data, userId);
+    // setUserData(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
+
     setOpacity(0);
     setIsOpen(!isOpen);
   }
@@ -173,13 +180,13 @@ function FancyModalButton() {
   }
   function handlePreferTypeDefault() {
     console.log(userData.preferType);
-    if (userData.preferType === "流行") {
+    if (props.data.preferType === "流行") {
       defaultPreferType = "流行";
     }
-    if (userData.preferType === "嘻哈") {
+    if (props.data.preferType === "嘻哈") {
       defaultPreferType = "嘻哈";
     }
-    if (userData.preferType === "古典") {
+    if (props.data.preferType === "古典") {
       defaultPreferType = "古典";
     }
   }
@@ -187,6 +194,15 @@ function FancyModalButton() {
   function toggleModal(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
+  }
+  function toggleCancel(e) {
+    setOpacity(0);
+    setIsOpen(!isOpen);
+    if (isOpen) {
+      console.log(userData);
+      console.log(props.data);
+      setUserData(props.data);
+    }
   }
 
   function afterOpen() {
@@ -229,7 +245,7 @@ function FancyModalButton() {
               console.log(e.target.value);
               handleProfileChange(e.target.value, "name");
             }}
-            defaultValue={userData.name}
+            defaultValue={props.data.name}
           />
 
           {/* </div> */}
@@ -244,7 +260,7 @@ function FancyModalButton() {
               console.log(e.target.value);
               handleProfileChange(e.target.value, "intro");
             }}
-            defaultValue={userData.intro}
+            defaultValue={props.data.intro}
           />
         </InputFieldContainer>
         <InputFieldContainer>
@@ -271,7 +287,7 @@ function FancyModalButton() {
             labelledBy="Select"
           />
         </InputFieldContainer>
-        <button onClick={toggleModal}>取消</button>
+        <button onClick={toggleCancel}>取消</button>
         <button onClick={editConfirm}>確認修改</button>
       </StyledModal>
     </div>
@@ -777,21 +793,26 @@ function Profile() {
   const [userData, setUserData] = useState();
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
+  console.log(userData);
+  const userDataRedux = useSelector((state) => state.userData);
+  console.log(userDataRedux);
+
+  const dispatch = useDispatch();
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
-    console.log(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
+
     setUserData(data);
   };
 
   const getUserActivitiesData = async () => {
     const data = await getUserHostActivities(userId);
-    console.log(data);
 
     const attendActivities = await getUserJoinActivities(userId);
-    console.log(attendActivities);
+
     const applyActivities = await getUserApplyActivities(userId);
-    console.log(applyActivities);
+
     setUserJoinActivities((a) => [...a, ...attendActivities]);
     setUserJoinActivities((a) => [...a, ...applyActivities]);
 
@@ -799,11 +820,10 @@ function Profile() {
   };
 
   const renderProfile = () => {
-    console.log(userData);
     return (
       <div>
         <img src={`${userData.profileImage}`} />
-        <div>{userData.name}</div>
+        <div>{userDataRedux.name}</div>
         <div>{userData.intro}</div>
         <div>{userData.email}</div>
         <div>類型偏好：{userData.preferType}</div>
@@ -816,7 +836,6 @@ function Profile() {
   const handleEditProfile = () => {};
 
   useEffect(() => {
-    console.log("><");
     getUserProfileData();
     getUserActivitiesData();
   }, []);
@@ -827,8 +846,6 @@ function Profile() {
   if (!userActivities || !userJoinActivities) {
     return "isLoading";
   }
-
-  console.log(userJoinActivities);
 
   const renderHostActivities = () => {
     if (userActivities.length !== 0) {
@@ -902,7 +919,7 @@ function Profile() {
 
           <ProfileCol>
             {renderProfile()}
-            <FancyModalButton />
+            <FancyModalButton data={userData} />
           </ProfileCol>
         </ProfileContainer>
       </div>
