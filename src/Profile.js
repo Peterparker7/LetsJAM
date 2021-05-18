@@ -12,10 +12,11 @@ import { getUserApplyActivities } from "./utils/firebase";
 import { agreeJoinActivity } from "./utils/firebase";
 import { kickActivity } from "./utils/firebase";
 import { deleteActivityData } from "./utils/firebase";
+import { updateActivitiesData } from "./utils/firebase";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -117,8 +118,6 @@ function FancyModalButton(props) {
 
   const [userData, setUserData] = useState();
 
-  //   userData.skill = skillArray;
-
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -129,18 +128,17 @@ function FancyModalButton(props) {
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
-
-    //處理skill格式 讓default值可顯示於select
-    data.skill.forEach((data) => {
-      let skill = {
-        label: data,
-        value: data,
-      };
-      skillFormat.push(skill);
-    });
-
     setUserData(data);
   };
+  //處理skill格式 讓default值可顯示於select
+  userDataRedux.skill.forEach((data) => {
+    let skill = {
+      label: data,
+      value: data,
+    };
+    skillFormat.push(skill);
+  });
+  console.log(skillFormat);
 
   useEffect(() => {
     getUserProfileData();
@@ -156,6 +154,7 @@ function FancyModalButton(props) {
       preferType: userData.preferType,
       skill: skillArray,
       favSinger: userData.favSinger,
+      profileImage: userData.profileImage,
     };
     console.log(data);
     console.log(userData.name);
@@ -166,27 +165,27 @@ function FancyModalButton(props) {
     setOpacity(0);
     setIsOpen(!isOpen);
   }
-
+  //
   function handleProfileChange(e, type) {
     if (type === "name") {
-      userData.name = e;
+      setUserData({ ...userData, name: e });
     }
     if (type === "intro") {
-      userData.intro = e;
+      setUserData({ ...userData, intro: e });
     }
     if (type === "preferType") {
-      userData.preferType = e;
+      setUserData({ ...userData, preferType: e });
     }
   }
   function handlePreferTypeDefault() {
     console.log(userData.preferType);
-    if (props.data.preferType === "流行") {
+    if (userDataRedux.preferType === "流行") {
       defaultPreferType = "流行";
     }
-    if (props.data.preferType === "嘻哈") {
+    if (userDataRedux.preferType === "嘻哈") {
       defaultPreferType = "嘻哈";
     }
-    if (props.data.preferType === "古典") {
+    if (userDataRedux.preferType === "古典") {
       defaultPreferType = "古典";
     }
   }
@@ -198,11 +197,10 @@ function FancyModalButton(props) {
   function toggleCancel(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
-    if (isOpen) {
-      console.log(userData);
-      console.log(props.data);
-      setUserData(props.data);
-    }
+
+    //取消時把值設回Redux上的值
+    setUserData(userDataRedux);
+    setSkill(skillFormat);
   }
 
   function afterOpen() {
@@ -245,7 +243,7 @@ function FancyModalButton(props) {
               console.log(e.target.value);
               handleProfileChange(e.target.value, "name");
             }}
-            defaultValue={props.data.name}
+            defaultValue={userDataRedux.name}
           />
 
           {/* </div> */}
@@ -260,13 +258,13 @@ function FancyModalButton(props) {
               console.log(e.target.value);
               handleProfileChange(e.target.value, "intro");
             }}
-            defaultValue={props.data.intro}
+            defaultValue={userDataRedux.intro}
           />
         </InputFieldContainer>
         <InputFieldContainer>
           {handlePreferTypeDefault()}
 
-          <label for="preferType">偏好曲風</label>
+          <label for="preferType">偏好類型</label>
           <select
             defaultValue={defaultPreferType}
             onChange={(e) => {
@@ -307,6 +305,21 @@ function EditActivitiesButton(props) {
     console.log(data);
     setActivityData(data);
   };
+
+  //   const userHostActivityDataRedux = useSelector(
+  //     (state) => state.userHostActivityData
+  //   );
+  const userHostActivityDataRedux = useSelector(
+    (state) =>
+      state.userHostActivityData.find((m) => {
+        return m.id === props.activityId;
+      }),
+    shallowEqual
+  );
+
+  console.log(userHostActivityDataRedux);
+
+  const dispatch = useDispatch();
 
   //   function resetLimit() {
   //     if (props.data.limit === 0) {
@@ -355,6 +368,7 @@ function EditActivitiesButton(props) {
       limit: oneactivityData.limit,
       date: oneactivityData.date,
       time: oneactivityData.time,
+      //   timestamp: oneactivityData.timestamp,
       type: oneactivityData.type,
       level: oneactivityData.level,
       location: oneactivityData.location,
@@ -362,6 +376,9 @@ function EditActivitiesButton(props) {
       requirement: requirementArray,
     };
     console.log(data);
+    updateActivitiesData(data, props.data.id);
+    // props.setUserActivities({ ...data, title: data.title });
+    // props.setUserActivities((prevState) => [...prevState, data.title]);
   };
 
   let requirementFormat = [];
@@ -390,9 +407,7 @@ function EditActivitiesButton(props) {
 
   const handleActivityChange = (e, type) => {
     if (type === "title") {
-      console.log(e);
-      oneactivityData.title = e;
-      console.log(oneactivityData.title);
+      setActivityData({ ...oneactivityData, title: e });
     }
     // if (type === "limit") {
     //   if (checked) {
@@ -404,12 +419,15 @@ function EditActivitiesButton(props) {
     // }
     if (type === "date") {
       oneactivityData.date = e;
+      setActivityData({ ...oneactivityData, date: e });
     }
     if (type === "time") {
       oneactivityData.time = e;
+      setActivityData({ ...oneactivityData, time: e });
     }
     if (type === "type") {
       oneactivityData.type = e;
+      setActivityData({ ...oneactivityData, type: e });
     }
     if (type === "level") {
       oneactivityData.level = e;
@@ -428,6 +446,7 @@ function EditActivitiesButton(props) {
   const handleDelete = async () => {
     const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
+
     setOpacity(0);
     setIsOpen(!isOpen);
   };
@@ -475,6 +494,7 @@ function EditActivitiesButton(props) {
       );
     }
   };
+  console.log(userHostActivityDataRedux.title);
   const renderEditActivityField = () => {
     return (
       <EditActivityCol>
@@ -484,7 +504,7 @@ function EditActivitiesButton(props) {
             id="title"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.title}
+            defaultValue={userHostActivityDataRedux.title}
             onInput={(e) => {
               console.log(e.target.value);
               handleActivityChange(e.target.value, "title");
@@ -497,7 +517,7 @@ function EditActivitiesButton(props) {
             id="date"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.date}
+            defaultValue={userHostActivityDataRedux.date}
             type="date"
             onInput={(e) => {
               console.log(e.target.value);
@@ -511,7 +531,7 @@ function EditActivitiesButton(props) {
             id="time"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.time}
+            defaultValue={userHostActivityDataRedux.time}
             type="time"
             onInput={(e) => {
               console.log(e.target.value);
@@ -532,7 +552,7 @@ function EditActivitiesButton(props) {
             }}
           ></InputFieldInput> */}
           <select
-            defaultValue={props.data.type}
+            defaultValue={userHostActivityDataRedux.type}
             onChange={(e) => {
               handleActivityChange(e.target.value, "type");
             }}
@@ -579,7 +599,7 @@ function EditActivitiesButton(props) {
             id="level"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.level}
+            defaultValue={userHostActivityDataRedux.level}
             onInput={(e) => {
               console.log(e.target.value);
               handleActivityChange(e.target.value, "level");
@@ -592,7 +612,7 @@ function EditActivitiesButton(props) {
             id="location"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.location}
+            defaultValue={userHostActivityDataRedux.location}
             onInput={(e) => {
               console.log(e.target.value);
               handleActivityChange(e.target.value, "location");
@@ -605,7 +625,7 @@ function EditActivitiesButton(props) {
             id="comment"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.comment}
+            defaultValue={userHostActivityDataRedux.comment}
             onInput={(e) => {
               console.log(e.target.value);
               handleActivityChange(e.target.value, "comment");
@@ -795,6 +815,9 @@ function Profile() {
   const [userJoinActivities, setUserJoinActivities] = useState([]);
   console.log(userData);
   const userDataRedux = useSelector((state) => state.userData);
+  const userHostActivityDataRedux = useSelector(
+    (state) => state.userHostActivityData
+  );
   console.log(userDataRedux);
 
   const dispatch = useDispatch();
@@ -808,6 +831,7 @@ function Profile() {
 
   const getUserActivitiesData = async () => {
     const data = await getUserHostActivities(userId);
+    dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
 
     const attendActivities = await getUserJoinActivities(userId);
 
@@ -824,11 +848,11 @@ function Profile() {
       <div>
         <img src={`${userData.profileImage}`} />
         <div>{userDataRedux.name}</div>
-        <div>{userData.intro}</div>
-        <div>{userData.email}</div>
-        <div>類型偏好：{userData.preferType}</div>
-        <div>會的樂器：{userData.skill}</div>
-        <div>{userData.favSinger}</div>
+        <div>{userDataRedux.intro}</div>
+        <div>{userDataRedux.email}</div>
+        <div>偏好類型：{userDataRedux.preferType}</div>
+        <div>會的樂器：{userDataRedux.skill}</div>
+        <div>{userDataRedux.favSinger}</div>
       </div>
     );
   };
@@ -846,7 +870,7 @@ function Profile() {
   if (!userActivities || !userJoinActivities) {
     return "isLoading";
   }
-
+  console.log(userActivities);
   const renderHostActivities = () => {
     if (userActivities.length !== 0) {
       const activitiesHTML = userActivities.map((data) => {
@@ -856,7 +880,11 @@ function Profile() {
             <div>{data.host}</div>
             <div>{data.id}</div>
             <div>
-              <EditActivitiesButton data={data} />
+              <EditActivitiesButton
+                activityId={data.id}
+                data={data}
+                setUserActivities={setUserActivities}
+              />
               <EditActivitiesMemberButton
                 applicants={data.applicants}
                 attendants={data.attendants}

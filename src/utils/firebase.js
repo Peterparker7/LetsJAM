@@ -180,6 +180,35 @@ const getUserApplyActivities = async (userId) => {
   return applyActivitiesArray;
 };
 
+const updateActivitiesData = async (data, activityId) => {
+  let docRef = db.collection("activityData").doc(activityId);
+  const activitiesData = await docRef
+    .set(
+      {
+        title: data.title,
+        type: data.type,
+        limit: data.limit,
+        // timestamp: data.timestamp,
+        location: "AppWork School 3F",
+        // geo: ["10", "10"],
+        requirement: data.requirement,
+        level: data.level,
+        comment: data.comment,
+        // youtubeSource: data.youtubeUrl,
+        // fileSource: imageUrl,
+        date: data.date,
+        time: data.time,
+      },
+      { merge: true }
+    )
+    .then(() => {
+      console.log(`update ${activityId} activity Data to firebase`);
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
 export { getActivityData };
 export { getSpecificData };
 export { deleteActivityData };
@@ -191,5 +220,6 @@ export { updateUserData };
 export { getUserHostActivities };
 export { getUserJoinActivities };
 export { getUserApplyActivities };
+export { updateActivitiesData };
 export { uploadImage };
 // export { createActivity };
