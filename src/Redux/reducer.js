@@ -11,7 +11,27 @@ export default function reducer(state = initialState, action) {
     case "UPDATE_ACTIVITYDATA":
       return { ...state, activityData: action.data };
     case "UPDATE_USERHOSTACTIVITYDATA":
-      return { ...state, userHostActivityData: action.data };
+      return {
+        ...state,
+        userHostActivityData: [...state.userHostActivityData, ...action.data],
+      };
+    case "UPDATE_ONEUSERHOSTACTIVITYDATA": {
+      //function 需用{}包起來
+      //dispatch時必須帶入id追蹤
+      const id = action.data.id;
+
+      const index = state.userHostActivityData.findIndex(
+        (data) => data.id === id
+      );
+      const newData = [...state.userHostActivityData];
+      newData[index] = action.data;
+
+      return {
+        ...state,
+        // userHostActivityData: ()=> [action.data, ...state.userHostActivityData],
+        userHostActivityData: newData,
+      };
+    }
     // case "DELETE_ACTIVITYDATA":
     //   return { ...state, userHostActivityData: state.userHostActivityData.splice(item.index, 1)};
     default:

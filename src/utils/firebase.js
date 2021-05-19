@@ -33,9 +33,7 @@ const getSpecificData = async (id) => {
 
 const deleteActivityData = async (id) => {
   let docRef = db.collection("activityData").doc(id);
-  docRef.delete().then(() => {
-    console.log(`delete activity ${id}`);
-  });
+  docRef.delete().then(() => {});
 };
 
 const uploadImage = async (img) => {
@@ -65,9 +63,7 @@ const joinActivity = async (activityId, userId) => {
     .update({
       applicants: window.firebase.firestore.FieldValue.arrayUnion(userId),
     })
-    .then(() => {
-      console.log(`update applicants ${userId} to firebase`);
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
@@ -81,9 +77,7 @@ const agreeJoinActivity = async (activityId, userId) => {
       applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
       attendants: window.firebase.firestore.FieldValue.arrayUnion(userId),
     })
-    .then(() => {
-      console.log(`update attendants ${userId} to firebase`);
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
@@ -95,9 +89,7 @@ const kickActivity = async (activityId, userId) => {
     .update({
       attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
     })
-    .then(() => {
-      console.log(`remove attendants ${userId} from firebase`);
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
@@ -125,9 +117,7 @@ const updateUserData = async (newData, userId) => {
       },
       { merge: true }
     )
-    .then(() => {
-      console.log(`update ${userId} userData to firebase`);
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
@@ -141,11 +131,9 @@ const getUserHostActivities = async (userId) => {
     .get()
     .then((data) => {
       data.forEach((item) => {
-        console.log(item.data());
         hostActivitiesArray.push(item.data());
       });
     });
-  console.log(hostActivitiesArray);
   return hostActivitiesArray;
 };
 const getUserJoinActivities = async (userId) => {
@@ -156,11 +144,9 @@ const getUserJoinActivities = async (userId) => {
     .get()
     .then((data) => {
       data.forEach((item) => {
-        console.log(item.data());
         joinActivitiesArray.push(item.data());
       });
     });
-  console.log(joinActivitiesArray);
   return joinActivitiesArray;
 };
 
@@ -172,11 +158,9 @@ const getUserApplyActivities = async (userId) => {
     .get()
     .then((data) => {
       data.forEach((item) => {
-        console.log(item.data());
         applyActivitiesArray.push(item.data());
       });
     });
-  console.log(applyActivitiesArray);
   return applyActivitiesArray;
 };
 
@@ -201,9 +185,7 @@ const updateActivitiesData = async (data, activityId) => {
       },
       { merge: true }
     )
-    .then(() => {
-      console.log(`update ${activityId} activity Data to firebase`);
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
