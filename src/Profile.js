@@ -4,17 +4,23 @@ import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
-import { getSpecificData, getUserData } from "./utils/firebase";
-import { updateUserData } from "./utils/firebase";
-import { getUserHostActivities } from "./utils/firebase";
-import { getUserJoinActivities } from "./utils/firebase";
-import { getUserApplyActivities } from "./utils/firebase";
-import { agreeJoinActivity } from "./utils/firebase";
-import { kickActivity } from "./utils/firebase";
-import { deleteActivityData } from "./utils/firebase";
+import {
+  getSpecificData,
+  getUserData,
+  updateUserData,
+  getUserHostActivities,
+  getUserJoinActivities,
+  getUserApplyActivities,
+  agreeJoinActivity,
+  kickActivity,
+  deleteActivityData,
+  updateActivitiesData,
+} from "./utils/firebase";
+
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -93,9 +99,12 @@ const MyJoin = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
-function FancyModalButton() {
+function FancyModalButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
+
+  const userDataRedux = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
 
   let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
@@ -111,8 +120,6 @@ function FancyModalButton() {
 
   const [userData, setUserData] = useState();
 
-  //   userData.skill = skillArray;
-
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -123,22 +130,18 @@ function FancyModalButton() {
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
-    console.log(data);
-    //處理skill格式 讓default值可顯示於select
-    data.skill.forEach((data) => {
-      let skill = {
-        label: data,
-        value: data,
-      };
-      skillFormat.push(skill);
-    });
-    console.log(skillFormat);
-
     setUserData(data);
   };
+  //處理skill格式 讓default值可顯示於select
+  userDataRedux.skill.forEach((data) => {
+    let skill = {
+      label: data,
+      value: data,
+    };
+    skillFormat.push(skill);
+  });
 
   useEffect(() => {
-    console.log("><");
     getUserProfileData();
   }, []);
   if (!userData) {
@@ -152,41 +155,53 @@ function FancyModalButton() {
       preferType: userData.preferType,
       skill: skillArray,
       favSinger: userData.favSinger,
+      profileImage: userData.profileImage,
     };
-    console.log(data);
-    console.log(userData.name);
     updateUserData(data, userId);
+    // setUserData(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
+
     setOpacity(0);
     setIsOpen(!isOpen);
   }
-
+  //
   function handleProfileChange(e, type) {
-    if (type === "name") {
-      userData.name = e;
-    }
-    if (type === "intro") {
-      userData.intro = e;
-    }
-    if (type === "preferType") {
-      userData.preferType = e;
-    }
+    setUserData({ ...userData, [type]: e });
+
+    // if (type === "name") {
+    //   setUserData({ ...userData, name: e });
+    // }
+    // if (type === "intro") {
+    //   setUserData({ ...userData, intro: e });
+    // }
+    // if (type === "preferType") {
+    //   setUserData({ ...userData, preferType: e });
+    // }
   }
   function handlePreferTypeDefault() {
-    console.log(userData.preferType);
-    if (userData.preferType === "流行") {
-      defaultPreferType = "流行";
-    }
-    if (userData.preferType === "嘻哈") {
-      defaultPreferType = "嘻哈";
-    }
-    if (userData.preferType === "古典") {
-      defaultPreferType = "古典";
-    }
+    defaultPreferType = userDataRedux.preferType;
+    // if (userDataRedux.preferType === "流行") {
+    //   defaultPreferType = "流行";
+    // }
+    // if (userDataRedux.preferType === "嘻哈") {
+    //   defaultPreferType = "嘻哈";
+    // }
+    // if (userDataRedux.preferType === "古典") {
+    //   defaultPreferType = "古典";
+    // }
   }
 
   function toggleModal(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
+  }
+  function toggleCancel(e) {
+    setOpacity(0);
+    setIsOpen(!isOpen);
+
+    //取消時把值設回Redux上的值
+    setUserData(userDataRedux);
+    setSkill(skillFormat);
   }
 
   function afterOpen() {
@@ -225,11 +240,9 @@ function FancyModalButton() {
             contentEditable="true"
             suppressContentEditableWarning={true}
             onInput={(e) => {
-              //   console.log(e.currentTarget.textContent);
-              console.log(e.target.value);
               handleProfileChange(e.target.value, "name");
             }}
-            defaultValue={userData.name}
+            defaultValue={userDataRedux.name}
           />
 
           {/* </div> */}
@@ -241,16 +254,15 @@ function FancyModalButton() {
             contentEditable="true"
             suppressContentEditableWarning={true}
             onInput={(e) => {
-              console.log(e.target.value);
               handleProfileChange(e.target.value, "intro");
             }}
-            defaultValue={userData.intro}
+            defaultValue={userDataRedux.intro}
           />
         </InputFieldContainer>
         <InputFieldContainer>
           {handlePreferTypeDefault()}
 
-          <label for="preferType">偏好曲風</label>
+          <label for="preferType">偏好類型</label>
           <select
             defaultValue={defaultPreferType}
             onChange={(e) => {
@@ -271,7 +283,7 @@ function FancyModalButton() {
             labelledBy="Select"
           />
         </InputFieldContainer>
-        <button onClick={toggleModal}>取消</button>
+        <button onClick={toggleCancel}>取消</button>
         <button onClick={editConfirm}>確認修改</button>
       </StyledModal>
     </div>
@@ -283,38 +295,53 @@ function EditActivitiesButton(props) {
   const [opacity, setOpacity] = useState(0);
 
   const [oneactivityData, setActivityData] = useState();
-  let limitCheck = "";
-  const [checked, setChecked] = useState(limitCheck);
+  let limitInitial = 1;
+  const [checked, setChecked] = useState();
 
   const getActivity = async () => {
     const data = await getSpecificData(props.data.id);
-    console.log(data);
     setActivityData(data);
   };
 
-  //   function resetLimit() {
-  //     if (props.data.limit === 0) {
-  //       limitCheck = true;
-  //     } else if (props.data.limit !== 0) {
-  //       limitCheck = false;
-  //     }
-  //     console.log(limitCheck);
-  //   }
-  //   resetLimit();
+  //   const userHostActivityDataRedux = useSelector(
+  //     (state) => state.userHostActivityData
+  //   );
+  const userHostActivityDataRedux = useSelector(
+    (state) =>
+      state.userHostActivityData.find((m) => {
+        return m.id === props.activityId;
+      }),
+    shallowEqual
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getActivity();
+    if (userHostActivityDataRedux.limit === 0) {
+      setChecked(true);
+    } else if (userHostActivityDataRedux.limit !== 0) {
+      setChecked(false);
+    }
   }, []);
 
-  console.log(checked);
-
   let activityData = props.data;
-  console.log(activityData);
 
-  console.log(props.data);
   function toggleModal(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
+  }
+
+  function toggleCancel(e) {
+    setOpacity(0);
+    setIsOpen(!isOpen);
+    setRequirement(requirementFormat);
+    if (userHostActivityDataRedux.limit === 0) {
+      setChecked(true);
+    } else if (userHostActivityDataRedux.limit !== 0) {
+      props.data.limit = userHostActivityDataRedux.limit;
+      setChecked(false);
+    }
   }
 
   function afterOpen() {
@@ -331,14 +358,16 @@ function EditActivitiesButton(props) {
   }
 
   const editConfirm = () => {
-    // if (checked) {
-    //   oneactivityData.limit = 0;
-    // }
+    if (checked) {
+      oneactivityData.limit = 0;
+    }
     let data = {
+      id: props.data.id,
       title: oneactivityData.title,
-      limit: oneactivityData.limit,
+      limit: parseInt(oneactivityData.limit),
       date: oneactivityData.date,
       time: oneactivityData.time,
+      //   timestamp: oneactivityData.timestamp,
       type: oneactivityData.type,
       level: oneactivityData.level,
       location: oneactivityData.location,
@@ -346,12 +375,28 @@ function EditActivitiesButton(props) {
       requirement: requirementArray,
     };
     console.log(data);
+    updateActivitiesData(data, props.data.id);
+    // props.setUserActivities({ ...data, title: data.title });
+    // props.setUserActivities((prevState) => [...prevState, data.title]);
+
+    // props.confirmArray.push(data);
+
+    // const dataArr = [];
+    // dataArr.push(data);
+    // props.onEdit(dataArr);
+    dispatch({
+      type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
+      data: data,
+    });
+    console.log(userHostActivityDataRedux);
+
+    setOpacity(0);
+    setIsOpen(!isOpen);
   };
 
   let requirementFormat = [];
   let requirementArray = [];
   const [requirement, setRequirement] = useState(requirementFormat);
-  console.log(props.data.requirement);
   requirement.forEach((data) => {
     requirementArray.push(data.value);
   });
@@ -364,7 +409,7 @@ function EditActivitiesButton(props) {
     { label: "電吉他", value: "電吉他" },
   ];
 
-  props.data.requirement.forEach((data) => {
+  userHostActivityDataRedux.requirement.forEach((data) => {
     let requirement = {
       label: data,
       value: data,
@@ -374,9 +419,7 @@ function EditActivitiesButton(props) {
 
   const handleActivityChange = (e, type) => {
     if (type === "title") {
-      console.log(e);
-      oneactivityData.title = e;
-      console.log(oneactivityData.title);
+      setActivityData({ ...oneactivityData, title: e });
     }
     // if (type === "limit") {
     //   if (checked) {
@@ -384,27 +427,25 @@ function EditActivitiesButton(props) {
     //   } else {
     //     activityData.limit = e;
     //   }
-    //   console.log(activityData.limit);
     // }
     if (type === "date") {
-      oneactivityData.date = e;
+      setActivityData({ ...oneactivityData, date: e });
     }
     if (type === "time") {
-      oneactivityData.time = e;
+      setActivityData({ ...oneactivityData, time: e });
     }
     if (type === "type") {
-      oneactivityData.type = e;
+      setActivityData({ ...oneactivityData, type: e });
     }
     if (type === "level") {
-      oneactivityData.level = e;
+      setActivityData({ ...oneactivityData, level: e });
     }
     if (type === "location") {
-      oneactivityData.location = e;
+      setActivityData({ ...oneactivityData, location: e });
     }
     if (type === "comment") {
-      oneactivityData.comment = e;
+      setActivityData({ ...oneactivityData, comment: e });
     }
-    console.log(oneactivityData);
   };
 
   const handleNolimtChange = () => {};
@@ -412,6 +453,7 @@ function EditActivitiesButton(props) {
   const handleDelete = async () => {
     const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
+
     setOpacity(0);
     setIsOpen(!isOpen);
   };
@@ -423,23 +465,18 @@ function EditActivitiesButton(props) {
     return "isLoading";
   }
 
-  if (oneactivityData.limit === 0) {
-    limitCheck = true;
-  } else if (oneactivityData.limit !== 0) {
-    limitCheck = false;
-  }
-
   const LimitboxHTML = () => {
     if (checked) {
       return (
         <div>
           <InputFieldInput
             type="number"
-            defaultValue=""
+            defaultValue={limitInitial}
             disabled={checked}
-            onChange={(e) => {
-              oneactivityData.limit = 0;
-            }}
+            style={{ backgroundColor: "grey" }}
+            // onChange={(e) => {
+            //   oneactivityData.limit = 0;
+            // }}
           ></InputFieldInput>
         </div>
       );
@@ -448,7 +485,7 @@ function EditActivitiesButton(props) {
         <div>
           <InputFieldInput
             type="number"
-            defaultValue={props.data.limit}
+            defaultValue={userHostActivityDataRedux.limit}
             min="1"
             max="20"
             onChange={(e) => {
@@ -468,9 +505,8 @@ function EditActivitiesButton(props) {
             id="title"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.title}
+            defaultValue={userHostActivityDataRedux.title}
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "title");
             }}
           ></InputFieldInput>
@@ -481,10 +517,9 @@ function EditActivitiesButton(props) {
             id="date"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.date}
+            defaultValue={userHostActivityDataRedux.date}
             type="date"
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "date");
             }}
           ></InputFieldInput>
@@ -495,10 +530,9 @@ function EditActivitiesButton(props) {
             id="time"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.time}
+            defaultValue={userHostActivityDataRedux.time}
             type="time"
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "time");
             }}
           ></InputFieldInput>
@@ -511,12 +545,11 @@ function EditActivitiesButton(props) {
             suppressContentEditableWarning={true}
             defaultValue={props.data.type}
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "type");
             }}
           ></InputFieldInput> */}
           <select
-            defaultValue={props.data.type}
+            defaultValue={userHostActivityDataRedux.type}
             onChange={(e) => {
               handleActivityChange(e.target.value, "type");
             }}
@@ -537,7 +570,6 @@ function EditActivitiesButton(props) {
             min="1"
             max="20"
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "limit");
             }}
           ></InputFieldInput> */}
@@ -563,9 +595,8 @@ function EditActivitiesButton(props) {
             id="level"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.level}
+            defaultValue={userHostActivityDataRedux.level}
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "level");
             }}
           ></InputFieldInput>
@@ -576,9 +607,8 @@ function EditActivitiesButton(props) {
             id="location"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.location}
+            defaultValue={userHostActivityDataRedux.location}
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "location");
             }}
           ></InputFieldInput>
@@ -589,9 +619,8 @@ function EditActivitiesButton(props) {
             id="comment"
             contentEditable="true"
             suppressContentEditableWarning={true}
-            defaultValue={props.data.comment}
+            defaultValue={userHostActivityDataRedux.comment}
             onInput={(e) => {
-              console.log(e.target.value);
               handleActivityChange(e.target.value, "comment");
             }}
           ></InputFieldInput>
@@ -631,7 +660,7 @@ function EditActivitiesButton(props) {
         backgroundProps={{ opacity }}
       >
         <div>{renderEditActivityField()}</div>
-        <button onClick={toggleModal}>Close me</button>
+        <button onClick={toggleCancel}>Close me</button>
       </StyledModal>
     </div>
   );
@@ -640,8 +669,6 @@ function EditActivitiesButton(props) {
 function EditActivitiesMemberButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
-  console.log(props.applicants);
-  console.log(props.attendants);
   const [applicantsData, setApplicantsData] = useState([]);
   const [attendantsData, setAttendantsData] = useState([]);
   let applicantsArray = [];
@@ -655,7 +682,6 @@ function EditActivitiesMemberButton(props) {
       applicantsArray.push(promise);
     });
     const allApplicants = await Promise.all(applicantsArray);
-    console.log(allApplicants);
     setApplicantsData(allApplicants);
   };
   const getAttendantsDetail = async () => {
@@ -666,21 +692,29 @@ function EditActivitiesMemberButton(props) {
       attendantsArray.push(promise);
     });
     const allAttendants = await Promise.all(attendantsArray);
-    console.log(allAttendants);
     setAttendantsData(allAttendants);
   };
 
   const handleAgree = (e) => {
-    console.log(e.userId);
     agreeJoinActivity(props.activityId, e.userId);
+
+    const index = applicantsData.findIndex((data) => data.userId === e.userId);
+    const newApplicantsData = [...applicantsData];
+    const newAttendant = newApplicantsData.splice(index, 1);
+    setApplicantsData(newApplicantsData);
+    //加新的element到array
+    setAttendantsData((attendantsData) => [...attendantsData, ...newAttendant]);
   };
   const handleKick = (e) => {
-    console.log(e.userId);
     kickActivity(props.activityId, e.userId);
+
+    const index = attendantsData.findIndex((data) => data.userId === e.userId);
+    const newAttendantsData = [...attendantsData];
+    const removedAttendant = newAttendantsData.splice(index, 1);
+    setAttendantsData(newAttendantsData);
   };
 
   useEffect(() => {
-    console.log("><");
     getApplicantsDetail();
     getAttendantsDetail();
   }, []);
@@ -777,21 +811,28 @@ function Profile() {
   const [userData, setUserData] = useState();
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
+  const userDataRedux = useSelector((state) => state.userData);
+  const userHostActivityDataRedux = useSelector(
+    (state) => state.userHostActivityData
+  );
+  const confirmArray = [];
+  const dispatch = useDispatch();
 
   const getUserProfileData = async () => {
     const data = await getUserData(userId);
-    console.log(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
+
     setUserData(data);
   };
 
   const getUserActivitiesData = async () => {
     const data = await getUserHostActivities(userId);
-    console.log(data);
+    dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
 
     const attendActivities = await getUserJoinActivities(userId);
-    console.log(attendActivities);
+
     const applyActivities = await getUserApplyActivities(userId);
-    console.log(applyActivities);
+
     setUserJoinActivities((a) => [...a, ...attendActivities]);
     setUserJoinActivities((a) => [...a, ...applyActivities]);
 
@@ -799,24 +840,28 @@ function Profile() {
   };
 
   const renderProfile = () => {
-    console.log(userData);
     return (
       <div>
         <img src={`${userData.profileImage}`} />
-        <div>{userData.name}</div>
-        <div>{userData.intro}</div>
-        <div>{userData.email}</div>
-        <div>類型偏好：{userData.preferType}</div>
-        <div>會的樂器：{userData.skill}</div>
-        <div>{userData.favSinger}</div>
+        <div>{userDataRedux.name}</div>
+        <div>{userDataRedux.intro}</div>
+        <div>{userDataRedux.email}</div>
+        <div>偏好類型：{userDataRedux.preferType}</div>
+        <div>會的樂器：{userDataRedux.skill}</div>
+        <div>{userDataRedux.favSinger}</div>
       </div>
     );
   };
 
   const handleEditProfile = () => {};
 
+  function onEdit(arr) {
+    if (arr.length === userDataRedux.length) {
+      setUserActivities(arr);
+    }
+  }
+
   useEffect(() => {
-    console.log("><");
     getUserProfileData();
     getUserActivitiesData();
   }, []);
@@ -828,24 +873,27 @@ function Profile() {
     return "isLoading";
   }
 
-  console.log(userJoinActivities);
-
   const renderHostActivities = () => {
-    if (userActivities.length !== 0) {
-      const activitiesHTML = userActivities.map((data) => {
+    if (userHostActivityDataRedux.length !== 0) {
+      const activitiesHTML = userHostActivityDataRedux.map((data) => {
         return (
           <div>
             <div>{data.title}</div>
             <div>{data.host}</div>
             <div>{data.id}</div>
-            <div>
-              <EditActivitiesButton data={data} />
-              <EditActivitiesMemberButton
-                applicants={data.applicants}
-                attendants={data.attendants}
-                activityId={data.id}
-              />
-            </div>
+            <div>{data.requirement}</div>
+            <EditActivitiesButton
+              activityId={data.id}
+              data={data}
+              setUserActivities={setUserActivities}
+              confirmArray={confirmArray}
+              onEdit={onEdit}
+            />
+            <EditActivitiesMemberButton
+              applicants={data.applicants}
+              attendants={data.attendants}
+              activityId={data.id}
+            />
           </div>
         );
       });
@@ -902,7 +950,7 @@ function Profile() {
 
           <ProfileCol>
             {renderProfile()}
-            <FancyModalButton />
+            <FancyModalButton data={userData} />
           </ProfileCol>
         </ProfileContainer>
       </div>
