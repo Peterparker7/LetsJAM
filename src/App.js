@@ -1,8 +1,8 @@
 import "./App.css";
-import Main from "./Main";
-import Create from "./Create";
-import Detail from "./Detail";
-import Profile from "./Profile";
+import Main from "./Pages/Main/Main";
+import Create from "./Pages/Create/Create";
+import Detail from "./Pages/Detail/Detail";
+import Profile from "./Pages/Profile/Profile";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {

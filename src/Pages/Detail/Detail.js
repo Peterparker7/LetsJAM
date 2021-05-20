@@ -1,15 +1,16 @@
-import "./App.css";
+import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSpecificData } from "./utils/firebase";
-import { joinActivity } from "./utils/firebase";
-import { getUserData } from "./utils/firebase";
+import { getSpecificData } from "../../utils/firebase";
+import { joinActivity } from "../../utils/firebase";
+import { getUserData } from "../../utils/firebase";
 
 function Detail() {
   let { id } = useParams();
   let userId = "vfjMHzp45ckI3o3kqDmO";
   const [detailData, setDetailData] = useState();
+  const [currentUserData, setCurrentUserData] = useState();
 
   let activityDetail = {};
 
@@ -18,6 +19,7 @@ function Detail() {
 
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
+    const currentUser = await getUserData(userId);
 
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
@@ -34,6 +36,7 @@ function Detail() {
     data.applicants = allApplicants;
 
     setDetailData(data);
+    setCurrentUserData(currentUser);
   };
 
   console.log(detailData);
@@ -83,7 +86,6 @@ function Detail() {
   //     let data = await getUserData(userId);
   //     console.log(data);
   //   };
-
   //   userData();
 
   const renderHost = () => {
@@ -109,6 +111,68 @@ function Detail() {
     console.log("join click!");
 
     joinActivity(id, userId);
+
+    // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
+
+    // setData((data) => [...data, ...dataList]);   //append新東西到array
+    // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
+
+    setDetailData({
+      ...detailData,
+      applicants: [
+        ...detailData.applicants, //資料結構不同，才有辦法更新
+        { name: currentUserData.name, userId: userId },
+      ],
+    });
+
+    console.log(detailData);
+  };
+  console.log(detailData);
+
+  const renderJoinButton = () => {
+    const isApplicant = detailData.applicants.filter((item) => {
+      if (item.userId === userId) {
+        return item;
+      }
+    });
+    const isAttendant = detailData.attendants.filter((item) => {
+      if (item.userId === userId) {
+        return item;
+      }
+    });
+    console.log(isApplicant);
+    console.log(isAttendant);
+    if (isApplicant.length !== 0) {
+      return (
+        <ApplicantButton
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          申請中
+        </ApplicantButton>
+      );
+    } else if (isAttendant.length !== 0) {
+      return (
+        <AttendantButton
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          已加入
+        </AttendantButton>
+      );
+    } else {
+      return (
+        <JoinButton
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          我要報名
+        </JoinButton>
+      );
+    }
   };
 
   //useEffect只在第一次render後執行
@@ -125,17 +189,19 @@ function Detail() {
   if (!detailData) {
     return "isLoading";
   }
+  console.log(detailData);
   return (
     <div>
       this is detail page
       {renderDetail()}
-      <JoinButton
+      {/* <JoinButton
         onClick={() => {
           handleJoin();
         }}
       >
         我要報名
-      </JoinButton>
+      </JoinButton> */}
+      {renderJoinButton()}
       {renderHost()}
     </div>
   );
@@ -160,5 +226,15 @@ const JoinButton = styled.button`
   border: 1px solid #979797;
   padding: 5px;
   cursor: pointer;
+`;
+const ApplicantButton = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: not-allowed;
+`;
+const AttendantButton = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: not-allowed;
 `;
 export default Detail;

@@ -1,11 +1,11 @@
-import "./App.css";
+import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
-import MyComponent from "./Map";
+import MyComponent from "../../Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
-import { uploadImage } from "./utils/firebase";
-import { createActivity } from "./utils/firebase";
+import { uploadImage } from "../../utils/firebase";
+import { createActivity } from "../../utils/firebase";
 
 // var firebaseConfig = {
 //   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
