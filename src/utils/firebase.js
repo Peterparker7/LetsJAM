@@ -103,6 +103,27 @@ const getUserData = async (userId) => {
 
   return userData;
 };
+const newUser = async (userEmail, userUid, userInfo) => {
+  let newCreate = db.collection("userData").doc(userUid);
+
+  const data = await newCreate
+    .set({
+      email: userEmail,
+      uid: userUid,
+      name: userInfo.name,
+      preferType: userInfo.preferType,
+      skill: userInfo.skill,
+      intro: "",
+      profileImage: "",
+      youtubeUrl: "",
+    })
+    .then(() => {
+      console.log("create new user");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
 
 const updateUserData = async (newData, userId) => {
   let docRef = db.collection("userData").doc(userId);
@@ -199,6 +220,7 @@ export { agreeJoinActivity };
 export { kickActivity };
 export { getUserData };
 export { updateUserData };
+export { newUser };
 export { getUserHostActivities };
 export { getUserJoinActivities };
 export { getUserApplyActivities };

@@ -3,6 +3,8 @@ import Main from "./Pages/Main/Main";
 import Create from "./Pages/Create/Create";
 import Detail from "./Pages/Detail/Detail";
 import Profile from "./Pages/Profile/Profile";
+import Login from "./Pages/Login/Login";
+import BaseLogin from "./Pages/Login/BaseLogin";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
@@ -11,6 +13,9 @@ function App() {
       <Router>
         {/* <Header/> */}
         <Switch>
+          <Route exact path="/activities/login">
+            <BaseLogin />
+          </Route>
           <Route exact path="/activities">
             <Main />
           </Route>
