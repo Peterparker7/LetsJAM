@@ -42,16 +42,6 @@ const FadingBackground = styled(BaseModalBackground)`
   transition: all 0.3s ease-in-out;
 `;
 
-const InputFieldContainer = styled.div`
-  display: flex;
-`;
-
-const InputFieldDiv = styled.div`
-  text-align: left;
-`;
-const InputFieldInput = styled.input`
-  border: 1px solid #979797;
-`;
 const ProfileContainer = styled.div`
   display: flex;
   width: 960px;
@@ -65,21 +55,6 @@ const ActivitiesCol = styled.div`
   display: flex;
   flex-direction: column;
   width: 600px;
-`;
-const EditActivityCol = styled.div`
-  margin: 0 auto;
-`;
-const Label = styled.label`
-  margin-right: 10px;
-`;
-const ProfileImage = styled.img`
-  width: 100px;
-  margin-bottom: 20px;
-`;
-const Btn = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
-  cursor: pointer;
 `;
 const MyHostTitle = styled.div`
   font-size: 20px;

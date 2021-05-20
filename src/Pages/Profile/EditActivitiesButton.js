@@ -6,20 +6,12 @@ import React, { useEffect, useState } from "react";
 // import { joinActivity } from "./utils/firebase";
 import {
   getSpecificData,
-  getUserData,
-  updateUserData,
-  getUserHostActivities,
-  getUserJoinActivities,
-  getUserApplyActivities,
-  agreeJoinActivity,
-  kickActivity,
   deleteActivityData,
   updateActivitiesData,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 const StyledModal = Modal.styled`
@@ -33,34 +25,11 @@ background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
 
-const FadingBackground = styled(BaseModalBackground)`
-  opacity: ${(props) => props.opacity};
-  transition: all 0.3s ease-in-out;
-`;
-
-const InputFieldContainer = styled.div`
-  display: flex;
-`;
-
 const InputFieldDiv = styled.div`
   text-align: left;
 `;
 const InputFieldInput = styled.input`
   border: 1px solid #979797;
-`;
-const ProfileContainer = styled.div`
-  display: flex;
-  width: 960px;
-  justify-content: space-around;
-  margin: 0 auto;
-`;
-const ProfileCol = styled.div`
-  width: 360px;
-`;
-const ActivitiesCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 600px;
 `;
 const EditActivityCol = styled.div`
   margin: 0 auto;
@@ -68,36 +37,11 @@ const EditActivityCol = styled.div`
 const Label = styled.label`
   margin-right: 10px;
 `;
-const ProfileImage = styled.img`
-  width: 100px;
-  margin-bottom: 20px;
-`;
+
 const Btn = styled.button`
   border: 1px solid #979797;
   padding: 5px;
   cursor: pointer;
-`;
-const MyHostTitle = styled.div`
-  font-size: 20px;
-  border-bottom: 1px solid #979797;
-  text-align: left;
-  margin: 0 auto;
-  width: 100%;
-`;
-const MyJoinTitle = styled.div`
-  font-size: 20px;
-  border-bottom: 1px solid #979797;
-  text-align: left;
-  margin: 0 auto;
-  width: 100%;
-`;
-const MyHost = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-const MyJoin = styled.div`
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 function EditActivitiesButton(props) {
