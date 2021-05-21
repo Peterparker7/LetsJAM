@@ -2,13 +2,7 @@ import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-// import { useParams } from "react-router-dom";
-import { newUser } from "../../utils/firebase";
-import MultiSelect from "react-multi-select-component";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
-// Initialize Firebase
-const db = window.firebase.firestore();
 let userEmail = "";
 let userPassword = "";
 let userInfo = {};
@@ -38,7 +32,6 @@ function Login() {
         .signInWithEmailAndPassword(userEmail, userPassword)
         .then((result) => {
           console.log("Login");
-          console.log(result);
           console.log(result.uid);
           alert("登入成功！");
         })
@@ -160,16 +153,6 @@ function Login() {
 
 const InputField = styled.input`
   border: 1px solid #979797;
-`;
-
-const SkillDiv = styled.div`
-  display: flex;
-  width: 480px;
-  margin: 0 auto;
-`;
-
-const SkillSelectDiv = styled.div`
-  width: 300px;
 `;
 
 const RequireField = styled.span`

@@ -3,19 +3,12 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
-import { getActivityData } from "../../utils/firebase";
-
-// var firebaseConfig = {
-//   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
-//   authDomain: "personalproject-33263.firebaseapp.com",
-//   projectId: "personalproject-33263",
-//   storageBucket: "personalproject-33263.appspot.com",
-//   messagingSenderId: "966021952087",
-//   appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
-//   measurementId: "G-MXQWY9WWZK",
-// };
-// // Initialize Firebase
-// window.firebase.initializeApp(firebaseConfig);
+import {
+  getActivityData,
+  getUserData,
+  getAuthUser,
+  logOut,
+} from "../../utils/firebase";
 
 const db = window.firebase.firestore();
 console.log(db);
@@ -26,20 +19,6 @@ function Main() {
   const [data, setData] = useState([]);
   console.log(data);
 
-  //   const getActivityData = async () => {
-  //     const activityData = db.collection("activityData");
-  //     const allActivities = [];
-
-  //     await activityData.get().then((d) => {
-  //       d.forEach((data) => {
-  //         allActivities.push(data.data());
-
-  //         //   allActivity.push
-  //       });
-  //     });
-  //     setData(allActivities);
-  //     return allActivities;
-  //   };
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
@@ -63,6 +42,7 @@ function Main() {
   useEffect(() => {
     //渲染頁面之前先把存活動的array清空，避免array裡面有重複之前的data
     allActivitiesArray = [];
+    checkUserIsLogin();
     getFirebaseData();
   }, []);
 
@@ -147,6 +127,14 @@ function Main() {
   };
 
   const handleRequirementFilter = () => {};
+
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    console.log(userUid);
+    const userData = await getUserData(userUid);
+    console.log(userData);
+  };
+
   const ActivityHTML = data.map((item, index) => {
     return (
       <Link to={`/activities/${item.id}`}>
@@ -200,6 +188,15 @@ function Main() {
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
       <Link to={`/activities/create`}>
         <div>start a group</div>
+      </Link>
+      <Link to={`./`}>
+        <button
+          onClick={(e) => {
+            logOut();
+          }}
+        >
+          logout
+        </button>
       </Link>
     </div>
   );
