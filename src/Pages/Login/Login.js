@@ -9,17 +9,21 @@ let userInfo = {};
 
 function Login() {
   const [emailState, setEmailState] = useState(true);
+  const [emailValue, setEmailValue] = useState();
   const [emailAuthState, setEmailAuthState] = useState(true);
   const [passwordState, setPasswordState] = useState(true);
+  const [passwordValue, setPasswordValue] = useState(true);
   const [passwordAuthState, setPasswordAuthState] = useState(true);
 
   const handleEmailChange = (e) => {
     userEmail = e;
+    setEmailValue(e);
     setEmailState(true);
     setEmailAuthState(true);
   };
   const handlePasswordChange = (e) => {
     userPassword = e;
+    setPasswordValue(e);
     setPasswordState(true);
     setPasswordAuthState(true);
   };
@@ -61,19 +65,16 @@ function Login() {
   const formCheck = () => {
     // userInfo = { ...userInfo, skill: skillArray };
 
-    let email = document.querySelector("#email");
-    let password = document.querySelector("#password");
-
-    if (!email.value) {
+    if (!emailValue) {
       setEmailState(false);
       return false;
-    } else if (email.value) {
+    } else if (emailValue) {
       setEmailState(true);
     }
-    if (!password.value) {
+    if (!passwordValue) {
       setPasswordState(false);
       return false;
-    } else if (password.value) {
+    } else if (passwordValue) {
       setPasswordState(true);
       return true;
     }
@@ -81,22 +82,30 @@ function Login() {
   const warningEmailHTML = () => {
     if (!emailState) {
       return (
-        <div style={{ display: "inline-block", color: "red" }}>帳號不完整</div>
+        <Warning style={{ display: "inline-block", color: "red" }}>
+          帳號不完整
+        </Warning>
       );
     } else if (!emailAuthState) {
       return (
-        <div style={{ display: "inline-block", color: "red" }}>無效帳號</div>
+        <Warning style={{ display: "inline-block", color: "red" }}>
+          無效帳號
+        </Warning>
       );
     }
   };
   const warningPasswordHTML = () => {
     if (!passwordState) {
       return (
-        <div style={{ display: "inline-block", color: "red" }}>密碼不完整</div>
+        <Warning style={{ display: "inline-block", color: "red" }}>
+          密碼不完整
+        </Warning>
       );
     } else if (!passwordAuthState) {
       return (
-        <div style={{ display: "inline-block", color: "red" }}>密碼錯誤</div>
+        <Warning style={{ display: "inline-block", color: "red" }}>
+          密碼錯誤
+        </Warning>
       );
     }
   };
@@ -104,26 +113,23 @@ function Login() {
   const loginHTML = () => {
     return (
       <div>
-        <div>
-          <RequireField>*</RequireField>
-          <label for="email">帳號</label>
+        <ItemField>
+          <Label for="email">帳號</Label>
           <InputField
             id="email"
             onChange={(e) => {
               handleEmailChange(e.target.value);
             }}
             style={
-              emailState
+              emailState && emailAuthState
                 ? { border: "1px solid #979797" }
                 : { border: "1px solid red" }
             }
           ></InputField>
           {warningEmailHTML()}
-        </div>
-        <div>
-          <RequireField>*</RequireField>
-
-          <label for="password">密碼</label>
+        </ItemField>
+        <ItemField>
+          <Label for="password">密碼</Label>
           <InputField
             id="password"
             type="password"
@@ -131,15 +137,15 @@ function Login() {
               handlePasswordChange(e.target.value);
             }}
             style={
-              passwordState
+              passwordState && passwordAuthState
                 ? { border: "1px solid #979797" }
                 : { border: "1px solid red" }
             }
           ></InputField>
           {warningPasswordHTML()}
-        </div>
+        </ItemField>
 
-        <button onClick={(e) => handleLogin()}>登入</button>
+        <LoginButton onClick={(e) => handleLogin()}>登入</LoginButton>
       </div>
     );
   };
@@ -151,12 +157,36 @@ function Login() {
   );
 }
 
+const ItemField = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+`;
+const Label = styled.label`
+  display: inline-block;
+  width: 80px;
+`;
+
 const InputField = styled.input`
-  border: 1px solid #979797;
+  padding: 5px;
+  width: 250px;
+  height: 38px;
+`;
+const Warning = styled.div`
+  width: 80px;
+  font-size: 12px;
 `;
 
 const RequireField = styled.span`
   color: red;
 `;
-
+const LoginButton = styled.button`
+  width: 90px;
+  margin: 0 auto;
+  height: 40px;
+  border: 1px solid #979797;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
 export default Login;

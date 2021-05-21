@@ -3,9 +3,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
-import { newUser } from "../../utils/firebase";
-import MultiSelect from "react-multi-select-component";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+
 import Login from "./Login";
 import Register from "./Register";
 
@@ -14,9 +12,20 @@ function BaseLogin() {
 
   const baseHTML = () => {
     if (toggle) {
-      return <div>{Login()}</div>;
+      console.log(toggle);
+      return (
+        <div>
+          <Login />
+        </div>
+      );
     } else {
-      <div>{Register()}</div>;
+      console.log(toggle);
+
+      return (
+        <div>
+          <Register />
+        </div>
+      );
     }
   };
 
@@ -29,6 +38,14 @@ function BaseLogin() {
             onClick={() => {
               setToggle(!toggle);
             }}
+            style={
+              toggle
+                ? {
+                    borderBottom: "1px solid #979797",
+                    borderRight: "1px solid #979797",
+                  }
+                : { borderBottom: "none" }
+            }
           >
             註冊會員
           </SelectTag>
@@ -37,11 +54,19 @@ function BaseLogin() {
             onClick={() => {
               setToggle(!toggle);
             }}
+            style={
+              toggle
+                ? { borderBottom: "none" }
+                : {
+                    borderBottom: "1px solid #979797",
+                    borderLeft: "1px solid #979797",
+                  }
+            }
           >
             會員登入
           </SelectTag>
         </SelectContainer>
-        <div>{baseHTML()}</div>
+        <FormDetail>{baseHTML()}</FormDetail>
       </Container>
     </div>
   );
@@ -49,7 +74,7 @@ function BaseLogin() {
 
 const Container = styled.div`
   width: 600px;
-  margin: 0 auto;
+  margin: 50px auto;
   border: 1px solid #979797;
 `;
 const SelectContainer = styled.div`
@@ -57,6 +82,17 @@ const SelectContainer = styled.div`
   justify-content: space-around;
   margin: 0 auto;
 `;
-const SelectTag = styled.div``;
+const SelectTag = styled.button`
+  width: 300px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+`;
+
+const FormDetail = styled.div`
+  margin: 0 auto;
+  margin-top: 40px;
+  width: 400px;
+  justify-content: space-between;
+`;
 
 export default BaseLogin;

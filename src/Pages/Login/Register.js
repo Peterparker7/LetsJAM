@@ -19,6 +19,13 @@ function Register() {
   const [preferTypeState, setPreferTypeState] = useState(true);
   const [skillState, setSkillState] = useState(true);
 
+  const [emailValue, setEmailValue] = useState();
+  const [passwordValue, setPasswordValue] = useState();
+  const [userInfoValue, setUserInfoValue] = useState({
+    name: "",
+    preferType: "",
+  });
+
   const [skill, setSkill] = useState([]);
   const options = [
     { label: "Vocal", value: "Vocal" },
@@ -36,11 +43,13 @@ function Register() {
   const handleEmailChange = (e) => {
     console.log(e);
     userEmail = e;
+    setEmailValue(e);
     console.log(userEmail);
   };
   const handlePasswordChange = (e) => {
     console.log(e);
     userPassword = e;
+    setPasswordValue(e);
   };
 
   const handleRegister = () => {
@@ -54,9 +63,6 @@ function Register() {
         .createUserWithEmailAndPassword(userEmail, userPassword)
         .then((result) => {
           console.log("register firebase");
-          console.log(result.user.uid);
-          console.log(userInfo);
-          console.log(userEmail);
           return result.user.uid;
         })
         .then((uid) => {
@@ -64,7 +70,7 @@ function Register() {
         })
         .then(() => {
           alert("註冊成功！正在重新導向");
-          //   window.location.href = "./";
+          window.location.href = "./";
         })
         .catch((error) => {
           alert(error.message);
@@ -79,42 +85,38 @@ function Register() {
       [type]: e,
     };
     // formCheck();
+    setUserInfoValue({ ...userInfoValue, [type]: e });
   };
 
-  console.log(userInfo);
+  console.log(userInfoValue);
   console.log(userEmail);
   console.log(userPassword);
 
   const formCheck = () => {
     // userInfo = { ...userInfo, skill: skillArray };
 
-    let email = document.querySelector("#email");
-    let password = document.querySelector("#password");
-    let name = document.querySelector("#name");
-    let preferType = document.querySelector("#preferType");
-
-    if (!email.value) {
+    if (!emailValue) {
       setEmailState(false);
       return false;
-    } else if (email.value) {
+    } else if (emailValue) {
       setEmailState(true);
     }
-    if (!password.value) {
+    if (!passwordValue) {
       setPasswordState(false);
       return false;
-    } else if (password.value) {
+    } else if (passwordValue) {
       setPasswordState(true);
     }
-    if (!name.value) {
+    if (!userInfoValue.name) {
       setNameState(false);
       return false;
-    } else if (name.value) {
+    } else if (userInfoValue.name) {
       setNameState(true);
     }
-    if (!preferType.value) {
+    if (!userInfoValue.preferType) {
       setPreferTypeState(false);
       return false;
-    } else if (preferType.value) {
+    } else if (userInfoValue.preferType) {
       setPreferTypeState(true);
     }
     if (skillArray.length === 0) {
@@ -124,16 +126,13 @@ function Register() {
       setSkillState(true);
       return true;
     }
-
-    console.log(preferType.value);
-    console.log(skillArray.length);
   };
   const registerHTML = () => {
     return (
       <div>
-        <div>
+        <ItemField>
           <RequireField>*</RequireField>
-          <label for="email">電子信箱</label>
+          <Label for="email">電子信箱</Label>
           <InputField
             id="email"
             placeholder="example@gmail.com"
@@ -146,7 +145,7 @@ function Register() {
                 : { border: "1px solid red" }
             }
           ></InputField>
-          <div
+          <Warning
             style={
               emailState
                 ? { display: "none" }
@@ -154,12 +153,12 @@ function Register() {
             }
           >
             此項必填
-          </div>
-        </div>
-        <div>
+          </Warning>
+        </ItemField>
+        <ItemField>
           <RequireField>*</RequireField>
 
-          <label for="password">設定密碼</label>
+          <Label for="password">設定密碼</Label>
           <InputField
             placeholder="密碼長度至少6碼"
             id="password"
@@ -173,7 +172,7 @@ function Register() {
                 : { border: "1px solid red" }
             }
           ></InputField>
-          <div
+          <Warning
             style={
               passwordState
                 ? { display: "none" }
@@ -181,12 +180,12 @@ function Register() {
             }
           >
             此項必填
-          </div>
-        </div>
-        <div>
+          </Warning>
+        </ItemField>
+        <ItemField>
           <RequireField>*</RequireField>
 
-          <label for="name">名稱</label>
+          <Label for="name">名稱</Label>
           <InputField
             id="name"
             style={
@@ -198,7 +197,7 @@ function Register() {
               handleChange(e.target.value, "name");
             }}
           ></InputField>
-          <div
+          <Warning
             style={
               nameState
                 ? { display: "none" }
@@ -206,14 +205,13 @@ function Register() {
             }
           >
             此項必填
-          </div>
-          <div></div>
-        </div>
-        <div>
+          </Warning>
+        </ItemField>
+        <ItemField>
           <RequireField>*</RequireField>
 
-          <label for="preferType">偏好類型</label>
-          <select
+          <Label for="preferType">偏好類型</Label>
+          <SelectPreferType
             id="preferType"
             onChange={(e) => {
               handleChange(e.target.value, "preferType");
@@ -225,8 +223,8 @@ function Register() {
             <option>流行</option>
             <option>嘻哈</option>
             <option>古典</option>
-          </select>
-          <span
+          </SelectPreferType>
+          <Warning
             style={
               preferTypeState
                 ? { display: "none" }
@@ -234,24 +232,22 @@ function Register() {
             }
           >
             此項必填
-          </span>
-        </div>
-        <SkillDiv>
+          </Warning>
+        </ItemField>
+        <ItemField>
           <RequireField>*</RequireField>
 
-          <label for="skill">會的樂器</label>
+          <Label for="skill">會的樂器</Label>
           <SkillSelectDiv>
             <MultiSelect
               id="skill"
               options={options}
               value={skill}
-              onChange={() => {
-                setSkill();
-              }}
+              onChange={setSkill}
               labelledBy="Select"
             />
           </SkillSelectDiv>
-          <span
+          <Warning
             style={
               skillState
                 ? { display: "none" }
@@ -259,9 +255,11 @@ function Register() {
             }
           >
             此項必填
-          </span>
-        </SkillDiv>
-        <button onClick={() => handleRegister()}>註冊</button>
+          </Warning>
+        </ItemField>
+        <RegisterButton onClick={() => handleRegister()}>
+          馬上加入
+        </RegisterButton>
       </div>
     );
   };
@@ -290,22 +288,46 @@ function Register() {
   );
 }
 
-const InputField = styled.input`
-  border: 1px solid #979797;
+const ItemField = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 20px;
+`;
+const Label = styled.label`
+  display: inline-block;
+  width: 80px;
 `;
 
-const SkillDiv = styled.div`
-  display: flex;
-  width: 480px;
-  margin: 0 auto;
+const InputField = styled.input`
+  border: 1px solid #979797;
+  padding: 5px;
+  width: 250px;
+  height: 38px;
+`;
+const Warning = styled.div`
+  width: 80px;
+  font-size: 12px;
+`;
+
+const SelectPreferType = styled.select`
+  width: 250px;
+  padding: 5px;
 `;
 
 const SkillSelectDiv = styled.div`
-  width: 300px;
+  width: 250px;
 `;
 
 const RequireField = styled.span`
   color: red;
 `;
-
+const RegisterButton = styled.button`
+  width: 90px;
+  margin: 0 auto;
+  height: 40px;
+  border: 1px solid #979797;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
 export default Register;

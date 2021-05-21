@@ -15,6 +15,7 @@
 
 a {
   text-decoration: none;
+  color: black;
 }
 
 .rmsc {
@@ -26,7 +27,7 @@ a {
   --rmsc-bg: #fff;
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
-  --rmsc-h: 20px !important; /* Height */
+  --rmsc-h: 40px !important; /* Height */
   width: 100%;
 }
 
