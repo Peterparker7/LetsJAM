@@ -148,8 +148,8 @@ function Main() {
   });
 
   return (
-    <div>
-      this is main page
+    <MainContainer>
+      <Neon data-text="成果牆">成果牆</Neon>
       <div>
         <div>篩選活動 依</div>
         <div>
@@ -198,7 +198,7 @@ function Main() {
           logout
         </button>
       </Link>
-    </div>
+    </MainContainer>
   );
   {
     /* <iframe id="ytplayer" type="text/html" width="640" height="360"
@@ -206,7 +206,47 @@ function Main() {
   frameborder="0"></iframe>; */
   }
 }
+const MainContainer = styled.main`
+  /* background-color: #846767; */
+  background-color: #4e3a3a;
+`;
 
+const Neon = styled.div`
+  position: absolute;
+
+  top: 120px;
+  left: 120px;
+  margin: 0 auto;
+  padding: 0 20px;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-shadow: 0 0 20px #ff005b;
+  &:after {
+    position: absolute;
+
+    content: attr(data-text);
+    top: 0px;
+    left: 0px;
+
+    margin: 0 auto;
+    padding: 0 20px;
+    z-index: -1;
+    color: #ff005b;
+    filter: blur(15px);
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fe3a80;
+    z-index: -2;
+    opacity: 0.5;
+    filter: blur(100px);
+  }
+`;
 const ActivitiesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
