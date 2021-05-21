@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import {
   getSpecificData,
   getUserData,
+  getAuthUser,
   updateUserData,
   getUserHostActivities,
   getUserJoinActivities,
@@ -82,7 +83,7 @@ const MyJoin = styled.div`
 function Profile() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState({});
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
   const userDataRedux = useSelector((state) => state.userData);
@@ -104,20 +105,29 @@ function Profile() {
     }
   });
 
-  const getUserProfileData = async () => {
-    const data = await getUserData(userId);
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    console.log(userUid);
+    const data = await getUserData(userUid);
+    console.log(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
-
     setUserData(data);
   };
 
+  // const getUserProfileData = async () => {
+  //   const data = await getUserData(userId);
+  //   dispatch({ type: "UPDATE_USERDATA", data: data });
+
+  //   setUserData(data);
+  // };
+
   const getUserActivitiesData = async () => {
-    const data = await getUserHostActivities(userId);
+    const data = await getUserHostActivities(userData.uid);
     dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
 
-    const attendActivities = await getUserJoinActivities(userId);
+    const attendActivities = await getUserJoinActivities(userData.uid);
 
-    const applyActivities = await getUserApplyActivities(userId);
+    const applyActivities = await getUserApplyActivities(userData.uid);
 
     setUserJoinActivities((a) => [...a, ...attendActivities]);
     setUserJoinActivities((a) => [...a, ...applyActivities]);
@@ -148,13 +158,14 @@ function Profile() {
   }
 
   useEffect(() => {
-    getUserProfileData();
-    getUserActivitiesData();
+    // getUserProfileData();
+    checkUserIsLogin();
   }, []);
 
-  if (!userData) {
-    return "isLoading";
-  }
+  useEffect(() => {
+    getUserActivitiesData();
+  }, [userData]);
+
   if (!userActivities || !userJoinActivities) {
     return "isLoading";
   }
