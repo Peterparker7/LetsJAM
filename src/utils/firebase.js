@@ -104,6 +104,61 @@ const getUserData = async (userId) => {
   return userData;
 };
 
+const getAuthUser = async () => {
+  const promise = new Promise((resolve) => {
+    window.firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // 使用者已登入，可以取得資料
+        var email = user.email;
+        var uid = user.uid;
+        console.log(email, uid);
+        resolve(uid);
+      } else {
+        // 使用者未登入
+        console.log("you are not login");
+        resolve(false);
+      }
+    });
+  });
+  let response = await promise;
+  return response;
+};
+
+const logOut = async () => {
+  window.firebase
+    .auth()
+    .signOut()
+    .then(function () {
+      // 登出後強制重整一次頁面
+      alert("已登出");
+      window.location.href = "./";
+    })
+    .catch(function (error) {
+      console.log(error.message);
+    });
+};
+const newUser = async (userEmail, userUid, userInfo) => {
+  let newCreate = db.collection("userData").doc(userUid);
+
+  const data = await newCreate
+    .set({
+      email: userEmail,
+      uid: userUid,
+      name: userInfo.name,
+      preferType: userInfo.preferType,
+      skill: userInfo.skill,
+      intro: "",
+      profileImage: "",
+      youtubeUrl: "",
+    })
+    .then(() => {
+      console.log("create new user");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
 const updateUserData = async (newData, userId) => {
   let docRef = db.collection("userData").doc(userId);
   const data = await docRef
@@ -198,7 +253,10 @@ export { joinActivity };
 export { agreeJoinActivity };
 export { kickActivity };
 export { getUserData };
+export { getAuthUser };
+export { logOut };
 export { updateUserData };
+export { newUser };
 export { getUserHostActivities };
 export { getUserJoinActivities };
 export { getUserApplyActivities };
