@@ -63,6 +63,7 @@ function Detail() {
     });
     let activityTime = detailData.timestamp.toDate().toString();
     console.log(activityTime.slice(0, 24));
+    let showTime = activityTime.slice(0, 24);
     let limit = "";
     if (detailData.limit === 0) {
       limit = "無";
@@ -74,6 +75,7 @@ function Detail() {
       <ActivityContainer>
         <ActivityDetail>
           <div>{detailData.title}</div>
+          <div>{showTime}</div>
           <div>{detailData.type}</div>
           <div>{detailData.comment}</div>
           {/* <div>{detailData.timestamp}</div> */}
@@ -203,7 +205,7 @@ function Detail() {
   }
   console.log(detailData);
   return (
-    <div>
+    <DetailContent>
       this is detail page
       {renderDetail()}
       {/* <JoinButton
@@ -215,10 +217,14 @@ function Detail() {
       </JoinButton> */}
       {renderJoinButton()}
       {renderHost()}
-    </div>
+    </DetailContent>
   );
 }
 
+const DetailContent = styled.div`
+  height: 100vh;
+  padding-bottom: 180px;
+`;
 const ActivityContainer = styled.div`
   width: 960px;
   display: flex;
