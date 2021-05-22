@@ -9,6 +9,7 @@ import {
   getAuthUser,
   logOut,
 } from "../../utils/firebase";
+import neonBand from "../../images/neon-band.jpg";
 
 const db = window.firebase.firestore();
 console.log(db);
@@ -25,6 +26,22 @@ function Main() {
     allActivitiesArray.push(...data);
     allActivitiesArrayCopy.push(...data);
     console.log(allActivitiesArray);
+
+    //也顯示揪團主，待更改
+    //   data.forEach(async (item, index) => {
+    //     const eachHost = await getUserData(item.host).then((res) => {
+    //       // hostDetailArray.push(res);
+    //       // console.log(hostDetailArray);
+    //       data[index].host = res;
+
+    //       return res;
+    //     });
+    //   });
+
+    // setData(data);
+    // allActivitiesArray.push(...data);
+    // allActivitiesArrayCopy.push(...data);
+    // console.log(allActivitiesArray);
   };
   //Promise.all(promises.then((result)=>{
 
@@ -136,12 +153,30 @@ function Main() {
   };
 
   const ActivityHTML = data.map((item, index) => {
+    let activityTime = item.timestamp.toDate().toString();
+    let showTime = activityTime.slice(0, 24);
+    let requirementHTML = item.requirement.map((data) => {
+      return <span>{data} </span>;
+    });
+    let attendantsNum = item.attendants.length;
+
     return (
       <Link to={`/activities/${item.id}`}>
-        <ActivityItem>
-          <div>{item.id}</div>
-          <div>{item.title}</div>
-          <ActivityImage src={item.fileSource} alt=""></ActivityImage>
+        <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
+          <Canvas style={{ background: `background: rgba(76, 175, 80, 0.3)` }}>
+            {/* <div>{item.id}</div> */}
+            <ActivityContent>
+              <Time>{showTime}</Time>
+
+              <Title>{item.title}</Title>
+              <Type>{item.type}</Type>
+              <Requirement>{requirementHTML}</Requirement>
+              <Location>{item.location}</Location>
+              {/* <Host>揪團主：{item.host.name}</Host> */}
+              <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+              {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+            </ActivityContent>
+          </Canvas>
         </ActivityItem>
       </Link>
     );
@@ -149,12 +184,20 @@ function Main() {
 
   return (
     <MainContainer>
+      <Carosul>
+        {/* <MainImg src={neonBand} alt="" /> */}
+        <Slogan>
+          整個城市<br></br>都是我的練團室
+        </Slogan>
+        <JoinButton>加入Let's JAM</JoinButton>
+      </Carosul>
       <Neon data-text="成果牆">成果牆</Neon>
-      <div>
-        <div>篩選活動 依</div>
-        <div>
-          <label>類型</label>
+      <ActivityFilter>
+        <FilterTitle>篩選活動 依 </FilterTitle>
+        <FilterBar>
+          <Filterlabel>類型</Filterlabel>
           <select
+            style={{ color: "white" }}
             id="selectType"
             defaultValue="所有類型"
             onChange={(e) => {
@@ -166,10 +209,11 @@ function Main() {
             <option>嘻哈</option>
             <option>古典</option>
           </select>
-        </div>
-        <div>
-          <label>需求</label>
+        </FilterBar>
+        <FilterBar>
+          <Filterlabel>需求</Filterlabel>
           <select
+            style={{ color: "white" }}
             id="selectRequirement"
             defaultValue="所有樂器"
             onChange={(e) => {
@@ -183,8 +227,8 @@ function Main() {
             <option>電吉他</option>
             <option>烏克麗麗</option>
           </select>
-        </div>
-      </div>
+        </FilterBar>
+      </ActivityFilter>
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
       <Link to={`/activities/create`}>
         <div>start a group</div>
@@ -209,6 +253,156 @@ function Main() {
 const MainContainer = styled.main`
   /* background-color: #846767; */
   background-color: #4e3a3a;
+  height: 100%;
+`;
+
+const Carosul = styled.div`
+  height: 500px;
+  background: url(${neonBand});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  position: relative;
+`;
+
+const Slogan = styled.div`
+  color: white;
+  position: absolute;
+  white-space: pre;
+  text-align: left;
+  font-size: 36px;
+  font-weight: bold;
+  top: 50px;
+  left: 80px;
+`;
+
+const JoinButton = styled.button`
+  position: absolute;
+  top: 80%;
+  left: 45%;
+  border: 1px solid none;
+  border-radius: 20px;
+  background: #ff00ff;
+  height: 40px;
+  width: 200px;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const MainImg = styled.img`
+  max-width: 100%;
+  height: auto;
+
+  /* object-fit: cover; */
+`;
+
+const ActivityFilter = styled.div`
+  display: flex;
+  margin: 0 auto;
+  margin-top: 20px;
+  max-width: 1024px;
+  justify-content: flex-end;
+  padding: 0 40px;
+  color: white;
+  margin-bottom: 20px;
+  align-items: center;
+`;
+
+const FilterTitle = styled.div`
+  font-size: 16px;
+  padding-left: 10px;
+`;
+
+const Filterlabel = styled.label`
+  font-weight: bold;
+  line-height: 30px;
+  margin: 0 20px;
+`;
+const FilterBar = styled.div`
+  border: 1px solid white;
+  height: 30px;
+
+  align-items: center;
+  margin-left: 20px;
+  padding-right: 10px;
+`;
+
+const ActivitiesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  margin: 0 auto;
+  max-width: 1024px;
+  justify-content: space-around;
+  padding: 0 40px;
+`;
+
+const ActivityItem = styled.div`
+  border: 1px solid #979797;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+  background: #000;
+  margin-bottom: 40px;
+  text-align: left;
+  padding-top: 20px;
+  padding-left: 30px;
+  line-height: 30px;
+  color: #fff;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  position: relative;
+
+  &:hover {
+    background: white;
+    color: black;
+  }
+`;
+
+const Canvas = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+
+  background: rgba(0, 0, 0, 0.8);
+  &:hover {
+    background: white;
+    color: black;
+  }
+`;
+
+const ActivityContent = styled.div`
+  margin-top: 20px;
+  margin-left: 30px;
+`;
+
+const Title = styled.div`
+  font-size: 24px;
+`;
+const Time = styled.div`
+  font-size: 12px;
+`;
+const Type = styled.div`
+  font-size: 16px;
+`;
+const Requirement = styled.div`
+  font-size: 20px;
+  margin-top: 10px;
+`;
+const Location = styled.div`
+  margin-top: 70px;
+`;
+const Host = styled.div``;
+const AttendantNum = styled.div`
+  font-size: 16px;
+`;
+const ActivityImage = styled.img`
+  width: 300px;
 `;
 
 const Neon = styled.div`
@@ -246,17 +440,6 @@ const Neon = styled.div`
     opacity: 0.5;
     filter: blur(100px);
   }
-`;
-const ActivitiesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const ActivityItem = styled.div`
-  border: 1px solid #979797;
-`;
-const ActivityImage = styled.img`
-  width: 300px;
 `;
 
 export default Main;

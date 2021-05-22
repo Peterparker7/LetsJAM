@@ -6,6 +6,7 @@ import Profile from "./Pages/Profile/Profile";
 import Login from "./Pages/Login/Login";
 import BaseLogin from "./Pages/Login/BaseLogin";
 import Header from "./Pages/Header";
+import Footer from "./Pages/Footer";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <div className="App">
       <Router>
         <Header />
+
         <Switch>
           <Route exact path="/activities/login">
             <BaseLogin />
@@ -33,6 +35,7 @@ function App() {
             <Main />
           </Route>
         </Switch>
+        <Footer />
       </Router>
     </div>
   );

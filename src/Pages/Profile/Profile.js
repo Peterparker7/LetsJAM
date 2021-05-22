@@ -42,6 +42,9 @@ const FadingBackground = styled(BaseModalBackground)`
   opacity: ${(props) => props.opacity};
   transition: all 0.3s ease-in-out;
 `;
+const MainContainer = styled.div`
+  height: 100vh;
+`;
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -234,7 +237,7 @@ function Profile() {
 
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
-      <div>
+      <MainContainer>
         <div>this is profile page</div>
         <ProfileContainer>
           <ActivitiesCol>
@@ -250,7 +253,7 @@ function Profile() {
             <EditProfileButton data={userData} />
           </ProfileCol>
         </ProfileContainer>
-      </div>
+      </MainContainer>
     </ModalProvider>
   );
 }

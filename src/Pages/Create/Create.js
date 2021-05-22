@@ -330,6 +330,7 @@ const Container = styled.div`
   text-align: start;
   width: 480px;
   margin: 0 auto;
+  height: 100vh;
 `;
 
 const Inputfield = styled.input`
