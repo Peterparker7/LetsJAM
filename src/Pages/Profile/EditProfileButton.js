@@ -1,4 +1,5 @@
 import "../../App.css";
+import "./EditProfileButton.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
@@ -11,8 +12,8 @@ import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch } from "react-redux";
 
 const StyledModal = Modal.styled`
-width: 20rem;
-height: 20rem;
+width: 30rem;
+height: 30rem;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -21,23 +22,6 @@ background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
 
-const InputFieldContainer = styled.div`
-  display: flex;
-`;
-
-const InputFieldInput = styled.input`
-  border: 1px solid #979797;
-`;
-const ProfileImage = styled.img`
-  width: 100px;
-  margin-bottom: 20px;
-`;
-const Btn = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
-  cursor: pointer;
-`;
-
 function EditProfileButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
@@ -45,7 +29,7 @@ function EditProfileButton(props) {
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  // let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   let defaultPreferType = "";
   let skillFormat = [];
@@ -68,7 +52,7 @@ function EditProfileButton(props) {
   ];
 
   const getUserProfileData = async () => {
-    const data = await getUserData(userId);
+    const data = await getUserData(userDataRedux.uid);
     setUserData(data);
   };
   //處理skill格式 讓default值可顯示於select
@@ -96,7 +80,7 @@ function EditProfileButton(props) {
       favSinger: userData.favSinger,
       profileImage: userData.profileImage,
     };
-    updateUserData(data, userId);
+    updateUserData(data, userDataRedux.uid);
     // setUserData(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
 
@@ -158,7 +142,7 @@ function EditProfileButton(props) {
 
   return (
     <div>
-      <Btn onClick={toggleModal}>編輯個人檔案</Btn>
+      <EditBtn onClick={toggleModal}>編輯個人檔案</EditBtn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -172,61 +156,129 @@ function EditProfileButton(props) {
           {/* <label for="name">大頭照</label> */}
           <ProfileImage src={`${userData.profileImage}`} alt=""></ProfileImage>
         </InputFieldContainer>
-        <InputFieldContainer>
-          <label for="name">名稱</label>
-          <InputFieldInput
-            id="name"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            onInput={(e) => {
-              handleProfileChange(e.target.value, "name");
-            }}
-            defaultValue={userDataRedux.name}
-          />
+        <ProfileDetail>
+          <InputFieldContainer>
+            <Label for="name">名稱</Label>
+            <InputFieldInput
+              id="name"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              onInput={(e) => {
+                handleProfileChange(e.target.value, "name");
+              }}
+              defaultValue={userDataRedux.name}
+            />
 
-          {/* </div> */}
-        </InputFieldContainer>
-        <InputFieldContainer>
-          <label for="intro">自我介紹</label>
-          <InputFieldInput
-            id="intro"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            onInput={(e) => {
-              handleProfileChange(e.target.value, "intro");
-            }}
-            defaultValue={userDataRedux.intro}
-          />
-        </InputFieldContainer>
-        <InputFieldContainer>
-          {handlePreferTypeDefault()}
+            {/* </div> */}
+          </InputFieldContainer>
+          <InputFieldContainer>
+            <Label for="intro">自我介紹</Label>
+            <InputFieldInput
+              id="intro"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              onInput={(e) => {
+                handleProfileChange(e.target.value, "intro");
+              }}
+              defaultValue={userDataRedux.intro}
+            />
+          </InputFieldContainer>
+          <InputFieldContainer>
+            {handlePreferTypeDefault()}
 
-          <label for="preferType">偏好類型</label>
-          <select
-            defaultValue={defaultPreferType}
-            onChange={(e) => {
-              handleProfileChange(e.target.value, "preferType");
-            }}
-          >
-            <option>流行</option>
-            <option>嘻哈</option>
-            <option>古典</option>
-          </select>
-        </InputFieldContainer>
-        <InputFieldContainer>
-          <label for="skill">會的樂器</label>
-          <MultiSelect
-            options={options}
-            value={skill}
-            onChange={setSkill}
-            labelledBy="Select"
-          />
-        </InputFieldContainer>
-        <button onClick={toggleCancel}>取消</button>
-        <button onClick={editConfirm}>確認修改</button>
+            <Label for="preferType">偏好類型</Label>
+            <SelectType
+              defaultValue={defaultPreferType}
+              onChange={(e) => {
+                handleProfileChange(e.target.value, "preferType");
+              }}
+            >
+              <option>流行</option>
+              <option>嘻哈</option>
+              <option>古典</option>
+            </SelectType>
+          </InputFieldContainer>
+          <InputFieldContainer>
+            <Label for="skill">會的樂器</Label>
+            <MultiSelect
+              style={{ width: "100px" }}
+              options={options}
+              value={skill}
+              onChange={setSkill}
+              labelledBy="Select"
+            />
+          </InputFieldContainer>
+        </ProfileDetail>
+        <BtnField>
+          <BtnCancel onClick={toggleCancel}>取消</BtnCancel>
+          <BtnConfirm onClick={editConfirm}>確認修改</BtnConfirm>
+        </BtnField>
       </StyledModal>
     </div>
   );
 }
+
+const ProfileDetail = styled.div`
+  text-align: left;
+  width: 300px;
+`;
+const Label = styled.label`
+  width: 80px;
+`;
+const InputFieldContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const InputFieldInput = styled.input`
+  border: 1px solid #979797;
+  height: 30px;
+  width: calc(100% - 80px);
+  padding: 5px;
+`;
+
+const SelectType = styled.select`
+  width: calc(100% - 80px);
+`;
+
+const BtnField = styled.div`
+  display: flex;
+  width: 300px;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 50px;
+`;
+
+const BtnCancel = styled.div`
+  border: 1px solid #000;
+  border-radius: 20px;
+  width: 100px;
+  padding: 5px;
+  cursor: pointer;
+`;
+const BtnConfirm = styled.div`
+  border: 1px solid none;
+  border-radius: 20px;
+  width: 100px;
+  padding: 5px;
+  background: #ff6600;
+  align-items: center;
+
+  cursor: pointer;
+`;
+const ProfileImage = styled.img`
+  width: 100px;
+  margin-bottom: 20px;
+`;
+
+const EditBtn = styled.button`
+  border: 1px solid none;
+  border-radius: 20px;
+  background: #00ffff;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 50px;
+`;
 
 export default EditProfileButton;

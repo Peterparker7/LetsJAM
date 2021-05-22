@@ -26,6 +26,8 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import EditProfileButton from "./EditProfileButton.js";
 import EditActivitiesButton from "./EditActivitiesButton.js";
 import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
+import amplifierImg from "../../images/amplifier-guitar.jpg";
+import recordImg from "../../images/retro-record.jpg";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -37,51 +39,6 @@ justify-content: center;
 background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
-
-const FadingBackground = styled(BaseModalBackground)`
-  opacity: ${(props) => props.opacity};
-  transition: all 0.3s ease-in-out;
-`;
-const MainContainer = styled.div`
-  height: 100vh;
-`;
-
-const ProfileContainer = styled.div`
-  display: flex;
-  width: 960px;
-  justify-content: space-around;
-  margin: 0 auto;
-`;
-const ProfileCol = styled.div`
-  width: 360px;
-`;
-const ActivitiesCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 600px;
-`;
-const MyHostTitle = styled.div`
-  font-size: 20px;
-  border-bottom: 1px solid #979797;
-  text-align: left;
-  margin: 0 auto;
-  width: 100%;
-`;
-const MyJoinTitle = styled.div`
-  font-size: 20px;
-  border-bottom: 1px solid #979797;
-  text-align: left;
-  margin: 0 auto;
-  width: 100%;
-`;
-const MyHost = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-const MyJoin = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
 
 function Profile() {
   let userId = "vfjMHzp45ckI3o3kqDmO";
@@ -140,15 +97,19 @@ function Profile() {
 
   const renderProfile = () => {
     return (
-      <div>
-        <img src={`${userData.profileImage}`} />
-        <div>{userDataRedux.name}</div>
-        <div>{userDataRedux.intro}</div>
-        <div>{userDataRedux.email}</div>
-        <div>偏好類型：{userDataRedux.preferType}</div>
-        <div>會的樂器：{userDataRedux.skill}</div>
-        <div>{userDataRedux.favSinger}</div>
-      </div>
+      <ProfileDetail>
+        <Wrapper>
+          <ProfileName>{userDataRedux.name}</ProfileName>
+        </Wrapper>
+        <ProfileImg src={`${userData.profileImage}`} />
+        <Wrapper>
+          <ProfileItem>{userDataRedux.intro}</ProfileItem>
+          {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
+          <ProfileItem>偏好類型：{userDataRedux.preferType}</ProfileItem>
+          <ProfileItem>會的樂器：{userDataRedux.skill}</ProfileItem>
+          <div>{userDataRedux.favSinger}</div>
+        </Wrapper>
+      </ProfileDetail>
     );
   };
 
@@ -176,30 +137,39 @@ function Profile() {
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
       const activitiesHTML = userHostActivityDataRedux.map((data) => {
+        let activityTime = data.timestamp.toDate().toString();
+        let showTime = activityTime.slice(0, 24);
+
         return (
-          <div>
-            <div>{data.title}</div>
-            <div>{data.host}</div>
-            <div>{data.id}</div>
-            <div>{data.requirement}</div>
-            <EditActivitiesButton
-              activityId={data.id}
-              data={data}
-              setUserActivities={setUserActivities}
-              confirmArray={confirmArray}
-              onEdit={onEdit}
-            />
-            <EditActivitiesMemberButton
-              applicants={data.applicants}
-              attendants={data.attendants}
-              activityId={data.id}
-            />
-          </div>
+          <EachActivityContainer>
+            <EachActivityContent>
+              {/* <div>{data.host}</div> */}
+              <Time>{showTime}</Time>
+              <Title>{data.title}</Title>
+
+              {/* <div>{data.id}</div> */}
+              <div>{data.requirement}</div>
+            </EachActivityContent>
+            <ButtonField>
+              <EditActivitiesButton
+                activityId={data.id}
+                data={data}
+                setUserActivities={setUserActivities}
+                confirmArray={confirmArray}
+                onEdit={onEdit}
+              />
+              <EditActivitiesMemberButton
+                applicants={data.applicants}
+                attendants={data.attendants}
+                activityId={data.id}
+              />
+            </ButtonField>
+          </EachActivityContainer>
         );
       });
       return activitiesHTML;
     } else {
-      return <div>沒有開團</div>;
+      return <NoContent>沒有開團</NoContent>;
     }
   };
 
@@ -222,7 +192,7 @@ function Profile() {
             <div>{data.id}</div>
             <div>
               <Link to={`/activities/${data.id}`}>
-                <button>查看活動</button>
+                <CheckActivityBtn>查看活動</CheckActivityBtn>
               </Link>
             </div>
             <div>{applyStatusHTML()}</div>
@@ -231,15 +201,14 @@ function Profile() {
       });
       return joinActivitiesHTML;
     } else {
-      return <div>未有活動</div>;
+      return <NoContent>未有活動</NoContent>;
     }
   };
 
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
       <MainContainer>
-        <div>this is profile page</div>
-        <ProfileContainer>
+        <ProfilePageContainer>
           <ActivitiesCol>
             <MyHostTitle>我的開團</MyHostTitle>
             <MyHost>{renderHostActivities()}</MyHost>
@@ -252,10 +221,131 @@ function Profile() {
             {renderProfile()}
             <EditProfileButton data={userData} />
           </ProfileCol>
-        </ProfileContainer>
+        </ProfilePageContainer>
       </MainContainer>
     </ModalProvider>
   );
 }
 
+const FadingBackground = styled(BaseModalBackground)`
+  opacity: ${(props) => props.opacity};
+  transition: all 0.3s ease-in-out;
+`;
+const MainContainer = styled.div`
+  height: 100vh;
+  background: #555;
+  background: url(${amplifierImg});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  position: relative;
+`;
+
+const ProfilePageContainer = styled.div`
+  display: flex;
+  width: 1024px;
+  justify-content: space-around;
+  margin: 0 auto;
+  padding-top: 30px;
+`;
+const ProfileCol = styled.div`
+  width: 360px;
+  padding: 0 50px;
+  margin: 0 30px;
+  background: #000;
+  border: 2px solid #ff0099;
+`;
+const ProfileDetail = styled.div`
+  color: white;
+`;
+const ProfileImg = styled.img`
+  width: 150px;
+`;
+const ProfileName = styled.div`
+  font-size: 28px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: auto;
+`;
+const ProfileItem = styled.div`
+  margin-top: 10px;
+`;
+const Wrapper = styled.div`
+  text-align: left;
+  margin-bottom: 30px;
+`;
+
+const ActivitiesCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+`;
+const MyHostTitle = styled.div`
+  font-size: 24px;
+  border-bottom: 1px solid #979797;
+  text-align: left;
+  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+const MyJoinTitle = styled.div`
+  font-size: 24px;
+  border-bottom: 1px solid #979797;
+  text-align: left;
+  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+const MyHost = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+const MyJoin = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+`;
+const NoContent = styled.div`
+  width: 100%;
+  margin: 30px;
+  font-size: 24px;
+`;
+const EachActivityContainer = styled.div`
+  width: 250px;
+  height: 250px;
+  background: #555;
+  border-radius: 20px;
+  margin-bottom: 20px;
+`;
+
+const EachActivityContent = styled.div`
+  text-align: left;
+  padding-top: 20px;
+  padding-left: 30px;
+  line-height: 30px;
+  color: white;
+`;
+const Title = styled.div`
+  font-size: 24px;
+`;
+const Time = styled.div`
+  font-size: 14px;
+`;
+
+const ButtonField = styled.div`
+  display: flex;
+  margin-top: 70px;
+  padding: 0 30px;
+  justify-content: space-between;
+`;
+const CheckActivityBtn = styled.button`
+  border: 1px solid none;
+  border-radius: 10px;
+  width: 90px;
+  height: 40px;
+  padding: 5px;
+  background: #ff00ff;
+  cursor: pointer;
+`;
 export default Profile;

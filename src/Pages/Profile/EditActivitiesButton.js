@@ -25,25 +25,6 @@ background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
 
-const InputFieldDiv = styled.div`
-  text-align: left;
-`;
-const InputFieldInput = styled.input`
-  border: 1px solid #979797;
-`;
-const EditActivityCol = styled.div`
-  margin: 0 auto;
-`;
-const Label = styled.label`
-  margin-right: 10px;
-`;
-
-const Btn = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
-  cursor: pointer;
-`;
-
 function EditActivitiesButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
@@ -403,7 +384,7 @@ function EditActivitiesButton(props) {
 
   return (
     <div>
-      <Btn onClick={toggleModal}>編輯活動</Btn>
+      <EditBtn onClick={toggleModal}>編輯活動</EditBtn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -419,5 +400,33 @@ function EditActivitiesButton(props) {
     </div>
   );
 }
+
+const InputFieldDiv = styled.div`
+  text-align: left;
+`;
+const InputFieldInput = styled.input`
+  border: 1px solid #979797;
+`;
+const EditActivityCol = styled.div`
+  margin: 0 auto;
+`;
+const Label = styled.label`
+  margin-right: 10px;
+`;
+
+const Btn = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: pointer;
+`;
+const EditBtn = styled.button`
+  border: 1px solid none;
+  border-radius: 10px;
+  width: 90px;
+  height: 40px;
+  padding: 5px;
+  background: #ff00ff;
+  cursor: pointer;
+`;
 
 export default EditActivitiesButton;

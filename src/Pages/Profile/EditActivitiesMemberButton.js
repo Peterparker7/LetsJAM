@@ -23,12 +23,6 @@ background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
 
-const Btn = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
-  cursor: pointer;
-`;
-
 function EditActivitiesMemberButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
@@ -150,7 +144,7 @@ function EditActivitiesMemberButton(props) {
 
   return (
     <div>
-      <Btn onClick={toggleModal}>查看申請</Btn>
+      <CheckApplicantBtn onClick={toggleModal}>查看申請</CheckApplicantBtn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -168,5 +162,20 @@ function EditActivitiesMemberButton(props) {
     </div>
   );
 }
+
+const Btn = styled.button`
+  border: 1px solid #979797;
+  padding: 5px;
+  cursor: pointer;
+`;
+const CheckApplicantBtn = styled.button`
+  border: 1px solid none;
+  border-radius: 10px;
+  width: 90px;
+  height: 40px;
+  padding: 5px;
+  background: #ffff00;
+  cursor: pointer;
+`;
 
 export default EditActivitiesMemberButton;
