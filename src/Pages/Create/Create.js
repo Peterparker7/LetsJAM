@@ -68,6 +68,8 @@ function Create() {
       convertDateTime().formatTimeSecond
     );
 
+    let newTimestamp = new Date(`${date}T${time}`);
+
     // const uploadImage = async () => {
     //   const path = imgSource.name;
 
@@ -92,6 +94,7 @@ function Create() {
       title: title,
       type: type,
       limit: limit,
+      newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
       timestamp: timestamp, //firebase內建timestamp
       location: "AppWork School 3F",
       geo: ["10", "10"],

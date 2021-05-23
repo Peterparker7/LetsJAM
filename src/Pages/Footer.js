@@ -31,6 +31,7 @@ const Item = styled.div`
   align-items: center;
   color: white;
   margin-top: 40px;
+  margin-left: 40px;
 `;
 const LogoImg = styled.img`
   width: 320px;
