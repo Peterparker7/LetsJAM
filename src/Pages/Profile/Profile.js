@@ -115,6 +115,7 @@ function Profile() {
 
   const handleEditProfile = () => {};
 
+  //?? 應該是沒用到
   function onEdit(arr) {
     if (arr.length === userDataRedux.length) {
       setUserActivities(arr);
@@ -124,8 +125,13 @@ function Profile() {
   useEffect(() => {
     // getUserProfileData();
     checkUserIsLogin();
+    //渲染頁面之前先清空，避免裡面有重複之前的data
+    setUserJoinActivities([]);
   }, []);
 
+  // useEffect(() => {
+  //   getUserActivitiesData();
+  // }, []);
   useEffect(() => {
     getUserActivitiesData();
   }, [userData]);
@@ -137,8 +143,9 @@ function Profile() {
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
       const activitiesHTML = userHostActivityDataRedux.map((data) => {
-        let activityTime = data.timestamp.toDate().toString();
-        let showTime = activityTime.slice(0, 24);
+        // let activityTime = data.timestamp.toDate().toString();
+        let showTime = data.timestamp.toString().slice(0, 21);
+        // let showTime = data.newTimestamp.toString().slice(0, 21);
 
         return (
           <EachActivityContainer>
@@ -176,6 +183,9 @@ function Profile() {
   const renderJoinActivities = () => {
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
+        let activityTime = data.timestamp.toDate().toString();
+        let showTime = activityTime.slice(0, 24);
+
         const applyStatusHTML = () => {
           if (data.attendants.includes(userId)) {
             return <div style={{ backgroundColor: "green" }}>已加入</div>;
@@ -186,17 +196,21 @@ function Profile() {
         };
 
         return (
-          <div>
-            <div>{data.title}</div>
-            <div>{data.host}</div>
-            <div>{data.id}</div>
-            <div>
+          <EachActivityContainer>
+            <EachActivityContent>
+              <Time>{showTime}</Time>
+              <Title>{data.title}</Title>
+              <div>{data.requirement}</div>
+            </EachActivityContent>
+
+            <CheckActivityButtonField>
               <Link to={`/activities/${data.id}`}>
                 <CheckActivityBtn>查看活動</CheckActivityBtn>
               </Link>
-            </div>
-            <div>{applyStatusHTML()}</div>
-          </div>
+            </CheckActivityButtonField>
+
+            <StatusTag>{applyStatusHTML()}</StatusTag>
+          </EachActivityContainer>
         );
       });
       return joinActivitiesHTML;
@@ -254,6 +268,7 @@ const ProfileCol = styled.div`
   margin: 0 30px;
   background: #000;
   border: 2px solid #ff0099;
+  height: 450px;
 `;
 const ProfileDetail = styled.div`
   color: white;
@@ -305,6 +320,7 @@ const MyJoin = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 `;
 const NoContent = styled.div`
   width: 100%;
@@ -317,6 +333,7 @@ const EachActivityContainer = styled.div`
   background: #555;
   border-radius: 20px;
   margin-bottom: 20px;
+  position: relative;
 `;
 
 const EachActivityContent = styled.div`
@@ -339,6 +356,10 @@ const ButtonField = styled.div`
   padding: 0 30px;
   justify-content: space-between;
 `;
+const CheckActivityButtonField = styled.div`
+  margin-top: 70px;
+  padding: 0 30px;
+`;
 const CheckActivityBtn = styled.button`
   border: 1px solid none;
   border-radius: 10px;
@@ -347,5 +368,11 @@ const CheckActivityBtn = styled.button`
   padding: 5px;
   background: #ff00ff;
   cursor: pointer;
+`;
+
+const StatusTag = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `;
 export default Profile;

@@ -65,8 +65,9 @@ function Register() {
           console.log("register firebase");
           return result.user.uid;
         })
-        .then((uid) => {
-          newUser(userEmail, uid, userInfo);
+        .then(async (uid) => {
+          //這裡沒用await的話userData會來不及寫入
+          let create = await newUser(userEmail, uid, userInfo);
         })
         .then(() => {
           alert("註冊成功！正在重新導向");

@@ -13,7 +13,8 @@ export default function reducer(state = initialState, action) {
     case "UPDATE_USERHOSTACTIVITYDATA":
       return {
         ...state,
-        userHostActivityData: [...state.userHostActivityData, ...action.data],
+        // userHostActivityData: [...state.userHostActivityData, ...action.data],
+        userHostActivityData: [...action.data], //上面的方式會重複
       };
     case "UPDATE_ONEUSERHOSTACTIVITYDATA": {
       //function 需用{}包起來

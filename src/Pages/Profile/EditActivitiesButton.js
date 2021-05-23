@@ -1,4 +1,5 @@
-import "../../App.css";
+// import "../../App.css";
+import "./EditActivitiesButton.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
@@ -15,15 +16,16 @@ import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 const StyledModal = Modal.styled`
-width: 20rem;
-height: 20rem;
+width: 30rem;
+height: 30rem;
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
 background-color: white;
 opacity: ${(props) => props.opacity};
-transition : all 0.3s ease-in-out;`;
+transition : all 0.3s ease-in-out;
+position: relative`;
 
 function EditActivitiesButton(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,6 +79,17 @@ function EditActivitiesButton(props) {
       props.data.limit = userHostActivityDataRedux.limit;
       setChecked(false);
     }
+
+    let date = oneactivityData.date;
+    let time = oneactivityData.time;
+    let newTimestamp = new Date(`${date}T${time}`);
+    let timestampformat = Date.parse(newTimestamp);
+
+    console.log(date);
+    console.log(time);
+    console.log(newTimestamp);
+    console.log(`${date}T${time}`);
+    console.log(timestampformat);
   }
 
   function afterOpen() {
@@ -92,22 +105,29 @@ function EditActivitiesButton(props) {
     });
   }
 
-  const editConfirm = () => {
+  const editConfirm = async () => {
     if (checked) {
       oneactivityData.limit = 0;
     }
+    let date = oneactivityData.date;
+    let time = oneactivityData.time;
+    let newTimestamp = new Date(`${date}T${time}`);
+    let timestampformat = Date.parse(newTimestamp);
+
     let data = {
       id: props.data.id,
       title: oneactivityData.title,
       limit: parseInt(oneactivityData.limit),
       date: oneactivityData.date,
       time: oneactivityData.time,
-      //   timestamp: oneactivityData.timestamp,
+      newTimestamp: newTimestamp,
+      timestamp: newTimestamp,
       type: oneactivityData.type,
       level: oneactivityData.level,
       location: oneactivityData.location,
       comment: oneactivityData.comment,
       requirement: requirementArray,
+      youtubeSource: oneactivityData.youtubeSource,
     };
     console.log(data);
     updateActivitiesData(data, props.data.id);
@@ -204,21 +224,21 @@ function EditActivitiesButton(props) {
     if (checked) {
       return (
         <div>
-          <InputFieldInput
+          <LimitInputField
             type="number"
             defaultValue={limitInitial}
             disabled={checked}
-            style={{ backgroundColor: "grey" }}
+            style={{ opacity: 0.3 }}
             // onChange={(e) => {
             //   oneactivityData.limit = 0;
             // }}
-          ></InputFieldInput>
+          ></LimitInputField>
         </div>
       );
     } else {
       return (
         <div>
-          <InputFieldInput
+          <LimitInputField
             type="number"
             defaultValue={userHostActivityDataRedux.limit}
             min="1"
@@ -226,7 +246,7 @@ function EditActivitiesButton(props) {
             onChange={(e) => {
               oneactivityData.limit = e.target.value;
             }}
-          ></InputFieldInput>
+          ></LimitInputField>
         </div>
       );
     }
@@ -234,47 +254,48 @@ function EditActivitiesButton(props) {
   const renderEditActivityField = () => {
     return (
       <EditActivityCol>
-        <InputFieldDiv>
-          <Label for="title">活動名稱</Label>
-          <InputFieldInput
-            id="title"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.title}
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "title");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="date">活動日期</Label>
-          <InputFieldInput
-            id="date"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.date}
-            type="date"
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "date");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="time">活動時間</Label>
-          <InputFieldInput
-            id="time"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.time}
-            type="time"
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "time");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="type">音樂類型</Label>
-          {/* <InputFieldInput
+        <EditActivityDetail>
+          <InputFieldDiv>
+            <Label for="title">活動名稱</Label>
+            <InputFieldInput
+              id="title"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.title}
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "title");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="date">活動日期</Label>
+            <InputFieldInput
+              id="date"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.date}
+              type="date"
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "date");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="time">活動時間</Label>
+            <InputFieldInput
+              id="time"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.time}
+              type="time"
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "time");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="type">音樂類型</Label>
+            {/* <InputFieldInput
               id="type"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -283,20 +304,20 @@ function EditActivitiesButton(props) {
                 handleActivityChange(e.target.value, "type");
               }}
             ></InputFieldInput> */}
-          <select
-            defaultValue={userHostActivityDataRedux.type}
-            onChange={(e) => {
-              handleActivityChange(e.target.value, "type");
-            }}
-          >
-            <option>流行</option>
-            <option>嘻哈</option>
-            <option>古典</option>
-          </select>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="limit">人數限制</Label>
-          {/* <InputFieldInput
+            <SelectType
+              defaultValue={userHostActivityDataRedux.type}
+              onChange={(e) => {
+                handleActivityChange(e.target.value, "type");
+              }}
+            >
+              <option>流行</option>
+              <option>嘻哈</option>
+              <option>古典</option>
+            </SelectType>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="limit">人數限制</Label>
+            {/* <InputFieldInput
               id="limit"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -308,76 +329,81 @@ function EditActivitiesButton(props) {
                 handleActivityChange(e.target.value, "limit");
               }}
             ></InputFieldInput> */}
-          {LimitboxHTML()}
-          <input
-            id="nolimit"
-            type="checkbox"
-            checked={checked}
-            onChange={() => setChecked(!checked)}
-          />
-          <label for="nolimit">無</label>
-        </InputFieldDiv>
-        <Label>樂器需求</Label>
-        <MultiSelect
-          options={options}
-          value={requirement}
-          onChange={setRequirement}
-          labelledBy="Select"
-        />
-        <InputFieldDiv>
-          <Label for="level">建議程度</Label>
-          <InputFieldInput
-            id="level"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.level}
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "level");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="location">活動地點</Label>
-          <InputFieldInput
-            id="location"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.location}
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "location");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        <InputFieldDiv>
-          <Label for="comment">備註說明</Label>
-          <InputFieldInput
-            id="comment"
-            contentEditable="true"
-            suppressContentEditableWarning={true}
-            defaultValue={userHostActivityDataRedux.comment}
-            onInput={(e) => {
-              handleActivityChange(e.target.value, "comment");
-            }}
-          ></InputFieldInput>
-        </InputFieldDiv>
-        {/* <InputFieldDiv>
+            {LimitboxHTML()}
+            <LimitCheckBoxField
+              id="nolimit"
+              type="checkbox"
+              checked={checked}
+              onChange={() => setChecked(!checked)}
+            />
+            <label for="nolimit">無</label>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label>樂器需求</Label>
+            <MultiSelect
+              options={options}
+              value={requirement}
+              onChange={setRequirement}
+              labelledBy="Select"
+            />
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="level">建議程度</Label>
+            <InputFieldInput
+              id="level"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.level}
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "level");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="location">活動地點</Label>
+            <InputFieldInput
+              id="location"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.location}
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "location");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          <InputFieldDiv>
+            <Label for="comment">備註說明</Label>
+            <InputFieldInput
+              id="comment"
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              defaultValue={userHostActivityDataRedux.comment}
+              onInput={(e) => {
+                handleActivityChange(e.target.value, "comment");
+              }}
+            ></InputFieldInput>
+          </InputFieldDiv>
+          {/* <InputFieldDiv>
             <Label for="activityImage">上傳照片</Label>
             <InputFieldInput type="file" id="activityImage"></InputFieldInput>
           </InputFieldDiv> */}
-        <Btn
-          onClick={(e) => {
-            editConfirm();
-          }}
-        >
-          確認修改
-        </Btn>
-        <Btn
-          onClick={(e) => {
-            handleDelete();
-          }}
-        >
-          刪除活動
-        </Btn>
+        </EditActivityDetail>
+        <EditActivityButtonDiv>
+          <BtnConfirm
+            onClick={(e) => {
+              editConfirm();
+            }}
+          >
+            確認修改
+          </BtnConfirm>
+          <BtnCancel
+            onClick={(e) => {
+              handleDelete();
+            }}
+          >
+            刪除活動
+          </BtnCancel>
+        </EditActivityButtonDiv>
       </EditActivityCol>
     );
   };
@@ -395,30 +421,67 @@ function EditActivitiesButton(props) {
         backgroundProps={{ opacity }}
       >
         <div>{renderEditActivityField()}</div>
-        <button onClick={toggleCancel}>Close me</button>
+        <BtnClose onClick={toggleCancel}>X</BtnClose>
       </StyledModal>
     </div>
   );
 }
 
 const InputFieldDiv = styled.div`
-  text-align: left;
+  /* text-align: left; */
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 `;
 const InputFieldInput = styled.input`
   border: 1px solid #979797;
+  height: 30px;
+  width: calc(100% - 80px);
+  padding: 5px;
 `;
 const EditActivityCol = styled.div`
   margin: 0 auto;
 `;
+const EditActivityDetail = styled.div`
+  text-align: left;
+  width: 300px;
+`;
+const LimitInputField = styled.input`
+  width: 50px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #979797;
+`;
+const LimitCheckBoxField = styled.input`
+  width: 30px;
+`;
+const SelectType = styled.select`
+  width: calc(100% - 80px);
+`;
+const EditActivityButtonDiv = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+`;
 const Label = styled.label`
-  margin-right: 10px;
+  /* margin-right: 10px; */
+  width: 80px;
+  /* display: inline-block; */
 `;
 
 const Btn = styled.button`
   border: 1px solid #979797;
   padding: 5px;
+  border-radius: 10px;
+  width: 90px;
+  height: 40px;
   cursor: pointer;
 `;
+const BtnConfirm = styled(Btn)`
+  background: #ff6600;
+  border: none;
+`;
+const BtnCancel = styled(Btn)``;
 const EditBtn = styled.button`
   border: 1px solid none;
   border-radius: 10px;
@@ -426,6 +489,12 @@ const EditBtn = styled.button`
   height: 40px;
   padding: 5px;
   background: #ff00ff;
+  cursor: pointer;
+`;
+const BtnClose = styled.button`
+  position: absolute;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
 `;
 

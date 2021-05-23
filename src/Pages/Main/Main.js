@@ -191,7 +191,7 @@ function Main() {
         </Slogan>
         <JoinButton>加入Let's JAM</JoinButton>
       </Carosul>
-      <Neon data-text="成果牆">成果牆</Neon>
+      {/* <Neon data-text="成果牆">成果牆</Neon> */}
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -270,10 +270,10 @@ const Slogan = styled.div`
   position: absolute;
   white-space: pre;
   text-align: left;
-  font-size: 36px;
+  font-size: 48px;
   font-weight: bold;
   top: 50px;
-  left: 80px;
+  left: 120px;
 `;
 
 const JoinButton = styled.button`
@@ -302,7 +302,7 @@ const ActivityFilter = styled.div`
   margin-top: 20px;
   max-width: 1024px;
   justify-content: flex-end;
-  padding: 0 40px;
+  padding: 0 20px;
   color: white;
   margin-bottom: 20px;
   align-items: center;
@@ -334,7 +334,6 @@ const ActivitiesContainer = styled.div`
   margin: 0 auto;
   max-width: 1024px;
   justify-content: space-around;
-  padding: 0 40px;
 `;
 
 const ActivityItem = styled.div`

@@ -23,6 +23,7 @@ function Header() {
     checkUserIsLogin();
   }, []);
 
+  console.log(userData);
   if (!userData) {
     return "isLoading";
   }

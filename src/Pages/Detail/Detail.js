@@ -5,12 +5,15 @@ import { useParams } from "react-router-dom";
 import { getSpecificData } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
+import { getAuthUser } from "../../utils/firebase";
 
 function Detail() {
   let { id } = useParams();
   let userId = "vfjMHzp45ckI3o3kqDmO";
   const [detailData, setDetailData] = useState();
   const [currentUserData, setCurrentUserData] = useState();
+  const [userUid, setUserUid] = useState();
+  const [userName, setUserName] = useState();
 
   let activityDetail = {};
 
@@ -25,13 +28,21 @@ function Detail() {
       // 使用者未登入
     }
   });
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    console.log(userUid);
+    const userData = await getUserData(userUid);
+    console.log(userData);
+    setUserUid(userUid);
+    setUserName(userData.name);
+  };
 
   const getData = async () => {
     let data = await getSpecificData(id);
 
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
-    const currentUser = await getUserData(userId);
+    const currentUser = await getUserData(userUid);
 
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
@@ -62,8 +73,8 @@ function Detail() {
       return <span>{item} </span>;
     });
     let activityTime = detailData.timestamp.toDate().toString();
-    console.log(activityTime.slice(0, 24));
-    let showTime = activityTime.slice(0, 24);
+    console.log(activityTime.slice(0, 21));
+    let showTime = activityTime.slice(0, 21);
     let limit = "";
     if (detailData.limit === 0) {
       limit = "無";
@@ -74,22 +85,33 @@ function Detail() {
     return (
       <ActivityContainer>
         <ActivityDetail>
-          <div>{detailData.title}</div>
-          <div>{showTime}</div>
-          <div>{detailData.type}</div>
-          <div>{detailData.comment}</div>
-          {/* <div>{detailData.timestamp}</div> */}
-          <div>需求樂器： {requirementHTML}</div>
-          <div>適合程度： {detailData.level}</div>
-          <div>人數限制： {limit}</div>
-          <div>地點： {detailData.location}</div>
-          <div>{detailData.id}</div>
+          <Title>{detailData.title}</Title>
+          <ItemField>
+            <InfoBar>
+              <TypeItem>{detailData.type}</TypeItem>
+
+              <Item>{showTime}</Item>
+            </InfoBar>
+            <InfoBarSecond>
+              <CommentItem>{detailData.comment}</CommentItem>
+              {/* <Item>{detailData.timestamp}</Item> */}
+              <Item>需求樂器： {requirementHTML}</Item>
+              <Item>適合程度： {detailData.level}</Item>
+              <Item>人數限制： {limit}</Item>
+              <Item>地點： {detailData.location}</Item>
+              <div>{detailData.id}</div>
+            </InfoBarSecond>
+          </ItemField>
         </ActivityDetail>
         <ImageContainer>
           <ActivityImage
             src={`${detailData.fileSource}`}
             alt=""
           ></ActivityImage>
+          <ButtonField>
+            <ShareButton>分享活動</ShareButton>
+            {renderJoinButton()}
+          </ButtonField>
         </ImageContainer>
       </ActivityContainer>
     );
@@ -108,15 +130,44 @@ function Detail() {
     const applicantsHTML = Object.values(detailData.applicants).map((data) => {
       console.log(data);
       console.log(data.name);
-      return <div>{data.name}</div>;
+      return (
+        <EachAttendantField>
+          <ProfileBlock>
+            <ProfileImg
+              // src={`${data.profileImage}`}
+              style={{
+                background: `url(${data.profileImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "",
+              }}
+            />
+
+            <div>{data.name}</div>
+          </ProfileBlock>
+        </EachAttendantField>
+      );
     });
     return (
-      <div>
-        <div>揪團主</div>
-        <div>{detailData.host.name}</div>
-        <div>出席成員</div>
-        {applicantsHTML}
-      </div>
+      <MemberInfoContainer>
+        <HostTitle>關於揪團主</HostTitle>
+        <MemberHostField>
+          <ProfileBlock>
+            <ProfileImg
+              style={{
+                background: `url(${detailData.host.profileImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "",
+              }}
+            />
+
+            <div>{detailData.host.name}</div>
+          </ProfileBlock>
+          <IntroBlock>{detailData.host.intro}</IntroBlock>
+          <VideoBlock></VideoBlock>
+        </MemberHostField>
+        <AttendantsTitle>出席成員</AttendantsTitle>
+        <MemberField>{applicantsHTML}</MemberField>
+      </MemberInfoContainer>
     );
 
     console.log(detailData.host);
@@ -124,18 +175,18 @@ function Detail() {
   const handleJoin = () => {
     console.log("join click!");
 
-    joinActivity(id, userId);
+    joinActivity(id, userUid);
 
     // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
 
     // setData((data) => [...data, ...dataList]);   //append新東西到array
     // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
-
+    console.log(currentUserData);
     setDetailData({
       ...detailData,
       applicants: [
         ...detailData.applicants, //資料結構不同，才有辦法更新
-        { name: currentUserData.name, userId: userId },
+        { name: userName, uid: userUid },
       ],
     });
 
@@ -145,12 +196,14 @@ function Detail() {
 
   const renderJoinButton = () => {
     const isApplicant = detailData.applicants.filter((item) => {
-      if (item.userId === userId) {
+      console.log(userUid);
+      console.log(item.uid);
+      if (item.uid === userUid) {
         return item;
       }
     });
     const isAttendant = detailData.attendants.filter((item) => {
-      if (item.userId === userId) {
+      if (item.uid === userUid) {
         return item;
       }
     });
@@ -159,9 +212,9 @@ function Detail() {
     if (isApplicant.length !== 0) {
       return (
         <ApplicantButton
-          onClick={() => {
-            handleJoin();
-          }}
+        // onClick={() => {
+        //   handleJoin();
+        // }}
         >
           申請中
         </ApplicantButton>
@@ -169,9 +222,9 @@ function Detail() {
     } else if (isAttendant.length !== 0) {
       return (
         <AttendantButton
-          onClick={() => {
-            handleJoin();
-          }}
+        // onClick={() => {
+        //   handleJoin();
+        // }}
         >
           已加入
         </AttendantButton>
@@ -191,6 +244,8 @@ function Detail() {
 
   //useEffect只在第一次render後執行
   useEffect(() => {
+    checkUserIsLogin();
+
     getData();
   }, []);
 
@@ -206,7 +261,6 @@ function Detail() {
   console.log(detailData);
   return (
     <DetailContent>
-      this is detail page
       {renderDetail()}
       {/* <JoinButton
         onClick={() => {
@@ -215,44 +269,134 @@ function Detail() {
       >
         我要報名
       </JoinButton> */}
-      {renderJoinButton()}
+      {/* {renderJoinButton()} */}
       {renderHost()}
     </DetailContent>
   );
 }
 
 const DetailContent = styled.div`
-  height: 100vh;
+  height: 100%;
   padding-bottom: 180px;
+  background: #000;
 `;
 const ActivityContainer = styled.div`
-  width: 960px;
+  width: 1024px;
   display: flex;
-  margin: 0 auto;
+  margin: 0px auto;
+  padding-top: 50px;
+  justify-content: space-between;
+  border: 1px solid;
 `;
 const ActivityDetail = styled.div`
   width: 480px;
+  text-align: left;
+  margin-right: 20px;
+`;
+const Title = styled.div`
+  font-size: 28px;
+  border-bottom: 1px solid #979797;
+  color: #fff;
+`;
+const ItemField = styled.div`
+  padding-left: 10px;
+`;
+
+const InfoBar = styled.div`
+  line-height: 20px;
+  color: #979797;
+`;
+const InfoBarSecond = styled.div`
+  margin-top: 20px;
+  line-height: 40px;
+  color: #fff;
+`;
+
+const CommentItem = styled.div`
+  padding-left: 40px;
+  padding-right: 40px;
+  margin: 20px auto;
+  line-height: 30px;
+`;
+const TypeItem = styled.div``;
+const Item = styled.div`
+  width: 100%;
 `;
 const ImageContainer = styled.div`
   /* width: calc(100%-480px); */
-  width: 360px;
+  width: calc(100% - 480px);
+  margin-top: 40px;
 `;
 const ActivityImage = styled.img`
   width: 100%;
 `;
-const JoinButton = styled.button`
+const ButtonField = styled.div`
+  margin-top: 20px;
+  text-align: right;
+`;
+
+const Btn = styled.button`
   border: 1px solid #979797;
-  padding: 5px;
+  border-radius: 10px;
+  width: 150px;
+  height: 50px;
   cursor: pointer;
+  color: #fff;
 `;
-const ApplicantButton = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
+const ShareButton = styled(Btn)`
+  margin-right: 20px;
+`;
+const JoinButton = styled(Btn)``;
+const ApplicantButton = styled(Btn)`
   cursor: not-allowed;
 `;
-const AttendantButton = styled.button`
-  border: 1px solid #979797;
-  padding: 5px;
+const AttendantButton = styled(Btn)`
   cursor: not-allowed;
+`;
+
+const MemberInfoContainer = styled.div`
+  width: 1024px;
+  margin: 80px auto;
+  text-align: left;
+  color: #fff;
+`;
+const MemberField = styled.div`
+  padding: 0 40px;
+  width: 100%;
+  display: flex;
+`;
+const MemberHostField = styled.div`
+  padding: 0 40px;
+  width: 100%;
+  display: flex;
+`;
+const ProfileBlock = styled.div`
+  text-align: center;
+  margin: 20px 20px;
+`;
+const IntroBlock = styled.div`
+  width: 300px;
+  padding: 20px;
+  align-items: center;
+  margin: auto;
+`;
+const VideoBlock = styled.div``;
+const HostTitle = styled.div`
+  font-size: 24px;
+  border-bottom: 1px solid #979797;
+`;
+
+const EachAttendantField = styled.div``;
+const AttendantsTitle = styled.div`
+  font-size: 24px;
+  border-bottom: 1px solid #979797;
+`;
+const ProfileImg = styled.img`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 `;
 export default Detail;

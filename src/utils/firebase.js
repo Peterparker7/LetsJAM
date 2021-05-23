@@ -148,7 +148,8 @@ const newUser = async (userEmail, userUid, userInfo) => {
       preferType: userInfo.preferType,
       skill: userInfo.skill,
       intro: "",
-      profileImage: "",
+      profileImage:
+        "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/133-1332476_male-clipart.png?alt=media&token=07badd84-8b19-47e1-983b-dd63a56909ab",
       youtubeUrl: "",
     })
     .then(() => {
@@ -227,20 +228,23 @@ const updateActivitiesData = async (data, activityId) => {
         title: data.title,
         type: data.type,
         limit: data.limit,
+        newTimestamp: data.newTimestamp,
         // timestamp: data.timestamp,
         location: "AppWork School 3F",
         // geo: ["10", "10"],
         requirement: data.requirement,
         level: data.level,
         comment: data.comment,
-        // youtubeSource: data.youtubeUrl,
+        youtubeSource: data.youtubeSource,
         // fileSource: imageUrl,
         date: data.date,
         time: data.time,
       },
       { merge: true }
     )
-    .then(() => {})
+    .then(() => {
+      console.log("update to firebase");
+    })
     .catch((error) => {
       console.error("Error writing document: ", error);
     });

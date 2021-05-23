@@ -13,8 +13,8 @@ import {
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 
 const StyledModal = Modal.styled`
-width: 20rem;
-height: 20rem;
+width: 30rem;
+height: 30rem;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -102,7 +102,9 @@ function EditActivitiesMemberButton(props) {
     if (applicantsData.length !== 0) {
       const applicantsHTML = applicantsData.map((item) => {
         return (
-          <div>
+          <EachMemberDiv>
+            <MemberImg src={`${item.profileImage}`} alt="" />
+
             <div>{item.name}</div>
             <Btn
               onClick={() => {
@@ -111,7 +113,7 @@ function EditActivitiesMemberButton(props) {
             >
               同意
             </Btn>
-          </div>
+          </EachMemberDiv>
         );
       });
       return applicantsHTML;
@@ -124,7 +126,8 @@ function EditActivitiesMemberButton(props) {
     if (attendantsData.length !== 0) {
       const attendantsHTML = attendantsData.map((item) => {
         return (
-          <div>
+          <EachMemberDiv>
+            <MemberImg src={`${item.profileImage}`} alt="" />
             <div>{item.name}</div>
             <Btn
               onClick={() => {
@@ -133,7 +136,7 @@ function EditActivitiesMemberButton(props) {
             >
               踢
             </Btn>
-          </div>
+          </EachMemberDiv>
         );
       });
       return attendantsHTML;
@@ -154,18 +157,63 @@ function EditActivitiesMemberButton(props) {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
-        <div>{renderApplicants()}</div>
-        <div>{renderAttendants()}</div>
+        <EditMemberCol>
+          <ApplicantTitle>申請中</ApplicantTitle>
+          <MemberDivField>{renderApplicants()}</MemberDivField>
+          <AttendantTitle>已加入成員</AttendantTitle>
+          <MemberDivField>{renderAttendants()}</MemberDivField>
 
-        <button onClick={toggleModal}>Close me</button>
+          <BtnClose onClick={toggleModal}>+</BtnClose>
+        </EditMemberCol>
       </StyledModal>
     </div>
   );
 }
 
+const EditMemberCol = styled.div`
+  text-align: left;
+  width: 80%;
+  height: 90%;
+  position: relative;
+`;
+const ApplicantTitle = styled.div`
+  font-size: 20px;
+  border-bottom: 1px solid #979797;
+`;
+const AttendantTitle = styled.div`
+  font-size: 20px;
+  border-bottom: 1px solid #979797;
+`;
+const MemberDivField = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+`;
+const EachMemberDiv = styled.div`
+  width: 120px;
+  border: 1px solid #979797;
+  text-align: center;
+  margin-top: 10px;
+`;
+const MemberImg = styled.img`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+`;
 const Btn = styled.button`
   border: 1px solid #979797;
-  padding: 5px;
+  border-radius: 10px;
+  padding: 2.5px 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+`;
+const BtnClose = styled.button`
+  transform: rotate(0.125turn);
+  font-size: 28px;
+  position: absolute;
+  top: -10px;
+  right: -30px;
   cursor: pointer;
 `;
 const CheckApplicantBtn = styled.button`
