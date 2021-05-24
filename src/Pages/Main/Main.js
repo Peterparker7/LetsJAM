@@ -165,7 +165,7 @@ function Main() {
     return (
       <Link to={`/activities/${item.id}`}>
         <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
-          <Canvas style={{ background: `background: rgba(76, 175, 80, 0.3)` }}>
+          <Canvas>
             {/* <div>{item.id}</div> */}
             <ActivityContent>
               <Time>{showTime}</Time>
@@ -259,7 +259,8 @@ function Main() {
 }
 const MainContainer = styled.main`
   /* background-color: #846767; */
-  background-color: #4e3a3a;
+  background-color: #7b7b7b;
+  /* background-color: #4e3a3a; */
   height: 100%;
 `;
 
