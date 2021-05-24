@@ -96,6 +96,7 @@ function Header() {
         {handleCreateHTML()}
         {handleLoginHTML()}
       </NavItem>
+      <NavMenu></NavMenu>
     </HeaderContainer>
   );
 }
@@ -134,6 +135,15 @@ const IconUser = styled.img`
 const NavItem = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+const NavMenu = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 const Item = styled.div`

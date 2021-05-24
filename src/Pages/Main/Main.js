@@ -341,6 +341,11 @@ const ActivitiesContainer = styled.div`
   margin: 0 auto;
   max-width: 1024px;
   justify-content: space-around;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 `;
 
 const ActivityItem = styled.div`
@@ -365,6 +370,11 @@ const ActivityItem = styled.div`
     background: white;
     color: black;
   }
+  @media (max-width: 768px) {
+    width: 80%;
+    height: 200px;
+    margin: 20px auto;
+  }
 `;
 
 const Canvas = styled.div`
@@ -380,11 +390,20 @@ const Canvas = styled.div`
     background: white;
     color: black;
   }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 200px;
+  }
 `;
 
 const ActivityContent = styled.div`
   margin-top: 20px;
   margin-left: 30px;
+  position: relative;
+  @media (max-width: 768px) {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -399,13 +418,25 @@ const Type = styled.div`
 const Requirement = styled.div`
   font-size: 20px;
   margin-top: 10px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 const Location = styled.div`
   margin-top: 70px;
+  @media (max-width: 768px) {
+    margin-top: 10px;
+  }
 `;
 const Host = styled.div``;
 const AttendantNum = styled.div`
   font-size: 16px;
+  @media (max-width: 768px) {
+    position: absolute;
+    right: 50px;
+    bottom: 2.5px;
+    font-size: 16px;
+  }
 `;
 const ActivityImage = styled.img`
   width: 300px;
