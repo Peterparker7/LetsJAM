@@ -274,7 +274,6 @@ const Item = styled.div`
   /* width: 90px; */
   margin-right: 5px;
   margin-left: 30px;
-  color: #fff;
 `;
 
 const SignInItem = styled.div`
