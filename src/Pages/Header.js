@@ -60,7 +60,7 @@ function Header() {
       return (
         <SignInItem>
           <StyledLink to={`/activities/profile`}>
-            <div>{userDataRedux.name}</div>
+            <Item>{userDataRedux.name}</Item>
           </StyledLink>
           <StyledLink to={`/activities/profile`}>
             <IconUser src={iconPersonCircle} alt="" />
@@ -137,8 +137,9 @@ const NavItem = styled.div`
 `;
 
 const Item = styled.div`
-  width: 90px;
+  /* width: 90px; */
   margin-right: 5px;
+  margin-left: 30px;
 `;
 
 const SignInItem = styled.div`
