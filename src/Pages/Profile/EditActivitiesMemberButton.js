@@ -53,9 +53,9 @@ function EditActivitiesMemberButton(props) {
   };
 
   const handleAgree = (e) => {
-    agreeJoinActivity(props.activityId, e.userId);
+    agreeJoinActivity(props.activityId, e.uid);
 
-    const index = applicantsData.findIndex((data) => data.userId === e.userId);
+    const index = applicantsData.findIndex((data) => data.uid === e.uid);
     const newApplicantsData = [...applicantsData];
     const newAttendant = newApplicantsData.splice(index, 1);
     setApplicantsData(newApplicantsData);
@@ -63,9 +63,9 @@ function EditActivitiesMemberButton(props) {
     setAttendantsData((attendantsData) => [...attendantsData, ...newAttendant]);
   };
   const handleKick = (e) => {
-    kickActivity(props.activityId, e.userId);
+    kickActivity(props.activityId, e.uid);
 
-    const index = attendantsData.findIndex((data) => data.userId === e.userId);
+    const index = attendantsData.findIndex((data) => data.uid === e.uid);
     const newAttendantsData = [...attendantsData];
     const removedAttendant = newAttendantsData.splice(index, 1);
     setAttendantsData(newAttendantsData);
