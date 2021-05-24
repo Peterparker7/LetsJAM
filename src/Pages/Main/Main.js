@@ -1,4 +1,5 @@
 import "../../App.css";
+import "../../normalize.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import {
   logOut,
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
+import guitar from "../../images/guitar.svg";
 
 const db = window.firebase.firestore();
 console.log(db);
@@ -191,6 +193,11 @@ function Main() {
         </Slogan>
         <JoinButton>加入Let's JAM</JoinButton>
       </Carosul>
+      {/* <img
+        src={guitar}
+        alt=""
+        style={{ width: "100px", transform: `rotate(${0.125}turn)` }}
+      ></img> */}
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>

@@ -7,9 +7,12 @@ import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
 import iconPersonCircle from "../images/person-circle.svg";
 // import { useParams } from "react-router-dom";
 import { getUserData, getAuthUser } from "../utils/firebase";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 function Header() {
   const [userData, setUserData] = useState([]);
+  const userDataRedux = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
@@ -17,6 +20,7 @@ function Header() {
     const data = await getUserData(userUid);
     console.log(data);
     setUserData(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
   };
 
   useEffect(() => {
@@ -33,19 +37,19 @@ function Header() {
     if (userData.length !== 0) {
       return (
         <StyledLink to={`/activities/create`}>
-          <div>我要開團</div>
+          <Item>我要開團</Item>
         </StyledLink>
       );
     } else {
       return (
         <StyledLink to={`/activities/login`}>
-          <div
+          <Item
             onClick={() => {
               alert("登入以使用開團功能");
             }}
           >
             我要開團
-          </div>
+          </Item>
         </StyledLink>
       );
     }
@@ -56,10 +60,10 @@ function Header() {
       return (
         <SignInItem>
           <StyledLink to={`/activities/profile`}>
-            <div>{userData.name}</div>
+            <Item>{userDataRedux.name}</Item>
           </StyledLink>
           <StyledLink to={`/activities/profile`}>
-            <IconUser src={iconPersonCircle} alt="" />
+            <IconUser src={userDataRedux.profileImage} alt="" />
           </StyledLink>
         </SignInItem>
       );
@@ -89,7 +93,7 @@ function Header() {
       </div>
       <NavItem>
         <Item>成果牆</Item>
-        <Item>{handleCreateHTML()}</Item>
+        {handleCreateHTML()}
         {handleLoginHTML()}
       </NavItem>
     </HeaderContainer>
@@ -124,6 +128,7 @@ const IconImage = styled.img`
 
 const IconUser = styled.img`
   width: 30px;
+  margin-left: 10px;
 `;
 
 const NavItem = styled.div`
@@ -132,8 +137,9 @@ const NavItem = styled.div`
 `;
 
 const Item = styled.div`
-  width: 90px;
+  /* width: 90px; */
   margin-right: 5px;
+  margin-left: 30px;
 `;
 
 const SignInItem = styled.div`
