@@ -12,6 +12,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 function Header() {
   const [userData, setUserData] = useState([]);
   const userDataRedux = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
@@ -19,6 +20,7 @@ function Header() {
     const data = await getUserData(userUid);
     console.log(data);
     setUserData(data);
+    dispatch({ type: "UPDATE_USERDATA", data: data });
   };
 
   useEffect(() => {
