@@ -116,6 +116,14 @@ function Profile() {
 
   const handleEditProfile = () => {};
 
+  const handleOpenTag = (date) => {
+    let nowDate = Date.now();
+    if (nowDate < date.toDate()) {
+      return <IsOpenTag></IsOpenTag>;
+    } else {
+      return <IsCloseTag></IsCloseTag>;
+    }
+  };
   //?? 應該是沒用到
   function onEdit(arr) {
     if (arr.length === userDataRedux.length) {
@@ -141,6 +149,8 @@ function Profile() {
     return "isLoading";
   }
 
+  // handleOpenTag();
+
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
       const activitiesHTML = userHostActivityDataRedux.map((data) => {
@@ -150,6 +160,9 @@ function Profile() {
 
         return (
           <EachActivityContainer>
+            <EachActivitityIsOpen>
+              {handleOpenTag(data.newTimestamp)}
+            </EachActivitityIsOpen>
             <EachActivityContent>
               {/* <div>{data.host}</div> */}
               <Time>{showTime}</Time>
@@ -182,6 +195,8 @@ function Profile() {
   };
 
   const renderJoinActivities = () => {
+    console.log(userHostActivityDataRedux);
+
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
         let activityTime = data.timestamp.toDate().toString();
@@ -375,5 +390,22 @@ const StatusTag = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+`;
+const EachActivitityIsOpen = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+const IsOpenTag = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: green;
+`;
+const IsCloseTag = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: grey;
 `;
 export default Profile;
