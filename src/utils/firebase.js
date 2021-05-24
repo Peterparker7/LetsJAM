@@ -229,7 +229,7 @@ const updateActivitiesData = async (data, activityId) => {
         type: data.type,
         limit: data.limit,
         newTimestamp: data.newTimestamp,
-        // timestamp: data.timestamp,
+        timestamp: data.newTimestamp,
         location: "AppWork School 3F",
         // geo: ["10", "10"],
         requirement: data.requirement,
