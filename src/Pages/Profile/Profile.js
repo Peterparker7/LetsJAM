@@ -144,8 +144,8 @@ function Profile() {
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
       const activitiesHTML = userHostActivityDataRedux.map((data) => {
-        // let activityTime = data.timestamp.toDate().toString();
-        let showTime = data.timestamp.toString().slice(0, 21);
+        let activityTime = data.newTimestamp.toDate().toString();
+        let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
 
         return (
