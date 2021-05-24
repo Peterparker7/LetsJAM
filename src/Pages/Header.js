@@ -7,9 +7,11 @@ import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
 import iconPersonCircle from "../images/person-circle.svg";
 // import { useParams } from "react-router-dom";
 import { getUserData, getAuthUser } from "../utils/firebase";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 function Header() {
   const [userData, setUserData] = useState([]);
+  const userDataRedux = useSelector((state) => state.userData);
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
@@ -56,7 +58,7 @@ function Header() {
       return (
         <SignInItem>
           <StyledLink to={`/activities/profile`}>
-            <div>{userData.name}</div>
+            <div>{userDataRedux.name}</div>
           </StyledLink>
           <StyledLink to={`/activities/profile`}>
             <IconUser src={iconPersonCircle} alt="" />
@@ -124,6 +126,7 @@ const IconImage = styled.img`
 
 const IconUser = styled.img`
   width: 30px;
+  margin-left: 10px;
 `;
 
 const NavItem = styled.div`

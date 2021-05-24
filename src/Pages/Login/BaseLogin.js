@@ -30,7 +30,7 @@ function BaseLogin() {
   };
 
   return (
-    <div>
+    <PageContainer>
       <Container>
         <SelectContainer>
           <SelectTag
@@ -68,10 +68,13 @@ function BaseLogin() {
         </SelectContainer>
         <FormDetail>{baseHTML()}</FormDetail>
       </Container>
-    </div>
+    </PageContainer>
   );
 }
 
+const PageContainer = styled.div`
+  height: 70vh;
+`;
 const Container = styled.div`
   width: 600px;
   margin: 50px auto;
