@@ -9,18 +9,7 @@ import MultiSelect from "react-multi-select-component";
 import { uploadImage } from "../../utils/firebase";
 import { createActivity } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
-
-// var firebaseConfig = {
-//   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
-//   authDomain: "personalproject-33263.firebaseapp.com",
-//   projectId: "personalproject-33263",
-//   storageBucket: "personalproject-33263.appspot.com",
-//   messagingSenderId: "966021952087",
-//   appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
-//   measurementId: "G-MXQWY9WWZK",
-// };
-
-// window.firebase.initializeApp(firebaseConfig);
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 const db = window.firebase.firestore();
 let checked = false;
@@ -30,18 +19,20 @@ function Create() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [type, setType] = useState("");
-  // const [limit, setLimit] = useState("");
+  const [limit, setLimit] = useState("");
   const [level, setLevel] = useState("");
   const [checked, setChecked] = useState(false);
-  let limit = 0;
+  // let limitinit = 0;
   let comment = "";
   let youtubeUrl = "";
   let imgSource = "";
   let imageUrl = "";
 
-  //   const [requirement, setRequirement] = useState("");
-  const host = "vfjMHzp45ckI3o3kqDmO";
+  const userDataRedux = useSelector((state) => state.userData);
 
+  //   const [requirement, setRequirement] = useState("");
+  // const host = "vfjMHzp45ckI3o3kqDmO";
+  const host = userDataRedux.uid;
   const refContainer = useRef("");
 
   const convertDateTime = () => {
@@ -61,6 +52,9 @@ function Create() {
   };
 
   const clickCreate = async () => {
+    if (checked) {
+      setLimit(0);
+    }
     console.log("click");
     convertDateTime();
     let timestamp = new Date(
@@ -150,6 +144,9 @@ function Create() {
     if (changeType === "level") {
       setLevel(e.target.value);
     }
+    if (changeType === "limit") {
+      setLimit(e.target.value);
+    }
   }
 
   const LimitboxHTML = () => {
@@ -162,7 +159,8 @@ function Create() {
             disabled={checked}
             style={{ opacity: 0.3 }}
             onChange={(e) => {
-              limit = e.target.value;
+              // limitinit = e.target.value;
+              // handleChange(e, "limit");
             }}
           />
         </div>
@@ -172,11 +170,13 @@ function Create() {
         <div>
           <LimitInputField
             type="number"
-            defaultValue="1"
+            defaultValue={limit}
             min="1"
             max="20"
             onChange={(e) => {
-              limit = e.target.value;
+              // limitinit = e.target.value;
+              // setLimit(e.target.value);
+              handleChange(e, "limit");
             }}
           />
         </div>

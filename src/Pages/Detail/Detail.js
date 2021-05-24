@@ -231,15 +231,42 @@ function Detail() {
         </AttendantButton>
       );
     } else {
-      return (
-        <JoinButton
-          onClick={() => {
-            handleJoin();
-          }}
-        >
-          我要報名
-        </JoinButton>
-      );
+      console.log(detailData.host.uid);
+      console.log(userUid);
+      if (detailData.host.uid === userUid) {
+        console.log(
+          "🚀 ~ file: Detail.js ~ line 235 ~ renderJoinButton ~ detailData.host ",
+          detailData.host
+        );
+        return (
+          <JoinButton
+            onClick={() => {
+              handleJoin();
+            }}
+            disabled={true}
+            style={{
+              backgroundColor: "#ffffff4f",
+              color: "#FFF",
+              opacity: 0.5,
+              cursor: "not-allowed",
+            }}
+          >
+            我的活動
+          </JoinButton>
+        );
+      } else {
+        console.log("here");
+
+        return (
+          <JoinButton
+            onClick={() => {
+              handleJoin();
+            }}
+          >
+            我要報名
+          </JoinButton>
+        );
+      }
     }
   };
 

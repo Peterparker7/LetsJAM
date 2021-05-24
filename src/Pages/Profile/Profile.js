@@ -53,7 +53,7 @@ function Profile() {
   );
   const confirmArray = [];
   const dispatch = useDispatch();
-
+  console.log(userDataRedux.uid);
   //fireauth
   window.firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -116,6 +116,14 @@ function Profile() {
 
   const handleEditProfile = () => {};
 
+  const handleOpenTag = (date) => {
+    let nowDate = Date.now();
+    if (nowDate < date) {
+      return <IsOpenTag></IsOpenTag>;
+    } else {
+      return <IsCloseTag></IsCloseTag>;
+    }
+  };
   //?? 應該是沒用到
   function onEdit(arr) {
     if (arr.length === userDataRedux.length) {
@@ -141,15 +149,24 @@ function Profile() {
     return "isLoading";
   }
 
+  // handleOpenTag();
+
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
-      const activitiesHTML = userHostActivityDataRedux.map((data) => {
-        // let activityTime = data.timestamp.toDate().toString();
-        let showTime = data.timestamp.toString().slice(0, 21);
+      const activitiesHTML = userHostActivityDataRedux.map((data, index) => {
+        let date = data.date;
+        let time = data.time;
+        let newFormatDate = new Date(`${date}T${time}`);
+        let activityTime = newFormatDate.toString();
+        console.log(activityTime);
+        let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
 
         return (
           <EachActivityContainer>
+            <EachActivitityIsOpen>
+              {handleOpenTag(newFormatDate)}
+            </EachActivitityIsOpen>
             <EachActivityContent>
               {/* <div>{data.host}</div> */}
               <Time>{showTime}</Time>
@@ -182,15 +199,17 @@ function Profile() {
   };
 
   const renderJoinActivities = () => {
+    console.log(userHostActivityDataRedux);
+
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
         let activityTime = data.timestamp.toDate().toString();
-        let showTime = activityTime.slice(0, 24);
+        let showTime = activityTime.slice(0, 21);
 
         const applyStatusHTML = () => {
-          if (data.attendants.includes(userId)) {
+          if (data.attendants.includes(userDataRedux.uid)) {
             return <div style={{ backgroundColor: "green" }}>已加入</div>;
-          } else if (data.applicants.includes(userId)) {
+          } else if (data.applicants.includes(userDataRedux.uid)) {
             return <div style={{ backgroundColor: "yellow" }}>申請中</div>;
           }
           return applyStatusHTML;
@@ -247,7 +266,7 @@ const FadingBackground = styled(BaseModalBackground)`
   transition: all 0.3s ease-in-out;
 `;
 const MainContainer = styled.div`
-  height: 100vh;
+  height: 100%;
   background: #555;
   background: url(${amplifierImg});
   background-size: cover;
@@ -375,5 +394,22 @@ const StatusTag = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+`;
+const EachActivitityIsOpen = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+const IsOpenTag = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: green;
+`;
+const IsCloseTag = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: grey;
 `;
 export default Profile;
