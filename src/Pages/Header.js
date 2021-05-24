@@ -37,19 +37,19 @@ function Header() {
     if (userData.length !== 0) {
       return (
         <StyledLink to={`/activities/create`}>
-          <div>我要開團</div>
+          <Item>我要開團</Item>
         </StyledLink>
       );
     } else {
       return (
         <StyledLink to={`/activities/login`}>
-          <div
+          <Item
             onClick={() => {
               alert("登入以使用開團功能");
             }}
           >
             我要開團
-          </div>
+          </Item>
         </StyledLink>
       );
     }
@@ -63,7 +63,7 @@ function Header() {
             <Item>{userDataRedux.name}</Item>
           </StyledLink>
           <StyledLink to={`/activities/profile`}>
-            <IconUser src={iconPersonCircle} alt="" />
+            <IconUser src={userDataRedux.profileImage} alt="" />
           </StyledLink>
         </SignInItem>
       );
@@ -93,7 +93,7 @@ function Header() {
       </div>
       <NavItem>
         <Item>成果牆</Item>
-        <Item>{handleCreateHTML()}</Item>
+        {handleCreateHTML()}
         {handleLoginHTML()}
       </NavItem>
     </HeaderContainer>
