@@ -198,7 +198,7 @@ const updateUserData = async (newData, userId) => {
         preferType: newData.preferType,
         skill: newData.skill,
         profileImage: newData.profileImage,
-        youtubeSource: newData.youtubeSource,
+        youtubeUrl: newData.youtubeUrl,
         //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
       },
       { merge: true }

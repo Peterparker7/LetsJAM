@@ -97,8 +97,9 @@ function EditProfileButton(props) {
       skill: skillArray,
       favSinger: userData.favSinger,
       profileImage: imageUrl,
-      youtubeSource: userData.youtubeSource,
+      youtubeUrl: userData.youtubeUrl,
     };
+    console.log(data);
     let updateToFirebase = await updateUserData(data, userDataRedux.uid);
     // setUserData(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
@@ -233,6 +234,7 @@ function EditProfileButton(props) {
               <InputFieldInput
                 id="intro"
                 contentEditable="true"
+                placeholder="寫點描述"
                 suppressContentEditableWarning={true}
                 onInput={(e) => {
                   handleProfileChange(e.target.value, "intro");
@@ -269,12 +271,13 @@ function EditProfileButton(props) {
               <Label for="youtubeSource">YouTube</Label>
               <InputFieldInput
                 id="youtubeSource"
+                placeholder="可放練習影片youtube連結"
                 contentEditable="true"
                 suppressContentEditableWarning={true}
                 onInput={(e) => {
-                  handleProfileChange(e.target.value, "youtubeSource");
+                  handleProfileChange(e.target.value, "youtubeUrl");
                 }}
-                defaultValue={userDataRedux.youtubeSource}
+                defaultValue={userDataRedux.youtubeUrl}
               />
 
               {/* </div> */}
