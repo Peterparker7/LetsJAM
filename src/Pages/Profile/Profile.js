@@ -17,6 +17,7 @@ import {
   kickActivity,
   deleteActivityData,
   updateActivitiesData,
+  logOut,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
@@ -254,6 +255,7 @@ function Profile() {
           <ProfileCol>
             {renderProfile()}
             <EditProfileButton data={userData} />
+            <LogoutBtn onClick={() => logOut()}>登出</LogoutBtn>
           </ProfileCol>
         </ProfilePageContainer>
       </MainContainer>
@@ -288,7 +290,7 @@ const ProfileCol = styled.div`
   margin: 0 30px;
   background: #000;
   border: 2px solid #ff0099;
-  height: 450px;
+  height: 500px;
 `;
 const ProfileDetail = styled.div`
   color: white;
@@ -309,7 +311,15 @@ const Wrapper = styled.div`
   text-align: left;
   margin-bottom: 30px;
 `;
-
+const LogoutBtn = styled.button`
+  border: 1px solid none;
+  border-radius: 20px;
+  width: 116px;
+  height: 40px;
+  padding: 10px;
+  background: #ff00ff;
+  cursor: pointer;
+`;
 const ActivitiesCol = styled.div`
   display: flex;
   flex-direction: column;

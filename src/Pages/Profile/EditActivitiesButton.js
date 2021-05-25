@@ -208,7 +208,10 @@ function EditActivitiesButton(props) {
   const handleDelete = async () => {
     const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
-
+    dispatch({
+      type: "DELETE_ACTIVITYDATA",
+      data: props.data,
+    });
     setOpacity(0);
     setIsOpen(!isOpen);
   };
@@ -421,7 +424,7 @@ function EditActivitiesButton(props) {
         backgroundProps={{ opacity }}
       >
         <div>{renderEditActivityField()}</div>
-        <BtnClose onClick={toggleCancel}>X</BtnClose>
+        <BtnClose onClick={toggleCancel}>+</BtnClose>
       </StyledModal>
     </div>
   );
@@ -493,8 +496,10 @@ const EditBtn = styled.button`
 `;
 const BtnClose = styled.button`
   position: absolute;
-  top: 15px;
-  right: 15px;
+  transform: rotate(0.125turn);
+  font-size: 28px;
+  top: 10px;
+  right: 30px;
   cursor: pointer;
 `;
 
