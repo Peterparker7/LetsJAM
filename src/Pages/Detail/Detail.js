@@ -10,7 +10,7 @@ import { getAuthUser } from "../../utils/firebase";
 
 function Detail() {
   let { id } = useParams();
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  // let userId = "vfjMHzp45ckI3o3kqDmO";
   const [detailData, setDetailData] = useState();
   const [currentUserData, setCurrentUserData] = useState();
   const [userUid, setUserUid] = useState();
@@ -36,6 +36,7 @@ function Detail() {
     console.log(userData);
     setUserUid(userUid);
     setUserName(userData.name);
+    console.log(userUid);
   };
 
   const getData = async () => {
@@ -127,8 +128,23 @@ function Detail() {
 
   const renderHost = () => {
     const renderVideo = () => {
-      if (detailData.youtubeSource) {
-        const videoUrl = detailData.youtubeSource;
+      // if (detailData.youtubeSource) {
+      //   const videoUrl = detailData.youtubeSource;
+      //   const source = videoUrl.toString().slice(-11);
+      //   const videoEmbedUrl = `https://www.youtube.com/embed/${source}?&autoplay=1&mute=1&loop=0&controls=1&rel=0" frameborder="1" allowfullscreen>`;
+      //   return (
+      //     <iframe
+      //       width="500"
+      //       height="315"
+      //       src={videoEmbedUrl}
+      //       title="YouTube video player"
+      //     ></iframe>
+      //   );
+      // } else {
+      //   return;
+      // }
+      if (detailData.host.youtubeUrl) {
+        const videoUrl = detailData.host.youtubeUrl;
         const source = videoUrl.toString().slice(-11);
         const videoEmbedUrl = `https://www.youtube.com/embed/${source}?&autoplay=1&mute=1&loop=0&controls=1&rel=0" frameborder="1" allowfullscreen>`;
         return (
@@ -208,10 +224,10 @@ function Detail() {
         { name: userName, uid: userUid },
       ],
     });
-
-    console.log(detailData);
   };
-  console.log(detailData);
+  const handleVisitor = () => {
+    alert("登入以使用此功能");
+  };
 
   const renderJoinButton = () => {
     const isApplicant = detailData.applicants.filter((item) => {
@@ -248,6 +264,16 @@ function Detail() {
           已加入
         </AttendantButton>
       );
+    } else if (!userUid) {
+      return (
+        <JoinButton
+          onClick={() => {
+            handleVisitor();
+          }}
+        >
+          我要報名
+        </JoinButton>
+      );
     } else {
       console.log(detailData.host.uid);
       console.log(userUid);
@@ -266,18 +292,6 @@ function Detail() {
             }}
           >
             我的活動
-          </JoinButton>
-        );
-      } else {
-        console.log("here");
-
-        return (
-          <JoinButton
-            onClick={() => {
-              handleJoin();
-            }}
-          >
-            我要報名
           </JoinButton>
         );
       }
