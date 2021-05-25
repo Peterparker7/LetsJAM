@@ -97,6 +97,7 @@ function EditProfileButton(props) {
       skill: skillArray,
       favSinger: userData.favSinger,
       profileImage: imageUrl,
+      youtubeSource: userData.youtubeSource,
     };
     let updateToFirebase = await updateUserData(data, userDataRedux.uid);
     // setUserData(data);
@@ -263,6 +264,20 @@ function EditProfileButton(props) {
                 onChange={setSkill}
                 labelledBy="Select"
               />
+            </InputFieldContainer>
+            <InputFieldContainer>
+              <Label for="youtubeSource">YouTube</Label>
+              <InputFieldInput
+                id="youtubeSource"
+                contentEditable="true"
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  handleProfileChange(e.target.value, "youtubeSource");
+                }}
+                defaultValue={userDataRedux.youtubeSource}
+              />
+
+              {/* </div> */}
             </InputFieldContainer>
           </ProfileDetail>
           <BtnField>
