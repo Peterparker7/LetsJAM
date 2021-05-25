@@ -46,6 +46,8 @@ function EditProfileButton(props) {
 
   const [userData, setUserData] = useState();
   const [userProfileImage, setUserProfileImage] = useState();
+  const [userProfileImageSource, setUserProfileImageSource] = useState();
+  const [imgCover, setImgCover] = useState(true);
 
   const options = [
     { label: "Vocal", value: "Vocal" },
@@ -79,7 +81,8 @@ function EditProfileButton(props) {
   async function editConfirm(e) {
     console.log(imgSource);
     console.log(userProfileImage);
-    imageUrl = await uploadImage(userProfileImage);
+    imageUrl = await uploadImage(userProfileImageSource);
+    console.log(imageUrl);
 
     let data = {
       name: userData.name,
@@ -99,27 +102,11 @@ function EditProfileButton(props) {
   //
   function handleProfileChange(e, type) {
     setUserData({ ...userData, [type]: e });
-
-    // if (type === "name") {
-    //   setUserData({ ...userData, name: e });
-    // }
-    // if (type === "intro") {
-    //   setUserData({ ...userData, intro: e });
-    // }
-    // if (type === "preferType") {
-    //   setUserData({ ...userData, preferType: e });
-    // }
   }
   function handlePreferTypeDefault() {
     defaultPreferType = userDataRedux.preferType;
     // if (userDataRedux.preferType === "流行") {
     //   defaultPreferType = "流行";
-    // }
-    // if (userDataRedux.preferType === "嘻哈") {
-    //   defaultPreferType = "嘻哈";
-    // }
-    // if (userDataRedux.preferType === "古典") {
-    //   defaultPreferType = "古典";
     // }
   }
   function handleClickToUpload() {
@@ -129,8 +116,10 @@ function EditProfileButton(props) {
   function handleUploadImage(e) {
     imgSource = e.target.files[0];
     setUserProfileImage(URL.createObjectURL(imgSource));
+    setUserProfileImageSource(imgSource);
     console.log(imgSource);
     console.log(userProfileImage);
+    setImgCover("cover");
   }
 
   function toggleModal(e) {
@@ -143,6 +132,7 @@ function EditProfileButton(props) {
 
     //取消時把值設回Redux上的值
     setUserData(userDataRedux);
+    setUserProfileImage(userDataRedux.profileImage);
     setSkill(skillFormat);
   }
 
@@ -175,12 +165,29 @@ function EditProfileButton(props) {
           <ProfileImageContainer>
             {/* <label for="name">大頭照</label> */}
             <ProfileImage
-              src={`${userProfileImage}`}
+              // src={`${userProfileImage}`}
               // src={`${userData.profileImage}`}
-              alt=""
+              // alt=""
+              // style={{
+              //   background: `url(${userProfileImage})`,
+              //   backgroundSize: `${imgCover}`,
+              //   // backgroundPosition: "",
+              //   // backgroundPosition: "50% 50%",
+
+              // }}
+              style={
+                imgCover
+                  ? {
+                      background: `url(${userProfileImage})`,
+                      backgroundSize: "cover",
+                    }
+                  : {
+                      background: `url(${userProfileImage})`,
+                      backgroundSize: "cover",
+                    }
+              }
             ></ProfileImage>
             <EditProfileImageField>
-              <Label>編輯頭像</Label>
               <input
                 id="uploadProfileImage"
                 type="file"
@@ -313,9 +320,15 @@ const BtnConfirm = styled.div`
 
   cursor: pointer;
 `;
-const ProfileImage = styled.img`
-  width: 100px;
+const ProfileImage = styled.div`
+  margin: 0 auto;
+  width: 120px;
+  height: 120px;
   margin-bottom: 20px;
+  border-radius: 50%;
+  background-size: cover;
+
+  background-position: 50% 50%;
 `;
 const ProfileImageContainer = styled.div`
   align-items: center;
@@ -326,7 +339,7 @@ const EditImageIcon = styled.img`
   width: 25px;
   position: absolute;
   top: 0;
-  right: 20px;
+  right: 70px;
 `;
 const EditBtn = styled.button`
   border: 1px solid none;

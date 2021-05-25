@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
   authDomain: "personalproject-33263.firebaseapp.com",
@@ -37,35 +39,34 @@ const deleteActivityData = async (id) => {
 };
 
 const uploadImage = async (img) => {
-  console.log("🚀 ~ file: firebase.js ~ line 40 ~ uploadImage ~ img", img);
   const path = img.name;
-  console.log("🚀 ~ file: firebase.js ~ line 41 ~ uploadImage ~ path", path);
+  // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
   const storageReference = window.firebase.storage().ref(path);
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ storageReference",
-    storageReference
-  );
+
   // .put() 方法把東西丟到該位置裡
   const task = await storageReference.put(img);
-  console.log("🚀 ~ file: firebase.js ~ line 46 ~ uploadImage ~ task", task);
   const fileRef = window.firebase.storage().ref(path);
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 48 ~ uploadImage ~ fileRef",
-    fileRef
-  );
 
-  // let downloadUrl = await fileRef
-  //   .child(img)
-  //   .getDownloadURL()
-  //   .then(function (url) {
-  //     return url;
-  //   });
-  // console.log(
-  //   "🚀 ~ file: firebase.js ~ line 61 ~ downloadUrl ~ downloadUrl",
-  //   downloadUrl
-  // );
+  let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
+    return url;
+  });
+  return downloadUrl;
+
+  // const path = img.name;
+  // const imagePath = uuidv4();
+
+  // // 取得 storage 對應的位置
+  // const storageReference = window.firebase.storage().ref(imagePath);
+
+  // // .put() 方法把東西丟到該位置裡
+  // const task = await storageReference.put(img);
+  // const fileRef = window.firebase.storage().ref(imagePath);
+
+  // let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
+  //   return url;
+  // });
   // return downloadUrl;
 };
 
@@ -187,6 +188,7 @@ const updateUserData = async (newData, userId) => {
         intro: newData.intro,
         preferType: newData.preferType,
         skill: newData.skill,
+        profileImage: newData.profileImage,
         //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
       },
       { merge: true }

@@ -103,7 +103,7 @@ function Profile() {
         <Wrapper>
           <ProfileName>{userDataRedux.name}</ProfileName>
         </Wrapper>
-        <ProfileImg src={`${userData.profileImage}`} />
+        <ProfileImg src={`${userDataRedux.profileImage}`} />
         <Wrapper>
           <ProfileItem>{userDataRedux.intro}</ProfileItem>
           {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
