@@ -29,11 +29,9 @@ function Header() {
     checkUserIsLogin();
   }, []);
 
-  console.log(userData);
   if (!userData) {
     return "isLoading";
   }
-  console.log(userData);
 
   const handleMenuSideBar = () => {
     setSideBarDisplay(!sideBarDisplay);

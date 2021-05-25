@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
   authDomain: "personalproject-33263.firebaseapp.com",
@@ -38,17 +40,43 @@ const deleteActivityData = async (id) => {
 
 const uploadImage = async (img) => {
   const path = img.name;
+  // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
   const storageReference = window.firebase.storage().ref(path);
+
   // .put() 方法把東西丟到該位置裡
   const task = await storageReference.put(img);
+  console.log("🚀 ~ file: firebase.js ~ line 50 ~ uploadImage ~ task", task);
   const fileRef = window.firebase.storage().ref(path);
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 51 ~ uploadImage ~ fileRef",
+    fileRef
+  );
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 56 ~ downloadUrl ~ downloadUrl",
+    downloadUrl
+  );
   return downloadUrl;
+
+  // const path = img.name;
+  // const imagePath = uuidv4();
+
+  // // 取得 storage 對應的位置
+  // const storageReference = window.firebase.storage().ref(imagePath);
+
+  // // .put() 方法把東西丟到該位置裡
+  // const task = await storageReference.put(img);
+  // const fileRef = window.firebase.storage().ref(imagePath);
+
+  // let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
+  //   return url;
+  // });
+  // return downloadUrl;
 };
 
 // const createActivity = async (data) => {
@@ -169,6 +197,8 @@ const updateUserData = async (newData, userId) => {
         intro: newData.intro,
         preferType: newData.preferType,
         skill: newData.skill,
+        profileImage: newData.profileImage,
+        youtubeUrl: newData.youtubeUrl,
         //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
       },
       { merge: true }

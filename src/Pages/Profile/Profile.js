@@ -103,7 +103,7 @@ function Profile() {
         <Wrapper>
           <ProfileName>{userDataRedux.name}</ProfileName>
         </Wrapper>
-        <ProfileImg src={`${userData.profileImage}`} />
+        <ProfileImg src={`${userDataRedux.profileImage}`} />
         <Wrapper>
           <ProfileItem>{userDataRedux.intro}</ProfileItem>
           {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
@@ -255,7 +255,9 @@ function Profile() {
           <ProfileCol>
             {renderProfile()}
             <EditProfileButton data={userData} />
-            <LogoutBtn onClick={() => logOut()}>登出</LogoutBtn>
+            <Link to={"./"}>
+              <LogoutBtn onClick={() => logOut()}>登出</LogoutBtn>
+            </Link>
           </ProfileCol>
         </ProfilePageContainer>
       </MainContainer>
@@ -296,7 +298,8 @@ const ProfileDetail = styled.div`
   color: white;
 `;
 const ProfileImg = styled.img`
-  width: 150px;
+  width: auto;
+  height: 150px;
 `;
 const ProfileName = styled.div`
   font-size: 28px;

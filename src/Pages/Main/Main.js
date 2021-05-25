@@ -20,6 +20,7 @@ let allActivitiesArray = [];
 
 function Main() {
   const [data, setData] = useState([]);
+  const [userDataUid, setUserDataUid] = useState();
   console.log(data);
 
   const getFirebaseData = async () => {
@@ -150,8 +151,25 @@ function Main() {
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
     console.log(userUid);
+    setUserDataUid(userUid);
     const userData = await getUserData(userUid);
     console.log(userData);
+  };
+
+  const sloganButtonHTML = () => {
+    if (userDataUid) {
+      return (
+        <Link to={`/activities/profile`}>
+          <JoinButton>查看我的活動</JoinButton>
+        </Link>
+      );
+    } else {
+      return (
+        <Link to={`/activities/login`}>
+          <JoinButton>加入Let's JAM</JoinButton>
+        </Link>
+      );
+    }
   };
 
   const ActivityHTML = data.map((item, index) => {
@@ -191,7 +209,7 @@ function Main() {
         <Slogan>
           整個城市<br></br>都是我的練團室
         </Slogan>
-        <JoinButton>加入Let's JAM</JoinButton>
+        {sloganButtonHTML()}
       </Carosul>
       {/* <img
         src={guitar}
@@ -237,9 +255,6 @@ function Main() {
         </FilterBar>
       </ActivityFilter>
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
-      <Link to={`/activities/create`}>
-        <div>start a group</div>
-      </Link>
       <Link to={`./`}>
         <button
           onClick={(e) => {
@@ -295,6 +310,7 @@ const JoinButton = styled.button`
   width: 200px;
   font-size: 20px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 const MainImg = styled.img`

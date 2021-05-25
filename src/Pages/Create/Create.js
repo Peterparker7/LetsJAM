@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from "react";
 import MyComponent from "../../Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
-import { uploadImage } from "../../utils/firebase";
+import { uploadImage, getAuthUser } from "../../utils/firebase";
 import { createActivity } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
@@ -51,6 +51,16 @@ function Create() {
     };
   };
 
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    if (!userUid) {
+      window.location.href = "/";
+      return "redirection";
+    }
+  };
+  useEffect(() => {
+    checkUserIsLogin();
+  }, []);
   const clickCreate = async () => {
     if (checked) {
       setLimit(0);

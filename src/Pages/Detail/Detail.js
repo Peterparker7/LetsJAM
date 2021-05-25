@@ -10,7 +10,7 @@ import { getAuthUser } from "../../utils/firebase";
 
 function Detail() {
   let { id } = useParams();
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  // let userId = "vfjMHzp45ckI3o3kqDmO";
   const [detailData, setDetailData] = useState();
   const [currentUserData, setCurrentUserData] = useState();
   const [userUid, setUserUid] = useState();
@@ -36,6 +36,7 @@ function Detail() {
     console.log(userData);
     setUserUid(userUid);
     setUserName(userData.name);
+    console.log(userUid);
   };
 
   const getData = async () => {
@@ -54,10 +55,20 @@ function Detail() {
       applicantsDetailArray.push(promise);
     });
     const allApplicants = await Promise.all(applicantsDetailArray);
+    //打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
+    const attendantsDetailArray = [];
+    data.attendants.forEach((attendants) => {
+      const promise = getUserData(attendants).then((data) => {
+        return data;
+      });
+      attendantsDetailArray.push(promise);
+    });
+    const allAttendants = await Promise.all(attendantsDetailArray);
 
     //把有detail的host & applicants塞到useState
     data.host = host;
     data.applicants = allApplicants;
+    data.attendants = allAttendants;
 
     setDetailData(data);
     setCurrentUserData(currentUser);
@@ -126,9 +137,62 @@ function Detail() {
   //   userData();
 
   const renderHost = () => {
+    const renderVideo = () => {
+      // if (detailData.youtubeSource) {
+      //   const videoUrl = detailData.youtubeSource;
+      //   const source = videoUrl.toString().slice(-11);
+      //   const videoEmbedUrl = `https://www.youtube.com/embed/${source}?&autoplay=1&mute=1&loop=0&controls=1&rel=0" frameborder="1" allowfullscreen>`;
+      //   return (
+      //     <iframe
+      //       width="500"
+      //       height="315"
+      //       src={videoEmbedUrl}
+      //       title="YouTube video player"
+      //     ></iframe>
+      //   );
+      // } else {
+      //   return;
+      // }
+      if (detailData.host.youtubeUrl) {
+        const videoUrl = detailData.host.youtubeUrl;
+        const source = videoUrl.toString().slice(-11);
+        const videoEmbedUrl = `https://www.youtube.com/embed/${source}?&autoplay=1&mute=1&loop=0&controls=1&rel=0" frameborder="1" allowfullscreen>`;
+        return (
+          <iframe
+            width="500"
+            height="315"
+            src={videoEmbedUrl}
+            title="YouTube video player"
+          ></iframe>
+        );
+      } else {
+        return;
+      }
+    };
+
     console.log(detailData.host.name);
     console.log(detailData.applicants);
-    const applicantsHTML = Object.values(detailData.applicants).map((data) => {
+    // const applicantsHTML = Object.values(detailData.applicants).map((data) => {
+    //   console.log(data);
+    //   console.log(data.name);
+    //   return (
+    //     <EachAttendantField>
+    //       <ProfileBlock>
+    //         <ProfileImg
+    //           // src={`${data.profileImage}`}
+    //           style={{
+    //             background: `url(${data.profileImage})`,
+    //             backgroundSize: "cover",
+    //             backgroundPosition: "",
+    //           }}
+    //         />
+
+    //         <div>{data.name}</div>
+    //       </ProfileBlock>
+    //     </EachAttendantField>
+    //   );
+    // });
+    const attendantsHTML = Object.values(detailData.attendants).map((data) => {
       console.log(data);
       console.log(data.name);
       return (
@@ -152,7 +216,7 @@ function Detail() {
       <MemberInfoContainer>
         <HostTitle>關於揪團主</HostTitle>
         <MemberHostField>
-          <ProfileBlock>
+          <HostProfileBlock>
             <ProfileImg
               style={{
                 background: `url(${detailData.host.profileImage})`,
@@ -162,12 +226,12 @@ function Detail() {
             />
 
             <div>{detailData.host.name}</div>
-          </ProfileBlock>
+          </HostProfileBlock>
           <IntroBlock>{detailData.host.intro}</IntroBlock>
-          <VideoBlock></VideoBlock>
+          <VideoBlock>{renderVideo()}</VideoBlock>
         </MemberHostField>
         <AttendantsTitle>出席成員</AttendantsTitle>
-        <MemberField>{applicantsHTML}</MemberField>
+        <MemberField>{attendantsHTML}</MemberField>
       </MemberInfoContainer>
     );
 
@@ -190,21 +254,21 @@ function Detail() {
         { name: userName, uid: userUid },
       ],
     });
-
-    console.log(detailData);
   };
-  console.log(detailData);
+  const handleVisitor = () => {
+    alert("登入以使用此功能");
+  };
 
   const renderJoinButton = () => {
     const isApplicant = detailData.applicants.filter((item) => {
       console.log(userUid);
       console.log(item.uid);
-      if (item.uid === userUid) {
+      if (userUid && item.uid === userUid) {
         return item;
       }
     });
     const isAttendant = detailData.attendants.filter((item) => {
-      if (item.uid === userUid) {
+      if (userUid && item.uid === userUid) {
         return item;
       }
     });
@@ -230,43 +294,45 @@ function Detail() {
           已加入
         </AttendantButton>
       );
-    } else {
+    } else if (!userUid) {
+      return (
+        <JoinButton
+          onClick={() => {
+            handleVisitor();
+          }}
+        >
+          我要報名
+        </JoinButton>
+      );
+    } else if (detailData.host.uid === userUid) {
       console.log(detailData.host.uid);
       console.log(userUid);
-      if (detailData.host.uid === userUid) {
-        console.log(
-          "🚀 ~ file: Detail.js ~ line 235 ~ renderJoinButton ~ detailData.host ",
-          detailData.host
-        );
-        return (
-          <JoinButton
-            onClick={() => {
-              handleJoin();
-            }}
-            disabled={true}
-            style={{
-              backgroundColor: "#ffffff4f",
-              color: "#FFF",
-              opacity: 0.5,
-              cursor: "not-allowed",
-            }}
-          >
-            我的活動
-          </JoinButton>
-        );
-      } else {
-        console.log("here");
-
-        return (
-          <JoinButton
-            onClick={() => {
-              handleJoin();
-            }}
-          >
-            我要報名
-          </JoinButton>
-        );
-      }
+      return (
+        <JoinButton
+          onClick={() => {
+            handleJoin();
+          }}
+          disabled={true}
+          style={{
+            backgroundColor: "#ffffff4f",
+            color: "#FFF",
+            opacity: 0.5,
+            cursor: "not-allowed",
+          }}
+        >
+          我的活動
+        </JoinButton>
+      );
+    } else {
+      return (
+        <JoinButton
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          我要報名
+        </JoinButton>
+      );
     }
   };
 
@@ -351,8 +417,8 @@ const Item = styled.div`
   width: 100%;
 `;
 const ImageContainer = styled.div`
-  /* width: calc(100%-480px); */
   width: calc(100% - 480px);
+  /* width: 600px; */
   margin-top: 40px;
 `;
 const ActivityImage = styled.img`
@@ -394,11 +460,18 @@ const MemberField = styled.div`
   display: flex;
 `;
 const MemberHostField = styled.div`
-  padding: 0 40px;
+  padding: 10px 40px;
   width: 100%;
   display: flex;
+  padding-right: 0px;
 `;
 const ProfileBlock = styled.div`
+  text-align: center;
+  margin: 20px 20px;
+`;
+const HostProfileBlock = styled.div`
+  margin: auto 20px;
+  margin-right: 0px;
   text-align: center;
   margin: 20px 20px;
 `;
@@ -407,6 +480,8 @@ const IntroBlock = styled.div`
   padding: 20px;
   align-items: center;
   margin: auto;
+  line-height: 2;
+  word-wrap: break-word;
 `;
 const VideoBlock = styled.div``;
 const HostTitle = styled.div`

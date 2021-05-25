@@ -108,7 +108,10 @@ function EditActivitiesButton(props) {
   const editConfirm = async () => {
     if (checked) {
       oneactivityData.limit = 0;
+    } else if (!checked && oneactivityData.limit === 0) {
+      oneactivityData.limit = 1;
     }
+    console.log(oneactivityData.limit);
     let date = oneactivityData.date;
     let time = oneactivityData.time;
     let newTimestamp = new Date(`${date}T${time}`);
@@ -201,6 +204,9 @@ function EditActivitiesButton(props) {
     if (type === "comment") {
       setActivityData({ ...oneactivityData, comment: e });
     }
+    // if (type === "limit") {
+    //   setActivityData({ ...oneactivityData, comment: e });
+    // }
   };
 
   const handleNolimtChange = () => {};
@@ -243,7 +249,11 @@ function EditActivitiesButton(props) {
         <div>
           <LimitInputField
             type="number"
-            defaultValue={userHostActivityDataRedux.limit}
+            defaultValue={
+              userHostActivityDataRedux.limit !== 0
+                ? userHostActivityDataRedux.limit
+                : 1
+            }
             min="1"
             max="20"
             onChange={(e) => {
