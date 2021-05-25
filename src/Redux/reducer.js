@@ -33,8 +33,16 @@ export default function reducer(state = initialState, action) {
         userHostActivityData: newData,
       };
     }
-    // case "DELETE_ACTIVITYDATA":
-    //   return { ...state, userHostActivityData: state.userHostActivityData.splice(item.index, 1)};
+    case "DELETE_ACTIVITYDATA": {
+      const dataToDelete = action.data;
+
+      return {
+        ...state,
+        userHostActivityData: state.userHostActivityData.filter((item) => {
+          return item.id !== dataToDelete.id;
+        }),
+      };
+    }
     default:
       return state;
   }

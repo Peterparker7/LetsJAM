@@ -278,7 +278,8 @@ const EditBtn = styled.button`
   background: #00ffff;
   padding: 10px;
   cursor: pointer;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
+  height: 40px;
 `;
 
 export default EditProfileButton;
