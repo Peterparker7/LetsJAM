@@ -79,10 +79,16 @@ function EditProfileButton(props) {
   }
 
   async function editConfirm(e) {
-    console.log(imgSource);
-    console.log(userProfileImage);
-    imageUrl = await uploadImage(userProfileImageSource);
-    console.log(imageUrl);
+    if (userProfileImageSource) {
+      console.log("1");
+      console.log(userProfileImageSource);
+      imageUrl = await uploadImage(userProfileImageSource);
+      console.log(imageUrl);
+    } else {
+      console.log("2");
+
+      imageUrl = userDataRedux.profileImage;
+    }
 
     let data = {
       name: userData.name,
@@ -92,7 +98,7 @@ function EditProfileButton(props) {
       favSinger: userData.favSinger,
       profileImage: imageUrl,
     };
-    updateUserData(data, userDataRedux.uid);
+    let updateToFirebase = await updateUserData(data, userDataRedux.uid);
     // setUserData(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
 
