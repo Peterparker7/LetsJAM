@@ -5,11 +5,12 @@ import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
-import { getUserData, updateUserData } from "../../utils/firebase";
+import { getUserData, updateUserData, uploadImage } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch } from "react-redux";
+import settingIcon from "../../images/gear.svg";
 
 const StyledModal = Modal.styled`
 width: 30rem;
@@ -21,6 +22,7 @@ justify-content: center;
 background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
+let imgSource = "";
 
 function EditProfileButton(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +36,7 @@ function EditProfileButton(props) {
   let defaultPreferType = "";
   let skillFormat = [];
   let skillArray = [];
+  let imageUrl = "";
 
   const [skill, setSkill] = useState(skillFormat);
 
@@ -42,6 +45,7 @@ function EditProfileButton(props) {
   });
 
   const [userData, setUserData] = useState();
+  const [userProfileImage, setUserProfileImage] = useState();
 
   const options = [
     { label: "Vocal", value: "Vocal" },
@@ -54,6 +58,7 @@ function EditProfileButton(props) {
   const getUserProfileData = async () => {
     const data = await getUserData(userDataRedux.uid);
     setUserData(data);
+    setUserProfileImage(data.profileImage);
   };
   //處理skill格式 讓default值可顯示於select
   userDataRedux.skill.forEach((data) => {
@@ -71,14 +76,18 @@ function EditProfileButton(props) {
     return "isLoading";
   }
 
-  function editConfirm(e) {
+  async function editConfirm(e) {
+    console.log(imgSource);
+    console.log(userProfileImage);
+    imageUrl = await uploadImage(userProfileImage);
+
     let data = {
       name: userData.name,
       intro: userData.intro,
       preferType: userData.preferType,
       skill: skillArray,
       favSinger: userData.favSinger,
-      profileImage: userData.profileImage,
+      profileImage: imageUrl,
     };
     updateUserData(data, userDataRedux.uid);
     // setUserData(data);
@@ -112,6 +121,16 @@ function EditProfileButton(props) {
     // if (userDataRedux.preferType === "古典") {
     //   defaultPreferType = "古典";
     // }
+  }
+  function handleClickToUpload() {
+    const uploadProfileImage = document.querySelector("#uploadProfileImage");
+    uploadProfileImage.click();
+  }
+  function handleUploadImage(e) {
+    imgSource = e.target.files[0];
+    setUserProfileImage(URL.createObjectURL(imgSource));
+    console.log(imgSource);
+    console.log(userProfileImage);
   }
 
   function toggleModal(e) {
@@ -152,72 +171,99 @@ function EditProfileButton(props) {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
-        <InputFieldContainer>
-          {/* <label for="name">大頭照</label> */}
-          <ProfileImage src={`${userData.profileImage}`} alt=""></ProfileImage>
-        </InputFieldContainer>
-        <ProfileDetail>
-          <InputFieldContainer>
-            <Label for="name">名稱</Label>
-            <InputFieldInput
-              id="name"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              onInput={(e) => {
-                handleProfileChange(e.target.value, "name");
-              }}
-              defaultValue={userDataRedux.name}
-            />
+        <Container>
+          <ProfileImageContainer>
+            {/* <label for="name">大頭照</label> */}
+            <ProfileImage
+              src={`${userProfileImage}`}
+              // src={`${userData.profileImage}`}
+              alt=""
+            ></ProfileImage>
+            <EditProfileImageField>
+              <Label>編輯頭像</Label>
+              <input
+                id="uploadProfileImage"
+                type="file"
+                accept="image/*"
+                hidden={true}
+                onChange={(e) => {
+                  handleUploadImage(e);
+                }}
+              ></input>
+              <EditImageIcon
+                src={settingIcon}
+                alt=""
+                onClick={() => {
+                  handleClickToUpload();
+                }}
+              />
+            </EditProfileImageField>
+          </ProfileImageContainer>
+          <ProfileDetail>
+            <InputFieldContainer>
+              <Label for="name">名稱</Label>
+              <InputFieldInput
+                id="name"
+                contentEditable="true"
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  handleProfileChange(e.target.value, "name");
+                }}
+                defaultValue={userDataRedux.name}
+              />
 
-            {/* </div> */}
-          </InputFieldContainer>
-          <InputFieldContainer>
-            <Label for="intro">自我介紹</Label>
-            <InputFieldInput
-              id="intro"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              onInput={(e) => {
-                handleProfileChange(e.target.value, "intro");
-              }}
-              defaultValue={userDataRedux.intro}
-            />
-          </InputFieldContainer>
-          <InputFieldContainer>
-            {handlePreferTypeDefault()}
+              {/* </div> */}
+            </InputFieldContainer>
+            <InputFieldContainer>
+              <Label for="intro">自我介紹</Label>
+              <InputFieldInput
+                id="intro"
+                contentEditable="true"
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  handleProfileChange(e.target.value, "intro");
+                }}
+                defaultValue={userDataRedux.intro}
+              />
+            </InputFieldContainer>
+            <InputFieldContainer>
+              {handlePreferTypeDefault()}
 
-            <Label for="preferType">偏好類型</Label>
-            <SelectType
-              defaultValue={defaultPreferType}
-              onChange={(e) => {
-                handleProfileChange(e.target.value, "preferType");
-              }}
-            >
-              <option>流行</option>
-              <option>嘻哈</option>
-              <option>古典</option>
-            </SelectType>
-          </InputFieldContainer>
-          <InputFieldContainer>
-            <Label for="skill">會的樂器</Label>
-            <MultiSelect
-              style={{ width: "100px" }}
-              options={options}
-              value={skill}
-              onChange={setSkill}
-              labelledBy="Select"
-            />
-          </InputFieldContainer>
-        </ProfileDetail>
-        <BtnField>
-          <BtnCancel onClick={toggleCancel}>取消</BtnCancel>
-          <BtnConfirm onClick={editConfirm}>確認修改</BtnConfirm>
-        </BtnField>
+              <Label for="preferType">偏好類型</Label>
+              <SelectType
+                defaultValue={defaultPreferType}
+                onChange={(e) => {
+                  handleProfileChange(e.target.value, "preferType");
+                }}
+              >
+                <option>流行</option>
+                <option>嘻哈</option>
+                <option>古典</option>
+              </SelectType>
+            </InputFieldContainer>
+            <InputFieldContainer>
+              <Label for="skill">會的樂器</Label>
+              <MultiSelect
+                style={{ width: "100px" }}
+                options={options}
+                value={skill}
+                onChange={setSkill}
+                labelledBy="Select"
+              />
+            </InputFieldContainer>
+          </ProfileDetail>
+          <BtnField>
+            <BtnCancel onClick={toggleCancel}>取消</BtnCancel>
+            <BtnConfirm onClick={editConfirm}>確認修改</BtnConfirm>
+          </BtnField>
+        </Container>
       </StyledModal>
     </div>
   );
 }
-
+const Container = styled.div`
+  position: relative;
+`;
 const ProfileDetail = styled.div`
   text-align: left;
   width: 300px;
@@ -271,7 +317,17 @@ const ProfileImage = styled.img`
   width: 100px;
   margin-bottom: 20px;
 `;
-
+const ProfileImageContainer = styled.div`
+  align-items: center;
+  position: relative;
+`;
+const EditProfileImageField = styled.div``;
+const EditImageIcon = styled.img`
+  width: 25px;
+  position: absolute;
+  top: 0;
+  right: 20px;
+`;
 const EditBtn = styled.button`
   border: 1px solid none;
   border-radius: 20px;

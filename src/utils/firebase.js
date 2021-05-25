@@ -37,18 +37,36 @@ const deleteActivityData = async (id) => {
 };
 
 const uploadImage = async (img) => {
+  console.log("🚀 ~ file: firebase.js ~ line 40 ~ uploadImage ~ img", img);
   const path = img.name;
+  console.log("🚀 ~ file: firebase.js ~ line 41 ~ uploadImage ~ path", path);
 
   // 取得 storage 對應的位置
   const storageReference = window.firebase.storage().ref(path);
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ storageReference",
+    storageReference
+  );
   // .put() 方法把東西丟到該位置裡
   const task = await storageReference.put(img);
+  console.log("🚀 ~ file: firebase.js ~ line 46 ~ uploadImage ~ task", task);
   const fileRef = window.firebase.storage().ref(path);
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 48 ~ uploadImage ~ fileRef",
+    fileRef
+  );
 
-  let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
-    return url;
-  });
-  return downloadUrl;
+  // let downloadUrl = await fileRef
+  //   .child(img)
+  //   .getDownloadURL()
+  //   .then(function (url) {
+  //     return url;
+  //   });
+  // console.log(
+  //   "🚀 ~ file: firebase.js ~ line 61 ~ downloadUrl ~ downloadUrl",
+  //   downloadUrl
+  // );
+  // return downloadUrl;
 };
 
 // const createActivity = async (data) => {
