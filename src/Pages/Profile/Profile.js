@@ -296,7 +296,8 @@ const ProfileDetail = styled.div`
   color: white;
 `;
 const ProfileImg = styled.img`
-  width: 150px;
+  width: auto;
+  height: 150px;
 `;
 const ProfileName = styled.div`
   font-size: 28px;
