@@ -255,7 +255,9 @@ function Profile() {
           <ProfileCol>
             {renderProfile()}
             <EditProfileButton data={userData} />
-            <LogoutBtn onClick={() => logOut()}>登出</LogoutBtn>
+            <Link to={"./"}>
+              <LogoutBtn onClick={() => logOut()}>登出</LogoutBtn>
+            </Link>
           </ProfileCol>
         </ProfilePageContainer>
       </MainContainer>

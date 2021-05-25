@@ -55,10 +55,20 @@ function Detail() {
       applicantsDetailArray.push(promise);
     });
     const allApplicants = await Promise.all(applicantsDetailArray);
+    //打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
+    const attendantsDetailArray = [];
+    data.attendants.forEach((attendants) => {
+      const promise = getUserData(attendants).then((data) => {
+        return data;
+      });
+      attendantsDetailArray.push(promise);
+    });
+    const allAttendants = await Promise.all(attendantsDetailArray);
 
     //把有detail的host & applicants塞到useState
     data.host = host;
     data.applicants = allApplicants;
+    data.attendants = allAttendants;
 
     setDetailData(data);
     setCurrentUserData(currentUser);
@@ -162,7 +172,27 @@ function Detail() {
 
     console.log(detailData.host.name);
     console.log(detailData.applicants);
-    const applicantsHTML = Object.values(detailData.applicants).map((data) => {
+    // const applicantsHTML = Object.values(detailData.applicants).map((data) => {
+    //   console.log(data);
+    //   console.log(data.name);
+    //   return (
+    //     <EachAttendantField>
+    //       <ProfileBlock>
+    //         <ProfileImg
+    //           // src={`${data.profileImage}`}
+    //           style={{
+    //             background: `url(${data.profileImage})`,
+    //             backgroundSize: "cover",
+    //             backgroundPosition: "",
+    //           }}
+    //         />
+
+    //         <div>{data.name}</div>
+    //       </ProfileBlock>
+    //     </EachAttendantField>
+    //   );
+    // });
+    const attendantsHTML = Object.values(detailData.attendants).map((data) => {
       console.log(data);
       console.log(data.name);
       return (
@@ -201,7 +231,7 @@ function Detail() {
           <VideoBlock>{renderVideo()}</VideoBlock>
         </MemberHostField>
         <AttendantsTitle>出席成員</AttendantsTitle>
-        <MemberField>{applicantsHTML}</MemberField>
+        <MemberField>{attendantsHTML}</MemberField>
       </MemberInfoContainer>
     );
 
@@ -233,12 +263,12 @@ function Detail() {
     const isApplicant = detailData.applicants.filter((item) => {
       console.log(userUid);
       console.log(item.uid);
-      if (item.uid === userUid) {
+      if (userUid && item.uid === userUid) {
         return item;
       }
     });
     const isAttendant = detailData.attendants.filter((item) => {
-      if (item.uid === userUid) {
+      if (userUid && item.uid === userUid) {
         return item;
       }
     });
@@ -274,27 +304,35 @@ function Detail() {
           我要報名
         </JoinButton>
       );
-    } else {
+    } else if (detailData.host.uid === userUid) {
       console.log(detailData.host.uid);
       console.log(userUid);
-      if (detailData.host.uid === userUid) {
-        return (
-          <JoinButton
-            onClick={() => {
-              handleJoin();
-            }}
-            disabled={true}
-            style={{
-              backgroundColor: "#ffffff4f",
-              color: "#FFF",
-              opacity: 0.5,
-              cursor: "not-allowed",
-            }}
-          >
-            我的活動
-          </JoinButton>
-        );
-      }
+      return (
+        <JoinButton
+          onClick={() => {
+            handleJoin();
+          }}
+          disabled={true}
+          style={{
+            backgroundColor: "#ffffff4f",
+            color: "#FFF",
+            opacity: 0.5,
+            cursor: "not-allowed",
+          }}
+        >
+          我的活動
+        </JoinButton>
+      );
+    } else {
+      return (
+        <JoinButton
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          我要報名
+        </JoinButton>
+      );
     }
   };
 
