@@ -189,6 +189,7 @@ function Profile() {
                 applicants={data.applicants}
                 attendants={data.attendants}
                 activityId={data.id}
+                data={data}
               />
             </ButtonField>
           </EachActivityContainer>

@@ -290,6 +290,17 @@ const updateActivitiesData = async (data, activityId) => {
       console.error("Error writing document: ", error);
     });
 };
+const sendUserInvite = async (inviteInfo, userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const data = await docRef
+    .update({
+      invitation: window.firebase.firestore.FieldValue.arrayUnion(inviteInfo),
+    })
+    .then(() => {})
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
 
 export { getActivityData };
 export { getSpecificData };
@@ -308,4 +319,5 @@ export { getUserJoinActivities };
 export { getUserApplyActivities };
 export { updateActivitiesData };
 export { uploadImage };
+export { sendUserInvite };
 // export { createActivity };
