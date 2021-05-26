@@ -28,6 +28,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import EditProfileButton from "./EditProfileButton.js";
 import EditActivitiesButton from "./EditActivitiesButton.js";
 import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
+import MemberCard from "./MemberCard.js";
 import InviteButton from "./InviteButton.js";
 import amplifierImg from "../../images/amplifier-guitar.jpg";
 import recordImg from "../../images/retro-record.jpg";

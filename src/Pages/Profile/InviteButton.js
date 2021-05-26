@@ -9,6 +9,8 @@ import {
   sendUserInvite,
 } from "../../utils/firebase";
 
+import MemberCard from "./MemberCard.js";
+
 const StyledModal = Modal.styled`
   width: 40rem;
   height: 40rem;
@@ -143,7 +145,10 @@ function InviteButton(props) {
               backgroundSize: "cover",
               borderRadius: "50%",
             }}
-          ></ProfileImage>
+          >
+            <MemberCard />
+          </ProfileImage>
+
           <Name>{item.name}</Name>
           <InviteEachButton
             onClick={() => {
@@ -223,6 +228,9 @@ const ProfileImage = styled.div`
   width: 80px;
   height: 80px;
   margin: auto;
+
+  &:hover {
+  }
 `;
 const Name = styled.div``;
 const InviteEachButton = styled.button``;
