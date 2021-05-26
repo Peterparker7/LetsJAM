@@ -51,7 +51,7 @@ function InviteButton(props) {
   const renderCheckboxField = () => {
     return (
       <RequirementField>
-        <label for="vocal">Vocal</label>
+        <Label for="vocal">Vocal</Label>
         <input
           id="vocal"
           type="radio"
@@ -61,7 +61,7 @@ function InviteButton(props) {
             handleRequirement(e.target.value);
           }}
         />
-        <label for="guitar">吉他</label>
+        <Label for="guitar">吉他</Label>
         <input
           id="guitar"
           type="radio"
@@ -71,7 +71,17 @@ function InviteButton(props) {
             handleRequirement(e.target.value);
           }}
         />
-        <label for="bass">Bass</label>
+        <Label for="electricguitar">電吉他</Label>
+        <input
+          id="electricguitar"
+          type="radio"
+          name={"requireInstrument"}
+          value={"電吉他"}
+          onChange={(e) => {
+            handleRequirement(e.target.value);
+          }}
+        />
+        <Label for="bass">Bass</Label>
         <input
           id="bass"
           type="radio"
@@ -81,7 +91,7 @@ function InviteButton(props) {
             handleRequirement(e.target.value);
           }}
         />
-        <label for="piano">Piano</label>
+        <Label for="piano">Piano</Label>
         <input
           id="piano"
           type="radio"
@@ -91,7 +101,7 @@ function InviteButton(props) {
             handleRequirement(e.target.value);
           }}
         />
-        <label for="drum">木箱鼓</label>
+        <Label for="drum">木箱鼓</Label>
         <input
           id="drum"
           type="radio"
@@ -121,9 +131,19 @@ function InviteButton(props) {
     console.log(filterUser);
 
     const allUserHTML = filterUser.map((item, index) => {
+      console.log(
+        "🚀 ~ file: InviteButton.js ~ line 134 ~ allUserHTML ~ item",
+        item.profileImage
+      );
       return (
-        <div key={index}>
-          <ProfileImage></ProfileImage>
+        <EachUser key={index}>
+          <ProfileImage
+            style={{
+              background: `url(${item.profileImage})`,
+              backgroundSize: "cover",
+              borderRadius: "50%",
+            }}
+          ></ProfileImage>
           <Name>{item.name}</Name>
           <InviteEachButton
             onClick={() => {
@@ -132,7 +152,7 @@ function InviteButton(props) {
           >
             邀
           </InviteEachButton>
-        </div>
+        </EachUser>
       );
     });
     return allUserHTML;
@@ -160,7 +180,7 @@ function InviteButton(props) {
       >
         <AllMemberCol>
           <Title>發送邀請</Title>
-          <div>在找哪種樂手?</div>
+          <TitleSub>在找哪種樂手?</TitleSub>
           {renderCheckboxField()}
 
           <MemberField>{renderAllUser()}</MemberField>
@@ -173,27 +193,45 @@ function InviteButton(props) {
 
 const AllMemberCol = styled.div`
   position: relative;
-  width: 90%;
+  width: 95%;
   height: 90%;
 `;
 const MemberField = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  margin: 20px auto;
 `;
 const Title = styled.div`
   padding: 10px;
   border-bottom: 1px solid #979797;
 `;
+const TitleSub = styled.div`
+  margin: 10px;
+`;
+const Label = styled.label`
+  margin-left: 20px;
+  margin-right: 5px;
+`;
 const RequirementField = styled.div``;
-const ProfileImage = styled.div``;
+const EachUser = styled.div`
+  width: 100px;
+  height: 150px;
+  text-align: center;
+`;
+const ProfileImage = styled.div`
+  width: 80px;
+  height: 80px;
+  margin: auto;
+`;
 const Name = styled.div``;
 const InviteEachButton = styled.button``;
 const BtnClose = styled.button`
   transform: rotate(0.125turn);
   font-size: 28px;
   position: absolute;
-  top: -10px;
-  right: -30px;
+  top: -20px;
+  right: 0px;
   cursor: pointer;
 `;
 export default InviteButton;

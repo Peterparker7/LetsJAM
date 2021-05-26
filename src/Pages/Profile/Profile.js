@@ -55,14 +55,12 @@ function Profile() {
   );
   const confirmArray = [];
   const dispatch = useDispatch();
-  console.log(userDataRedux.uid);
   //fireauth
   window.firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // 使用者已登入，可以取得資料
       var email = user.email;
       var uid = user.uid;
-      console.log(email, uid);
     } else {
       // 使用者未登入
     }
@@ -70,9 +68,7 @@ function Profile() {
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
-    console.log(userUid);
     const data = await getUserData(userUid);
-    console.log(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
     setUserData(data);
   };
@@ -160,7 +156,6 @@ function Profile() {
         let time = data.time;
         let newFormatDate = new Date(`${date}T${time}`);
         let activityTime = newFormatDate.toString();
-        console.log(activityTime);
         let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
 
@@ -202,8 +197,6 @@ function Profile() {
   };
 
   const renderJoinActivities = () => {
-    console.log(userHostActivityDataRedux);
-
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
         let activityTime = data.timestamp.toDate().toString();

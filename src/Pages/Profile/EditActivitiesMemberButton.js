@@ -31,7 +31,6 @@ function EditActivitiesMemberButton(props) {
   const [attendantsData, setAttendantsData] = useState([]);
   let applicantsArray = [];
   let attendantsArray = [];
-  console.log(props);
 
   const getApplicantsDetail = async () => {
     props.applicants.forEach((applicant) => {
@@ -166,6 +165,7 @@ function EditActivitiesMemberButton(props) {
           <MemberDivField>{renderAttendants()}</MemberDivField>
 
           <BtnClose onClick={toggleModal}>+</BtnClose>
+          <span>找不到成員？ 試試</span>
           <InviteButton data={props} />
         </EditMemberCol>
       </StyledModal>

@@ -14,7 +14,6 @@ import neonBand from "../../images/neon-band.jpg";
 import guitar from "../../images/guitar.svg";
 
 const db = window.firebase.firestore();
-console.log(db);
 let allActivitiesArrayCopy = [];
 let allActivitiesArray = [];
 

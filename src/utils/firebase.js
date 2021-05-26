@@ -145,19 +145,22 @@ const getAllUser = async () => {
 
 const getAuthUser = async () => {
   const promise = new Promise((resolve) => {
-    window.firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        // 使用者已登入，可以取得資料
-        var email = user.email;
-        var uid = user.uid;
-        console.log(email, uid);
-        resolve(uid);
-      } else {
-        // 使用者未登入
-        console.log("you are not login");
-        resolve(false);
-      }
-    });
+    const unsubscribe = window.firebase
+      .auth()
+      .onAuthStateChanged(function (user) {
+        unsubscribe();
+        if (user) {
+          // 使用者已登入，可以取得資料
+          var email = user.email;
+          var uid = user.uid;
+          console.log(email, uid);
+          resolve(uid);
+        } else {
+          // 使用者未登入
+          console.log("you are not login");
+          resolve(false);
+        }
+      });
   });
   let response = await promise;
   return response;
