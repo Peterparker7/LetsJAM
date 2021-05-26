@@ -28,6 +28,7 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import EditProfileButton from "./EditProfileButton.js";
 import EditActivitiesButton from "./EditActivitiesButton.js";
 import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
+import InviteButton from "./InviteButton.js";
 import amplifierImg from "../../images/amplifier-guitar.jpg";
 import recordImg from "../../images/retro-record.jpg";
 
@@ -292,7 +293,7 @@ const ProfileCol = styled.div`
   margin: 0 30px;
   background: #000;
   border: 2px solid #ff0099;
-  height: 500px;
+  height: 100%;
 `;
 const ProfileDetail = styled.div`
   color: white;

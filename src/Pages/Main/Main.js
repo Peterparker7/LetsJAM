@@ -151,9 +151,11 @@ function Main() {
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
     console.log(userUid);
-    setUserDataUid(userUid);
-    const userData = await getUserData(userUid);
-    console.log(userData);
+    if (userUid) {
+      setUserDataUid(userUid);
+      const userData = await getUserData(userUid);
+      console.log(userData);
+    }
   };
 
   const sloganButtonHTML = () => {

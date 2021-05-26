@@ -132,6 +132,17 @@ const getUserData = async (userId) => {
   return userData;
 };
 
+const getAllUser = async () => {
+  let docRef = db.collection("userData");
+  let allUser = [];
+  await docRef.get().then((d) => {
+    d.forEach((data) => {
+      allUser.push(data.data());
+    });
+  });
+  return allUser;
+};
+
 const getAuthUser = async () => {
   const promise = new Promise((resolve) => {
     window.firebase.auth().onAuthStateChanged(function (user) {
@@ -287,6 +298,7 @@ export { joinActivity };
 export { agreeJoinActivity };
 export { kickActivity };
 export { getUserData };
+export { getAllUser };
 export { getAuthUser };
 export { logOut };
 export { updateUserData };

@@ -91,6 +91,7 @@ function EditProfileButton(props) {
     }
 
     let data = {
+      uid: userData.uid,
       name: userData.name,
       intro: userData.intro,
       preferType: userData.preferType,

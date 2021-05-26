@@ -19,10 +19,12 @@ function Header() {
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
     console.log(userUid);
-    const data = await getUserData(userUid);
-    console.log(data);
-    setUserData(data);
-    dispatch({ type: "UPDATE_USERDATA", data: data });
+    if (userUid) {
+      const data = await getUserData(userUid);
+      console.log(data);
+      setUserData(data);
+      dispatch({ type: "UPDATE_USERDATA", data: data });
+    }
   };
 
   useEffect(() => {

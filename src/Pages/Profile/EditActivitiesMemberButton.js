@@ -11,6 +11,7 @@ import {
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import InviteButton from "./InviteButton.js";
 
 const StyledModal = Modal.styled`
 width: 30rem;
@@ -164,6 +165,7 @@ function EditActivitiesMemberButton(props) {
           <MemberDivField>{renderAttendants()}</MemberDivField>
 
           <BtnClose onClick={toggleModal}>+</BtnClose>
+          <InviteButton />
         </EditMemberCol>
       </StyledModal>
     </div>
