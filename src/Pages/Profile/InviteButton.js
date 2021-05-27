@@ -133,13 +133,9 @@ function InviteButton(props) {
     console.log(filterUser);
 
     const allUserHTML = filterUser.map((item, index) => {
-      console.log(
-        "🚀 ~ file: InviteButton.js ~ line 134 ~ allUserHTML ~ item",
-        item.profileImage
-      );
       return (
         <EachUser key={index}>
-          <ProfileImage
+          {/* <ProfileImage
             style={{
               background: `url(${item.profileImage})`,
               backgroundSize: "cover",
@@ -147,7 +143,11 @@ function InviteButton(props) {
             }}
           >
             <MemberCard />
-          </ProfileImage>
+          </ProfileImage> */}
+          <ProfileImgDiv>
+            <ProfileImg src={item.profileImage}></ProfileImg>
+            <MemberCard data={item} />
+          </ProfileImgDiv>
 
           <Name>{item.name}</Name>
           <InviteEachButton
@@ -228,9 +228,18 @@ const ProfileImage = styled.div`
   width: 80px;
   height: 80px;
   margin: auto;
-
-  &:hover {
-  }
+`;
+const ProfileImgDiv = styled.div`
+  width: 80px;
+  height: 80px;
+  position: relative;
+  margin: 0 auto;
+`;
+const ProfileImg = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 const Name = styled.div``;
 const InviteEachButton = styled.button``;

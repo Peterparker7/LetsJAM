@@ -173,7 +173,7 @@ function EditProfileButton(props) {
         <Container>
           <ProfileImageContainer>
             {/* <label for="name">大頭照</label> */}
-            <ProfileImage
+            {/* <ProfileImage
               // src={`${userProfileImage}`}
               // src={`${userData.profileImage}`}
               // alt=""
@@ -195,7 +195,8 @@ function EditProfileButton(props) {
                       backgroundSize: "cover",
                     }
               }
-            ></ProfileImage>
+            ></ProfileImage> */}
+            <ProfileImg src={userProfileImage}></ProfileImg>
             <EditProfileImageField>
               <input
                 id="uploadProfileImage"
@@ -354,6 +355,13 @@ const ProfileImage = styled.div`
   background-size: cover;
 
   background-position: 50% 50%;
+`;
+const ProfileImg = styled.img`
+  object-fit: cover;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 20px;
 `;
 const ProfileImageContainer = styled.div`
   align-items: center;
