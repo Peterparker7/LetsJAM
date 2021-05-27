@@ -304,12 +304,38 @@ const sendUserInvite = async (inviteInfo, userId) => {
       console.error("Error writing document: ", error);
     });
 };
+const updateInvitation = async (newInviteArray, userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const data = await docRef
+    .set(
+      {
+        invitation: newInviteArray,
+      },
+      { merge: true }
+    )
+    .then(() => {
+      console.log("??????");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
 
 const subscribe = (callback, activityId) => {
   const unsubscribe = db
     .collection("activityData")
     .doc(activityId)
     .onSnapshot((doc) => {
+      callback(doc.data());
+    });
+  return unsubscribe;
+};
+const subscribeUser = (callback, userId) => {
+  const unsubscribe = db
+    .collection("userData")
+    .doc(userId)
+    .onSnapshot((doc) => {
+      console.log(doc.data());
       callback(doc.data());
     });
   return unsubscribe;
@@ -333,5 +359,7 @@ export { getUserApplyActivities };
 export { updateActivitiesData };
 export { uploadImage };
 export { sendUserInvite };
+export { updateInvitation };
 export { subscribe };
+export { subscribeUser };
 // export { createActivity };

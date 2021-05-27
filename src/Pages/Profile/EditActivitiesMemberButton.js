@@ -40,8 +40,6 @@ function EditActivitiesMemberButton(props) {
   );
   let applicantsArray = [];
   let attendantsArray = [];
-  console.log(initApplicantsData);
-  console.log(activityChange);
 
   const getApplicantsDetail = async () => {
     initApplicantsData.forEach((applicant) => {
@@ -65,10 +63,8 @@ function EditActivitiesMemberButton(props) {
   };
 
   const handlefirebaseChange = async () => {
-    // setApplicantsData(activityChange.applicants);
     setInitApplicantsData(activityChange.applicants);
     setInitAttendantsData(activityChange.attendants);
-    // setAttendantsData(activityChange.attendants);
   };
 
   const handleAgree = (e) => {

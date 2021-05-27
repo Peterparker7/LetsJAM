@@ -8,7 +8,13 @@ import iconPersonCircle from "../images/person-circle.svg";
 import menuIcon from "../images/list.svg";
 import mailboxIcon from "../images/envelope.svg";
 // import { useParams } from "react-router-dom";
-import { getUserData, getAuthUser, getSpecificData } from "../utils/firebase";
+import {
+  getUserData,
+  getAuthUser,
+  getSpecificData,
+  subscribeUser,
+  updateInvitation,
+} from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 function Header() {
@@ -16,6 +22,7 @@ function Header() {
   const [invitationData, setInvitationData] = useState([]);
   const [sideBarDisplay, setSideBarDisplay] = useState(false);
   const [mailBoxDisplay, setMailBoxDisplay] = useState(false);
+  const [userDataChange, setUserDataChange] = useState([]);
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
@@ -28,20 +35,10 @@ function Header() {
     }
   };
 
-  useEffect(() => {
-    checkUserIsLogin();
-  }, []);
-
-  useEffect(() => {
-    arrangeInvitationData();
-  }, [userData]);
-
-  if (!userData) {
-    return "isLoading";
-  }
-  if (!invitationData) {
-    return "isLoading";
-  }
+  const handlefirebaseChange = () => {
+    console.log(userDataChange);
+    setUserData(userDataChange);
+  };
   // window.onclick = function (e) {
   //   if (
   //     e.target.id !== "MailBoxDiv" &&
@@ -57,7 +54,19 @@ function Header() {
   const handleMailbox = () => {
     setMailBoxDisplay(!mailBoxDisplay);
   };
-
+  const handleIgnore = (activityId) => {
+    const newInvitation = userData.invitation.filter(
+      (item) => item.id !== activityId
+    );
+    console.log(newInvitation);
+    setUserData({
+      ...userData,
+      invitation: newInvitation,
+    });
+    console.log(userData);
+    updateInvitation(newInvitation, userDataRedux.uid);
+  };
+  const handleUserDataChange = () => {};
   const arrangeInvitationData = async () => {
     const invitation = userData.invitation;
     if (!invitation) {
@@ -75,13 +84,41 @@ function Header() {
     setInvitationData(allInvitation);
   };
 
+  useEffect(() => {
+    checkUserIsLogin();
+  }, []);
+
+  useEffect(() => {
+    arrangeInvitationData();
+    console.log("<<<<<<<<");
+  }, [userData]);
+
+  useEffect(() => {
+    subscribeUser(setUserDataChange, userDataRedux.uid);
+  }, [userDataRedux]);
+  useEffect(() => {
+    console.log(">>>>>");
+
+    if (userDataChange) {
+      handlefirebaseChange();
+    }
+  }, [userDataChange]);
+  if (!userData) {
+    return "isLoading";
+  }
+  if (!invitationData) {
+    return "isLoading";
+  }
+  // console.log(userDataChange);
+  console.log(userData.uid);
+  console.log(invitationData);
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
         const HTML = invitationData.map((item) => {
-          const messageObj = userData.invitation.filter(
-            (data) => data.id === item.id
-          );
+          // const messageObj = userData.invitation.filter(
+          //   (data) => data.id === item.id
+          // );
           return (
             <Link to={`/activities/${item.id}`}>
               <EachMailDiv
@@ -94,7 +131,14 @@ function Header() {
                 <EachMailDivCanvas>
                   <EachMailContent>
                     <EachMailTitle>{item.title}</EachMailTitle>
-                    <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg>
+                    {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                    <IgnoreBtn
+                      onClick={() => {
+                        handleIgnore(item.id);
+                      }}
+                    >
+                      +
+                    </IgnoreBtn>
                   </EachMailContent>
                 </EachMailDivCanvas>
               </EachMailDiv>
@@ -422,6 +466,14 @@ const EachMailTitle = styled.div`
 const EachMailMsg = styled.div`
   font-size: 16px;
   color: white;
+`;
+const IgnoreBtn = styled.button`
+  transform: rotate(0.125turn);
+  font-size: 24px;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 const NoInvite = styled.div`
   margin: 0 auto;
