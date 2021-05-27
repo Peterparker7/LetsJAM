@@ -8,6 +8,7 @@ import {
   getUserData,
   agreeJoinActivity,
   kickActivity,
+  subscribe,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
@@ -29,6 +30,7 @@ function EditActivitiesMemberButton(props) {
   const [opacity, setOpacity] = useState(0);
   const [applicantsData, setApplicantsData] = useState([]);
   const [attendantsData, setAttendantsData] = useState([]);
+  const [activityChange, setActivityChange] = useState();
   let applicantsArray = [];
   let attendantsArray = [];
 
@@ -75,6 +77,9 @@ function EditActivitiesMemberButton(props) {
   useEffect(() => {
     getApplicantsDetail();
     getAttendantsDetail();
+  }, []);
+  useEffect(() => {
+    subscribe(setActivityChange, props.data.id);
   }, []);
 
   function toggleModal(e) {

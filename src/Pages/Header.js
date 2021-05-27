@@ -51,6 +51,8 @@ function Header() {
   //   ) {
   //     setMailBoxDisplay(false);
   //   }
+  //   console.log(e.currentTarget);
+  //   console.log(e);
   // };
   const handleMailbox = () => {
     setMailBoxDisplay(!mailBoxDisplay);

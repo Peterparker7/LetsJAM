@@ -305,6 +305,16 @@ const sendUserInvite = async (inviteInfo, userId) => {
     });
 };
 
+const subscribe = (callback, activityId) => {
+  const unsubscribe = db
+    .collection("activityData")
+    .doc(activityId)
+    .onSnapshot((doc) => {
+      callback(doc.data());
+    });
+  return unsubscribe;
+};
+
 export { getActivityData };
 export { getSpecificData };
 export { deleteActivityData };
@@ -323,4 +333,5 @@ export { getUserApplyActivities };
 export { updateActivitiesData };
 export { uploadImage };
 export { sendUserInvite };
+export { subscribe };
 // export { createActivity };

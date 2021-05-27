@@ -7,6 +7,7 @@ import {
   updateActivitiesData,
   getAllUser,
   sendUserInvite,
+  subscribe,
 } from "../../utils/firebase";
 
 import MemberCard from "./MemberCard.js";
@@ -30,6 +31,11 @@ function InviteButton(props) {
 
   const [allUserData, setAllUserDate] = useState();
   const [requireInstrument, setRequireInstrument] = useState();
+  const [activityChange, setActivityChange] = useState();
+  console.log(
+    "🚀 ~ file: InviteButton.js ~ line 35 ~ InviteButton ~ activityChange",
+    activityChange
+  );
   let activityDetail = props.data.data;
 
   function toggleModal(e) {
@@ -127,7 +133,34 @@ function InviteButton(props) {
   console.log(activityDetail.id);
   console.log(allUserData);
   const renderAllUser = () => {
-    const filterUser = allUserData.filter((item) => {
+    const userAttend = allUserData.filter((item) => {
+      if (activityChange.attendants.includes(item.uid)) return item;
+    });
+    const userApply = allUserData.filter((item) => {
+      if (activityChange.applicants.includes(item.uid)) return item;
+    });
+
+    const excludeAttendants = allUserData.filter(
+      (item) => !userAttend.some((j) => item.uid === j.uid)
+    );
+    const restUser = excludeAttendants.filter(
+      (item) => !userApply.some((j) => item.uid === j.uid)
+    );
+    // const restUser = allUserData.filter((item) => {
+    //   const each = userAttend.filter((attend) => {
+    //     return item.uid !== attend.uid;
+    //   });
+    //   return each;
+    // });
+
+    console.log(
+      "🚀 ~ file: InviteButton.js ~ line 140 ~ renderAllUser ~ restUser",
+      restUser
+    );
+
+    // items = items.filter((i) => !valuesToRemove.includes(i))
+
+    const filterUser = restUser.filter((item) => {
       return item.skill.includes(requireInstrument);
     });
     console.log(filterUser);
@@ -167,7 +200,13 @@ function InviteButton(props) {
       setAllUserDate(data);
     });
   }, []);
+  useEffect(() => {
+    subscribe(setActivityChange, activityDetail.id);
+  }, []);
   if (!allUserData) {
+    return "isLoading";
+  }
+  if (!activityChange) {
     return "isLoading";
   }
 
