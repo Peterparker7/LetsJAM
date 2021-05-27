@@ -162,6 +162,13 @@ function Header() {
       </MailBoxDiv>
     );
   };
+  const renderMailBoxCircle = () => {
+    if (invitationData.length !== 0) {
+      return <MailBoxIconCircle></MailBoxIconCircle>;
+    } else {
+      return;
+    }
+  };
   const handleMenuSideBar = () => {
     setSideBarDisplay(!sideBarDisplay);
   };
@@ -273,6 +280,7 @@ function Header() {
                 handleMailbox();
               }}
             ></MailBoxIcon>
+            {renderMailBoxCircle()}
           </MailBoxIconContainer>
           {mailboxHTML()}
         </SignInItem>
@@ -420,9 +428,19 @@ const Menu = styled.img`
 `;
 const MailBoxIconContainer = styled.div`
   margin-left: 20px;
+  position: relative;
 `;
 const MailBoxIcon = styled.img`
   width: 25px;
+`;
+const MailBoxIconCircle = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ff3737;
+  bottom: 2px;
+  right: -2px;
 `;
 const MailBoxDiv = styled.div`
   position: absolute;
