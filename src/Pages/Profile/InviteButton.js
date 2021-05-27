@@ -1,14 +1,7 @@
 import Modal from "styled-react-modal";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import {
-  getSpecificData,
-  deleteActivityData,
-  updateActivitiesData,
-  getAllUser,
-  sendUserInvite,
-  subscribe,
-} from "../../utils/firebase";
+import { getAllUser, sendUserInvite, subscribe } from "../../utils/firebase";
 
 import MemberCard from "./MemberCard.js";
 
@@ -32,10 +25,7 @@ function InviteButton(props) {
   const [allUserData, setAllUserDate] = useState();
   const [requireInstrument, setRequireInstrument] = useState();
   const [activityChange, setActivityChange] = useState();
-  console.log(
-    "🚀 ~ file: InviteButton.js ~ line 35 ~ InviteButton ~ activityChange",
-    activityChange
-  );
+
   let activityDetail = props.data.data;
 
   function toggleModal(e) {
@@ -130,8 +120,7 @@ function InviteButton(props) {
     };
     sendUserInvite(data, uid);
   };
-  console.log(activityDetail.id);
-  console.log(allUserData);
+
   const renderAllUser = () => {
     const userAttend = allUserData.filter((item) => {
       if (activityChange.attendants.includes(item.uid)) return item;
@@ -146,37 +135,14 @@ function InviteButton(props) {
     const restUser = excludeAttendants.filter(
       (item) => !userApply.some((j) => item.uid === j.uid)
     );
-    // const restUser = allUserData.filter((item) => {
-    //   const each = userAttend.filter((attend) => {
-    //     return item.uid !== attend.uid;
-    //   });
-    //   return each;
-    // });
-
-    console.log(
-      "🚀 ~ file: InviteButton.js ~ line 140 ~ renderAllUser ~ restUser",
-      restUser
-    );
-
-    // items = items.filter((i) => !valuesToRemove.includes(i))
 
     const filterUser = restUser.filter((item) => {
       return item.skill.includes(requireInstrument);
     });
-    console.log(filterUser);
 
     const allUserHTML = filterUser.map((item, index) => {
       return (
         <EachUser key={index}>
-          {/* <ProfileImage
-            style={{
-              background: `url(${item.profileImage})`,
-              backgroundSize: "cover",
-              borderRadius: "50%",
-            }}
-          >
-            <MemberCard />
-          </ProfileImage> */}
           <ProfileImgDiv>
             <ProfileImg src={item.profileImage}></ProfileImg>
             <MemberCard data={item} />

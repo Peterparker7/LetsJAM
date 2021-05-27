@@ -78,20 +78,10 @@ function Header() {
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
-        console.log(
-          "🚀 ~ file: Header.js ~ line 79 ~ invitedActivityHTML ~ invitationData",
-          invitationData
-        );
         const HTML = invitationData.map((item) => {
           const messageObj = userData.invitation.filter(
             (data) => data.id === item.id
           );
-          console.log(
-            "🚀 ~ file: Header.js ~ line 75 ~ HTML ~ messageObj",
-            messageObj[0]
-          );
-
-          console.log("🚀 ~ file: Header.js ~ line 71 ~ HTML ~ item", item);
           return (
             <Link to={`/activities/${item.id}`}>
               <EachMailDiv
