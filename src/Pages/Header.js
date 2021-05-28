@@ -22,6 +22,7 @@ function Header() {
   const [invitationData, setInvitationData] = useState([]);
   const [sideBarDisplay, setSideBarDisplay] = useState(false);
   const [mailBoxDisplay, setMailBoxDisplay] = useState(false);
+  const [maskDisplay, setMaskDisplay] = useState(false);
   const [userDataChange, setUserDataChange] = useState([]);
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
@@ -41,18 +42,23 @@ function Header() {
   };
   // window.onclick = function (e) {
   //   if (
-  //     e.target.id !== "MailBoxDiv" &&
-  //     e.target.parentNode.id !== "MailBoxDiv" &&
-  //     e.target.offsetParent.id !== "MailBoxDiv" &&
-  //     e.target.parentNode.id !== "MailBoxIcon"
-  //   ) {
-  //     setMailBoxDisplay(false);
-  //   }
+  //   e.target.id !== "MailBoxDiv" &&
+  //   e.target.parentNode.id !== "MailBoxDiv" &&
+  //   e.target.offsetParent.id !== "MailBoxDiv" &&
+  //   e.target.parentNode.id !== "MailBoxIcon"
+  // ) {
+  //   setMailBoxDisplay(false);
+  // }
   //   console.log(e.currentTarget);
   //   console.log(e);
   // };
   const handleMailbox = () => {
     setMailBoxDisplay(!mailBoxDisplay);
+    setMaskDisplay(!maskDisplay);
+  };
+  const maskClick = () => {
+    setMailBoxDisplay(!mailBoxDisplay);
+    setMaskDisplay(!maskDisplay);
   };
   const handleIgnore = (activityId) => {
     const newInvitation = userData.invitation.filter(
@@ -90,15 +96,12 @@ function Header() {
 
   useEffect(() => {
     arrangeInvitationData();
-    console.log("<<<<<<<<");
   }, [userData]);
 
   useEffect(() => {
     subscribeUser(setUserDataChange, userDataRedux.uid);
   }, [userDataRedux]);
   useEffect(() => {
-    console.log(">>>>>");
-
     if (userDataChange) {
       handlefirebaseChange();
     }
@@ -303,25 +306,41 @@ function Header() {
 
   return (
     <HeaderContainer>
-      <IconContainer>
-        <StyledLink to={`/`}>
-          <IconImage src={iconTaylorBlack} alt="" />
-          {/* <IconImage src={iconLifelogoWhite} alt="" /> */}
-        </StyledLink>
-      </IconContainer>
-      <NavItem>
-        <Item>成果牆</Item>
-        {handleCreateHTML()}
-        {handleLoginHTML()}
-      </NavItem>
-      <NavMenu>
-        <MenuIcon src={menuIcon} alt="" onClick={() => handleMenuSideBar()} />
-        {showMenuSideBar()}
-      </NavMenu>
+      <HeaderDiv>
+        <IconContainer>
+          <StyledLink to={`/`}>
+            <IconImage src={iconTaylorBlack} alt="" />
+            {/* <IconImage src={iconLifelogoWhite} alt="" /> */}
+          </StyledLink>
+        </IconContainer>
+        <NavItem>
+          <Item>成果牆</Item>
+          {handleCreateHTML()}
+          {handleLoginHTML()}
+        </NavItem>
+        <NavMenu>
+          <MenuIcon src={menuIcon} alt="" onClick={() => handleMenuSideBar()} />
+          {showMenuSideBar()}
+        </NavMenu>
+      </HeaderDiv>
+      <Mask
+        style={maskDisplay ? { display: "block" } : { display: "none" }}
+        onClick={() => {
+          maskClick();
+        }}
+      ></Mask>
     </HeaderContainer>
   );
 }
-
+const Mask = styled.div`
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  left: 0;
+  bottom: 0;
+  z-index: 4;
+`;
 const StyledLink = styled(Link)`
   text-decoration: none;
   align-items: center;
@@ -338,10 +357,20 @@ const HeaderContainer = styled.header`
   width: 100%;
   height: 80px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  z-index: 5;
+`;
+const HeaderDiv = styled.div`
+  width: 100%;
+  height: 80px;
+  display: flex;
   padding: 0 40px;
   align-items: center;
   justify-content: space-between;
   background-color: white;
+  z-index: 5;
 `;
 const IconContainer = styled.div`
   @media (max-width: 768px) {
@@ -383,7 +412,7 @@ const MenuSideBar = styled.div`
   display: none;
   background: #000;
   color: #fff;
-  z-index: 2;
+  z-index: 5;
   padding: 40px;
   text-align: left;
   line-height: 50px;
@@ -429,6 +458,7 @@ const Menu = styled.img`
 const MailBoxIconContainer = styled.div`
   margin-left: 20px;
   position: relative;
+  z-index: 5;
 `;
 const MailBoxIcon = styled.img`
   width: 25px;
@@ -449,7 +479,7 @@ const MailBoxDiv = styled.div`
   background: white;
   top: 80px;
   right: 0px;
-  z-index: 2;
+  z-index: 5;
   text-align: left;
 `;
 const MailBoxTitle = styled.div`

@@ -45,7 +45,7 @@ function Detail() {
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
     const currentUser = await getUserData(userUid);
-
+    console.log(data);
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
     data.applicants.forEach((applicants) => {
@@ -341,7 +341,7 @@ function Detail() {
     checkUserIsLogin();
 
     getData();
-  }, []);
+  }, [id]);
 
   //useEffect在每次detailData變化後執行
   //   useEffect(() => {
