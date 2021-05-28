@@ -82,12 +82,14 @@ function Header() {
     const invitedArray = [];
     invitation.forEach((item) => {
       const promise = getSpecificData(item.id).then((data) => {
+        console.log(data);
         return data;
       });
       invitedArray.push(promise);
     });
     const allInvitation = await Promise.all(invitedArray);
     setInvitationData(allInvitation);
+    console.log(allInvitation);
   };
 
   useEffect(() => {
@@ -122,31 +124,33 @@ function Header() {
           // const messageObj = userData.invitation.filter(
           //   (data) => data.id === item.id
           // );
-          return (
-            <Link to={`/activities/${item.id}`}>
-              <EachMailDiv
-                style={{
-                  background: `url(${item.fileSource})`,
-                  backgroundPosition: "50% 50%",
-                  backgroundSize: "cover",
-                }}
-              >
-                <EachMailDivCanvas>
-                  <EachMailContent>
-                    <EachMailTitle>{item.title}</EachMailTitle>
-                    {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
-                    <IgnoreBtn
-                      onClick={() => {
-                        handleIgnore(item.id);
-                      }}
-                    >
-                      +
-                    </IgnoreBtn>
-                  </EachMailContent>
-                </EachMailDivCanvas>
-              </EachMailDiv>
-            </Link>
-          );
+          if (item) {
+            return (
+              <Link to={`/activities/${item.id}`}>
+                <EachMailDiv
+                  style={{
+                    background: `url(${item.fileSource})`,
+                    backgroundPosition: "50% 50%",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  <EachMailDivCanvas>
+                    <EachMailContent>
+                      <EachMailTitle>{item.title}</EachMailTitle>
+                      {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                      <IgnoreBtn
+                        onClick={() => {
+                          handleIgnore(item.id);
+                        }}
+                      >
+                        +
+                      </IgnoreBtn>
+                    </EachMailContent>
+                  </EachMailDivCanvas>
+                </EachMailDiv>
+              </Link>
+            );
+          }
         });
         return HTML;
       } else {
