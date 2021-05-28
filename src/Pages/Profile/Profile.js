@@ -28,6 +28,8 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import EditProfileButton from "./EditProfileButton.js";
 import EditActivitiesButton from "./EditActivitiesButton.js";
 import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
+import MemberCard from "./MemberCard.js";
+import InviteButton from "./InviteButton.js";
 import amplifierImg from "../../images/amplifier-guitar.jpg";
 import recordImg from "../../images/retro-record.jpg";
 
@@ -54,14 +56,12 @@ function Profile() {
   );
   const confirmArray = [];
   const dispatch = useDispatch();
-  console.log(userDataRedux.uid);
   //fireauth
   window.firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // 使用者已登入，可以取得資料
       var email = user.email;
       var uid = user.uid;
-      console.log(email, uid);
     } else {
       // 使用者未登入
     }
@@ -69,9 +69,7 @@ function Profile() {
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
-    console.log(userUid);
     const data = await getUserData(userUid);
-    console.log(data);
     dispatch({ type: "UPDATE_USERDATA", data: data });
     setUserData(data);
   };
@@ -159,7 +157,6 @@ function Profile() {
         let time = data.time;
         let newFormatDate = new Date(`${date}T${time}`);
         let activityTime = newFormatDate.toString();
-        console.log(activityTime);
         let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
 
@@ -188,6 +185,7 @@ function Profile() {
                 applicants={data.applicants}
                 attendants={data.attendants}
                 activityId={data.id}
+                data={data}
               />
             </ButtonField>
           </EachActivityContainer>
@@ -200,8 +198,6 @@ function Profile() {
   };
 
   const renderJoinActivities = () => {
-    console.log(userHostActivityDataRedux);
-
     if (userJoinActivities.length !== 0) {
       const joinActivitiesHTML = userJoinActivities.map((data) => {
         let activityTime = data.timestamp.toDate().toString();
@@ -292,7 +288,7 @@ const ProfileCol = styled.div`
   margin: 0 30px;
   background: #000;
   border: 2px solid #ff0099;
-  height: 500px;
+  height: 100%;
 `;
 const ProfileDetail = styled.div`
   color: white;

@@ -14,7 +14,6 @@ import neonBand from "../../images/neon-band.jpg";
 import guitar from "../../images/guitar.svg";
 
 const db = window.firebase.firestore();
-console.log(db);
 let allActivitiesArrayCopy = [];
 let allActivitiesArray = [];
 
@@ -151,9 +150,11 @@ function Main() {
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
     console.log(userUid);
-    setUserDataUid(userUid);
-    const userData = await getUserData(userUid);
-    console.log(userData);
+    if (userUid) {
+      setUserDataUid(userUid);
+      const userData = await getUserData(userUid);
+      console.log(userData);
+    }
   };
 
   const sloganButtonHTML = () => {

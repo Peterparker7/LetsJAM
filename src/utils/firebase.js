@@ -132,21 +132,35 @@ const getUserData = async (userId) => {
   return userData;
 };
 
+const getAllUser = async () => {
+  let docRef = db.collection("userData");
+  let allUser = [];
+  await docRef.get().then((d) => {
+    d.forEach((data) => {
+      allUser.push(data.data());
+    });
+  });
+  return allUser;
+};
+
 const getAuthUser = async () => {
   const promise = new Promise((resolve) => {
-    window.firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        // 使用者已登入，可以取得資料
-        var email = user.email;
-        var uid = user.uid;
-        console.log(email, uid);
-        resolve(uid);
-      } else {
-        // 使用者未登入
-        console.log("you are not login");
-        resolve(false);
-      }
-    });
+    const unsubscribe = window.firebase
+      .auth()
+      .onAuthStateChanged(function (user) {
+        unsubscribe();
+        if (user) {
+          // 使用者已登入，可以取得資料
+          var email = user.email;
+          var uid = user.uid;
+          console.log(email, uid);
+          resolve(uid);
+        } else {
+          // 使用者未登入
+          console.log("you are not login");
+          resolve(false);
+        }
+      });
   });
   let response = await promise;
   return response;
@@ -279,6 +293,53 @@ const updateActivitiesData = async (data, activityId) => {
       console.error("Error writing document: ", error);
     });
 };
+const sendUserInvite = async (inviteInfo, userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const data = await docRef
+    .update({
+      invitation: window.firebase.firestore.FieldValue.arrayUnion(inviteInfo),
+    })
+    .then(() => {})
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+const updateInvitation = async (newInviteArray, userId) => {
+  let docRef = db.collection("userData").doc(userId);
+  const data = await docRef
+    .set(
+      {
+        invitation: newInviteArray,
+      },
+      { merge: true }
+    )
+    .then(() => {
+      console.log("??????");
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
+const subscribe = (callback, activityId) => {
+  const unsubscribe = db
+    .collection("activityData")
+    .doc(activityId)
+    .onSnapshot((doc) => {
+      callback(doc.data());
+    });
+  return unsubscribe;
+};
+const subscribeUser = (callback, userId) => {
+  const unsubscribe = db
+    .collection("userData")
+    .doc(userId)
+    .onSnapshot((doc) => {
+      console.log(doc.data());
+      callback(doc.data());
+    });
+  return unsubscribe;
+};
 
 export { getActivityData };
 export { getSpecificData };
@@ -287,6 +348,7 @@ export { joinActivity };
 export { agreeJoinActivity };
 export { kickActivity };
 export { getUserData };
+export { getAllUser };
 export { getAuthUser };
 export { logOut };
 export { updateUserData };
@@ -296,4 +358,8 @@ export { getUserJoinActivities };
 export { getUserApplyActivities };
 export { updateActivitiesData };
 export { uploadImage };
+export { sendUserInvite };
+export { updateInvitation };
+export { subscribe };
+export { subscribeUser };
 // export { createActivity };

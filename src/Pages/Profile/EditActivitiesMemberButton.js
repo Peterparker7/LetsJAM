@@ -8,9 +8,12 @@ import {
   getUserData,
   agreeJoinActivity,
   kickActivity,
+  subscribe,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import InviteButton from "./InviteButton.js";
+import { setIn } from "formik";
 
 const StyledModal = Modal.styled`
 width: 30rem;
@@ -28,11 +31,18 @@ function EditActivitiesMemberButton(props) {
   const [opacity, setOpacity] = useState(0);
   const [applicantsData, setApplicantsData] = useState([]);
   const [attendantsData, setAttendantsData] = useState([]);
+  const [activityChange, setActivityChange] = useState([]);
+  const [initApplicantsData, setInitApplicantsData] = useState(
+    props.data.applicants
+  );
+  const [initAttendantsData, setInitAttendantsData] = useState(
+    props.data.attendants
+  );
   let applicantsArray = [];
   let attendantsArray = [];
 
   const getApplicantsDetail = async () => {
-    props.applicants.forEach((applicant) => {
+    initApplicantsData.forEach((applicant) => {
       const promise = getUserData(applicant).then((data) => {
         return data;
       });
@@ -42,7 +52,7 @@ function EditActivitiesMemberButton(props) {
     setApplicantsData(allApplicants);
   };
   const getAttendantsDetail = async () => {
-    props.attendants.forEach((attendant) => {
+    initAttendantsData.forEach((attendant) => {
       const promise = getUserData(attendant).then((data) => {
         return data;
       });
@@ -50,6 +60,11 @@ function EditActivitiesMemberButton(props) {
     });
     const allAttendants = await Promise.all(attendantsArray);
     setAttendantsData(allAttendants);
+  };
+
+  const handlefirebaseChange = async () => {
+    setInitApplicantsData(activityChange.applicants);
+    setInitAttendantsData(activityChange.attendants);
   };
 
   const handleAgree = (e) => {
@@ -73,8 +88,18 @@ function EditActivitiesMemberButton(props) {
 
   useEffect(() => {
     getApplicantsDetail();
+  }, [initApplicantsData]);
+  useEffect(() => {
     getAttendantsDetail();
+  }, [initAttendantsData]);
+  useEffect(() => {
+    subscribe(setActivityChange, props.data.id);
   }, []);
+  useEffect(() => {
+    if (activityChange.applicants || activityChange.attendants) {
+      handlefirebaseChange();
+    }
+  }, [activityChange]);
 
   function toggleModal(e) {
     setOpacity(0);
@@ -95,6 +120,12 @@ function EditActivitiesMemberButton(props) {
   }
 
   if (!applicantsData || !attendantsData) {
+    return "isLoading";
+  }
+  if (!activityChange) {
+    return "isLoading";
+  }
+  if (!initApplicantsData) {
     return "isLoading";
   }
 
@@ -164,6 +195,8 @@ function EditActivitiesMemberButton(props) {
           <MemberDivField>{renderAttendants()}</MemberDivField>
 
           <BtnClose onClick={toggleModal}>+</BtnClose>
+          <span>找不到成員？ 試試</span>
+          <InviteButton data={props} />
         </EditMemberCol>
       </StyledModal>
     </div>
