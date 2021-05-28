@@ -47,20 +47,12 @@ const uploadImage = async (img) => {
 
   // .put() 方法把東西丟到該位置裡
   const task = await storageReference.put(img);
-  console.log("🚀 ~ file: firebase.js ~ line 50 ~ uploadImage ~ task", task);
   const fileRef = window.firebase.storage().ref(path);
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 51 ~ uploadImage ~ fileRef",
-    fileRef
-  );
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 56 ~ downloadUrl ~ downloadUrl",
-    downloadUrl
-  );
+
   return downloadUrl;
 
   // const path = img.name;

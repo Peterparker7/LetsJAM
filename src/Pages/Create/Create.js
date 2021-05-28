@@ -7,9 +7,11 @@ import MyComponent from "../../Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
 import { uploadImage, getAuthUser } from "../../utils/firebase";
-import { createActivity } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector } from "react-redux";
+
+import CreateDetailForm from "./Formik";
+import * as Warning from "./Warning";
 
 const db = window.firebase.firestore();
 let checked = false;
@@ -20,8 +22,21 @@ function Create() {
   const [time, setTime] = useState("");
   const [type, setType] = useState("");
   const [limit, setLimit] = useState("");
+  const [imgUrl, setimgUrl] = useState("");
   const [level, setLevel] = useState("");
+  const [location, setLocation] = useState("");
   const [checked, setChecked] = useState(false);
+
+  const [titleStatus, setTitleStatus] = useState(true);
+  const [dateStatus, setDateStatus] = useState(true);
+  const [timeStatus, setTimeStatus] = useState(true);
+  const [typeStatus, setTypeStatus] = useState(true);
+  const [requirementStatus, setRequirementStatus] = useState(true);
+  const [limitStatus, setLimitStatus] = useState(true);
+  const [levelStatus, setLevelStatus] = useState(true);
+  const [locationStatus, setLocationStatus] = useState(true);
+  const [imageStatus, setImageStatus] = useState(true);
+
   // let limitinit = 0;
   let comment = "";
   let youtubeUrl = "";
@@ -58,14 +73,61 @@ function Create() {
       return "redirection";
     }
   };
+
   useEffect(() => {
     checkUserIsLogin();
   }, []);
+
+  const createFormCheck = () => {
+    if (!title || title.length > 10) {
+      setTitleStatus(false);
+    }
+    if (!date) {
+      setDateStatus(false);
+    }
+    if (!time) {
+      setTimeStatus(false);
+    }
+    if (!type) {
+      setTypeStatus(false);
+    }
+    if (requirement.length === 0) {
+      setRequirementStatus(false);
+    }
+    if (!limit && !checked) {
+      setLimitStatus(false);
+    }
+    if (!level) {
+      setLevelStatus(false);
+    }
+    if (!location) {
+      setLocationStatus(false);
+    }
+    if (!imgUrl) {
+      setImageStatus(false);
+    }
+    if (
+      !titleStatus ||
+      !dateStatus ||
+      !typeStatus ||
+      requirement.length === 0 ||
+      !limitStatus ||
+      !levelStatus ||
+      !locationStatus ||
+      !imgUrl
+    ) {
+      console.log("Validation fail");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const clickCreate = async () => {
     if (checked) {
       setLimit(0);
     }
-    console.log("click");
+
     convertDateTime();
     let timestamp = new Date(
       convertDateTime().formatDateYear,
@@ -77,22 +139,7 @@ function Create() {
 
     let newTimestamp = new Date(`${date}T${time}`);
 
-    // const uploadImage = async () => {
-    //   const path = imgSource.name;
-
-    //   // 取得 storage 對應的位置
-    //   const storageReference = window.firebase.storage().ref(path);
-    //   // .put() 方法把東西丟到該位置裡
-    //   const task = await storageReference.put(imgSource);
-    //   const fileRef = window.firebase.storage().ref(path);
-
-    //   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
-    //     return url;
-    //   });
-    //   imageUrl = await downloadUrl;
-    // };
-    imageUrl = await uploadImage(imgSource);
-    console.log(imageUrl);
+    // imageUrl = await uploadImage(imgSource);
 
     const activityData = db.collection("activityData").doc();
 
@@ -103,7 +150,7 @@ function Create() {
       limit: limit,
       newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
       timestamp: timestamp, //firebase內建timestamp
-      location: "AppWork School 3F",
+      location: location,
       geo: ["10", "10"],
       requirement: requirementArray,
       level: level,
@@ -112,15 +159,15 @@ function Create() {
       applicants: [],
       comment: comment,
       youtubeSource: youtubeUrl,
-      fileSource: imageUrl,
+      fileSource: imgUrl,
       status: true,
       date: date,
       time: time,
     };
-
-    await activityData.set(newData);
-    window.location.replace("./");
-    console.log("???????");
+    if (createFormCheck()) {
+      await activityData.set(newData);
+      window.location.replace("./");
+    }
   };
 
   const [requirement, setRequirement] = useState([]);
@@ -140,22 +187,31 @@ function Create() {
   function handleChange(e, changeType) {
     if (changeType === "title") {
       setTitle(e.target.value);
-      console.log(e.target.value);
+      setTitleStatus(true);
     }
     if (changeType === "date") {
       setDate(e.target.value);
+      setDateStatus(true);
     }
     if (changeType === "time") {
       setTime(e.target.value);
+      setTimeStatus(true);
     }
     if (changeType === "type") {
       setType(e.target.value);
+      setTypeStatus(true);
     }
     if (changeType === "level") {
       setLevel(e.target.value);
+      setLevelStatus(true);
     }
     if (changeType === "limit") {
       setLimit(e.target.value);
+      setLimitStatus(true);
+    }
+    if (changeType === "location") {
+      setLocation(e.target.value);
+      setLocationStatus(true);
     }
   }
 
@@ -194,8 +250,12 @@ function Create() {
     }
   };
 
-  function handleUploadImage(e) {
-    imgSource = e.target.files[0];
+  async function handleUploadImage(e) {
+    if (e.target.value) {
+      imgSource = e.target.files[0];
+      imageUrl = await uploadImage(imgSource);
+      setimgUrl(imageUrl);
+    }
   }
 
   return (
@@ -210,10 +270,13 @@ function Create() {
           <InputFieldDiv>
             <Label>活動名稱</Label>
             <Inputfield
+              name="title"
+              placeholder="請輸入活動名稱 最多10字"
               onChange={(e) => {
                 handleChange(e, "title");
               }}
             ></Inputfield>
+            {Warning.warningTitleHTML(title, titleStatus)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>日期</Label>
@@ -223,6 +286,7 @@ function Create() {
                 handleChange(e, "date");
               }}
             ></Inputfield>
+            {Warning.warningDateHTML(date, dateStatus)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>時間</Label>
@@ -232,6 +296,7 @@ function Create() {
                 handleChange(e, "time");
               }}
             ></Inputfield>
+            {Warning.warningTimeHTML(time, timeStatus)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>音樂類型</Label>
@@ -241,6 +306,7 @@ function Create() {
           }}
         ></Inputfield> */}
             <select
+              style={{ width: "220px" }}
               onChange={(e) => {
                 handleChange(e, "type");
               }}
@@ -252,7 +318,9 @@ function Create() {
               <option>嘻哈</option>
               <option>古典</option>
             </select>
+            {Warning.warningTypeHTML(type, typeStatus)}
           </InputFieldDiv>
+
           <InputFieldDiv>
             <Label>樂器需求</Label>
             <MultiSelect
@@ -261,55 +329,47 @@ function Create() {
               onChange={setRequirement}
               labelledBy="Select"
             />
+            {Warning.warningRequirementHTML(requirement, requirementStatus)}
           </InputFieldDiv>
+
           <InputFieldDiv>
             <LimitDiv>
               <Label>人數限制</Label>
-              {/* <Inputfield
-          type="number"
-          defaultValue="1"
-          min="1"
-          max="20"
-          id="limitValue"
-          onChange={(e) => {
-            setLimit(e.target.value);
-          }}
-        ></Inputfield> */}
               <LimitboxHTML></LimitboxHTML>
               <LimitCheckBoxField
                 type="checkbox"
                 id="noLimit"
-                onChange={() => setChecked(!checked)}
+                onChange={() => {
+                  setChecked(!checked);
+                  setLimitStatus(true);
+                }}
               />
-              {/* <input
-          type="checkbox"
-          id="noLimit"
-          onChange={(e) => {
-            console.dir(e);
-            if (e.target.checked) {
-              setLimit("none");
-              console.log(limit);
-              const ttt = document.querySelector("#limitValue");
-              ttt.disabled = true;
-              ttt.value = "";
-            }
-          }}
-        /> */}
+
               <label for="noLimit">無</label>
             </LimitDiv>
+            {Warning.warningLimitHTML(limit, limitStatus)}
           </InputFieldDiv>
+
           <InputFieldDiv>
             <Label>建議程度</Label>
             <Inputfield
-              placeholder="請描述"
+              placeholder="請描述 如：初階/進階"
               onChange={(e) => {
                 handleChange(e, "level");
               }}
             ></Inputfield>
+            {Warning.warningLevelHTML(level, levelStatus)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>地點</Label>
-            <Inputfield class="location"></Inputfield>
+            <Inputfield
+              placeholder="請輸入詳細地址"
+              class="location"
+              onChange={(e) => {
+                handleChange(e, "location");
+              }}
+            ></Inputfield>
+            {Warning.warningLocationHTML(location, locationStatus)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>備註</Label>
@@ -320,16 +380,23 @@ function Create() {
             ></Inputfield>
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label>上傳活動照片</Label>
+            <Label>活動封面</Label>
             <input
               type="file"
               accept="image/*"
-              style={{ width: "200px" }}
+              style={{ width: "220px" }}
               onChange={(e) => {
                 handleUploadImage(e);
+                if (e.target.value) {
+                  setImageStatus(true);
+                } else {
+                  setImageStatus(false);
+                }
               }}
             ></input>
+            {Warning.warningImageHTML(imageUrl, imageStatus)}
           </InputFieldDiv>
+
           <InputFieldDiv>
             <Label>上傳Youtube連結</Label>
             <Inputfield
@@ -340,6 +407,7 @@ function Create() {
             ></Inputfield>
           </InputFieldDiv>
         </CreateDetail>
+
         <ButtonField>
           <Button
             class="createBtn"
@@ -390,7 +458,7 @@ const InputFieldDiv = styled.div`
 `;
 const Inputfield = styled.input`
   border: 1px solid #979797;
-  width: 200px;
+  width: 220px;
   height: 30px;
   padding: 5px;
 `;
@@ -423,4 +491,8 @@ const Button = styled.button`
   height: 40px;
   cursor: pointer;
 `;
+// const Warning = styled.div`
+//   width: 120px;
+//   font-size: 12px;
+// `;
 export default Create;
