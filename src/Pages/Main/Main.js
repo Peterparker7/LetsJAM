@@ -1,6 +1,7 @@
 import "../../App.css";
 import "../../normalize.css";
 import styled from "styled-components";
+import { keyframes } from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
@@ -212,11 +213,6 @@ function Main() {
         </Slogan>
         <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
-      {/* <img
-        src={guitar}
-        alt=""
-        style={{ width: "100px", transform: `rotate(${0.125}turn)` }}
-      ></img> */}
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
       <div>
         <InstrumentBanner />
@@ -294,7 +290,18 @@ const Carosul = styled.div`
     height: 300px;
   }
 `;
+const NeonShine = keyframes`
+  0% {opacity: 1}
+  1%{opacity:0;}
+  2%{opacity:1;}
 
+  5%{opacity:1;}
+  6%{opacity:0;}
+
+  21%{opacity:1;}
+
+  90% {opacity: 1}
+`;
 const Slogan = styled.div`
   color: white;
   position: absolute;
@@ -304,11 +311,15 @@ const Slogan = styled.div`
   font-weight: bold;
   top: 50px;
   left: 120px;
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
+  animation: ${NeonShine} 3s 1s linear infinite;
   @media (max-width: 576px) {
     font-size: 36px;
     left: 60px;
   }
 `;
+
 const JoinButtonContainer = styled.div`
   width: 100%;
   text-align: center;
