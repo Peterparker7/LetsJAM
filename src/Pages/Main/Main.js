@@ -210,7 +210,7 @@ function Main() {
         <Slogan>
           整個城市<br></br>都是我的練團室
         </Slogan>
-        {sloganButtonHTML()}
+        <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
       {/* <img
         src={guitar}
@@ -287,6 +287,9 @@ const Carosul = styled.div`
   background-repeat: no-repeat;
   background-position: 50% 50%;
   position: relative;
+  @media (max-width: 576px) {
+    height: 300px;
+  }
 `;
 
 const Slogan = styled.div`
@@ -298,12 +301,18 @@ const Slogan = styled.div`
   font-weight: bold;
   top: 50px;
   left: 120px;
+  @media (max-width: 576px) {
+    font-size: 36px;
+    left: 60px;
+  }
 `;
-
-const JoinButton = styled.button`
+const JoinButtonContainer = styled.div`
+  width: 100%;
+  text-align: center;
   position: absolute;
   top: 80%;
-  left: 45%;
+`;
+const JoinButton = styled.button`
   border: 1px solid none;
   border-radius: 20px;
   background: #ff00ff;
@@ -342,6 +351,9 @@ const Filterlabel = styled.label`
   font-weight: bold;
   line-height: 30px;
   margin: 0 20px;
+  @media (max-width: 576px) {
+    margin: 0 10px;
+  }
 `;
 const FilterBar = styled.div`
   border: 1px solid white;
