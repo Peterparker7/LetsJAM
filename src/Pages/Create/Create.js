@@ -259,155 +259,159 @@ function Create() {
   }
 
   return (
-    <Container>
-      <ProcessIntroContainer>
-        <ProcessIntro>創立活動圖文說明</ProcessIntro>
-        <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} />
-      </ProcessIntroContainer>
-      <CreateDetailContainer>
-        <Title>我要創團</Title>
-        <CreateDetail>
-          <InputFieldDiv>
-            <Label>活動名稱</Label>
-            <Inputfield
-              name="title"
-              placeholder="請輸入活動名稱 最多10字"
-              onChange={(e) => {
-                handleChange(e, "title");
-              }}
-            ></Inputfield>
-            {Warning.warningTitleHTML(title, titleStatus)}
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>日期</Label>
-            <Inputfield
-              type="date"
-              onChange={(e) => {
-                handleChange(e, "date");
-              }}
-            ></Inputfield>
-            {Warning.warningDateHTML(date, dateStatus)}
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>時間</Label>
-            <Inputfield
-              type="time"
-              onChange={(e) => {
-                handleChange(e, "time");
-              }}
-            ></Inputfield>
-            {Warning.warningTimeHTML(time, timeStatus)}
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>音樂類型</Label>
-            {/* <Inputfield
+    <MainContainer>
+      <Container>
+        {/* <ProcessIntroContainer> */}
+        {/* <ProcessIntro>創立活動圖文說明</ProcessIntro> */}
+        {/* <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} /> */}
+        {/* </ProcessIntroContainer> */}
+        <CreateDetailContainer>
+          <Title>我要開團</Title>
+          <CreateDetail>
+            <CreateDetailContent>
+              <InputFieldDiv>
+                <Label>活動名稱</Label>
+                <Inputfield
+                  name="title"
+                  placeholder="請輸入活動名稱 最多10字"
+                  onChange={(e) => {
+                    handleChange(e, "title");
+                  }}
+                ></Inputfield>
+                {Warning.warningTitleHTML(title, titleStatus)}
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>日期</Label>
+                <Inputfield
+                  type="date"
+                  onChange={(e) => {
+                    handleChange(e, "date");
+                  }}
+                ></Inputfield>
+                {Warning.warningDateHTML(date, dateStatus)}
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>時間</Label>
+                <Inputfield
+                  type="time"
+                  onChange={(e) => {
+                    handleChange(e, "time");
+                  }}
+                  step={300}
+                ></Inputfield>
+                {Warning.warningTimeHTML(time, timeStatus)}
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>音樂類型</Label>
+                {/* <Inputfield
           onChange={(e) => {
             setType(e.target.value);
           }}
         ></Inputfield> */}
-            <select
-              style={{ width: "220px" }}
-              onChange={(e) => {
-                handleChange(e, "type");
-              }}
-            >
-              <option value="" disabled selected>
-                請選擇主要曲風
-              </option>
-              <option>流行</option>
-              <option>嘻哈</option>
-              <option>古典</option>
-            </select>
-            {Warning.warningTypeHTML(type, typeStatus)}
-          </InputFieldDiv>
+                <SelectType
+                  onChange={(e) => {
+                    handleChange(e, "type");
+                  }}
+                >
+                  <option value="" disabled selected>
+                    請選擇主要曲風
+                  </option>
+                  <option>流行</option>
+                  <option>嘻哈</option>
+                  <option>古典</option>
+                </SelectType>
+                {Warning.warningTypeHTML(type, typeStatus)}
+              </InputFieldDiv>
 
-          <InputFieldDiv>
-            <Label>樂器需求</Label>
-            <MultiSelect
-              options={options}
-              value={requirement}
-              onChange={setRequirement}
-              labelledBy="Select"
-            />
-            {Warning.warningRequirementHTML(requirement, requirementStatus)}
-          </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>樂器需求</Label>
+                <MultiSelect
+                  className="createPageMultiSelect"
+                  options={options}
+                  value={requirement}
+                  onChange={setRequirement}
+                  labelledBy="Select"
+                />
+                {Warning.warningRequirementHTML(requirement, requirementStatus)}
+              </InputFieldDiv>
 
-          <InputFieldDiv>
-            <LimitDiv>
-              <Label>人數限制</Label>
-              <LimitboxHTML></LimitboxHTML>
-              <LimitCheckBoxField
-                type="checkbox"
-                id="noLimit"
-                onChange={() => {
-                  setChecked(!checked);
-                  setLimitStatus(true);
-                }}
-              />
+              <InputFieldDiv>
+                <LimitDiv>
+                  <Label>人數限制</Label>
+                  <LimitboxHTML></LimitboxHTML>
+                  <LimitCheckBoxField
+                    type="checkbox"
+                    id="noLimit"
+                    onChange={() => {
+                      setChecked(!checked);
+                      setLimitStatus(true);
+                    }}
+                  />
 
-              <label for="noLimit">無</label>
-            </LimitDiv>
-            {Warning.warningLimitHTML(limit, limitStatus)}
-          </InputFieldDiv>
+                  <label for="noLimit">無</label>
+                </LimitDiv>
+                {Warning.warningLimitHTML(limit, limitStatus)}
+              </InputFieldDiv>
 
-          <InputFieldDiv>
-            <Label>建議程度</Label>
-            <Inputfield
-              placeholder="請描述 如：初階/進階"
-              onChange={(e) => {
-                handleChange(e, "level");
-              }}
-            ></Inputfield>
-            {Warning.warningLevelHTML(level, levelStatus)}
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>地點</Label>
-            <Inputfield
-              placeholder="請輸入詳細地址"
-              class="location"
-              onChange={(e) => {
-                handleChange(e, "location");
-              }}
-            ></Inputfield>
-            {Warning.warningLocationHTML(location, locationStatus)}
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>備註</Label>
-            <Inputfield
-              onChange={(e) => {
-                comment = e.target.value;
-              }}
-            ></Inputfield>
-          </InputFieldDiv>
-          <InputFieldDiv>
-            <Label>活動封面</Label>
-            <input
-              type="file"
-              accept="image/*"
-              style={{ width: "220px" }}
-              onChange={(e) => {
-                handleUploadImage(e);
-                if (e.target.value) {
-                  setImageStatus(true);
-                } else {
-                  setImageStatus(false);
-                }
-              }}
-            ></input>
-            {Warning.warningImageHTML(imageUrl, imageStatus)}
-          </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>建議程度</Label>
+                <Inputfield
+                  placeholder="請描述 如：初階/進階"
+                  onChange={(e) => {
+                    handleChange(e, "level");
+                  }}
+                ></Inputfield>
+                {Warning.warningLevelHTML(level, levelStatus)}
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>地點</Label>
+                <Inputfield
+                  placeholder="請輸入詳細地址"
+                  class="location"
+                  onChange={(e) => {
+                    handleChange(e, "location");
+                  }}
+                ></Inputfield>
+                {Warning.warningLocationHTML(location, locationStatus)}
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>備註</Label>
+                <Inputfield
+                  onChange={(e) => {
+                    comment = e.target.value;
+                  }}
+                ></Inputfield>
+              </InputFieldDiv>
+              <InputFieldDiv>
+                <Label>活動封面</Label>
+                <InputfieldImage
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    handleUploadImage(e);
+                    if (e.target.value) {
+                      setImageStatus(true);
+                    } else {
+                      setImageStatus(false);
+                    }
+                  }}
+                ></InputfieldImage>
+                {Warning.warningImageHTML(imageUrl, imageStatus)}
+              </InputFieldDiv>
 
-          <InputFieldDiv>
-            <Label>上傳Youtube連結</Label>
-            <Inputfield
-              type="url"
-              onChange={(e) => {
-                youtubeUrl = e.target.value;
-              }}
-            ></Inputfield>
-          </InputFieldDiv>
-        </CreateDetail>
-
+              {/* <InputFieldDiv>
+                <Label>上傳Youtube連結</Label>
+                <Inputfield
+                  type="url"
+                  onChange={(e) => {
+                    youtubeUrl = e.target.value;
+                  }}
+                ></Inputfield>
+              </InputFieldDiv> */}
+            </CreateDetailContent>
+            <CreateDetailImage></CreateDetailImage>
+          </CreateDetail>
+        </CreateDetailContainer>
         <ButtonField>
           <Button
             class="createBtn"
@@ -418,17 +422,21 @@ function Create() {
             建立活動
           </Button>
         </ButtonField>
-      </CreateDetailContainer>
-    </Container>
+      </Container>
+    </MainContainer>
   );
 }
-
+const MainContainer = styled.div`
+  background-color: white;
+  padding: 0 20px;
+`;
 const Container = styled.div`
   text-align: left;
-  width: 1024px;
+  max-width: 1024px;
   margin: 50px auto;
   height: 100%;
-  border: 1px solid;
+  border: 1px solid #979797;
+  padding-bottom: 50px;
 `;
 const ProcessIntroContainer = styled.div`
   width: 960px;
@@ -439,11 +447,34 @@ const ProcessIntro = styled.div``;
 const CreateDetailContainer = styled.div`
   width: 720px;
   margin: 0 auto;
+  margin-top: 20px;
   margin-bottom: 20px;
+  background: white;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 const CreateDetail = styled.div`
+  display: flex;
   line-height: 30px;
   padding: 20px;
+  justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+const CreateDetailContent = styled.div``;
+
+const CreateDetailImage = styled.div`
+  background: #979797;
+  width: 300px;
+  height: auto;
+  /* margin-left: 20px; */
+  @media (max-width: 768px) {
+    height: 300px;
+    margin-left: 0px;
+    display: none;
+  }
 `;
 const Title = styled.div`
   font-size: 24px;
@@ -461,6 +492,30 @@ const Inputfield = styled.input`
   width: 220px;
   height: 30px;
   padding: 5px;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
+  @media (max-width: 576px) {
+    width: 220px;
+  }
+`;
+const SelectType = styled.select`
+  width: 220px;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
+  @media (max-width: 576px) {
+    width: 220px;
+  }
+`;
+const InputfieldImage = styled.input`
+  width: 220px;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
+  @media (max-width: 576px) {
+    width: 220px;
+  }
 `;
 const LimitInputField = styled.input`
   width: 50px;
@@ -477,8 +532,11 @@ const LimitDiv = styled.div`
   align-items: center;
 `;
 const Label = styled.label`
-  width: 130px;
+  width: 90px;
   display: inline-block;
+  @media (max-width: 768px) {
+    width: 90px;
+  }
 `;
 const ButtonField = styled.div`
   text-align: center;

@@ -11,7 +11,7 @@ import {
   logOut,
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
-import guitar from "../../images/guitar.svg";
+import InstrumentBanner from "./InstrumentBanner";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -218,7 +218,9 @@ function Main() {
         style={{ width: "100px", transform: `rotate(${0.125}turn)` }}
       ></img> */}
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
-      <InstrumentBar></InstrumentBar>
+      <div>
+        <InstrumentBanner />
+      </div>
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -330,7 +332,6 @@ const MainImg = styled.img`
 
   /* object-fit: cover; */
 `;
-const InstrumentBar = styled.div``;
 
 const ActivityFilter = styled.div`
   display: flex;

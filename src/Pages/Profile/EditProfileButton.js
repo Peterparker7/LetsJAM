@@ -272,6 +272,7 @@ function EditProfileButton(props) {
             <InputFieldContainer>
               <Label for="skill">會的樂器</Label>
               <MultiSelect
+                className="EditProfileMulti"
                 style={{ width: "100px" }}
                 options={options}
                 value={skill}

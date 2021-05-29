@@ -354,6 +354,7 @@ function EditActivitiesButton(props) {
           <InputFieldDiv>
             <Label>樂器需求</Label>
             <MultiSelect
+              className="EditActivitiesMulti"
               options={options}
               value={requirement}
               onChange={setRequirement}
