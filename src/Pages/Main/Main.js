@@ -218,6 +218,7 @@ function Main() {
         style={{ width: "100px", transform: `rotate(${0.125}turn)` }}
       ></img> */}
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
+      <InstrumentBar></InstrumentBar>
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -329,6 +330,7 @@ const MainImg = styled.img`
 
   /* object-fit: cover; */
 `;
+const InstrumentBar = styled.div``;
 
 const ActivityFilter = styled.div`
   display: flex;
@@ -365,13 +367,27 @@ const FilterBar = styled.div`
 `;
 
 const ActivitiesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
   max-width: 1024px;
-  justify-content: space-around;
+  justify-items: center;
+
+  /* justify-content: space-around; */
+
+  @media (max-width: 985px) {
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    grid-column-gap: 0px;
+    grid-row-gap: 20px;
+    max-width: 700px;
+  }
   @media (max-width: 768px) {
+    display: flex;
     flex-direction: column;
     padding-left: 20px;
     padding-right: 20px;
@@ -384,7 +400,7 @@ const ActivityItem = styled.div`
   height: 300px;
   border-radius: 20px;
   background: #000;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   text-align: left;
   padding-top: 20px;
   padding-left: 30px;
@@ -427,17 +443,17 @@ const Canvas = styled.div`
 `;
 
 const ActivityContent = styled.div`
-  margin-top: 20px;
-  margin-left: 30px;
+  margin: 20px 25px;
   position: relative;
   @media (max-width: 768px) {
-    margin-top: 10px;
-    margin-left: 20px;
+    /* margin-top: 10px;
+    margin-left: 20px; */
   }
 `;
 
 const Title = styled.div`
   font-size: 24px;
+  height: 30px;
 `;
 const Time = styled.div`
   font-size: 12px;
@@ -448,12 +464,16 @@ const Type = styled.div`
 const Requirement = styled.div`
   font-size: 20px;
   margin-top: 10px;
+  height: 80px;
   @media (max-width: 768px) {
     font-size: 16px;
+    height: unset;
   }
 `;
 const Location = styled.div`
-  margin-top: 70px;
+  height: 50px;
+  line-height: 20px;
+
   @media (max-width: 768px) {
     margin-top: 10px;
   }
@@ -463,8 +483,8 @@ const AttendantNum = styled.div`
   font-size: 16px;
   @media (max-width: 768px) {
     position: absolute;
-    right: 50px;
-    bottom: 2.5px;
+    right: 20px;
+    bottom: 25px;
     font-size: 16px;
   }
 `;
