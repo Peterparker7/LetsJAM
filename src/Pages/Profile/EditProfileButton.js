@@ -14,7 +14,7 @@ import settingIcon from "../../images/gear.svg";
 
 const StyledModal = Modal.styled`
 width: 30rem;
-height: 30rem;
+height: 35rem;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -231,9 +231,9 @@ function EditProfileButton(props) {
 
               {/* </div> */}
             </InputFieldContainer>
-            <InputFieldContainer>
+            <InputFieldContainer style={{ alignItems: "normal" }}>
               <Label for="intro">自我介紹</Label>
-              <InputFieldInput
+              {/* <InputFieldInput
                 id="intro"
                 contentEditable="true"
                 placeholder="寫點描述"
@@ -242,7 +242,17 @@ function EditProfileButton(props) {
                   handleProfileChange(e.target.value, "intro");
                 }}
                 defaultValue={userDataRedux.intro}
-              />
+              /> */}
+              <IntroTextArea
+                id="intro"
+                contentEditable="true"
+                placeholder="寫點描述"
+                suppressContentEditableWarning={true}
+                onInput={(e) => {
+                  handleProfileChange(e.target.value, "intro");
+                }}
+                defaultValue={userDataRedux.intro}
+              ></IntroTextArea>
             </InputFieldContainer>
             <InputFieldContainer>
               {handlePreferTypeDefault()}
@@ -315,6 +325,13 @@ const InputFieldInput = styled.input`
   height: 30px;
   width: calc(100% - 80px);
   padding: 5px;
+`;
+const IntroTextArea = styled.textarea`
+  width: calc(100% - 80px);
+  height: 110px;
+  border: 1px solid #979797;
+  padding: 5px;
+  resize: none;
 `;
 
 const SelectType = styled.select`

@@ -27,5 +27,5 @@ a {
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
   --rmsc-h: 30px !important; /* Height */
-  width: 220px;
+  width: 220px !important;
 }
