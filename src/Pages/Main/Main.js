@@ -376,6 +376,10 @@ const ActivityFilter = styled.div`
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
+  @media (max-width: 576px) {
+    font-size: 12px;
+    padding-left: 0px;
+  }
 `;
 
 const Filterlabel = styled.label`
@@ -384,6 +388,10 @@ const Filterlabel = styled.label`
   margin: 0 20px;
   @media (max-width: 576px) {
     margin: 0 10px;
+    font-size: 12px;
+  }
+  @media (max-width: 414px) {
+    margin: 0 5px;
   }
 `;
 const FilterBar = styled.div`
@@ -393,6 +401,12 @@ const FilterBar = styled.div`
   align-items: center;
   margin-left: 20px;
   padding-right: 10px;
+  @media (max-width: 576px) {
+    font-size: 12px;
+  }
+  @media (max-width: 414px) {
+    margin-left: 10px;
+  }
 `;
 
 const ActivitiesContainer = styled.div`
@@ -446,9 +460,9 @@ const ActivityItem = styled.div`
     color: black;
   }
   @media (max-width: 768px) {
-    width: 80%;
+    width: 90%;
     height: 200px;
-    margin: 20px auto;
+    margin: 0 auto;
   }
 `;
 
@@ -460,7 +474,7 @@ const Canvas = styled.div`
   height: 300px;
   border-radius: 20px;
 
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
   &:hover {
     background: white;
     color: black;

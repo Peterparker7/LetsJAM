@@ -14,7 +14,7 @@ import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
 
 const db = window.firebase.firestore();
-let checked = false;
+// let checked = false;
 
 function Create() {
   const [title, setTitle] = useState("");
@@ -349,6 +349,11 @@ function Create() {
                     onChange={() => {
                       setChecked(!checked);
                       setLimitStatus(true);
+                      console.log(checked);
+                      //第一次按下還沒有值，在這邊先設定不然到送出時limit會是空的
+                      if (!checked) {
+                        setLimit(0);
+                      }
                     }}
                   />
 

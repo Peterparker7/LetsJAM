@@ -455,7 +455,9 @@ const ImageContainer = styled.div`
 `;
 const ActivityImage = styled.img`
   width: 100%;
+  max-height: 400px;
   border-radius: 20px;
+  object-fit: cover;
 `;
 const ButtonField = styled.div`
   margin-top: 20px;
@@ -564,6 +566,7 @@ const ProfileBlock = styled.div`
 const ImageIntroBlock = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
   @media (max-width: 888px) {
     width: 100%;
   }
@@ -587,7 +590,9 @@ const IntroBlock = styled.div`
   }
 `;
 const VideoBlock = styled.div`
-  width: 100%;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 const VideoIframe = styled.iframe`
   width: 500px;
