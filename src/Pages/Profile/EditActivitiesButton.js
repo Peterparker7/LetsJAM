@@ -218,6 +218,7 @@ function EditActivitiesButton(props) {
       type: "DELETE_ACTIVITYDATA",
       data: props.data,
     });
+    // window.location.replace("/activities/profile");
     setOpacity(0);
     setIsOpen(!isOpen);
   };

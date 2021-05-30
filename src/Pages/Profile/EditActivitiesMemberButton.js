@@ -96,8 +96,10 @@ function EditActivitiesMemberButton(props) {
     subscribe(setActivityChange, props.data.id);
   }, []);
   useEffect(() => {
-    if (activityChange.applicants || activityChange.attendants) {
-      handlefirebaseChange();
+    if (activityChange) {
+      if (activityChange.applicants || activityChange.attendants) {
+        handlefirebaseChange();
+      }
     }
   }, [activityChange]);
 

@@ -175,33 +175,50 @@ function Main() {
   };
 
   const ActivityHTML = data.map((item, index) => {
+    let firebaseTime = item.timestamp.toMillis();
+    console.log(
+      "🚀 ~ file: Main.js ~ line 179 ~ ActivityHTML ~ firebaseTime",
+      firebaseTime
+    );
     let activityTime = item.timestamp.toDate().toString();
-    let showTime = activityTime.slice(0, 24);
+    console.log(
+      "🚀 ~ file: Main.js ~ line 179 ~ ActivityHTML ~ activityTime",
+      activityTime
+    );
+    let showTime = activityTime.slice(0, 21);
+    let currentTime = Date.now();
+    console.log(
+      "🚀 ~ file: Main.js ~ line 182 ~ ActivityHTML ~ currentTime",
+      currentTime
+    );
+
     let requirementHTML = item.requirement.map((data) => {
       return <span>{data} </span>;
     });
     let attendantsNum = item.attendants.length;
 
-    return (
-      <Link to={`/activities/${item.id}`}>
-        <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
-          <Canvas>
-            {/* <div>{item.id}</div> */}
-            <ActivityContent>
-              <Time>{showTime}</Time>
+    if (firebaseTime > currentTime) {
+      return (
+        <Link to={`/activities/${item.id}`}>
+          <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
+            <Canvas>
+              {/* <div>{item.id}</div> */}
+              <ActivityContent>
+                <Time>{showTime}</Time>
 
-              <Title>{item.title}</Title>
-              <Type>{item.type}</Type>
-              <Requirement>{requirementHTML}</Requirement>
-              <Location>{item.location}</Location>
-              {/* <Host>揪團主：{item.host.name}</Host> */}
-              <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-              {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
-            </ActivityContent>
-          </Canvas>
-        </ActivityItem>
-      </Link>
-    );
+                <Title>{item.title}</Title>
+                <Type>{item.type}</Type>
+                <Requirement>{requirementHTML}</Requirement>
+                <Location>{item.location}</Location>
+                {/* <Host>揪團主：{item.host.name}</Host> */}
+                <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+                {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+              </ActivityContent>
+            </Canvas>
+          </ActivityItem>
+        </Link>
+      );
+    }
   });
 
   return (

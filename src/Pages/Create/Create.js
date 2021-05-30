@@ -25,6 +25,7 @@ function Create() {
   const [imgUrl, setimgUrl] = useState("");
   const [level, setLevel] = useState("");
   const [location, setLocation] = useState("");
+  const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(false);
 
   const [titleStatus, setTitleStatus] = useState(true);
@@ -38,7 +39,7 @@ function Create() {
   const [imageStatus, setImageStatus] = useState(true);
 
   // let limitinit = 0;
-  let comment = "";
+  // let comment = "";
   let youtubeUrl = "";
   let imgSource = "";
   let imageUrl = "";
@@ -213,6 +214,9 @@ function Create() {
       setLocation(e.target.value);
       setLocationStatus(true);
     }
+    if (changeType === "comment") {
+      setComment(e.target.value);
+    }
   }
 
   const LimitboxHTML = () => {
@@ -378,7 +382,8 @@ function Create() {
                 <Label>備註</Label>
                 <Inputfield
                   onChange={(e) => {
-                    comment = e.target.value;
+                    handleChange(e, "comment");
+                    // comment = e.target.value;
                   }}
                 ></Inputfield>
               </InputFieldDiv>
