@@ -25,16 +25,22 @@ const FooterDiv = styled.div`
   background-color: black;
   height: 180px;
   padding: 0 40px;
+  align-items: center;
 `;
 
 const Item = styled.div`
   align-items: center;
   color: white;
-  margin-top: 40px;
-  margin-left: 40px;
+  /* margin-top: 40px;
+  margin-left: 40px; */
+  @media (max-width: 576px) {
+  }
 `;
 const LogoImg = styled.img`
   width: 320px;
+  @media (max-width: 576px) {
+    width: 200px;
+  }
 `;
 const NavTitle = styled.div`
   font-size: 10px;

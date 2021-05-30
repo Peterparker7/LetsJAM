@@ -1,12 +1,14 @@
 import "../App.css";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import iconTaylorBlack from "../images/icon-Taylor-black.png";
+import iconTaylorWhite from "../images/icon-Taylor-white.png";
 import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
 import iconPersonCircle from "../images/person-circle.svg";
 import menuIcon from "../images/list.svg";
 import mailboxIcon from "../images/envelope.svg";
+// import { ReactComponent as MailBoxIcon } from "../images/envelope.svg";
 // import { useParams } from "react-router-dom";
 import {
   getUserData,
@@ -252,19 +254,19 @@ function Header() {
     if (userData.length !== 0) {
       return (
         <StyledLink to={`/activities/create`}>
-          <Item>我要開團</Item>
+          <ItemTwo>我要開團</ItemTwo>
         </StyledLink>
       );
     } else {
       return (
         <StyledLink to={`/activities/login`}>
-          <Item
+          <ItemTwo
             onClick={() => {
               alert("登入以使用開團功能");
             }}
           >
             我要開團
-          </Item>
+          </ItemTwo>
         </StyledLink>
       );
     }
@@ -295,11 +297,10 @@ function Header() {
     } else {
       return (
         <SignInItem>
-          <Item>
-            <StyledLink to={`/activities/login`}>
-              <div>登入/註冊</div>
-            </StyledLink>
-          </Item>
+          <StyledLink to={`/activities/login`}>
+            <ItemThree>登入/註冊</ItemThree>
+          </StyledLink>
+
           <StyledLink to={`/activities/login`}>
             <IconUser src={iconPersonCircle} alt="" />
           </StyledLink>
@@ -313,12 +314,12 @@ function Header() {
       <HeaderDiv>
         <IconContainer>
           <StyledLink to={`/`}>
-            <IconImage src={iconTaylorBlack} alt="" />
+            <IconImage src={iconTaylorWhite} alt="" />
             {/* <IconImage src={iconLifelogoWhite} alt="" /> */}
           </StyledLink>
         </IconContainer>
         <NavItem>
-          <Item>成果牆</Item>
+          <ItemOne>成果牆</ItemOne>
           {handleCreateHTML()}
           {handleLoginHTML()}
         </NavItem>
@@ -373,7 +374,7 @@ const HeaderDiv = styled.div`
   padding: 0 40px;
   align-items: center;
   justify-content: space-between;
-  background-color: white;
+  background-color: black;
   z-index: 5;
 `;
 const IconContainer = styled.div`
@@ -445,10 +446,49 @@ const SideBarIconUser = styled.div`
   border-radius: 50%;
   background-position: 50% 50%;
 `;
+
+const NeonShine = keyframes`
+  0% {opacity: 1}
+  1%{opacity:0;}
+  2%{opacity:1;}
+  5%{opacity:1;}
+  6%{opacity:0;}
+  7%{opacity:1;}
+  9%{opacity:0;}
+  21%{opacity:1;}
+  90% {opacity: 1}
+`;
+const NeonShineTwo = keyframes`
+  0% {opacity: 1}
+  2%{opacity:0;}
+  4%{opacity:1;}
+  90% {opacity: 1}
+`;
+const NeonShineThree = keyframes`
+  0% {opacity: 1}
+  100% {opacity: 1}
+`;
 const Item = styled.div`
   /* width: 90px; */
+  font-weight: bold;
   margin-right: 5px;
   margin-left: 30px;
+  color: #fff;
+`;
+const ItemOne = styled(Item)`
+  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  animation: ${NeonShine} 3s linear infinite;
+`;
+const ItemTwo = styled(Item)`
+  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  animation: ${NeonShineTwo} 5s linear infinite;
+`;
+const ItemThree = styled(Item)`
+  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  animation: ${NeonShineThree} 5s linear infinite;
 `;
 
 const SignInItem = styled.div`
@@ -531,5 +571,42 @@ const NoInvite = styled.div`
   margin: 0 auto;
   width: 80px;
   font-size: 20px;
+`;
+
+const Neon = styled.div`
+  position: absolute;
+
+  top: 120px;
+  left: 120px;
+  margin: 0 auto;
+  padding: 0 20px;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-shadow: 0 0 20px #ff005b;
+  &:after {
+    position: absolute;
+
+    content: attr(data-text);
+    top: 0px;
+    left: 0px;
+
+    margin: 0 auto;
+    padding: 0 20px;
+    z-index: -1;
+    color: #ff005b;
+    filter: blur(15px);
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fe3a80;
+    z-index: -2;
+    opacity: 0.5;
+    filter: blur(100px);
+  }
 `;
 export default Header;

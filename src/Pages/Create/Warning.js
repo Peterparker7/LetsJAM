@@ -93,7 +93,7 @@ const warningImageHTML = (image, status) => {
 };
 
 const Warning = styled.div`
-  width: 120px;
+  width: 60px;
   font-size: 12px;
   padding-left: 10px;
 `;

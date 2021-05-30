@@ -27,5 +27,9 @@ a {
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
   --rmsc-h: 30px !important; /* Height */
+  /* width: calc(100% - 80px); */
+}
+
+.EditProfileMulti {
   width: calc(100% - 80px);
 }

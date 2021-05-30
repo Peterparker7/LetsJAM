@@ -1,6 +1,7 @@
 import "../../App.css";
 import "../../normalize.css";
 import styled from "styled-components";
+import { keyframes } from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
@@ -11,7 +12,7 @@ import {
   logOut,
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
-import guitar from "../../images/guitar.svg";
+import InstrumentBanner from "./InstrumentBanner";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -210,14 +211,12 @@ function Main() {
         <Slogan>
           整個城市<br></br>都是我的練團室
         </Slogan>
-        {sloganButtonHTML()}
+        <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
-      {/* <img
-        src={guitar}
-        alt=""
-        style={{ width: "100px", transform: `rotate(${0.125}turn)` }}
-      ></img> */}
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
+      <div>
+        <InstrumentBanner />
+      </div>
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -287,8 +286,22 @@ const Carosul = styled.div`
   background-repeat: no-repeat;
   background-position: 50% 50%;
   position: relative;
+  @media (max-width: 576px) {
+    height: 300px;
+  }
 `;
+const NeonShine = keyframes`
+  0% {opacity: 1}
+  1%{opacity:0;}
+  2%{opacity:1;}
 
+  5%{opacity:1;}
+  6%{opacity:0;}
+
+  21%{opacity:1;}
+
+  90% {opacity: 1}
+`;
 const Slogan = styled.div`
   color: white;
   position: absolute;
@@ -298,12 +311,22 @@ const Slogan = styled.div`
   font-weight: bold;
   top: 50px;
   left: 120px;
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
+  animation: ${NeonShine} 3s 1s linear infinite;
+  @media (max-width: 576px) {
+    font-size: 36px;
+    left: 60px;
+  }
 `;
 
-const JoinButton = styled.button`
+const JoinButtonContainer = styled.div`
+  width: 100%;
+  text-align: center;
   position: absolute;
   top: 80%;
-  left: 45%;
+`;
+const JoinButton = styled.button`
   border: 1px solid none;
   border-radius: 20px;
   background: #ff00ff;
@@ -342,6 +365,9 @@ const Filterlabel = styled.label`
   font-weight: bold;
   line-height: 30px;
   margin: 0 20px;
+  @media (max-width: 576px) {
+    margin: 0 10px;
+  }
 `;
 const FilterBar = styled.div`
   border: 1px solid white;
@@ -353,13 +379,27 @@ const FilterBar = styled.div`
 `;
 
 const ActivitiesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
   max-width: 1024px;
-  justify-content: space-around;
+  justify-items: center;
+
+  /* justify-content: space-around; */
+
+  @media (max-width: 985px) {
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    grid-column-gap: 0px;
+    grid-row-gap: 20px;
+    max-width: 700px;
+  }
   @media (max-width: 768px) {
+    display: flex;
     flex-direction: column;
     padding-left: 20px;
     padding-right: 20px;
@@ -372,7 +412,7 @@ const ActivityItem = styled.div`
   height: 300px;
   border-radius: 20px;
   background: #000;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
   text-align: left;
   padding-top: 20px;
   padding-left: 30px;
@@ -415,17 +455,17 @@ const Canvas = styled.div`
 `;
 
 const ActivityContent = styled.div`
-  margin-top: 20px;
-  margin-left: 30px;
+  margin: 20px 25px;
   position: relative;
   @media (max-width: 768px) {
-    margin-top: 10px;
-    margin-left: 20px;
+    /* margin-top: 10px;
+    margin-left: 20px; */
   }
 `;
 
 const Title = styled.div`
   font-size: 24px;
+  height: 30px;
 `;
 const Time = styled.div`
   font-size: 12px;
@@ -436,12 +476,16 @@ const Type = styled.div`
 const Requirement = styled.div`
   font-size: 20px;
   margin-top: 10px;
+  height: 80px;
   @media (max-width: 768px) {
     font-size: 16px;
+    height: unset;
   }
 `;
 const Location = styled.div`
-  margin-top: 70px;
+  height: 50px;
+  line-height: 20px;
+
   @media (max-width: 768px) {
     margin-top: 10px;
   }
@@ -451,8 +495,8 @@ const AttendantNum = styled.div`
   font-size: 16px;
   @media (max-width: 768px) {
     position: absolute;
-    right: 50px;
-    bottom: 2.5px;
+    right: 20px;
+    bottom: 25px;
     font-size: 16px;
   }
 `;

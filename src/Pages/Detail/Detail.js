@@ -96,35 +96,46 @@ function Detail() {
 
     return (
       <ActivityContainer>
-        <ActivityDetail>
-          <Title>{detailData.title}</Title>
-          <ItemField>
-            <InfoBar>
-              <TypeItem>{detailData.type}</TypeItem>
+        <UpField>
+          <ActivityDetail>
+            <Title>{detailData.title}</Title>
+            <ItemField>
+              <InfoBar>
+                <TypeItem>{detailData.type}</TypeItem>
 
-              <Item>{showTime}</Item>
-            </InfoBar>
-            <InfoBarSecond>
-              <CommentItem>{detailData.comment}</CommentItem>
-              {/* <Item>{detailData.timestamp}</Item> */}
-              <Item>需求樂器： {requirementHTML}</Item>
-              <Item>適合程度： {detailData.level}</Item>
-              <Item>人數限制： {limit}</Item>
-              <Item>地點： {detailData.location}</Item>
-              <div>{detailData.id}</div>
-            </InfoBarSecond>
-          </ItemField>
-        </ActivityDetail>
-        <ImageContainer>
-          <ActivityImage
-            src={`${detailData.fileSource}`}
-            alt=""
-          ></ActivityImage>
-          <ButtonField>
-            <ShareButton>分享活動</ShareButton>
-            {renderJoinButton()}
-          </ButtonField>
-        </ImageContainer>
+                <Item>{showTime}</Item>
+              </InfoBar>
+              <InfoBarSecond>
+                {/* <CommentItem>{detailData.comment}</CommentItem> */}
+                {/* <Item>{detailData.timestamp}</Item> */}
+                <Item>需求樂器： {requirementHTML}</Item>
+                <Item>適合程度： {detailData.level}</Item>
+                <Item>人數限制： {limit}</Item>
+                <Item>地點： {detailData.location}</Item>
+                <div>{detailData.id}</div>
+              </InfoBarSecond>
+            </ItemField>
+            <RWDButtonField>
+              <RWDShareButton>分享活動</RWDShareButton>
+              {renderJoinButton()}
+            </RWDButtonField>
+          </ActivityDetail>
+
+          <ImageContainer>
+            <ActivityImage
+              src={`${detailData.fileSource}`}
+              alt=""
+            ></ActivityImage>
+            <ButtonField>
+              <ShareButton>分享活動</ShareButton>
+              {renderJoinButton()}
+            </ButtonField>
+          </ImageContainer>
+        </UpField>
+        <CommentField>
+          <CommentTitle>活動描述</CommentTitle>
+          <CommentItem>{detailData.comment}</CommentItem>
+        </CommentField>
       </ActivityContainer>
     );
   };
@@ -158,12 +169,12 @@ function Detail() {
         const source = videoUrl.toString().slice(-11);
         const videoEmbedUrl = `https://www.youtube.com/embed/${source}?&autoplay=1&mute=1&loop=0&controls=1&rel=0" frameborder="1" allowfullscreen>`;
         return (
-          <iframe
-            width="500"
-            height="315"
+          <VideoIframe
+            // width="500"
+            // height="315"
             src={videoEmbedUrl}
             title="YouTube video player"
-          ></iframe>
+          ></VideoIframe>
         );
       } else {
         return;
@@ -216,18 +227,20 @@ function Detail() {
       <MemberInfoContainer>
         <HostTitle>關於揪團主</HostTitle>
         <MemberHostField>
-          <HostProfileBlock>
-            <ProfileImg
-              style={{
-                background: `url(${detailData.host.profileImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "",
-              }}
-            />
+          <ImageIntroBlock>
+            <HostProfileBlock>
+              <ProfileImg
+                style={{
+                  background: `url(${detailData.host.profileImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "",
+                }}
+              />
 
-            <div>{detailData.host.name}</div>
-          </HostProfileBlock>
-          <IntroBlock>{detailData.host.intro}</IntroBlock>
+              <div>{detailData.host.name}</div>
+            </HostProfileBlock>
+            <IntroBlock>{detailData.host.intro}</IntroBlock>
+          </ImageIntroBlock>
           <VideoBlock>{renderVideo()}</VideoBlock>
         </MemberHostField>
         <AttendantsTitle>出席成員</AttendantsTitle>
@@ -376,16 +389,29 @@ const DetailContent = styled.div`
 `;
 const ActivityContainer = styled.div`
   width: 1024px;
-  display: flex;
+  /* display: flex; */
   margin: 0px auto;
   padding-top: 50px;
-  justify-content: space-between;
-  border: 1px solid;
+  /* justify-content: space-between; */
+  border: 1px solid white;
+  padding-left: 20px;
+  padding-right: 20px;
+  @media (max-width: 1024px) {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @media (max-width: 888px) {
+    flex-direction: column;
+  }
 `;
 const ActivityDetail = styled.div`
-  width: 480px;
+  width: 400px;
   text-align: left;
   margin-right: 20px;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 const Title = styled.div`
   font-size: 28px;
@@ -393,7 +419,10 @@ const Title = styled.div`
   color: #fff;
 `;
 const ItemField = styled.div`
-  padding-left: 10px;
+  padding-left: 20px;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 
 const InfoBar = styled.div`
@@ -417,16 +446,40 @@ const Item = styled.div`
   width: 100%;
 `;
 const ImageContainer = styled.div`
-  width: calc(100% - 480px);
+  width: calc(100% - 400px);
   /* width: 600px; */
-  margin-top: 40px;
+  margin-top: 20px;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 const ActivityImage = styled.img`
   width: 100%;
+  border-radius: 20px;
 `;
 const ButtonField = styled.div`
   margin-top: 20px;
   text-align: right;
+  @media (max-width: 888px) {
+    display: none;
+  }
+  @media (max-width: 576px) {
+    display: flex;
+
+    width: 100%;
+    justify-content: space-between;
+  }
+`;
+const RWDButtonField = styled.div`
+  /* margin-top: -50px; */
+  text-align: right;
+  display: none;
+  @media (max-width: 888px) {
+    display: block;
+  }
+  @media (max-width: 576px) {
+    display: none;
+  }
 `;
 
 const Btn = styled.button`
@@ -436,8 +489,14 @@ const Btn = styled.button`
   height: 50px;
   cursor: pointer;
   color: #fff;
+  @media (max-width: 576px) {
+    width: 50%;
+  }
 `;
 const ShareButton = styled(Btn)`
+  margin-right: 20px;
+`;
+const RWDShareButton = styled(Btn)`
   margin-right: 20px;
 `;
 const JoinButton = styled(Btn)``;
@@ -447,43 +506,104 @@ const ApplicantButton = styled(Btn)`
 const AttendantButton = styled(Btn)`
   cursor: not-allowed;
 `;
-
+const CommentTitle = styled.div`
+  color: white;
+  font-size: 24px;
+  text-align: left;
+  border-bottom: 1px solid #979797;
+`;
+const CommentField = styled.div`
+  margin-top: 30px;
+  color: white;
+  text-align: left;
+`;
+const UpField = styled.div`
+  display: flex;
+  margin: 0px auto;
+  justify-content: space-between;
+  border: 1px solid white;
+  @media (max-width: 1024px) {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @media (max-width: 888px) {
+    flex-direction: column;
+  }
+`;
 const MemberInfoContainer = styled.div`
   width: 1024px;
   margin: 80px auto;
   text-align: left;
   color: #fff;
+  padding-left: 20px;
+  padding-right: 20px;
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 const MemberField = styled.div`
-  padding: 0 40px;
+  padding: 10 0px;
   width: 100%;
   display: flex;
 `;
 const MemberHostField = styled.div`
-  padding: 10px 40px;
+  padding: 10px 0px;
   width: 100%;
   display: flex;
-  padding-right: 0px;
+  align-items: center;
+  @media (max-width: 888px) {
+    flex-direction: column;
+  }
 `;
 const ProfileBlock = styled.div`
   text-align: center;
-  margin: 20px 20px;
+  margin: 20px 40px;
+`;
+
+const ImageIntroBlock = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 const HostProfileBlock = styled.div`
   margin: auto 20px;
   margin-right: 0px;
   text-align: center;
-  margin: 20px 20px;
+  margin: 20px 40px;
+  @media (max-width: 888px) {
+  }
 `;
 const IntroBlock = styled.div`
-  width: 300px;
+  width: auto;
   padding: 20px;
   align-items: center;
   margin: auto;
   line-height: 2;
   word-wrap: break-word;
+  @media (max-width: 888px) {
+  }
 `;
-const VideoBlock = styled.div``;
+const VideoBlock = styled.div`
+  width: 100%;
+`;
+const VideoIframe = styled.iframe`
+  width: 500px;
+  height: 315px;
+  @media (max-width: 1024px) {
+    width: 450px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @media (max-width: 888px) {
+    width: unset;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+`;
 const HostTitle = styled.div`
   font-size: 24px;
   border-bottom: 1px solid #979797;
