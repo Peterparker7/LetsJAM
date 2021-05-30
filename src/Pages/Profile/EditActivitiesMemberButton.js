@@ -257,6 +257,13 @@ const CheckApplicantBtn = styled.button`
   padding: 5px;
   background: #ffff00;
   cursor: pointer;
+  @media (max-width: 414px) {
+    font-size: 14px;
+    padding: 2px;
+    width: 70px;
+
+    height: 30px;
+  }
 `;
 
 export default EditActivitiesMemberButton;

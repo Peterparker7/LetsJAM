@@ -383,7 +383,7 @@ const IconContainer = styled.div`
   }
 `;
 const IconImage = styled.img`
-  width: 140px;
+  width: 200px;
 `;
 
 const IconUser = styled.img`

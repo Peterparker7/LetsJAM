@@ -504,6 +504,13 @@ const EditBtn = styled.button`
   padding: 5px;
   background: #ff00ff;
   cursor: pointer;
+  @media (max-width: 414px) {
+    font-size: 14px;
+    padding: 2px;
+    width: 70px;
+
+    height: 30px;
+  }
 `;
 const BtnClose = styled.button`
   position: absolute;
