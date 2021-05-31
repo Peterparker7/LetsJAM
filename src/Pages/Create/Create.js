@@ -8,10 +8,13 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
 import { uploadImage, getAuthUser } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
+import concertImg from "../../images/concert1.jpg";
 import { useSelector } from "react-redux";
 
 import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
+import UsePlace from "./UsePlace";
+import Place from "./Place";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -27,6 +30,7 @@ function Create() {
   const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(false);
+  const [place, setPlace] = useState("");
 
   const [titleStatus, setTitleStatus] = useState(true);
   const [dateStatus, setDateStatus] = useState(true);
@@ -101,7 +105,7 @@ function Create() {
     if (!level) {
       setLevelStatus(false);
     }
-    if (!location) {
+    if (!place) {
       setLocationStatus(false);
     }
     if (!imgUrl) {
@@ -128,7 +132,8 @@ function Create() {
     if (checked) {
       setLimit(0);
     }
-
+    console.log(place);
+    console.log(location);
     convertDateTime();
     let timestamp = new Date(
       convertDateTime().formatDateYear,
@@ -151,7 +156,7 @@ function Create() {
       limit: limit,
       newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
       timestamp: timestamp, //firebase內建timestamp
-      location: location,
+      location: place,
       geo: ["10", "10"],
       requirement: requirementArray,
       level: level,
@@ -374,14 +379,17 @@ function Create() {
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>地點</Label>
-                <Inputfield
+                {/* <Inputfield
+                  defaultValue={place}
                   placeholder="請輸入詳細地址"
                   class="location"
                   onChange={(e) => {
                     handleChange(e, "location");
                   }}
-                ></Inputfield>
-                {Warning.warningLocationHTML(location, locationStatus)}
+                ></Inputfield> */}
+                <Place setPlace={setPlace} />
+
+                {Warning.warningLocationHTML(place, locationStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>備註</Label>
@@ -437,16 +445,21 @@ function Create() {
   );
 }
 const MainContainer = styled.div`
-  background-color: white;
-  padding: 0 20px;
+  background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)),
+    url(${concertImg});
+  background-size: cover;
+  background-position: 50% 50%;
+  padding: 50px 20px;
+  position: relative;
 `;
+const MainContainerCanvas = styled.div``;
 const Container = styled.div`
   text-align: left;
-  max-width: 1024px;
-  margin: 50px auto;
+  max-width: 960px;
+  margin: 0 auto;
   height: 100%;
   border: 1px solid #979797;
-  padding-bottom: 50px;
+  padding: 50px 0;
 `;
 const ProcessIntroContainer = styled.div`
   width: 960px;
@@ -459,7 +472,9 @@ const CreateDetailContainer = styled.div`
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px;
+  color: black;
   background: white;
+  padding: 20px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -558,6 +573,7 @@ const Button = styled.button`
   width: 90px;
   height: 40px;
   cursor: pointer;
+  background: #fff000;
 `;
 // const Warning = styled.div`
 //   width: 120px;

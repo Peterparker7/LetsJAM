@@ -72,7 +72,7 @@ const warningLevelHTML = (level, status) => {
   }
 };
 const warningLocationHTML = (location, status) => {
-  if (!status) {
+  if (!location) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
         此項必填

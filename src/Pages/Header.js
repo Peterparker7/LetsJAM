@@ -240,48 +240,57 @@ function Header() {
     };
 
     const menuMailBoxHTML = () => {
-      const invitedActivityHTML = () => {
-        if (invitationData.length !== 0) {
-          const HTML = invitationData.map((item) => {
-            // const messageObj = userData.invitation.filter(
-            //   (data) => data.id === item.id
-            // );
-            if (item) {
-              return (
-                <EachMailField>
-                  <Link to={`/activities/${item.id}`}>
-                    <EachMailDiv
-                      style={{
-                        background: `url(${item.fileSource})`,
-                        backgroundPosition: "50% 50%",
-                        backgroundSize: "cover",
+      if (userDataRedux.length !== 0) {
+        const invitedActivityHTML = () => {
+          if (invitationData.length !== 0) {
+            const HTML = invitationData.map((item) => {
+              // const messageObj = userData.invitation.filter(
+              //   (data) => data.id === item.id
+              // );
+              if (item) {
+                return (
+                  <EachMailField>
+                    <Link to={`/activities/${item.id}`}>
+                      <EachMailDiv
+                        style={{
+                          background: `url(${item.fileSource})`,
+                          backgroundPosition: "50% 50%",
+                          backgroundSize: "cover",
+                        }}
+                      >
+                        <EachMailDivCanvas>
+                          <EachMailContent>
+                            <EachMailTitle>{item.title}</EachMailTitle>
+                            {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                          </EachMailContent>
+                        </EachMailDivCanvas>
+                      </EachMailDiv>
+                    </Link>
+                    <IgnoreBtn
+                      onClick={() => {
+                        handleIgnore(item.id);
                       }}
                     >
-                      <EachMailDivCanvas>
-                        <EachMailContent>
-                          <EachMailTitle>{item.title}</EachMailTitle>
-                          {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
-                        </EachMailContent>
-                      </EachMailDivCanvas>
-                    </EachMailDiv>
-                  </Link>
-                  <IgnoreBtn
-                    onClick={() => {
-                      handleIgnore(item.id);
-                    }}
-                  >
-                    +
-                  </IgnoreBtn>
-                </EachMailField>
-              );
-            }
-          });
-          return HTML;
-        } else {
-          return <NoInvite>無邀請</NoInvite>;
-        }
-      };
-      return <div>{invitedActivityHTML()}</div>;
+                      +
+                    </IgnoreBtn>
+                  </EachMailField>
+                );
+              }
+            });
+            return HTML;
+          } else {
+            return <NoInvite>無邀請</NoInvite>;
+          }
+        };
+        return (
+          <MenuSideBarItem>
+            邀請
+            {invitedActivityHTML()}
+          </MenuSideBarItem>
+        );
+      } else {
+        return;
+      }
     };
 
     if (sideBarDisplay) {
@@ -291,7 +300,7 @@ function Header() {
           <MenuItem>{menuLoginHTML()}</MenuItem>
           <MenuSideBarItem>成果牆</MenuSideBarItem>
           {menuCreateHTML()}
-          <MenuSideBarItem>邀請</MenuSideBarItem>
+          {/* <MenuSideBarItem>邀請</MenuSideBarItem> */}
           {menuMailBoxHTML()}
         </MenuSideBar>
       );
