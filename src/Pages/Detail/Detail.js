@@ -393,7 +393,7 @@ const ActivityContainer = styled.div`
   margin: 0px auto;
   padding-top: 50px;
   /* justify-content: space-between; */
-  border: 1px solid white;
+  /* border: 1px solid white; */
   padding-left: 20px;
   padding-right: 20px;
   @media (max-width: 1024px) {
@@ -523,7 +523,7 @@ const UpField = styled.div`
   display: flex;
   margin: 0px auto;
   justify-content: space-between;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   @media (max-width: 1024px) {
     width: 100%;
     padding-left: 20px;
@@ -545,9 +545,10 @@ const MemberInfoContainer = styled.div`
   }
 `;
 const MemberField = styled.div`
-  padding: 10 0px;
+  padding: 10px 20px;
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
 `;
 const MemberHostField = styled.div`
   padding: 10px 0px;
@@ -560,7 +561,7 @@ const MemberHostField = styled.div`
 `;
 const ProfileBlock = styled.div`
   text-align: center;
-  margin: 20px 40px;
+  margin: 20px 20px;
 `;
 
 const ImageIntroBlock = styled.div`

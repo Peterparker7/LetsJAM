@@ -176,21 +176,9 @@ function Main() {
 
   const ActivityHTML = data.map((item, index) => {
     let firebaseTime = item.timestamp.toMillis();
-    console.log(
-      "🚀 ~ file: Main.js ~ line 179 ~ ActivityHTML ~ firebaseTime",
-      firebaseTime
-    );
     let activityTime = item.timestamp.toDate().toString();
-    console.log(
-      "🚀 ~ file: Main.js ~ line 179 ~ ActivityHTML ~ activityTime",
-      activityTime
-    );
     let showTime = activityTime.slice(0, 21);
     let currentTime = Date.now();
-    console.log(
-      "🚀 ~ file: Main.js ~ line 182 ~ ActivityHTML ~ currentTime",
-      currentTime
-    );
 
     let requirementHTML = item.requirement.map((data) => {
       return <span>{data} </span>;
@@ -231,9 +219,9 @@ function Main() {
         <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
-      <div>
+      {/* <div>
         <InstrumentBanner />
-      </div>
+      </div> */}
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>

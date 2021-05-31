@@ -334,6 +334,7 @@ const ProfileCol = styled.div`
 `;
 const ProfileDetail = styled.div`
   color: white;
+  align-items: center;
   @media (max-width: 1024px) {
     display: flex;
   }
@@ -357,6 +358,9 @@ const ProfileTextField = styled.div`
     width: 320px;
   }
   @media (max-width: 768px) {
+    width: 100%;
+    margin-right: unset;
+    margin-left: unset;
   }
 `;
 const ProfileName = styled.div`
@@ -512,6 +516,7 @@ const ButtonField = styled.div`
   max-width: 200px;
   left: 25px;
   @media (max-width: 768px) {
+    left: unset;
     right: 20px;
     flex-direction: column;
     bottom: 40px;

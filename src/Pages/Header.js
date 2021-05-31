@@ -129,29 +129,31 @@ function Header() {
           // );
           if (item) {
             return (
-              <Link to={`/activities/${item.id}`}>
-                <EachMailDiv
-                  style={{
-                    background: `url(${item.fileSource})`,
-                    backgroundPosition: "50% 50%",
-                    backgroundSize: "cover",
+              <EachMailField>
+                <Link to={`/activities/${item.id}`}>
+                  <EachMailDiv
+                    style={{
+                      background: `url(${item.fileSource})`,
+                      backgroundPosition: "50% 50%",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <EachMailDivCanvas>
+                      <EachMailContent>
+                        <EachMailTitle>{item.title}</EachMailTitle>
+                        {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                      </EachMailContent>
+                    </EachMailDivCanvas>
+                  </EachMailDiv>
+                </Link>
+                <IgnoreBtn
+                  onClick={() => {
+                    handleIgnore(item.id);
                   }}
                 >
-                  <EachMailDivCanvas>
-                    <EachMailContent>
-                      <EachMailTitle>{item.title}</EachMailTitle>
-                      {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
-                      <IgnoreBtn
-                        onClick={() => {
-                          handleIgnore(item.id);
-                        }}
-                      >
-                        +
-                      </IgnoreBtn>
-                    </EachMailContent>
-                  </EachMailDivCanvas>
-                </EachMailDiv>
-              </Link>
+                  +
+                </IgnoreBtn>
+              </EachMailField>
             );
           }
         });
@@ -246,29 +248,31 @@ function Header() {
             // );
             if (item) {
               return (
-                <Link to={`/activities/${item.id}`}>
-                  <EachMailDiv
-                    style={{
-                      background: `url(${item.fileSource})`,
-                      backgroundPosition: "50% 50%",
-                      backgroundSize: "cover",
+                <EachMailField>
+                  <Link to={`/activities/${item.id}`}>
+                    <EachMailDiv
+                      style={{
+                        background: `url(${item.fileSource})`,
+                        backgroundPosition: "50% 50%",
+                        backgroundSize: "cover",
+                      }}
+                    >
+                      <EachMailDivCanvas>
+                        <EachMailContent>
+                          <EachMailTitle>{item.title}</EachMailTitle>
+                          {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                        </EachMailContent>
+                      </EachMailDivCanvas>
+                    </EachMailDiv>
+                  </Link>
+                  <IgnoreBtn
+                    onClick={() => {
+                      handleIgnore(item.id);
                     }}
                   >
-                    <EachMailDivCanvas>
-                      <EachMailContent>
-                        <EachMailTitle>{item.title}</EachMailTitle>
-                        {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
-                        <IgnoreBtn
-                          onClick={() => {
-                            handleIgnore(item.id);
-                          }}
-                        >
-                          +
-                        </IgnoreBtn>
-                      </EachMailContent>
-                    </EachMailDivCanvas>
-                  </EachMailDiv>
-                </Link>
+                    +
+                  </IgnoreBtn>
+                </EachMailField>
               );
             }
           });
@@ -591,6 +595,11 @@ const MailBoxTitle = styled.div`
   margin: 20px;
 `;
 const MailBoxContainer = styled.div``;
+const EachMailField = styled.div`
+  position: relative;
+  width: 100%;
+  height: 90px;
+`;
 const EachMailDiv = styled.div`
   position: relative;
   width: 100%;
@@ -626,6 +635,7 @@ const IgnoreBtn = styled.button`
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 2;
 `;
 const NoInvite = styled.div`
   margin: 0 auto;
