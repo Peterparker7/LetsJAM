@@ -6,6 +6,7 @@ import iconTaylorBlack from "../images/icon-Taylor-black.png";
 import iconTaylorWhite from "../images/icon-Taylor-white.png";
 import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
 import iconPersonCircle from "../images/person-circle.svg";
+import iconPerson from "../images/person-fill.svg";
 import menuIcon from "../images/list.svg";
 import mailboxIcon from "../images/envelope.svg";
 // import { ReactComponent as MailBoxIcon } from "../images/envelope.svg";
@@ -128,29 +129,31 @@ function Header() {
           // );
           if (item) {
             return (
-              <Link to={`/activities/${item.id}`}>
-                <EachMailDiv
-                  style={{
-                    background: `url(${item.fileSource})`,
-                    backgroundPosition: "50% 50%",
-                    backgroundSize: "cover",
+              <EachMailField>
+                <Link to={`/activities/${item.id}`}>
+                  <EachMailDiv
+                    style={{
+                      background: `url(${item.fileSource})`,
+                      backgroundPosition: "50% 50%",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <EachMailDivCanvas>
+                      <EachMailContent>
+                        <EachMailTitle>{item.title}</EachMailTitle>
+                        {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                      </EachMailContent>
+                    </EachMailDivCanvas>
+                  </EachMailDiv>
+                </Link>
+                <IgnoreBtn
+                  onClick={() => {
+                    handleIgnore(item.id);
                   }}
                 >
-                  <EachMailDivCanvas>
-                    <EachMailContent>
-                      <EachMailTitle>{item.title}</EachMailTitle>
-                      {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
-                      <IgnoreBtn
-                        onClick={() => {
-                          handleIgnore(item.id);
-                        }}
-                      >
-                        +
-                      </IgnoreBtn>
-                    </EachMailContent>
-                  </EachMailDivCanvas>
-                </EachMailDiv>
-              </Link>
+                  +
+                </IgnoreBtn>
+              </EachMailField>
             );
           }
         });
@@ -186,19 +189,19 @@ function Header() {
       if (userDataRedux.length !== 0) {
         return (
           <StyledLink to={`/activities/create`}>
-            <Item>我要開團</Item>
+            <MenuSideBarItem>我要開團</MenuSideBarItem>
           </StyledLink>
         );
       } else {
         return (
           <StyledLink to={`/activities/login`}>
-            <Item
+            <MenuSideBarItem
               onClick={() => {
                 alert("登入以使用開團功能");
               }}
             >
               我要開團
-            </Item>
+            </MenuSideBarItem>
           </StyledLink>
         );
       }
@@ -218,7 +221,7 @@ function Header() {
               ></SideBarIconUser>
             </StyledLink>
             <StyledLink to={`/activities/profile`}>
-              <Item>{userDataRedux.name}</Item>
+              <MenuSideBarItem>{userDataRedux.name}</MenuSideBarItem>
             </StyledLink>
           </SideBarProfileContainer>
         );
@@ -226,13 +229,67 @@ function Header() {
         return (
           <SideBarProfileContainer>
             <StyledLink to={`/activities/login`}>
-              <SideBarIconDefault src={iconPersonCircle} alt="" />
+              <SideBarIconDefault src={iconPerson} alt="" />
             </StyledLink>
             <StyledLink to={`/activities/login`}>
-              <Item>登入/註冊</Item>
+              <MenuSideBarItem>登入/註冊</MenuSideBarItem>
             </StyledLink>
           </SideBarProfileContainer>
         );
+      }
+    };
+
+    const menuMailBoxHTML = () => {
+      if (userDataRedux.length !== 0) {
+        const invitedActivityHTML = () => {
+          if (invitationData.length !== 0) {
+            const HTML = invitationData.map((item) => {
+              // const messageObj = userData.invitation.filter(
+              //   (data) => data.id === item.id
+              // );
+              if (item) {
+                return (
+                  <EachMailField>
+                    <Link to={`/activities/${item.id}`}>
+                      <EachMailDiv
+                        style={{
+                          background: `url(${item.fileSource})`,
+                          backgroundPosition: "50% 50%",
+                          backgroundSize: "cover",
+                        }}
+                      >
+                        <EachMailDivCanvas>
+                          <EachMailContent>
+                            <EachMailTitle>{item.title}</EachMailTitle>
+                            {/* <EachMailMsg>{`${messageObj[0].message}`}</EachMailMsg> */}
+                          </EachMailContent>
+                        </EachMailDivCanvas>
+                      </EachMailDiv>
+                    </Link>
+                    <IgnoreBtn
+                      onClick={() => {
+                        handleIgnore(item.id);
+                      }}
+                    >
+                      +
+                    </IgnoreBtn>
+                  </EachMailField>
+                );
+              }
+            });
+            return HTML;
+          } else {
+            return <NoInvite>無邀請</NoInvite>;
+          }
+        };
+        return (
+          <MenuSideBarItem>
+            邀請
+            {invitedActivityHTML()}
+          </MenuSideBarItem>
+        );
+      } else {
+        return;
       }
     };
 
@@ -243,6 +300,8 @@ function Header() {
           <MenuItem>{menuLoginHTML()}</MenuItem>
           <MenuSideBarItem>成果牆</MenuSideBarItem>
           {menuCreateHTML()}
+          {/* <MenuSideBarItem>邀請</MenuSideBarItem> */}
+          {menuMailBoxHTML()}
         </MenuSideBar>
       );
     } else {
@@ -277,7 +336,7 @@ function Header() {
       return (
         <SignInItem>
           <StyledLink to={`/activities/profile`}>
-            <Item>{userDataRedux.name}</Item>
+            <ItemThree>{userDataRedux.name}</ItemThree>
           </StyledLink>
           <StyledLink to={`/activities/profile`}>
             <IconUser src={userDataRedux.profileImage} alt="" />
@@ -302,7 +361,7 @@ function Header() {
           </StyledLink>
 
           <StyledLink to={`/activities/login`}>
-            <IconUser src={iconPersonCircle} alt="" />
+            <IconUser src={iconPerson} alt="" />
           </StyledLink>
         </SignInItem>
       );
@@ -383,12 +442,15 @@ const IconContainer = styled.div`
   }
 `;
 const IconImage = styled.img`
-  width: 140px;
+  width: 200px;
 `;
 
 const IconUser = styled.img`
-  width: 30px;
+  width: 40px;
+  height: 40px;
   margin-left: 10px;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const NavItem = styled.div`
@@ -427,7 +489,11 @@ const MenuSideBar = styled.div`
   }
 `;
 const MenuSideBarItem = styled.div`
-  margin-left: 30px;
+  margin-left: 10px;
+  color: #fff;
+  font-weight: bold;
+  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
 `;
 const MenuItem = styled.div``;
 const SideBarProfileContainer = styled.div`
@@ -466,6 +532,13 @@ const NeonShineTwo = keyframes`
 `;
 const NeonShineThree = keyframes`
   0% {opacity: 1}
+  10% {opacity: 0.8}
+  20% {opacity: 1}
+  30% {opacity: 0.9}
+  61% {opacity: 1}
+
+  65% {opacity: 1}
+  
   100% {opacity: 1}
 `;
 const Item = styled.div`
@@ -531,6 +604,11 @@ const MailBoxTitle = styled.div`
   margin: 20px;
 `;
 const MailBoxContainer = styled.div``;
+const EachMailField = styled.div`
+  position: relative;
+  width: 100%;
+  height: 90px;
+`;
 const EachMailDiv = styled.div`
   position: relative;
   width: 100%;
@@ -566,6 +644,7 @@ const IgnoreBtn = styled.button`
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 2;
 `;
 const NoInvite = styled.div`
   margin: 0 auto;

@@ -7,6 +7,19 @@ import { getSpecificData } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
+import MemberCard from "./MemberCard";
+import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+
+const StyledModal = Modal.styled`
+width: 20rem;
+height: 20rem;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background-color: white;
+opacity: ${(props) => props.opacity};
+transition : all 0.3s ease-in-out;`;
 
 function Detail() {
   let { id } = useParams();
@@ -15,6 +28,7 @@ function Detail() {
   const [currentUserData, setCurrentUserData] = useState();
   const [userUid, setUserUid] = useState();
   const [userName, setUserName] = useState();
+  const [activityStatus, setActivityStatus] = useState(true);
 
   let activityDetail = {};
 
@@ -72,12 +86,25 @@ function Detail() {
 
     setDetailData(data);
     setCurrentUserData(currentUser);
+
+    let newFormatDate = new Date(`${data.date}T${data.time}`);
+    let nowDate = Date.now();
+    if (newFormatDate < nowDate) {
+      setActivityStatus(false);
+    }
   };
 
   console.log(detailData);
   //   const detailHTML = detailData.() => {
   //     return <div></div>;
   //   };
+  const handleShareClick = () => {
+    window.open(
+      `https://social-plugins.line.me/lineit/share?url=${window.location}`,
+      "mywin",
+      "menubar=1,resizable=1,width=500,height=500"
+    );
+  };
 
   const renderDetail = () => {
     console.log("??");
@@ -88,17 +115,34 @@ function Detail() {
     console.log(activityTime.slice(0, 21));
     let showTime = activityTime.slice(0, 21);
     let limit = "";
+
     if (detailData.limit === 0) {
       limit = "無";
     } else {
       limit = detailData.limit;
     }
 
+    let date = detailData.date;
+    let time = detailData.time;
+    let newFormatDate = new Date(`${date}T${time}`);
+    let nowDate = Date.now();
+    let activityCloseTitleHTML = () => {
+      if (newFormatDate < nowDate) {
+        // setActivityStatus(false);
+        return <CloseTitle>活動已結束</CloseTitle>;
+      }
+    };
+
     return (
       <ActivityContainer>
         <UpField>
           <ActivityDetail>
-            <Title>{detailData.title}</Title>
+            <TitleContainer>
+              <Title>
+                {detailData.title}
+                {activityCloseTitleHTML()}
+              </Title>
+            </TitleContainer>
             <ItemField>
               <InfoBar>
                 <TypeItem>{detailData.type}</TypeItem>
@@ -116,7 +160,23 @@ function Detail() {
               </InfoBarSecond>
             </ItemField>
             <RWDButtonField>
-              <RWDShareButton>分享活動</RWDShareButton>
+              <RWDShareButton
+                disabled={!activityStatus}
+                onClick={() => {
+                  handleShareClick();
+                }}
+                style={
+                  !activityStatus
+                    ? {
+                        background: "grey",
+                        cursor: "not-allowed",
+                        opacity: "0.5",
+                      }
+                    : {}
+                }
+              >
+                分享活動
+              </RWDShareButton>
               {renderJoinButton()}
             </RWDButtonField>
           </ActivityDetail>
@@ -127,7 +187,23 @@ function Detail() {
               alt=""
             ></ActivityImage>
             <ButtonField>
-              <ShareButton>分享活動</ShareButton>
+              <ShareButton
+                disabled={!activityStatus}
+                onClick={() => {
+                  handleShareClick();
+                }}
+                style={
+                  !activityStatus
+                    ? {
+                        background: "grey",
+                        cursor: "not-allowed",
+                        opacity: "0.5",
+                      }
+                    : {}
+                }
+              >
+                分享活動
+              </ShareButton>
               {renderJoinButton()}
             </ButtonField>
           </ImageContainer>
@@ -210,15 +286,16 @@ function Detail() {
         <EachAttendantField>
           <ProfileBlock>
             <ProfileImg
-              // src={`${data.profileImage}`}
-              style={{
-                background: `url(${data.profileImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "",
-              }}
+              src={`${data.profileImage}`}
+              // style={{
+              //   background: `url(${data.profileImage})`,
+              //   backgroundSize: "cover",
+              //   backgroundPosition: "",
+              // }}
             />
 
             <div>{data.name}</div>
+            <MemberCard data={data} />
           </ProfileBlock>
         </EachAttendantField>
       );
@@ -230,14 +307,16 @@ function Detail() {
           <ImageIntroBlock>
             <HostProfileBlock>
               <ProfileImg
-                style={{
-                  background: `url(${detailData.host.profileImage})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "",
-                }}
+                // style={{
+                //   background: `url(${detailData.host.profileImage})`,
+                //   backgroundSize: "cover",
+                //   backgroundPosition: "",
+                // }}
+                src={detailData.host.profileImage}
               />
 
               <div>{detailData.host.name}</div>
+              <MemberCard data={detailData.host} />
             </HostProfileBlock>
             <IntroBlock>{detailData.host.intro}</IntroBlock>
           </ImageIntroBlock>
@@ -290,9 +369,19 @@ function Detail() {
     if (isApplicant.length !== 0) {
       return (
         <ApplicantButton
-        // onClick={() => {
-        //   handleJoin();
-        // }}
+          disabled={!activityStatus}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          // onClick={() => {
+          //   handleJoin();
+          // }}
         >
           申請中
         </ApplicantButton>
@@ -300,9 +389,19 @@ function Detail() {
     } else if (isAttendant.length !== 0) {
       return (
         <AttendantButton
-        // onClick={() => {
-        //   handleJoin();
-        // }}
+          disabled={!activityStatus}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          // onClick={() => {
+          //   handleJoin();
+          // }}
         >
           已加入
         </AttendantButton>
@@ -310,9 +409,19 @@ function Detail() {
     } else if (!userUid) {
       return (
         <JoinButton
+          disabled={!activityStatus}
           onClick={() => {
             handleVisitor();
           }}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
         >
           我要報名
         </JoinButton>
@@ -339,6 +448,16 @@ function Detail() {
     } else {
       return (
         <JoinButton
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          disabled={!activityStatus}
           onClick={() => {
             handleJoin();
           }}
@@ -367,20 +486,27 @@ function Detail() {
   }
   console.log(detailData);
   return (
-    <DetailContent>
-      {renderDetail()}
-      {/* <JoinButton
+    <ModalProvider backgroundComponent={FadingBackground}>
+      <DetailContent>
+        {renderDetail()}
+        {/* <JoinButton
         onClick={() => {
           handleJoin();
         }}
       >
         我要報名
       </JoinButton> */}
-      {/* {renderJoinButton()} */}
-      {renderHost()}
-    </DetailContent>
+        {/* {renderJoinButton()} */}
+        {renderHost()}
+      </DetailContent>
+    </ModalProvider>
   );
 }
+
+const FadingBackground = styled(BaseModalBackground)`
+  opacity: ${(props) => props.opacity};
+  transition: all 0.3s ease-in-out;
+`;
 
 const DetailContent = styled.div`
   height: 100%;
@@ -393,7 +519,7 @@ const ActivityContainer = styled.div`
   margin: 0px auto;
   padding-top: 50px;
   /* justify-content: space-between; */
-  border: 1px solid white;
+  /* border: 1px solid white; */
   padding-left: 20px;
   padding-right: 20px;
   @media (max-width: 1024px) {
@@ -413,10 +539,20 @@ const ActivityDetail = styled.div`
     width: 100%;
   }
 `;
+
+const TitleContainer = styled.div`
+  position: relative;
+`;
 const Title = styled.div`
   font-size: 28px;
   border-bottom: 1px solid #979797;
   color: #fff;
+`;
+const CloseTitle = styled.div`
+  position: absolute;
+  left: 160px;
+  bottom: 5px;
+  font-size: 16px;
 `;
 const ItemField = styled.div`
   padding-left: 20px;
@@ -455,7 +591,9 @@ const ImageContainer = styled.div`
 `;
 const ActivityImage = styled.img`
   width: 100%;
+  max-height: 400px;
   border-radius: 20px;
+  object-fit: cover;
 `;
 const ButtonField = styled.div`
   margin-top: 20px;
@@ -521,7 +659,7 @@ const UpField = styled.div`
   display: flex;
   margin: 0px auto;
   justify-content: space-between;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   @media (max-width: 1024px) {
     width: 100%;
     padding-left: 20px;
@@ -543,9 +681,10 @@ const MemberInfoContainer = styled.div`
   }
 `;
 const MemberField = styled.div`
-  padding: 10 0px;
+  padding: 10px 20px;
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
 `;
 const MemberHostField = styled.div`
   padding: 10px 0px;
@@ -558,12 +697,14 @@ const MemberHostField = styled.div`
 `;
 const ProfileBlock = styled.div`
   text-align: center;
-  margin: 20px 40px;
+  margin: 20px 20px;
+  position: relative;
 `;
 
 const ImageIntroBlock = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
   @media (max-width: 888px) {
     width: 100%;
   }
@@ -573,6 +714,7 @@ const HostProfileBlock = styled.div`
   margin-right: 0px;
   text-align: center;
   margin: 20px 40px;
+  position: relative;
   @media (max-width: 888px) {
   }
 `;
@@ -587,7 +729,9 @@ const IntroBlock = styled.div`
   }
 `;
 const VideoBlock = styled.div`
-  width: 100%;
+  @media (max-width: 888px) {
+    width: 100%;
+  }
 `;
 const VideoIframe = styled.iframe`
   width: 500px;
@@ -618,8 +762,9 @@ const ProfileImg = styled.img`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-size: cover;
+  object-fit: cover;
+  /* background-size: cover;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
+  background-position: 50% 50%; */
 `;
 export default Detail;

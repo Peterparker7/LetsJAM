@@ -2,6 +2,7 @@ const initialState = {
   userData: [],
   activityData: [],
   userHostActivityData: [],
+  userJoinActivityData: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -15,6 +16,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         // userHostActivityData: [...state.userHostActivityData, ...action.data],
         userHostActivityData: [...action.data], //上面的方式會重複
+      };
+    case "UPDATE_USERJOINACTIVITYDATA":
+      return {
+        ...state,
+        userJoinActivityData: [...action.data],
       };
     case "UPDATE_ONEUSERHOSTACTIVITYDATA": {
       //function 需用{}包起來

@@ -175,33 +175,38 @@ function Main() {
   };
 
   const ActivityHTML = data.map((item, index) => {
+    let firebaseTime = item.timestamp.toMillis();
     let activityTime = item.timestamp.toDate().toString();
-    let showTime = activityTime.slice(0, 24);
+    let showTime = activityTime.slice(0, 21);
+    let currentTime = Date.now();
+
     let requirementHTML = item.requirement.map((data) => {
       return <span>{data} </span>;
     });
     let attendantsNum = item.attendants.length;
 
-    return (
-      <Link to={`/activities/${item.id}`}>
-        <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
-          <Canvas>
-            {/* <div>{item.id}</div> */}
-            <ActivityContent>
-              <Time>{showTime}</Time>
+    if (firebaseTime > currentTime) {
+      return (
+        <Link to={`/activities/${item.id}`}>
+          <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
+            <Canvas>
+              {/* <div>{item.id}</div> */}
+              <ActivityContent>
+                <Time>{showTime}</Time>
 
-              <Title>{item.title}</Title>
-              <Type>{item.type}</Type>
-              <Requirement>{requirementHTML}</Requirement>
-              <Location>{item.location}</Location>
-              {/* <Host>揪團主：{item.host.name}</Host> */}
-              <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-              {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
-            </ActivityContent>
-          </Canvas>
-        </ActivityItem>
-      </Link>
-    );
+                <Title>{item.title}</Title>
+                <Type>{item.type}</Type>
+                <Requirement>{requirementHTML}</Requirement>
+                <Location>{item.location}</Location>
+                {/* <Host>揪團主：{item.host.name}</Host> */}
+                <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+                {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+              </ActivityContent>
+            </Canvas>
+          </ActivityItem>
+        </Link>
+      );
+    }
   });
 
   return (
@@ -214,9 +219,9 @@ function Main() {
         <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
-      <div>
+      {/* <div>
         <InstrumentBanner />
-      </div>
+      </div> */}
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -359,6 +364,10 @@ const ActivityFilter = styled.div`
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
+  @media (max-width: 576px) {
+    font-size: 12px;
+    padding-left: 0px;
+  }
 `;
 
 const Filterlabel = styled.label`
@@ -367,6 +376,10 @@ const Filterlabel = styled.label`
   margin: 0 20px;
   @media (max-width: 576px) {
     margin: 0 10px;
+    font-size: 12px;
+  }
+  @media (max-width: 414px) {
+    margin: 0 5px;
   }
 `;
 const FilterBar = styled.div`
@@ -376,6 +389,12 @@ const FilterBar = styled.div`
   align-items: center;
   margin-left: 20px;
   padding-right: 10px;
+  @media (max-width: 576px) {
+    font-size: 12px;
+  }
+  @media (max-width: 414px) {
+    margin-left: 10px;
+  }
 `;
 
 const ActivitiesContainer = styled.div`
@@ -429,9 +448,9 @@ const ActivityItem = styled.div`
     color: black;
   }
   @media (max-width: 768px) {
-    width: 80%;
+    width: 90%;
     height: 200px;
-    margin: 20px auto;
+    margin: 0 auto;
   }
 `;
 
@@ -443,7 +462,7 @@ const Canvas = styled.div`
   height: 300px;
   border-radius: 20px;
 
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.7);
   &:hover {
     background: white;
     color: black;

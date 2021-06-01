@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: "Noto Sans TC", sans-serif;
 }
 
 * {
@@ -24,7 +25,7 @@ a {
   --rmsc-selected: #e2e6ea;
   --rmsc-border: #ccc;
   --rmsc-gray: #aaa;
-  --rmsc-bg: #fff;
+  /* --rmsc-bg: #fff; */
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
   --rmsc-h: 40px !important; /* Height */

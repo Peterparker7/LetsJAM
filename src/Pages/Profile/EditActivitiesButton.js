@@ -9,6 +9,8 @@ import {
   getSpecificData,
   deleteActivityData,
   updateActivitiesData,
+  getAllUser,
+  updateInvitation,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
@@ -212,6 +214,7 @@ function EditActivitiesButton(props) {
   const handleNolimtChange = () => {};
 
   const handleDelete = async () => {
+    handleActivityInvitationDelete();
     const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
     dispatch({
@@ -220,6 +223,18 @@ function EditActivitiesButton(props) {
     });
     setOpacity(0);
     setIsOpen(!isOpen);
+  };
+  const handleActivityInvitationDelete = async () => {
+    const allUserData = await getAllUser();
+    const newAll = allUserData.map((item) => {
+      const newItem = item.invitation.filter(
+        (invitation) => invitation.id !== props.data.id
+      );
+      item.invitation = newItem;
+
+      const update = updateInvitation(newItem, item.uid);
+      return item;
+    });
   };
 
   if (!props.data) {
@@ -504,6 +519,13 @@ const EditBtn = styled.button`
   padding: 5px;
   background: #ff00ff;
   cursor: pointer;
+  @media (max-width: 414px) {
+    font-size: 14px;
+    padding: 2px;
+    width: 70px;
+
+    height: 30px;
+  }
 `;
 const BtnClose = styled.button`
   position: absolute;

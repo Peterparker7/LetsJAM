@@ -8,13 +8,16 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
 import { uploadImage, getAuthUser } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
+import concertImg from "../../images/concert1.jpg";
 import { useSelector } from "react-redux";
 
 import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
+import UsePlace from "./UsePlace";
+import Place from "./Place";
 
 const db = window.firebase.firestore();
-let checked = false;
+// let checked = false;
 
 function Create() {
   const [title, setTitle] = useState("");
@@ -25,7 +28,9 @@ function Create() {
   const [imgUrl, setimgUrl] = useState("");
   const [level, setLevel] = useState("");
   const [location, setLocation] = useState("");
+  const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(false);
+  const [place, setPlace] = useState("");
 
   const [titleStatus, setTitleStatus] = useState(true);
   const [dateStatus, setDateStatus] = useState(true);
@@ -35,10 +40,11 @@ function Create() {
   const [limitStatus, setLimitStatus] = useState(true);
   const [levelStatus, setLevelStatus] = useState(true);
   const [locationStatus, setLocationStatus] = useState(true);
+  const [placeStatus, setPlaceStatus] = useState(true);
   const [imageStatus, setImageStatus] = useState(true);
 
   // let limitinit = 0;
-  let comment = "";
+  // let comment = "";
   let youtubeUrl = "";
   let imgSource = "";
   let imageUrl = "";
@@ -100,8 +106,8 @@ function Create() {
     if (!level) {
       setLevelStatus(false);
     }
-    if (!location) {
-      setLocationStatus(false);
+    if (!place) {
+      setPlaceStatus(false);
     }
     if (!imgUrl) {
       setImageStatus(false);
@@ -113,7 +119,7 @@ function Create() {
       requirement.length === 0 ||
       !limitStatus ||
       !levelStatus ||
-      !locationStatus ||
+      !placeStatus ||
       !imgUrl
     ) {
       console.log("Validation fail");
@@ -127,7 +133,8 @@ function Create() {
     if (checked) {
       setLimit(0);
     }
-
+    console.log(place);
+    console.log(location);
     convertDateTime();
     let timestamp = new Date(
       convertDateTime().formatDateYear,
@@ -150,7 +157,7 @@ function Create() {
       limit: limit,
       newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
       timestamp: timestamp, //firebase內建timestamp
-      location: location,
+      location: place,
       geo: ["10", "10"],
       requirement: requirementArray,
       level: level,
@@ -212,6 +219,9 @@ function Create() {
     if (changeType === "location") {
       setLocation(e.target.value);
       setLocationStatus(true);
+    }
+    if (changeType === "comment") {
+      setComment(e.target.value);
     }
   }
 
@@ -329,7 +339,10 @@ function Create() {
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
-                  onChange={setRequirement}
+                  onChange={(value) => {
+                    setRequirement(value);
+                    setRequirementStatus(true);
+                  }}
                   labelledBy="Select"
                 />
                 {Warning.warningRequirementHTML(requirement, requirementStatus)}
@@ -345,6 +358,11 @@ function Create() {
                     onChange={() => {
                       setChecked(!checked);
                       setLimitStatus(true);
+                      console.log(checked);
+                      //第一次按下還沒有值，在這邊先設定不然到送出時limit會是空的
+                      if (!checked) {
+                        setLimit(0);
+                      }
                     }}
                   />
 
@@ -365,20 +383,24 @@ function Create() {
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>地點</Label>
-                <Inputfield
+                {/* <Inputfield
+                  defaultValue={place}
                   placeholder="請輸入詳細地址"
                   class="location"
                   onChange={(e) => {
                     handleChange(e, "location");
                   }}
-                ></Inputfield>
-                {Warning.warningLocationHTML(location, locationStatus)}
+                ></Inputfield> */}
+                <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
+
+                {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>備註</Label>
                 <Inputfield
                   onChange={(e) => {
-                    comment = e.target.value;
+                    handleChange(e, "comment");
+                    // comment = e.target.value;
                   }}
                 ></Inputfield>
               </InputFieldDiv>
@@ -427,16 +449,21 @@ function Create() {
   );
 }
 const MainContainer = styled.div`
-  background-color: white;
-  padding: 0 20px;
+  background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)),
+    url(${concertImg});
+  background-size: cover;
+  background-position: 50% 50%;
+  padding: 50px 20px;
+  position: relative;
 `;
+const MainContainerCanvas = styled.div``;
 const Container = styled.div`
   text-align: left;
-  max-width: 1024px;
-  margin: 50px auto;
+  max-width: 960px;
+  margin: 0 auto;
   height: 100%;
   border: 1px solid #979797;
-  padding-bottom: 50px;
+  padding: 50px 0;
 `;
 const ProcessIntroContainer = styled.div`
   width: 960px;
@@ -449,7 +476,9 @@ const CreateDetailContainer = styled.div`
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px;
+  color: black;
   background: white;
+  padding: 20px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -548,6 +577,7 @@ const Button = styled.button`
   width: 90px;
   height: 40px;
   cursor: pointer;
+  background: #fff000;
 `;
 // const Warning = styled.div`
 //   width: 120px;

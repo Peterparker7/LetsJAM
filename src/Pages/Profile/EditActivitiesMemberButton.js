@@ -13,6 +13,7 @@ import {
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import InviteButton from "./InviteButton.js";
+import MemberCard from "./MemberCard.js";
 import { setIn } from "formik";
 
 const StyledModal = Modal.styled`
@@ -24,6 +25,7 @@ align-items: center;
 justify-content: center;
 background-color: white;
 opacity: ${(props) => props.opacity};
+overflow-y: scroll;
 transition : all 0.3s ease-in-out;`;
 
 function EditActivitiesMemberButton(props) {
@@ -96,8 +98,10 @@ function EditActivitiesMemberButton(props) {
     subscribe(setActivityChange, props.data.id);
   }, []);
   useEffect(() => {
-    if (activityChange.applicants || activityChange.attendants) {
-      handlefirebaseChange();
+    if (activityChange) {
+      if (activityChange.applicants || activityChange.attendants) {
+        handlefirebaseChange();
+      }
     }
   }, [activityChange]);
 
@@ -134,9 +138,12 @@ function EditActivitiesMemberButton(props) {
       const applicantsHTML = applicantsData.map((item) => {
         return (
           <EachMemberDiv>
-            <MemberImg src={`${item.profileImage}`} alt="" />
+            <MemberContainer>
+              <MemberImg src={`${item.profileImage}`} alt="" />
 
-            <div>{item.name}</div>
+              <div>{item.name}</div>
+              <MemberCard data={item} />
+            </MemberContainer>
             <Btn
               onClick={() => {
                 handleAgree(item);
@@ -158,8 +165,12 @@ function EditActivitiesMemberButton(props) {
       const attendantsHTML = attendantsData.map((item) => {
         return (
           <EachMemberDiv>
-            <MemberImg src={`${item.profileImage}`} alt="" />
-            <div>{item.name}</div>
+            <MemberContainer>
+              <MemberImg src={`${item.profileImage}`} alt="" />
+              <div>{item.name}</div>
+              <MemberCard data={item} />
+            </MemberContainer>
+
             <Btn
               onClick={() => {
                 handleKick(item);
@@ -223,15 +234,21 @@ const MemberDivField = styled.div`
   margin-bottom: 20px;
 `;
 const EachMemberDiv = styled.div`
-  width: 120px;
-  border: 1px solid #979797;
+  width: 95px;
   text-align: center;
   margin-top: 10px;
 `;
+const MemberContainer = styled.div`
+  position: relative;
+  width: 80px;
+  text-align: center;
+  margin: 0 auto;
+`;
 const MemberImg = styled.img`
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
+  object-fit: cover;
 `;
 const Btn = styled.button`
   border: 1px solid #979797;
@@ -257,6 +274,13 @@ const CheckApplicantBtn = styled.button`
   padding: 5px;
   background: #ffff00;
   cursor: pointer;
+  @media (max-width: 414px) {
+    font-size: 14px;
+    padding: 2px;
+    width: 70px;
+
+    height: 30px;
+  }
 `;
 
 export default EditActivitiesMemberButton;
