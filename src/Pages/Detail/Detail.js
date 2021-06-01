@@ -15,6 +15,7 @@ function Detail() {
   const [currentUserData, setCurrentUserData] = useState();
   const [userUid, setUserUid] = useState();
   const [userName, setUserName] = useState();
+  const [activityStatus, setActivityStatus] = useState(true);
 
   let activityDetail = {};
 
@@ -72,6 +73,12 @@ function Detail() {
 
     setDetailData(data);
     setCurrentUserData(currentUser);
+
+    let newFormatDate = new Date(`${data.date}T${data.time}`);
+    let nowDate = Date.now();
+    if (newFormatDate < nowDate) {
+      setActivityStatus(false);
+    }
   };
 
   console.log(detailData);
@@ -88,17 +95,34 @@ function Detail() {
     console.log(activityTime.slice(0, 21));
     let showTime = activityTime.slice(0, 21);
     let limit = "";
+
     if (detailData.limit === 0) {
       limit = "無";
     } else {
       limit = detailData.limit;
     }
 
+    let date = detailData.date;
+    let time = detailData.time;
+    let newFormatDate = new Date(`${date}T${time}`);
+    let nowDate = Date.now();
+    let activityCloseTitleHTML = () => {
+      if (newFormatDate < nowDate) {
+        // setActivityStatus(false);
+        return <CloseTitle>活動已結束</CloseTitle>;
+      }
+    };
+
     return (
       <ActivityContainer>
         <UpField>
           <ActivityDetail>
-            <Title>{detailData.title}</Title>
+            <TitleContainer>
+              <Title>
+                {detailData.title}
+                {activityCloseTitleHTML()}
+              </Title>
+            </TitleContainer>
             <ItemField>
               <InfoBar>
                 <TypeItem>{detailData.type}</TypeItem>
@@ -116,7 +140,20 @@ function Detail() {
               </InfoBarSecond>
             </ItemField>
             <RWDButtonField>
-              <RWDShareButton>分享活動</RWDShareButton>
+              <RWDShareButton
+                disabled={!activityStatus}
+                style={
+                  !activityStatus
+                    ? {
+                        background: "grey",
+                        cursor: "not-allowed",
+                        opacity: "0.5",
+                      }
+                    : {}
+                }
+              >
+                分享活動
+              </RWDShareButton>
               {renderJoinButton()}
             </RWDButtonField>
           </ActivityDetail>
@@ -127,7 +164,20 @@ function Detail() {
               alt=""
             ></ActivityImage>
             <ButtonField>
-              <ShareButton>分享活動</ShareButton>
+              <ShareButton
+                disabled={!activityStatus}
+                style={
+                  !activityStatus
+                    ? {
+                        background: "grey",
+                        cursor: "not-allowed",
+                        opacity: "0.5",
+                      }
+                    : {}
+                }
+              >
+                分享活動
+              </ShareButton>
               {renderJoinButton()}
             </ButtonField>
           </ImageContainer>
@@ -290,9 +340,19 @@ function Detail() {
     if (isApplicant.length !== 0) {
       return (
         <ApplicantButton
-        // onClick={() => {
-        //   handleJoin();
-        // }}
+          disabled={!activityStatus}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          // onClick={() => {
+          //   handleJoin();
+          // }}
         >
           申請中
         </ApplicantButton>
@@ -300,9 +360,19 @@ function Detail() {
     } else if (isAttendant.length !== 0) {
       return (
         <AttendantButton
-        // onClick={() => {
-        //   handleJoin();
-        // }}
+          disabled={!activityStatus}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          // onClick={() => {
+          //   handleJoin();
+          // }}
         >
           已加入
         </AttendantButton>
@@ -310,9 +380,19 @@ function Detail() {
     } else if (!userUid) {
       return (
         <JoinButton
+          disabled={!activityStatus}
           onClick={() => {
             handleVisitor();
           }}
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
         >
           我要報名
         </JoinButton>
@@ -339,6 +419,16 @@ function Detail() {
     } else {
       return (
         <JoinButton
+          style={
+            !activityStatus
+              ? {
+                  background: "grey",
+                  cursor: "not-allowed",
+                  opacity: "0.5",
+                }
+              : {}
+          }
+          disabled={!activityStatus}
           onClick={() => {
             handleJoin();
           }}
@@ -413,10 +503,20 @@ const ActivityDetail = styled.div`
     width: 100%;
   }
 `;
+
+const TitleContainer = styled.div`
+  position: relative;
+`;
 const Title = styled.div`
   font-size: 28px;
   border-bottom: 1px solid #979797;
   color: #fff;
+`;
+const CloseTitle = styled.div`
+  position: absolute;
+  left: 160px;
+  bottom: 5px;
+  font-size: 16px;
 `;
 const ItemField = styled.div`
   padding-left: 20px;
