@@ -9,6 +9,8 @@ import {
   getSpecificData,
   deleteActivityData,
   updateActivitiesData,
+  getAllUser,
+  updateInvitation,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
@@ -212,15 +214,27 @@ function EditActivitiesButton(props) {
   const handleNolimtChange = () => {};
 
   const handleDelete = async () => {
+    handleActivityInvitationDelete();
     const deleteActivity = await deleteActivityData(props.data.id);
     alert("已刪除活動");
     dispatch({
       type: "DELETE_ACTIVITYDATA",
       data: props.data,
     });
-    // window.location.replace("/activities/profile");
     setOpacity(0);
     setIsOpen(!isOpen);
+  };
+  const handleActivityInvitationDelete = async () => {
+    const allUserData = await getAllUser();
+    const newAll = allUserData.map((item) => {
+      const newItem = item.invitation.filter(
+        (invitation) => invitation.id !== props.data.id
+      );
+      item.invitation = newItem;
+
+      const update = updateInvitation(newItem, item.uid);
+      return item;
+    });
   };
 
   if (!props.data) {
