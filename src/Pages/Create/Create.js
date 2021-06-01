@@ -40,6 +40,7 @@ function Create() {
   const [limitStatus, setLimitStatus] = useState(true);
   const [levelStatus, setLevelStatus] = useState(true);
   const [locationStatus, setLocationStatus] = useState(true);
+  const [placeStatus, setPlaceStatus] = useState(true);
   const [imageStatus, setImageStatus] = useState(true);
 
   // let limitinit = 0;
@@ -106,7 +107,7 @@ function Create() {
       setLevelStatus(false);
     }
     if (!place) {
-      setLocationStatus(false);
+      setPlaceStatus(false);
     }
     if (!imgUrl) {
       setImageStatus(false);
@@ -118,7 +119,7 @@ function Create() {
       requirement.length === 0 ||
       !limitStatus ||
       !levelStatus ||
-      !locationStatus ||
+      !placeStatus ||
       !imgUrl
     ) {
       console.log("Validation fail");
@@ -338,7 +339,10 @@ function Create() {
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
-                  onChange={setRequirement}
+                  onChange={(value) => {
+                    setRequirement(value);
+                    setRequirementStatus(true);
+                  }}
                   labelledBy="Select"
                 />
                 {Warning.warningRequirementHTML(requirement, requirementStatus)}
@@ -387,9 +391,9 @@ function Create() {
                     handleChange(e, "location");
                   }}
                 ></Inputfield> */}
-                <Place setPlace={setPlace} />
+                <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
 
-                {Warning.warningLocationHTML(place, locationStatus)}
+                {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>備註</Label>

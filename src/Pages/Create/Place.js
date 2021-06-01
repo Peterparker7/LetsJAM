@@ -50,13 +50,17 @@ function Place(props) {
     const latLng = await getLatLng(results[0]);
     console.log(latLng);
   };
-
+  console.log(address);
+  props.setPlace(address);
   return (
     <div>
       <PlacesAutocomplete
         style={{ position: "relative", width: "100%" }}
         value={address}
-        onChange={setAddress}
+        onChange={(value) => {
+          setAddress(value);
+          props.setPlaceStatus(true);
+        }}
         onSelect={handleSelect}
         searchOptions={searchOptions}
       >
