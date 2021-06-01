@@ -7,6 +7,19 @@ import { getSpecificData } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
+import MemberCard from "./MemberCard";
+import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+
+const StyledModal = Modal.styled`
+width: 20rem;
+height: 20rem;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background-color: white;
+opacity: ${(props) => props.opacity};
+transition : all 0.3s ease-in-out;`;
 
 function Detail() {
   let { id } = useParams();
@@ -149,6 +162,9 @@ function Detail() {
             <RWDButtonField>
               <RWDShareButton
                 disabled={!activityStatus}
+                onClick={() => {
+                  handleShareClick();
+                }}
                 style={
                   !activityStatus
                     ? {
@@ -270,15 +286,16 @@ function Detail() {
         <EachAttendantField>
           <ProfileBlock>
             <ProfileImg
-              // src={`${data.profileImage}`}
-              style={{
-                background: `url(${data.profileImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "",
-              }}
+              src={`${data.profileImage}`}
+              // style={{
+              //   background: `url(${data.profileImage})`,
+              //   backgroundSize: "cover",
+              //   backgroundPosition: "",
+              // }}
             />
 
             <div>{data.name}</div>
+            <MemberCard data={data} />
           </ProfileBlock>
         </EachAttendantField>
       );
@@ -290,14 +307,16 @@ function Detail() {
           <ImageIntroBlock>
             <HostProfileBlock>
               <ProfileImg
-                style={{
-                  background: `url(${detailData.host.profileImage})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "",
-                }}
+                // style={{
+                //   background: `url(${detailData.host.profileImage})`,
+                //   backgroundSize: "cover",
+                //   backgroundPosition: "",
+                // }}
+                src={detailData.host.profileImage}
               />
 
               <div>{detailData.host.name}</div>
+              <MemberCard data={detailData.host} />
             </HostProfileBlock>
             <IntroBlock>{detailData.host.intro}</IntroBlock>
           </ImageIntroBlock>
@@ -467,20 +486,27 @@ function Detail() {
   }
   console.log(detailData);
   return (
-    <DetailContent>
-      {renderDetail()}
-      {/* <JoinButton
+    <ModalProvider backgroundComponent={FadingBackground}>
+      <DetailContent>
+        {renderDetail()}
+        {/* <JoinButton
         onClick={() => {
           handleJoin();
         }}
       >
         我要報名
       </JoinButton> */}
-      {/* {renderJoinButton()} */}
-      {renderHost()}
-    </DetailContent>
+        {/* {renderJoinButton()} */}
+        {renderHost()}
+      </DetailContent>
+    </ModalProvider>
   );
 }
+
+const FadingBackground = styled(BaseModalBackground)`
+  opacity: ${(props) => props.opacity};
+  transition: all 0.3s ease-in-out;
+`;
 
 const DetailContent = styled.div`
   height: 100%;
@@ -672,6 +698,7 @@ const MemberHostField = styled.div`
 const ProfileBlock = styled.div`
   text-align: center;
   margin: 20px 20px;
+  position: relative;
 `;
 
 const ImageIntroBlock = styled.div`
@@ -687,6 +714,7 @@ const HostProfileBlock = styled.div`
   margin-right: 0px;
   text-align: center;
   margin: 20px 40px;
+  position: relative;
   @media (max-width: 888px) {
   }
 `;
@@ -734,8 +762,9 @@ const ProfileImg = styled.img`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-size: cover;
+  object-fit: cover;
+  /* background-size: cover;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
+  background-position: 50% 50%; */
 `;
 export default Detail;
