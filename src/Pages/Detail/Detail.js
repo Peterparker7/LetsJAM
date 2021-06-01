@@ -85,6 +85,13 @@ function Detail() {
   //   const detailHTML = detailData.() => {
   //     return <div></div>;
   //   };
+  const handleShareClick = () => {
+    window.open(
+      `https://social-plugins.line.me/lineit/share?url=${window.location}`,
+      "mywin",
+      "menubar=1,resizable=1,width=500,height=500"
+    );
+  };
 
   const renderDetail = () => {
     console.log("??");
@@ -166,6 +173,9 @@ function Detail() {
             <ButtonField>
               <ShareButton
                 disabled={!activityStatus}
+                onClick={() => {
+                  handleShareClick();
+                }}
                 style={
                   !activityStatus
                     ? {
