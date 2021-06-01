@@ -256,6 +256,27 @@ const getUserApplyActivities = async (userId) => {
   return applyActivitiesArray;
 };
 
+const cancelJoinActivities = async (activityId, userId) => {
+  let docRef = db.collection("activityData").doc(activityId);
+  docRef
+    .update({
+      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+    })
+    .then(() => {})
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+
+  docRef
+    .update({
+      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+    })
+    .then(() => {})
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+    });
+};
+
 const updateActivitiesData = async (data, activityId) => {
   let docRef = db.collection("activityData").doc(activityId);
   const activitiesData = await docRef
@@ -266,7 +287,7 @@ const updateActivitiesData = async (data, activityId) => {
         limit: data.limit,
         newTimestamp: data.newTimestamp,
         timestamp: data.newTimestamp,
-        location: "AppWork School 3F",
+        location: data.location,
         // geo: ["10", "10"],
         requirement: data.requirement,
         level: data.level,
@@ -348,6 +369,7 @@ export { newUser };
 export { getUserHostActivities };
 export { getUserJoinActivities };
 export { getUserApplyActivities };
+export { cancelJoinActivities };
 export { updateActivitiesData };
 export { uploadImage };
 export { sendUserInvite };

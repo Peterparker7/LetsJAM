@@ -18,6 +18,7 @@ import {
   deleteActivityData,
   updateActivitiesData,
   logOut,
+  cancelJoinActivities,
 } from "../../utils/firebase";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
@@ -50,9 +51,14 @@ function Profile() {
   const [userData, setUserData] = useState({});
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
+  const [toggleFilter, setToggleFilter] = useState(true);
+  const [toggleJoinFilter, setToggleJoinFilter] = useState(true);
   const userDataRedux = useSelector((state) => state.userData);
   const userHostActivityDataRedux = useSelector(
     (state) => state.userHostActivityData
+  );
+  const userJoinActivityDataRedux = useSelector(
+    (state) => state.userJoinActivityData
   );
   const confirmArray = [];
   const dispatch = useDispatch();
@@ -91,6 +97,10 @@ function Profile() {
 
     setUserJoinActivities((a) => [...a, ...attendActivities]);
     setUserJoinActivities((a) => [...a, ...applyActivities]);
+    dispatch({
+      type: "UPDATE_USERJOINACTIVITYDATA",
+      data: [...attendActivities, ...applyActivities],
+    });
 
     setUserActivities(data);
   };
@@ -125,6 +135,16 @@ function Profile() {
       return <IsCloseTag></IsCloseTag>;
     }
   };
+  const handleCancelJoin = async (activityId, userId) => {
+    let cancel = await cancelJoinActivities(activityId, userId);
+    let userJoin = userJoinActivityDataRedux;
+    let newJoin = userJoin.filter((item) => item.id !== activityId);
+    console.log(newJoin);
+    dispatch({
+      type: "UPDATE_USERJOINACTIVITYDATA",
+      data: [...newJoin],
+    });
+  };
   //?? 應該是沒用到
   function onEdit(arr) {
     if (arr.length === userDataRedux.length) {
@@ -158,47 +178,76 @@ function Profile() {
         let date = data.date;
         let time = data.time;
         let newFormatDate = new Date(`${date}T${time}`);
+        let nowDate = Date.now();
+
         let activityTime = newFormatDate.toString();
         let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
         let requirementHTML = data.requirement.map((data) => {
           return <span>{data} </span>;
         });
-        return (
-          <EachActivityContainer>
-            <Link to={`/activities/${data.id}`}>
-              <EachActivityField className="Field">
-                <EachActivitityIsOpen>
-                  {handleOpenTag(newFormatDate)}
-                </EachActivitityIsOpen>
-                <EachActivityContent>
-                  {/* <div>{data.host}</div> */}
-                  <Time>{showTime}</Time>
-                  <Title>{data.title}</Title>
 
-                  {/* <div>{data.id}</div> */}
-                  <Requirement>{requirementHTML}</Requirement>
-                </EachActivityContent>
-              </EachActivityField>
-            </Link>
+        if (newFormatDate > nowDate) {
+          return (
+            <EachActivityContainer
+              style={toggleFilter ? { display: "block" } : { display: "none" }}
+            >
+              <Link to={`/activities/${data.id}`}>
+                <EachActivityField className="Field">
+                  <EachActivitityIsOpen>
+                    {handleOpenTag(newFormatDate)}
+                  </EachActivitityIsOpen>
+                  <EachActivityContent>
+                    {/* <div>{data.host}</div> */}
+                    <Time>{showTime}</Time>
+                    <Title>{data.title}</Title>
 
-            <ButtonField>
-              <EditActivitiesButton
-                activityId={data.id}
-                data={data}
-                setUserActivities={setUserActivities}
-                confirmArray={confirmArray}
-                onEdit={onEdit}
-              />
-              <EditActivitiesMemberButton
-                applicants={data.applicants}
-                attendants={data.attendants}
-                activityId={data.id}
-                data={data}
-              />
-            </ButtonField>
-          </EachActivityContainer>
-        );
+                    {/* <div>{data.id}</div> */}
+                    <Requirement>{requirementHTML}</Requirement>
+                  </EachActivityContent>
+                </EachActivityField>
+              </Link>
+
+              <ButtonField>
+                <EditActivitiesButton
+                  activityId={data.id}
+                  data={data}
+                  setUserActivities={setUserActivities}
+                  confirmArray={confirmArray}
+                  onEdit={onEdit}
+                />
+                <EditActivitiesMemberButton
+                  applicants={data.applicants}
+                  attendants={data.attendants}
+                  activityId={data.id}
+                  data={data}
+                />
+              </ButtonField>
+            </EachActivityContainer>
+          );
+        } else if (newFormatDate < nowDate) {
+          return (
+            <EachHistoryActivityContainer
+              style={!toggleFilter ? { display: "block" } : { display: "none" }}
+            >
+              <Link to={`/activities/${data.id}`}>
+                <EachActivityField className="Field">
+                  <EachActivitityIsOpen>
+                    {handleOpenTag(newFormatDate)}
+                  </EachActivitityIsOpen>
+                  <EachActivityContent>
+                    {/* <div>{data.host}</div> */}
+                    <Time>{showTime}</Time>
+                    <Title>{data.title}</Title>
+
+                    {/* <div>{data.id}</div> */}
+                    <Requirement>{requirementHTML}</Requirement>
+                  </EachActivityContent>
+                </EachActivityField>
+              </Link>
+            </EachHistoryActivityContainer>
+          );
+        }
       });
       return activitiesHTML;
     } else {
@@ -207,8 +256,12 @@ function Profile() {
   };
 
   const renderJoinActivities = () => {
-    if (userJoinActivities.length !== 0) {
-      const joinActivitiesHTML = userJoinActivities.map((data) => {
+    if (userJoinActivityDataRedux.length !== 0) {
+      const joinActivitiesHTML = userJoinActivityDataRedux.map((data) => {
+        let date = data.date;
+        let time = data.time;
+        let newFormatDate = new Date(`${date}T${time}`);
+        let nowDate = Date.now();
         let activityTime = data.timestamp.toDate().toString();
         let showTime = activityTime.slice(0, 21);
 
@@ -225,27 +278,59 @@ function Profile() {
           return applyStatusHTML;
         };
 
-        return (
-          <Link to={`/activities/${data.id}`}>
-            <EachActivityContainer>
-              <EachActivityField className="Field">
-                <EachActivityContent>
-                  <Time>{showTime}</Time>
-                  <Title>{data.title}</Title>
-                  <Requirement>{requirementHTML}</Requirement>
-                </EachActivityContent>
+        if (newFormatDate > nowDate) {
+          return (
+            // <Link to={`/activities/${data.id}`}>
+            <EachActivityContainer
+              style={
+                toggleJoinFilter ? { display: "block" } : { display: "none" }
+              }
+            >
+              <Link to={`/activities/${data.id}`}>
+                <EachActivityField className="Field">
+                  <EachActivityContent>
+                    <Time>{showTime}</Time>
+                    <Title>{data.title}</Title>
+                    <Requirement>{requirementHTML}</Requirement>
+                  </EachActivityContent>
 
-                <CheckActivityButtonField>
-                  {/* <Link to={`/activities/${data.id}`}> */}
-                  {/* <CheckActivityBtn>查看活動</CheckActivityBtn> */}
-                  {/* </Link> */}
-                </CheckActivityButtonField>
+                  <StatusTag>{applyStatusHTML()}</StatusTag>
+                </EachActivityField>
+              </Link>
 
-                <StatusTag>{applyStatusHTML()}</StatusTag>
-              </EachActivityField>
+              <CheckActivityButtonField>
+                {/* <Link to={`/activities/${data.id}`}> */}
+                <CheckActivityBtn
+                  onClick={() => {
+                    handleCancelJoin(data.id, userDataRedux.uid);
+                  }}
+                >
+                  退出活動
+                </CheckActivityBtn>
+                {/* </Link> */}
+              </CheckActivityButtonField>
             </EachActivityContainer>
-          </Link>
-        );
+            // </Link>
+          );
+        } else if (newFormatDate < nowDate) {
+          return (
+            <EachHistoryActivityContainer
+              style={
+                !toggleJoinFilter ? { display: "block" } : { display: "none" }
+              }
+            >
+              <Link to={`/activities/${data.id}`}>
+                <EachActivityField className="Field">
+                  <EachActivityContent>
+                    <Time>{showTime}</Time>
+                    <Title>{data.title}</Title>
+                    <Requirement>{requirementHTML}</Requirement>
+                  </EachActivityContent>
+                </EachActivityField>
+              </Link>
+            </EachHistoryActivityContainer>
+          );
+        }
       });
       return joinActivitiesHTML;
     } else {
@@ -258,10 +343,67 @@ function Profile() {
       <MainContainer>
         <ProfilePageContainer>
           <ActivitiesCol>
-            <MyHostTitle>我的開團</MyHostTitle>
+            <MyHostTitle>
+              我的開團
+              <FilterBtnField>
+                <FilterBtn
+                  style={
+                    toggleFilter
+                      ? { background: "white", color: "black" }
+                      : { background: "black", color: "white" }
+                  }
+                  onClick={() => {
+                    setToggleFilter(true);
+                  }}
+                >
+                  進行中
+                </FilterBtn>
+                <FilterBtn
+                  style={
+                    !toggleFilter
+                      ? { background: "white", color: "black" }
+                      : { background: "black", color: "white" }
+                  }
+                  onClick={() => {
+                    setToggleFilter(false);
+                  }}
+                >
+                  已結束
+                </FilterBtn>
+              </FilterBtnField>
+            </MyHostTitle>
+
             <MyHost>{renderHostActivities()}</MyHost>
 
-            <MyJoinTitle>我的跟團</MyJoinTitle>
+            <MyJoinTitle>
+              我的跟團
+              <FilterBtnField>
+                <FilterBtn
+                  style={
+                    toggleJoinFilter
+                      ? { background: "white", color: "black" }
+                      : { background: "black", color: "white" }
+                  }
+                  onClick={() => {
+                    setToggleJoinFilter(true);
+                  }}
+                >
+                  進行中
+                </FilterBtn>
+                <FilterBtn
+                  style={
+                    !toggleJoinFilter
+                      ? { background: "white", color: "black" }
+                      : { background: "black", color: "white" }
+                  }
+                  onClick={() => {
+                    setToggleJoinFilter(false);
+                  }}
+                >
+                  已結束
+                </FilterBtn>
+              </FilterBtnField>
+            </MyJoinTitle>
             <MyJoin>{renderJoinActivities()}</MyJoin>
           </ActivitiesCol>
 
@@ -285,8 +427,9 @@ const FadingBackground = styled(BaseModalBackground)`
   transition: all 0.3s ease-in-out;
 `;
 const MainContainer = styled.div`
-  height: 100%;
+  min-height: calc(100vh - 260px);
   background: #555;
+  /* background: black; */
   background: url(${amplifierImg});
   background-size: cover;
   background-repeat: no-repeat;
@@ -408,6 +551,7 @@ const MyHostTitle = styled.div`
   width: 100%;
   margin-bottom: 20px;
   padding: 10px;
+  position: relative;
 `;
 const MyJoinTitle = styled.div`
   font-size: 24px;
@@ -417,12 +561,16 @@ const MyJoinTitle = styled.div`
   width: 100%;
   margin-bottom: 20px;
   padding: 10px;
+  position: relative;
 `;
 const MyHost = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 20px;
+  min-height: 270px;
+  position: relative;
+
   @media (max-width: 1024px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -439,6 +587,9 @@ const MyJoin = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 20px;
+  position: relative;
+  min-height: 270px;
+
   @media (max-width: 1024px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -451,10 +602,28 @@ const MyJoin = styled.div`
 `;
 const NoContent = styled.div`
   width: 100%;
-  margin: 30px;
+  margin: auto;
   font-size: 24px;
+  position: absolute;
+  top: 50%;
+  @media (max-width: 1024px) {
+  }
 `;
 const EachActivityContainer = styled.div`
+  width: 250px;
+  height: 250px;
+  background: #555;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 180px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+`;
+const EachHistoryActivityContainer = styled.div`
   width: 250px;
   height: 250px;
   background: #555;
@@ -526,9 +695,22 @@ const ButtonField = styled.div`
   }
 `;
 const ProfileButtonField = styled.div``;
-const CheckActivityButtonField = styled.div`
-  padding: 0 30px;
+const CheckActivityButtonField = styled(ButtonField)`
+  max-width: 90px;
+  left: 80px;
+  @media (max-width: 768px) {
+    left: unset;
+    right: 20px;
+    flex-direction: column;
+    bottom: 20px;
+  }
+  @media (max-width: 414px) {
+    right: 10px;
+  }
 `;
+// const CheckActivityButtonField = styled.div`
+//   padding: 0 30px;
+// `;
 const CheckActivityBtn = styled.button`
   border: 1px solid none;
   border-radius: 10px;
@@ -537,8 +719,27 @@ const CheckActivityBtn = styled.button`
   padding: 5px;
   background: #ff00ff;
   cursor: pointer;
-`;
+  @media (max-width: 414px) {
+    font-size: 14px;
+    padding: 2px;
+    width: 70px;
 
+    height: 30px;
+  }
+`;
+const FilterBtnField = styled.div`
+  font-size: 16px;
+  width: 120px;
+  display: flex;
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  justify-content: space-between;
+`;
+const FilterBtn = styled.button`
+  width: 60px;
+  height: 30px;
+`;
 const StatusTag = styled.div`
   position: absolute;
   top: 10px;
