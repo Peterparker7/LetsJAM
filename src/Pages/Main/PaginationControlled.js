@@ -1,4 +1,3 @@
-import "./style/PaginationControlled.css";
 import React from "react";
 import { makeStyles, withTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";

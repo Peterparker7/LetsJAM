@@ -19,17 +19,23 @@ import Place from "./Place";
 const db = window.firebase.firestore();
 // let checked = false;
 
+const StyledMultiSelect = styled(MultiSelect)`
+  border: 1px solid #979797;
+  --rmsc-border: unset !important;
+`;
 function Create() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("流行");
   const [limit, setLimit] = useState("");
-  const [imgUrl, setimgUrl] = useState("");
+  const [imgUrl, setimgUrl] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
+  );
   const [level, setLevel] = useState("");
   const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [place, setPlace] = useState("");
 
   const [titleStatus, setTitleStatus] = useState(true);
@@ -55,6 +61,21 @@ function Create() {
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
   const refContainer = useRef("");
+
+  function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  let nowDate = new Date();
+  // console.log(nowDate.getDay());
+  // let sat = nowDate.addDays(6 - nowDate.getDay());
+  // console.log(sat);
+
+  let sat = addDays(nowDate, 6 - nowDate.getDay())
+    .toISOString()
+    .substr(0, 10);
 
   const convertDateTime = () => {
     let formatDateYear = date.slice(0, 4);
@@ -82,6 +103,8 @@ function Create() {
 
   useEffect(() => {
     checkUserIsLogin();
+    setDate(sat);
+    setTime("16:00");
   }, []);
 
   const createFormCheck = () => {
@@ -103,9 +126,9 @@ function Create() {
     if (!limit && !checked) {
       setLimitStatus(false);
     }
-    if (!level) {
-      setLevelStatus(false);
-    }
+    // if (!level) {
+    //   setLevelStatus(false);
+    // }
     if (!place) {
       setPlaceStatus(false);
     }
@@ -118,7 +141,6 @@ function Create() {
       !typeStatus ||
       requirement.length === 0 ||
       !limitStatus ||
-      !levelStatus ||
       !placeStatus ||
       !imgUrl
     ) {
@@ -133,8 +155,12 @@ function Create() {
     if (checked) {
       setLimit(0);
     }
+    console.log(time);
+    console.log(date);
+    console.log(type);
     console.log(place);
     console.log(location);
+    console.log(limit);
     convertDateTime();
     let timestamp = new Date(
       convertDateTime().formatDateYear,
@@ -177,6 +203,14 @@ function Create() {
     }
   };
 
+  let override = {
+    allItemsAreSelected: "我全都要",
+    clearSearch: "Clear Search",
+    noOptions: "No options",
+    search: "搜尋",
+    selectAll: "全選",
+    selectSomeItems: "請選擇樂器",
+  };
   const [requirement, setRequirement] = useState([]);
   const options = [
     { label: "Vocal", value: "Vocal" },
@@ -210,7 +244,7 @@ function Create() {
     }
     if (changeType === "level") {
       setLevel(e.target.value);
-      setLevelStatus(true);
+      // setLevelStatus(true);
     }
     if (changeType === "limit") {
       setLimit(e.target.value);
@@ -265,6 +299,7 @@ function Create() {
       imgSource = e.target.files[0];
       imageUrl = await uploadImage(imgSource);
       setimgUrl(imageUrl);
+      console.log(imageUrl);
     }
   }
 
@@ -280,6 +315,7 @@ function Create() {
           <CreateDetail>
             <CreateDetailContent>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>活動名稱</Label>
                 <Inputfield
                   name="title"
@@ -291,8 +327,10 @@ function Create() {
                 {Warning.warningTitleHTML(title, titleStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>日期</Label>
                 <Inputfield
+                  defaultValue={sat}
                   type="date"
                   onChange={(e) => {
                     handleChange(e, "date");
@@ -301,8 +339,10 @@ function Create() {
                 {Warning.warningDateHTML(date, dateStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>時間</Label>
                 <Inputfield
+                  defaultValue="16:00:00"
                   type="time"
                   onChange={(e) => {
                     handleChange(e, "time");
@@ -323,9 +363,9 @@ function Create() {
                     handleChange(e, "type");
                   }}
                 >
-                  <option value="" disabled selected>
+                  {/* <option value="" disabled selected>
                     請選擇主要曲風
-                  </option>
+                  </option> */}
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
@@ -334,11 +374,13 @@ function Create() {
               </InputFieldDiv>
 
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
-                <MultiSelect
+                <StyledMultiSelect
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
+                  overrideStrings={override}
                   onChange={(value) => {
                     setRequirement(value);
                     setRequirementStatus(true);
@@ -353,6 +395,7 @@ function Create() {
                   <Label>人數限制</Label>
                   <LimitboxHTML></LimitboxHTML>
                   <LimitCheckBoxField
+                    checked={checked}
                     type="checkbox"
                     id="noLimit"
                     onChange={() => {
@@ -379,9 +422,10 @@ function Create() {
                     handleChange(e, "level");
                   }}
                 ></Inputfield>
-                {Warning.warningLevelHTML(level, levelStatus)}
+                {/* {Warning.warningLevelHTML(level, levelStatus)} */}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>地點</Label>
                 {/* <Inputfield
                   defaultValue={place}
@@ -395,14 +439,15 @@ function Create() {
 
                 {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
-              <InputFieldDiv>
-                <Label>備註</Label>
-                <Inputfield
+              <InputFieldDiv style={{ alignItems: "unset" }}>
+                <Label>活動備註</Label>
+                <InputTextArea
+                  placeholder={"請填活動說明"}
                   onChange={(e) => {
                     handleChange(e, "comment");
                     // comment = e.target.value;
                   }}
-                ></Inputfield>
+                ></InputTextArea>
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>活動封面</Label>
@@ -431,7 +476,7 @@ function Create() {
                 ></Inputfield>
               </InputFieldDiv> */}
             </CreateDetailContent>
-            <CreateDetailImage></CreateDetailImage>
+            <CreateDetailImage src={imgUrl} />
           </CreateDetail>
         </CreateDetailContainer>
         <ButtonField>
@@ -494,8 +539,9 @@ const CreateDetail = styled.div`
 `;
 const CreateDetailContent = styled.div``;
 
-const CreateDetailImage = styled.div`
+const CreateDetailImage = styled.img`
   background: #979797;
+  object-fit: cover;
   width: 300px;
   height: auto;
   /* margin-left: 20px; */
@@ -514,6 +560,7 @@ const InputFieldDiv = styled.div`
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  position: relative;
   /* text-align: center; */
 `;
 const Inputfield = styled.input`
@@ -529,6 +576,7 @@ const Inputfield = styled.input`
   }
 `;
 const SelectType = styled.select`
+  padding: 5px;
   width: 220px;
   @media (max-width: 768px) {
     width: 70%;
@@ -536,6 +584,13 @@ const SelectType = styled.select`
   @media (max-width: 576px) {
     width: 220px;
   }
+`;
+const InputTextArea = styled.textarea`
+  width: 220px;
+  height: 80px;
+  border: 1px solid #979797;
+  padding: 5px;
+  resize: none;
 `;
 const InputfieldImage = styled.input`
   width: 220px;
@@ -578,6 +633,12 @@ const Button = styled.button`
   height: 40px;
   cursor: pointer;
   background: #fff000;
+`;
+const RequireField = styled.span`
+  color: red;
+  display: inline-block;
+  position: absolute;
+  left: -10px;
 `;
 // const Warning = styled.div`
 //   width: 120px;

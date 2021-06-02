@@ -10,9 +10,7 @@ const warningTitleHTML = (title, status) => {
     );
   } else if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
@@ -20,63 +18,49 @@ const warningTitleHTML = (title, status) => {
 const warningDateHTML = (date, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningTimeHTML = (time, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningTypeHTML = (type, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningRequirementHTML = (requirement, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningLimitHTML = (limit, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningLevelHTML = (level, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 const warningLocationHTML = (location, status) => {
   if (!status) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
@@ -85,17 +69,18 @@ const warningImageHTML = (image, status) => {
     console.log("warnIMage");
 
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>
-        此項必填
-      </Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
 
 const Warning = styled.div`
-  width: 60px;
+  width: 40px;
   font-size: 12px;
   padding-left: 10px;
+  /* position: absolute;
+  right: 0;
+  bottom: -20px; */
 `;
 
 export { warningTitleHTML };
