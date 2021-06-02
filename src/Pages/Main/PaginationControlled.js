@@ -1,14 +1,29 @@
+import "./style/PaginationControlled.css";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
 import styled from "styled-components";
 
+const Newstyled = styled(Pagination)`
+  .Mui-selected {
+    color: white;
+  }
+  .MuiButtonBase-root {
+    color: white;
+  }
+  .MuiPaginationItem-page.Mui-selected {
+    background-color: black;
+  }
+`;
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > * + *": {
       marginTop: theme.spacing(2),
     },
+  },
+  color: {
+    color: "white",
   },
 }));
 
@@ -21,12 +36,16 @@ export default function PaginationControlled(props) {
   };
 
   return (
-    <div className={classes.root} style={{ margin: "auto" }}>
+    <div className={classes.root} style={{ margin: "auto", color: "white" }}>
       {/* <Typography>Page: {props.page}</Typography> */}
-      <Pagination
+      <Newstyled
+        classes={{
+          color: classes.color,
+        }}
         count={props.count}
         page={props.page}
         onChange={handleChange}
+        size={"large"}
       />
     </div>
   );

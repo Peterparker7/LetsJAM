@@ -234,8 +234,11 @@ function Main() {
           return (
             <Link to={`/activities/${item.id}`}>
               <ActivityItem
-                style={{ backgroundImage: `url(${item.fileSource})` }}
+              // style={{
+              //   backgroundImage: `url(${item.fileSource})`,
+              // }}
               >
+                <ActivityImage src={item.fileSource} />
                 <Canvas>
                   {/* <div>{item.id}</div> */}
                   <ActivityContent>
@@ -334,7 +337,8 @@ function Main() {
 }
 const MainContainer = styled.main`
   /* background-color: #846767; */
-  background-color: #7b7b7b;
+  /* background-color: #7b7b7b; */
+  background-color: #1b1b1b;
   /* background-color: #4e3a3a; */
   min-height: calc(100vh - 180px);
   padding-bottom: 50px;
@@ -456,6 +460,7 @@ const FilterBar = styled.div`
 const ActivitiesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   /* flex-wrap: wrap; */
@@ -464,7 +469,7 @@ const ActivitiesContainer = styled.div`
   max-width: 1024px;
   justify-items: center;
   position: relative;
-  min-height: 300px;
+  min-height: 940px;
   /* align-items: center; */
   /* justify-content: space-around; */
 
@@ -491,8 +496,8 @@ const ActivityItem = styled.div`
   background: #000;
   /* margin-bottom: 40px; */
   text-align: left;
-  padding-top: 20px;
-  padding-left: 30px;
+  /* padding-top: 20px;
+  padding-left: 30px; */
   line-height: 30px;
   color: #fff;
 
@@ -501,10 +506,15 @@ const ActivityItem = styled.div`
   background-position: 50% 50%;
   position: relative;
 
-  &:hover {
+  /* &:hover {
     background: white;
     color: black;
-  }
+  } */
+  /* &:hover {
+    transform: scale(1.5);
+  } */
+  overflow: hidden;
+
   @media (max-width: 768px) {
     width: 90%;
     height: 200px;
@@ -522,9 +532,13 @@ const Canvas = styled.div`
 
   background: rgba(0, 0, 0, 0.7);
   &:hover {
-    background: white;
+    background: rgba(0, 0, 0, 0.8);
     color: black;
+    transform: scale(1.05);
   }
+  pointer-events: none;
+  /* z-index: -1; */
+
   @media (max-width: 768px) {
     width: 100%;
     height: 200px;
@@ -591,7 +605,21 @@ const AttendantNum = styled.div`
   }
 `;
 const ActivityImage = styled.img`
-  width: 300px;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 20px;
+  /* background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)); */
+
+  transition: all 0.5s ease 0s;
+  &:hover {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 200px;
+  }
 `;
 
 const Neon = styled.div`
