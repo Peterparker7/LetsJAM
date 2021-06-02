@@ -13,6 +13,7 @@ import {
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
 import InstrumentBanner from "./InstrumentBanner";
+import PaginationControlled from "./PaginationControlled";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -20,8 +21,16 @@ let allActivitiesArray = [];
 
 function Main() {
   const [data, setData] = useState([]);
+  const [currentPageData, setCurrentPageData] = useState([]);
   const [userDataUid, setUserDataUid] = useState();
+  const [page, setPage] = useState(1);
+  const [pageNum, setPageNum] = useState(1);
+  const [allPaginateArray, setAllPaginateArray] = useState([]);
+  let pageLen = 9;
   console.log(data);
+  console.log(page);
+
+  console.log(allPaginateArray[page - 1]);
 
   const getFirebaseData = async () => {
     const data = await getActivityData();
@@ -49,6 +58,29 @@ function Main() {
   //Promise.all(promises.then((result)=>{
 
   //   }))
+
+  const handlePagination = () => {
+    let allPageArray = [];
+
+    let currentTime = Date.now();
+
+    let openActivityArray = data.filter((item) => {
+      return item.timestamp.toMillis() > currentTime;
+    });
+    console.log(openActivityArray);
+
+    const pageArray = openActivityArray.slice(0, pageLen);
+    const pageNum = Math.ceil(openActivityArray.length / pageLen);
+    setPageNum(pageNum);
+    for (let i = 0; i < openActivityArray.length; i = i + pageLen) {
+      let pageArray = openActivityArray.slice(i, i + pageLen);
+      allPageArray.push(pageArray);
+    }
+    console.log(allPageArray);
+
+    setAllPaginateArray(allPageArray);
+  };
+
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -59,6 +91,16 @@ function Main() {
 
   // const activitiesFilterHTML = () => {};
 
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    console.log(userUid);
+    if (userUid) {
+      setUserDataUid(userUid);
+      const userData = await getUserData(userUid);
+      console.log(userData);
+    }
+  };
+
   useEffect(() => {
     //渲染頁面之前先把存活動的array清空，避免array裡面有重複之前的data
     allActivitiesArray = [];
@@ -66,9 +108,20 @@ function Main() {
     getFirebaseData();
   }, []);
 
-  if (!data) {
-    return "isLoading";
-  }
+  useEffect(() => {
+    handlePagination();
+  }, [data]);
+  // if (!data) {
+  //   return "isLoading";
+  // }
+  // if (!data) {
+  //   console.log("haha");
+  //   return "Loading";
+  // }
+
+  // if (!data || allPaginateArray.length <= 0) {
+  //   return <div style={{ minHeight: `calc(100vh - 180px) ` }}>Loading</div>;
+  // }
 
   const handleFilter = (e, filter) => {
     console.log(allActivitiesArrayCopy);
@@ -148,16 +201,6 @@ function Main() {
 
   const handleRequirementFilter = () => {};
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    console.log(userUid);
-    if (userUid) {
-      setUserDataUid(userUid);
-      const userData = await getUserData(userUid);
-      console.log(userData);
-    }
-  };
-
   const sloganButtonHTML = () => {
     if (userDataUid) {
       return (
@@ -174,40 +217,49 @@ function Main() {
     }
   };
 
-  const ActivityHTML = data.map((item, index) => {
-    let firebaseTime = item.timestamp.toMillis();
-    let activityTime = item.timestamp.toDate().toString();
-    let showTime = activityTime.slice(0, 21);
-    let currentTime = Date.now();
+  const ActivityHTML =
+    allPaginateArray.length > 0 ? (
+      allPaginateArray[page - 1].map((item, index) => {
+        let firebaseTime = item.timestamp.toMillis();
+        let activityTime = item.timestamp.toDate().toString();
+        let showTime = activityTime.slice(0, 21);
+        let currentTime = Date.now();
 
-    let requirementHTML = item.requirement.map((data) => {
-      return <span>{data} </span>;
-    });
-    let attendantsNum = item.attendants.length;
+        let requirementHTML = item.requirement.map((data) => {
+          return <span>{data} </span>;
+        });
+        let attendantsNum = item.attendants.length;
 
-    if (firebaseTime > currentTime) {
-      return (
-        <Link to={`/activities/${item.id}`}>
-          <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
-            <Canvas>
-              {/* <div>{item.id}</div> */}
-              <ActivityContent>
-                <Time>{showTime}</Time>
+        if (firebaseTime > currentTime) {
+          return (
+            <Link to={`/activities/${item.id}`}>
+              <ActivityItem
+                style={{ backgroundImage: `url(${item.fileSource})` }}
+              >
+                <Canvas>
+                  {/* <div>{item.id}</div> */}
+                  <ActivityContent>
+                    <Time>{showTime}</Time>
 
-                <Title>{item.title}</Title>
-                <Type>{item.type}</Type>
-                <Requirement>{requirementHTML}</Requirement>
-                <Location>{item.location}</Location>
-                {/* <Host>揪團主：{item.host.name}</Host> */}
-                <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-                {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
-              </ActivityContent>
-            </Canvas>
-          </ActivityItem>
-        </Link>
-      );
-    }
-  });
+                    <Title>{item.title}</Title>
+                    <Type>{item.type}</Type>
+                    <Requirement>{requirementHTML}</Requirement>
+                    <Location>{item.location}</Location>
+                    {/* <Host>揪團主：{item.host.name}</Host> */}
+                    <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+                    {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+                  </ActivityContent>
+                </Canvas>
+              </ActivityItem>
+            </Link>
+          );
+        }
+      })
+    ) : (
+      <NoResultContainer>
+        <NoResult>無符合條件的活動</NoResult>
+      </NoResultContainer>
+    );
 
   return (
     <MainContainer>
@@ -260,7 +312,7 @@ function Main() {
         </FilterBar>
       </ActivityFilter>
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
-      <Link to={`./`}>
+      {/* <Link to={`./`}>
         <button
           onClick={(e) => {
             logOut();
@@ -268,7 +320,10 @@ function Main() {
         >
           logout
         </button>
-      </Link>
+      </Link> */}
+      <PageControllContainer>
+        <PaginationControlled count={pageNum} page={page} setPage={setPage} />
+      </PageControllContainer>
     </MainContainer>
   );
   {
@@ -281,7 +336,8 @@ const MainContainer = styled.main`
   /* background-color: #846767; */
   background-color: #7b7b7b;
   /* background-color: #4e3a3a; */
-  height: 100%;
+  min-height: calc(100vh - 180px);
+  padding-bottom: 50px;
 `;
 
 const Carosul = styled.div`
@@ -407,7 +463,9 @@ const ActivitiesContainer = styled.div`
   margin: 0 auto;
   max-width: 1024px;
   justify-items: center;
-
+  position: relative;
+  min-height: 300px;
+  /* align-items: center; */
   /* justify-content: space-around; */
 
   @media (max-width: 985px) {
@@ -481,7 +539,20 @@ const ActivityContent = styled.div`
     margin-left: 20px; */
   }
 `;
-
+const NoResultContainer = styled.div`
+  position: absolute;
+  width: 200px;
+  text-align: center;
+  align-items: center;
+`;
+const NoResult = styled.div`
+  font-size: 20px;
+`;
+const PageControllContainer = styled.div`
+  margin: 10px auto;
+  max-width: 1024px;
+  display: flex;
+`;
 const Title = styled.div`
   font-size: 24px;
   height: 30px;

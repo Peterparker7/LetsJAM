@@ -427,7 +427,7 @@ const FadingBackground = styled(BaseModalBackground)`
   transition: all 0.3s ease-in-out;
 `;
 const MainContainer = styled.div`
-  min-height: calc(100vh - 260px);
+  min-height: calc(100vh - 180px);
   background: #555;
   /* background: black; */
   background: url(${amplifierImg});
