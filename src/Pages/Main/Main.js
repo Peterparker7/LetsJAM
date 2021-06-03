@@ -247,7 +247,9 @@ function Main() {
   return (
     <MainContainer>
       <Carosul>
-        {/* <MainImg src={neonBand} alt="" /> */}
+        {/* <MainImgContainer>
+          <MainImg src={neonBand} alt="" />
+        </MainImgContainer> */}
         <Slogan>
           整個城市<br></br>都是我的練團室
         </Slogan>
@@ -325,7 +327,8 @@ const MainContainer = styled.main`
 `;
 
 const Carosul = styled.div`
-  height: 500px;
+  height: 600px;
+  /* background: black; */
   background: url(${neonBand});
   background-size: cover;
   background-repeat: no-repeat;
@@ -381,10 +384,17 @@ const JoinButton = styled.button`
   font-weight: bold;
   cursor: pointer;
 `;
-
+const MainImgContainer = styled.div`
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  right: 50px;
+  top: 50px;
+`;
 const MainImg = styled.img`
   max-width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 
   /* object-fit: cover; */
 `;
@@ -442,14 +452,14 @@ const ActivitiesContainer = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   grid-column-gap: 20px;
-  grid-row-gap: 20px;
+  grid-row-gap: 30px;
   /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
   max-width: 1024px;
   justify-items: center;
   position: relative;
-  min-height: 940px;
+  min-height: 960px;
   /* align-items: center; */
   /* justify-content: space-around; */
 
@@ -469,17 +479,18 @@ const ActivitiesContainer = styled.div`
 `;
 
 const ActivityItem = styled.div`
-  border: 1px solid #979797;
+  /* border: 1px solid #979797; */
   width: 300px;
   height: 300px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   background: #000;
   /* margin-bottom: 40px; */
-  text-align: left;
+  /* text-align: left; */
   /* padding-top: 20px;
   padding-left: 30px; */
   line-height: 30px;
   color: #fff;
+  align-items: center;
 
   background-size: cover;
   background-repeat: no-repeat;
@@ -508,9 +519,9 @@ const Canvas = styled.div`
   left: 0;
   width: 300px;
   height: 300px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
 
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   &:hover {
     background: rgba(0, 0, 0, 0.8);
     color: black;
@@ -526,7 +537,9 @@ const Canvas = styled.div`
 `;
 
 const ActivityContent = styled.div`
-  margin: 20px 25px;
+  border: 1px solid #979797;
+  margin: 10px 10px;
+  padding: 10px;
   position: relative;
   @media (max-width: 768px) {
     /* margin-top: 10px;
@@ -548,17 +561,19 @@ const PageControllContainer = styled.div`
   display: flex;
 `;
 const Title = styled.div`
-  font-size: 24px;
+  font-size: 16px;
+  font-weight: 600;
   height: 30px;
 `;
 const Time = styled.div`
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 300;
 `;
 const Type = styled.div`
   font-size: 16px;
 `;
 const Requirement = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   margin-top: 10px;
   height: 80px;
   @media (max-width: 768px) {
@@ -588,7 +603,7 @@ const ActivityImage = styled.img`
   width: 100%;
   height: 300px;
   object-fit: cover;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   /* background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)); */
 
   transition: all 0.5s ease 0s;
