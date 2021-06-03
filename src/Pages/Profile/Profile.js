@@ -33,6 +33,9 @@ import MemberCard from "./MemberCard.js";
 import InviteButton from "./InviteButton.js";
 import amplifierImg from "../../images/amplifier-guitar.jpg";
 import recordImg from "../../images/retro-record.jpg";
+import Alert from "@material-ui/lab/Alert";
+import { AlertTitle } from "@material-ui/lab";
+import Collapse from "@material-ui/core/Collapse";
 
 const StyledModal = Modal.styled`
 width: 20rem;

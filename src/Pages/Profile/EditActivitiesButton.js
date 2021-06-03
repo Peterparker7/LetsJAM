@@ -16,6 +16,8 @@ import {
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const StyledModal = Modal.styled`
 width: 30rem;
@@ -214,15 +216,29 @@ function EditActivitiesButton(props) {
   const handleNolimtChange = () => {};
 
   const handleDelete = async () => {
-    handleActivityInvitationDelete();
-    const deleteActivity = await deleteActivityData(props.data.id);
-    alert("已刪除活動");
-    dispatch({
-      type: "DELETE_ACTIVITYDATA",
-      data: props.data,
+    Swal.fire({
+      title: "確定要刪除嗎?",
+      text: "刪除後將無法復原",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "確定刪除",
+      cancelButtonText: "取消",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        handleActivityInvitationDelete();
+        const deleteActivity = deleteActivityData(props.data.id);
+        // alert("已刪除活動");
+        dispatch({
+          type: "DELETE_ACTIVITYDATA",
+          data: props.data,
+        });
+        setOpacity(0);
+        setIsOpen(!isOpen);
+      }
     });
-    setOpacity(0);
-    setIsOpen(!isOpen);
   };
   const handleActivityInvitationDelete = async () => {
     const allUserData = await getAllUser();

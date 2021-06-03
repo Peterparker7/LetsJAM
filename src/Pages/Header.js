@@ -40,7 +40,6 @@ function Header() {
   };
 
   const handlefirebaseChange = () => {
-    console.log(userDataChange);
     setUserData(userDataChange);
   };
   // window.onclick = function (e) {
@@ -52,8 +51,6 @@ function Header() {
   // ) {
   //   setMailBoxDisplay(false);
   // }
-  //   console.log(e.currentTarget);
-  //   console.log(e);
   // };
   const handleMailbox = () => {
     setMailBoxDisplay(!mailBoxDisplay);
@@ -67,12 +64,10 @@ function Header() {
     const newInvitation = userData.invitation.filter(
       (item) => item.id !== activityId
     );
-    console.log(newInvitation);
     setUserData({
       ...userData,
       invitation: newInvitation,
     });
-    console.log(userData);
     updateInvitation(newInvitation, userDataRedux.uid);
   };
   const handleUserDataChange = () => {};
@@ -85,14 +80,12 @@ function Header() {
     const invitedArray = [];
     invitation.forEach((item) => {
       const promise = getSpecificData(item.id).then((data) => {
-        console.log(data);
         return data;
       });
       invitedArray.push(promise);
     });
     const allInvitation = await Promise.all(invitedArray);
     setInvitationData(allInvitation);
-    console.log(allInvitation);
   };
 
   useEffect(() => {
@@ -117,9 +110,6 @@ function Header() {
   if (!invitationData) {
     return "isLoading";
   }
-  // console.log(userDataChange);
-  console.log(userData.uid);
-  console.log(invitationData);
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
@@ -294,7 +284,6 @@ function Header() {
     };
 
     if (sideBarDisplay) {
-      console.log(sideBarDisplay);
       return (
         <MenuSideBar>
           <MenuItem>{menuLoginHTML()}</MenuItem>

@@ -33,24 +33,20 @@ function Detail() {
   let activityDetail = {};
 
   //取得使用者資料
-  window.firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      // 使用者已登入，可以取得資料
-      var email = user.email;
-      var uid = user.uid;
-      console.log(email, uid);
-    } else {
-      // 使用者未登入
-    }
-  });
+  // window.firebase.auth().onAuthStateChanged(function (user) {
+  //   if (user) {
+  //     // 使用者已登入，可以取得資料
+  //     var email = user.email;
+  //     var uid = user.uid;
+  //   } else {
+  //     // 使用者未登入
+  //   }
+  // });
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
-    console.log(userUid);
     const userData = await getUserData(userUid);
-    console.log(userData);
     setUserUid(userUid);
     setUserName(userData.name);
-    console.log(userUid);
   };
 
   const getData = async () => {
@@ -59,7 +55,6 @@ function Detail() {
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
     const currentUser = await getUserData(userUid);
-    console.log(data);
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
     data.applicants.forEach((applicants) => {
@@ -94,7 +89,6 @@ function Detail() {
     }
   };
 
-  console.log(detailData);
   //   const detailHTML = detailData.() => {
   //     return <div></div>;
   //   };
@@ -107,12 +101,10 @@ function Detail() {
   };
 
   const renderDetail = () => {
-    console.log("??");
     let requirementHTML = detailData.requirement.map((item, index) => {
-      return <span>{item} </span>;
+      return <span key={index}>{item} </span>;
     });
     let activityTime = detailData.timestamp.toDate().toString();
-    console.log(activityTime.slice(0, 21));
     let showTime = activityTime.slice(0, 21);
     let limit = "";
 
@@ -217,9 +209,7 @@ function Detail() {
   };
 
   //   const userData = async () => {
-  //     console.log("!!");
   //     let data = await getUserData(userId);
-  //     console.log(data);
   //   };
   //   userData();
 
@@ -257,11 +247,7 @@ function Detail() {
       }
     };
 
-    console.log(detailData.host.name);
-    console.log(detailData.applicants);
     // const applicantsHTML = Object.values(detailData.applicants).map((data) => {
-    //   console.log(data);
-    //   console.log(data.name);
     //   return (
     //     <EachAttendantField>
     //       <ProfileBlock>
@@ -279,27 +265,27 @@ function Detail() {
     //     </EachAttendantField>
     //   );
     // });
-    const attendantsHTML = Object.values(detailData.attendants).map((data) => {
-      console.log(data);
-      console.log(data.name);
-      return (
-        <EachAttendantField>
-          <ProfileBlock>
-            <ProfileImg
-              src={`${data.profileImage}`}
-              // style={{
-              //   background: `url(${data.profileImage})`,
-              //   backgroundSize: "cover",
-              //   backgroundPosition: "",
-              // }}
-            />
+    const attendantsHTML = Object.values(detailData.attendants).map(
+      (data, index) => {
+        return (
+          <EachAttendantField key={index}>
+            <ProfileBlock>
+              <ProfileImg
+                src={`${data.profileImage}`}
+                // style={{
+                //   background: `url(${data.profileImage})`,
+                //   backgroundSize: "cover",
+                //   backgroundPosition: "",
+                // }}
+              />
 
-            <div>{data.name}</div>
-            <MemberCard data={data} />
-          </ProfileBlock>
-        </EachAttendantField>
-      );
-    });
+              <div>{data.name}</div>
+              <MemberCard data={data} />
+            </ProfileBlock>
+          </EachAttendantField>
+        );
+      }
+    );
     return (
       <MemberInfoContainer>
         <HostTitle>關於揪團主</HostTitle>
@@ -326,19 +312,14 @@ function Detail() {
         <MemberField>{attendantsHTML}</MemberField>
       </MemberInfoContainer>
     );
-
-    console.log(detailData.host);
   };
   const handleJoin = () => {
-    console.log("join click!");
-
     joinActivity(id, userUid);
 
     // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
 
     // setData((data) => [...data, ...dataList]);   //append新東西到array
     // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
-    console.log(currentUserData);
     setDetailData({
       ...detailData,
       applicants: [
@@ -353,8 +334,6 @@ function Detail() {
 
   const renderJoinButton = () => {
     const isApplicant = detailData.applicants.filter((item) => {
-      console.log(userUid);
-      console.log(item.uid);
       if (userUid && item.uid === userUid) {
         return item;
       }
@@ -364,8 +343,6 @@ function Detail() {
         return item;
       }
     });
-    console.log(isApplicant);
-    console.log(isAttendant);
     if (isApplicant.length !== 0) {
       return (
         <ApplicantButton
@@ -427,8 +404,6 @@ function Detail() {
         </JoinButton>
       );
     } else if (detailData.host.uid === userUid) {
-      console.log(detailData.host.uid);
-      console.log(userUid);
       return (
         <JoinButton
           onClick={() => {
@@ -484,7 +459,6 @@ function Detail() {
   if (!detailData) {
     return "isLoading";
   }
-  console.log(detailData);
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
       <DetailContent>

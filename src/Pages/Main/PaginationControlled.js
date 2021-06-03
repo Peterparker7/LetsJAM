@@ -21,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
   },
-  color: {
-    color: "white",
-  },
 }));
 
 export default function PaginationControlled(props) {
@@ -35,12 +32,9 @@ export default function PaginationControlled(props) {
   };
 
   return (
-    <div className={classes.root} style={{ margin: "auto", color: "white" }}>
+    <div className={classes.root} style={{ margin: "auto" }}>
       {/* <Typography>Page: {props.page}</Typography> */}
       <Newstyled
-        classes={{
-          color: classes.color,
-        }}
         count={props.count}
         page={props.page}
         onChange={handleChange}

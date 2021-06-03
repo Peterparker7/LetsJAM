@@ -126,9 +126,10 @@ function EditActivitiesMemberButton(props) {
   if (!applicantsData || !attendantsData) {
     return "isLoading";
   }
-  if (!activityChange) {
-    return "isLoading";
-  }
+  //加了下面 刪除活動時查看申請button會出現isLoading
+  // if (!activityChange) {
+  //   return "isLoading";
+  // }
   if (!initApplicantsData) {
     return "isLoading";
   }

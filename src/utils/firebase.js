@@ -46,7 +46,7 @@ const uploadImage = async (img) => {
   const storageReference = window.firebase.storage().ref(path);
 
   // .put() 方法把東西丟到該位置裡
-  const task = await storageReference.put(img);
+  const task = storageReference.put(img);
   const fileRef = window.firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
@@ -165,6 +165,7 @@ const logOut = async () => {
     .then(function () {
       // 登出後強制重整一次頁面
       alert("已登出");
+
       window.location.href = "./";
     })
     .catch(function (error) {
@@ -348,7 +349,6 @@ const subscribeUser = (callback, userId) => {
     .collection("userData")
     .doc(userId)
     .onSnapshot((doc) => {
-      console.log(doc.data());
       callback(doc.data());
     });
   return unsubscribe;

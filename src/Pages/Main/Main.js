@@ -27,23 +27,17 @@ function Main() {
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
   let pageLen = 9;
-  console.log(data);
-  console.log(page);
-
-  console.log(allPaginateArray[page - 1]);
 
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
     allActivitiesArray.push(...data);
     allActivitiesArrayCopy.push(...data);
-    console.log(allActivitiesArray);
 
     //也顯示揪團主，待更改
     //   data.forEach(async (item, index) => {
     //     const eachHost = await getUserData(item.host).then((res) => {
     //       // hostDetailArray.push(res);
-    //       // console.log(hostDetailArray);
     //       data[index].host = res;
 
     //       return res;
@@ -53,7 +47,6 @@ function Main() {
     // setData(data);
     // allActivitiesArray.push(...data);
     // allActivitiesArrayCopy.push(...data);
-    // console.log(allActivitiesArray);
   };
   //Promise.all(promises.then((result)=>{
 
@@ -67,7 +60,6 @@ function Main() {
     let openActivityArray = data.filter((item) => {
       return item.timestamp.toMillis() > currentTime;
     });
-    console.log(openActivityArray);
 
     const pageArray = openActivityArray.slice(0, pageLen);
     const pageNum = Math.ceil(openActivityArray.length / pageLen);
@@ -76,7 +68,6 @@ function Main() {
       let pageArray = openActivityArray.slice(i, i + pageLen);
       allPageArray.push(pageArray);
     }
-    console.log(allPageArray);
 
     setAllPaginateArray(allPageArray);
   };
@@ -93,11 +84,9 @@ function Main() {
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
-    console.log(userUid);
     if (userUid) {
       setUserDataUid(userUid);
       const userData = await getUserData(userUid);
-      console.log(userData);
     }
   };
 
@@ -115,7 +104,6 @@ function Main() {
   //   return "isLoading";
   // }
   // if (!data) {
-  //   console.log("haha");
   //   return "Loading";
   // }
 
@@ -124,12 +112,8 @@ function Main() {
   // }
 
   const handleFilter = (e, filter) => {
-    console.log(allActivitiesArrayCopy);
-    console.log(e);
-    console.log(allActivitiesArray);
     const selectType = document.querySelector("#selectType");
     const selectRequirement = document.querySelector("#selectRequirement");
-    console.log(selectType.value);
     if (filter === "type") {
       if (e === "所有類型") {
         if (selectRequirement.value === "所有樂器") {
@@ -145,12 +129,10 @@ function Main() {
         return;
       }
       const iscontain = allActivitiesArray.filter((item) => {
-        console.log(item);
         if (item.type.includes(e)) {
           return item;
         }
       });
-      console.log(iscontain);
       setData(iscontain);
       if (selectRequirement.value === "所有樂器") {
         setData(iscontain);
@@ -178,12 +160,10 @@ function Main() {
         return;
       }
       const iscontain = allActivitiesArray.filter((item) => {
-        console.log(item);
         if (item.requirement.includes(e)) {
           return item;
         }
       });
-      console.log(iscontain);
       if (selectType.value === "所有類型") {
         setData(iscontain);
       } else {
@@ -226,13 +206,13 @@ function Main() {
         let currentTime = Date.now();
 
         let requirementHTML = item.requirement.map((data) => {
-          return <span>{data} </span>;
+          return <span key={data}>{data} </span>;
         });
         let attendantsNum = item.attendants.length;
 
         if (firebaseTime > currentTime) {
           return (
-            <Link to={`/activities/${item.id}`}>
+            <Link to={`/activities/${item.id}`} key={index}>
               <ActivityItem
               // style={{
               //   backgroundImage: `url(${item.fileSource})`,

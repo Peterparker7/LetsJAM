@@ -16,6 +16,8 @@ import * as Warning from "./Warning";
 import UsePlace from "./UsePlace";
 import Place from "./Place";
 
+import CircularIndeterminate from "./CircularProgress";
+
 const db = window.firebase.firestore();
 // let checked = false;
 
@@ -23,6 +25,7 @@ const StyledMultiSelect = styled(MultiSelect)`
   border: 1px solid #979797;
   --rmsc-border: unset !important;
 `;
+
 function Create() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -48,6 +51,8 @@ function Create() {
   const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
   const [imageStatus, setImageStatus] = useState(true);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // let limitinit = 0;
   // let comment = "";
@@ -323,9 +328,13 @@ function Create() {
   };
 
   async function handleUploadImage(e) {
+    setIsLoading(true);
     if (e.target.value) {
       imgSource = e.target.files[0];
+      // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
+      setIsLoading(false);
+
       setimgUrl(imageUrl);
       console.log(imageUrl);
     }
@@ -339,6 +348,7 @@ function Create() {
         {/* <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} /> */}
         {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
+          <CreateDetailTopBar></CreateDetailTopBar>
           <Title>我要開團</Title>
           <CreateDetail>
             <CreateDetailContent>
@@ -437,7 +447,7 @@ function Create() {
                     }}
                   />
 
-                  <label for="noLimit">無</label>
+                  <label htmlFor="noLimit">無</label>
                 </LimitDiv>
                 {Warning.warningLimitHTML(limit, limitStatus)}
               </InputFieldDiv>
@@ -505,16 +515,48 @@ function Create() {
               </InputFieldDiv> */}
             </CreateDetailContent>
             <CreateDetailImage src={imgUrl} />
+            <div
+              style={
+                isLoading
+                  ? {
+                      width: "20px",
+                      height: "20px",
+                      background: "blue",
+                      display: "block",
+                    }
+                  : { display: "none" }
+              }
+            ></div>
           </CreateDetail>
         </CreateDetailContainer>
         <ButtonField>
           <Button
-            class="createBtn"
+            style={
+              !isLoading ? { display: "inline-block" } : { display: "none" }
+            }
+            className="createBtn"
             onClick={() => {
               clickCreate();
             }}
           >
             建立活動
+            {/* <CircularIndeterminate
+              style={!isLoading ? { display: "block" } : { display: "none" }}
+            /> */}
+          </Button>
+          <Button
+            disabled={!isLoading}
+            style={
+              isLoading
+                ? {
+                    display: "inline-block",
+                  }
+                : { display: "none" }
+            }
+          >
+            <CircularIndeterminate
+              style={isLoading ? { display: "block" } : { display: "none" }}
+            />
           </Button>
         </ButtonField>
       </Container>
@@ -544,6 +586,11 @@ const ProcessIntroContainer = styled.div`
   margin: 0 auto;
 `;
 const ProcessIntro = styled.div``;
+const CreateDetailTopBar = styled.div`
+  width: 100%;
+  height: 6px;
+  background: #ff0099;
+`;
 const CreateDetailContainer = styled.div`
   width: 720px;
   margin: 0 auto;
@@ -551,7 +598,8 @@ const CreateDetailContainer = styled.div`
   margin-bottom: 20px;
   color: black;
   background: white;
-  padding: 20px;
+  /* padding: 20px; */
+  padding-top: 0px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -559,6 +607,7 @@ const CreateDetailContainer = styled.div`
 const CreateDetail = styled.div`
   display: flex;
   line-height: 30px;
+  margin: 0px 20px;
   padding: 20px;
   justify-content: space-between;
   @media (max-width: 768px) {
@@ -581,6 +630,7 @@ const CreateDetailImage = styled.img`
 `;
 const Title = styled.div`
   font-size: 24px;
+  margin: 10px;
   padding: 10px;
   border-bottom: 1px solid #979797;
 `;
