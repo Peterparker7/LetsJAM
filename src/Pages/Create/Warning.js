@@ -16,14 +16,36 @@ const warningTitleHTML = (title, status) => {
 };
 
 const warningDateHTML = (date, status) => {
+  let nowDate = new Date();
+  if (nowDate >= Date.parse(date) + 16 * 60 * 60000) {
+    return (
+      <Warning style={{ display: "inline-block", color: "red" }}>
+        過期了
+      </Warning>
+    );
+  }
+
   if (!status) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
 };
-const warningTimeHTML = (time, status) => {
-  if (!status) {
+const warningTimeHTML = (date, time, status) => {
+  let nowDate = Date.now();
+  let a = time.split(":");
+  let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+  let deviation = 8 * 60 * 60000;
+
+  if (nowDate >= Date.parse(date) + milliseconds - deviation) {
+    return (
+      <Warning style={{ display: "inline-block", color: "red" }}>
+        過期了
+      </Warning>
+    );
+  }
+
+  if (!status && !time) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
@@ -75,7 +97,7 @@ const warningImageHTML = (image, status) => {
 };
 
 const Warning = styled.div`
-  width: 40px;
+  width: 60px;
   font-size: 12px;
   padding-left: 10px;
   /* position: absolute;

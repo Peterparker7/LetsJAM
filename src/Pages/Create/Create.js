@@ -63,7 +63,12 @@ function Create() {
   const refContainer = useRef("");
 
   function addDays(date, days) {
-    var result = new Date(date);
+    if (days === 0) {
+      let result = new Date(date);
+      result.setDate(result.getDate() + 7);
+      return result;
+    }
+    let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
   }
@@ -108,13 +113,22 @@ function Create() {
   }, []);
 
   const createFormCheck = () => {
+    let nowDate = Date.now();
+    let a = time.split(":");
+    let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+    let deviation = 8 * 60 * 60000;
+    console.log(nowDate);
+    console.log(Date.parse(date) + milliseconds - deviation);
+    console.log(timeStatus);
+    console.log(dateStatus);
+
     if (!title || title.length > 10) {
       setTitleStatus(false);
     }
-    if (!date) {
+    if (!date || nowDate >= Date.parse(date) + 16 * 60 * 60000) {
       setDateStatus(false);
     }
-    if (!time) {
+    if (!time || nowDate >= Date.parse(date) + milliseconds - deviation) {
       setTimeStatus(false);
     }
     if (!type) {
@@ -138,6 +152,7 @@ function Create() {
     if (
       !titleStatus ||
       !dateStatus ||
+      !timeStatus ||
       !typeStatus ||
       requirement.length === 0 ||
       !limitStatus ||
@@ -197,6 +212,7 @@ function Create() {
       date: date,
       time: time,
     };
+
     if (createFormCheck()) {
       await activityData.set(newData);
       window.location.replace("./");
@@ -226,6 +242,9 @@ function Create() {
   });
 
   function handleChange(e, changeType) {
+    let nowDate = Date.now();
+    let deviation = 8 * 60 * 60000;
+
     if (changeType === "title") {
       setTitle(e.target.value);
       setTitleStatus(true);
@@ -233,10 +252,19 @@ function Create() {
     if (changeType === "date") {
       setDate(e.target.value);
       setDateStatus(true);
+      if (nowDate >= Date.parse(e.target.value) + 16 * 60 * 60000) {
+        setDateStatus(false);
+      }
     }
     if (changeType === "time") {
+      let a = e.target.value.split(":");
+      let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+
       setTime(e.target.value);
       setTimeStatus(true);
+      if (nowDate >= Date.parse(date) + milliseconds - deviation) {
+        setTimeStatus(false);
+      }
     }
     if (changeType === "type") {
       setType(e.target.value);
@@ -349,7 +377,7 @@ function Create() {
                   }}
                   step={300}
                 ></Inputfield>
-                {Warning.warningTimeHTML(time, timeStatus)}
+                {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>音樂類型</Label>
