@@ -577,7 +577,7 @@ const NoResult = styled.div`
   font-size: 20px;
 `;
 const PageControllContainer = styled.div`
-  margin: 10px auto;
+  margin: 30px auto;
   max-width: 1024px;
   display: flex;
 `;
