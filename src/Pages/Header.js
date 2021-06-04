@@ -414,6 +414,7 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   background-color: white;
   z-index: 5;
+  /* position: fixed; */
 `;
 const HeaderDiv = styled.div`
   width: 100%;
@@ -525,16 +526,14 @@ const NeonShineThree = keyframes`
   20% {opacity: 1}
   30% {opacity: 0.9}
   61% {opacity: 1}
-
   65% {opacity: 1}
-  
   100% {opacity: 1}
 `;
 const Item = styled.div`
   /* width: 90px; */
   font-weight: bold;
   margin-right: 5px;
-  margin-left: 30px;
+  margin-left: 20px;
   color: #fff;
 `;
 const ItemOne = styled(Item)`
@@ -567,7 +566,7 @@ const MailBoxIconContainer = styled.div`
   z-index: 5;
 `;
 const MailBoxIcon = styled.img`
-  width: 25px;
+  width: 30px;
 `;
 const MailBoxIconCircle = styled.div`
   position: absolute;

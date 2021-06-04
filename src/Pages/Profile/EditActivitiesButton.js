@@ -220,6 +220,8 @@ function EditActivitiesButton(props) {
       title: "確定要刪除嗎?",
       text: "刪除後將無法復原",
       icon: "warning",
+      background: "black",
+      html: "<div style=color:white;>刪除後將無法復原</div>",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",

@@ -3,6 +3,8 @@ import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+
 import MyComponent from "../../Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
@@ -26,7 +28,7 @@ const StyledMultiSelect = styled(MultiSelect)`
   --rmsc-border: unset !important;
 `;
 
-function Create() {
+function Create(props) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -51,9 +53,12 @@ function Create() {
   const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
   const [imageStatus, setImageStatus] = useState(true);
+  // const [userUid, setUserUid] = useState();
+
+  const [requirement, setRequirement] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-
+  let history = useHistory();
   // let limitinit = 0;
   // let comment = "";
   let youtubeUrl = "";
@@ -103,19 +108,27 @@ function Create() {
     };
   };
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    if (!userUid) {
-      window.location.href = "/";
-      return "redirection";
-    }
-  };
+  // const checkUserIsLogin = async () => {
+  //   const userUid = await getAuthUser();
+  //   setUserUid(userUid);
+  //   if (!userUid) {
+  //     history.push("/");
+  //     return "redirection";
+  //   }
+  // };
 
   useEffect(() => {
-    checkUserIsLogin();
+    // checkUserIsLogin();
     setDate(sat);
     setTime("16:00");
   }, []);
+
+  if (props.userUid === "") {
+    return null;
+  } else if (!props.userUid) {
+    history.push("/");
+    return "redirection";
+  }
 
   const createFormCheck = () => {
     let nowDate = Date.now();
@@ -232,7 +245,6 @@ function Create() {
     selectAll: "全選",
     selectSomeItems: "請選擇樂器",
   };
-  const [requirement, setRequirement] = useState([]);
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -246,6 +258,12 @@ function Create() {
     requirementArray.push(data.value);
   });
 
+  if (!userDataRedux) {
+    return "isloading";
+  }
+  // if (!userUid) {
+  //   return "isLoading";
+  // }
   function handleChange(e, changeType) {
     let nowDate = Date.now();
     let deviation = 8 * 60 * 60000;

@@ -14,6 +14,9 @@ import {
 import neonBand from "../../images/neon-band.jpg";
 import InstrumentBanner from "./InstrumentBanner";
 import PaginationControlled from "./PaginationControlled";
+import IsLoading from "../../Components/IsLoading";
+import { Animated } from "react-animated-css";
+import CircularIndeterminate from "../Create/CircularProgress";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -197,6 +200,10 @@ function Main() {
     }
   };
 
+  if (allPaginateArray.length === 0) {
+    return <IsLoading />;
+  }
+
   const ActivityHTML =
     allPaginateArray.length > 0 ? (
       allPaginateArray[page - 1].map((item, index) => {
@@ -212,29 +219,36 @@ function Main() {
 
         if (firebaseTime > currentTime) {
           return (
-            <Link to={`/activities/${item.id}`} key={index}>
-              <ActivityItem
-              // style={{
-              //   backgroundImage: `url(${item.fileSource})`,
-              // }}
-              >
-                <ActivityImage src={item.fileSource} />
-                <Canvas>
-                  {/* <div>{item.id}</div> */}
-                  <ActivityContent>
-                    <Time>{showTime}</Time>
+            <Animated
+              animationIn="bounceInLeft"
+              // animationOut="fadeOut"
+              isVisible={true}
+              animationInDelay={index * 100}
+            >
+              <Link to={`/activities/${item.id}`} key={index}>
+                <ActivityItem
+                // style={{
+                //   backgroundImage: `url(${item.fileSource})`,
+                // }}
+                >
+                  <ActivityImage src={item.fileSource} />
+                  <Canvas>
+                    {/* <div>{item.id}</div> */}
+                    <ActivityContent>
+                      <Time>{showTime}</Time>
 
-                    <Title>{item.title}</Title>
-                    <Type>{item.type}</Type>
-                    <Requirement>{requirementHTML}</Requirement>
-                    <Location>{item.location}</Location>
-                    {/* <Host>揪團主：{item.host.name}</Host> */}
-                    <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-                    {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
-                  </ActivityContent>
-                </Canvas>
-              </ActivityItem>
-            </Link>
+                      <Title>{item.title}</Title>
+                      <Type>{item.type}</Type>
+                      <Requirement>{requirementHTML}</Requirement>
+                      <Location>{item.location}</Location>
+                      {/* <Host>揪團主：{item.host.name}</Host> */}
+                      <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+                      {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+                    </ActivityContent>
+                  </Canvas>
+                </ActivityItem>
+              </Link>
+            </Animated>
           );
         }
       })
@@ -250,15 +264,23 @@ function Main() {
         {/* <MainImgContainer>
           <MainImg src={neonBand} alt="" />
         </MainImgContainer> */}
-        <Slogan>
-          整個城市<br></br>都是我的練團室
-        </Slogan>
+        <Animated
+          animationIn="fadeInLeft"
+          animationInDelay="500"
+          // animationOut="fadeOut"
+          isVisible={true}
+        >
+          <Slogan>
+            整個城市<br></br>都是我的練團室
+          </Slogan>
+        </Animated>
         <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
       {/* <div>
         <InstrumentBanner />
       </div> */}
+
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -296,6 +318,7 @@ function Main() {
           </select>
         </FilterBar>
       </ActivityFilter>
+
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
       {/* <Link to={`./`}>
         <button
@@ -376,13 +399,18 @@ const JoinButtonContainer = styled.div`
 `;
 const JoinButton = styled.button`
   border: 1px solid none;
-  border-radius: 20px;
-  background: #ff00ff;
-  height: 40px;
-  width: 200px;
+  border-radius: 30px;
+  background: #43e8d8;
+  /* background: #ff00ff; */
+  padding: 12px 48px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background: #4cffee;
+    transform: translateY(-2px);
+  }
 `;
 const MainImgContainer = styled.div`
   width: 500px;
@@ -401,13 +429,13 @@ const MainImg = styled.img`
 
 const ActivityFilter = styled.div`
   display: flex;
-  margin: 0 auto;
-  margin-top: 20px;
+  margin: 50px auto;
+  /* margin-top: 20px; */
   max-width: 1024px;
   justify-content: flex-end;
   padding: 0 20px;
   color: white;
-  margin-bottom: 20px;
+
   align-items: center;
 `;
 
@@ -452,7 +480,7 @@ const ActivitiesContainer = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   grid-column-gap: 20px;
-  grid-row-gap: 30px;
+  grid-row-gap: 40px;
   /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
@@ -467,7 +495,7 @@ const ActivitiesContainer = styled.div`
     grid-template-columns: 1fr 1fr;
     justify-items: center;
     grid-column-gap: 0px;
-    grid-row-gap: 20px;
+    grid-row-gap: 40px;
     max-width: 700px;
   }
   @media (max-width: 768px) {
@@ -482,7 +510,7 @@ const ActivityItem = styled.div`
   /* border: 1px solid #979797; */
   width: 300px;
   height: 300px;
-  /* border-radius: 20px; */
+  border-radius: 4px;
   background: #000;
   /* margin-bottom: 40px; */
   /* text-align: left; */
@@ -497,13 +525,6 @@ const ActivityItem = styled.div`
   background-position: 50% 50%;
   position: relative;
 
-  /* &:hover {
-    background: white;
-    color: black;
-  } */
-  /* &:hover {
-    transform: scale(1.5);
-  } */
   overflow: hidden;
 
   @media (max-width: 768px) {
@@ -519,14 +540,14 @@ const Canvas = styled.div`
   left: 0;
   width: 300px;
   height: 300px;
-  /* border-radius: 20px; */
+  border-radius: 4px;
 
   background: rgba(0, 0, 0, 0.6);
-  &:hover {
+  /* &:hover {
     background: rgba(0, 0, 0, 0.8);
     color: black;
     transform: scale(1.05);
-  }
+  } */
   pointer-events: none;
   /* z-index: -1; */
 
@@ -603,13 +624,12 @@ const ActivityImage = styled.img`
   width: 100%;
   height: 300px;
   object-fit: cover;
-  /* border-radius: 20px; */
+  border-radius: 4px;
   /* background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)); */
 
   transition: all 0.5s ease 0s;
   &:hover {
     transform: scale(1.2);
-    opacity: 0.5;
   }
   @media (max-width: 768px) {
     width: 100%;

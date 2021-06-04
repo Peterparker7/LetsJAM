@@ -24,6 +24,7 @@ import {
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import EditProfileButton from "./EditProfileButton.js";
@@ -36,6 +37,7 @@ import recordImg from "../../images/retro-record.jpg";
 import Alert from "@material-ui/lab/Alert";
 import { AlertTitle } from "@material-ui/lab";
 import Collapse from "@material-ui/core/Collapse";
+import CircularIndeterminate from "../Create/CircularProgress";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -48,7 +50,7 @@ background-color: white;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;`;
 
-function Profile() {
+function Profile(props) {
   let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   const [userData, setUserData] = useState({});
@@ -65,6 +67,7 @@ function Profile() {
   );
   const confirmArray = [];
   const dispatch = useDispatch();
+  const history = useHistory();
   //fireauth
   window.firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -169,8 +172,16 @@ function Profile() {
     getUserActivitiesData();
   }, [userData]);
 
+  if (props.userUid === "") {
+    return null;
+  } else if (!props.userUid) {
+    history.push("/");
+    return "redirection";
+  }
+
   if (!userActivities || !userJoinActivities) {
-    return "isLoading";
+    // return "isLoading";
+    return <CircularIndeterminate />;
   }
 
   // handleOpenTag();

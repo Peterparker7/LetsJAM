@@ -1,6 +1,8 @@
 import "../../App.css";
 import "../../normalize.css";
 import styled from "styled-components";
+import { keyframes } from "styled-components";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSpecificData } from "../../utils/firebase";
@@ -9,6 +11,7 @@ import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import IsLoadingBlack from "../../Components/IsLoadingBlack";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -29,6 +32,7 @@ function Detail() {
   const [userUid, setUserUid] = useState();
   const [userName, setUserName] = useState();
   const [activityStatus, setActivityStatus] = useState(true);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   let activityDetail = {};
 
@@ -99,6 +103,12 @@ function Detail() {
       "menubar=1,resizable=1,width=500,height=500"
     );
   };
+  // const handleIsLoading = () => {
+  //   setLoadingStatus(true);
+  //   setTimeout(() => {
+  //     setLoadingStatus(false);
+  //   }, 2000);
+  // };
 
   const renderDetail = () => {
     let requirementHTML = detailData.requirement.map((item, index) => {
@@ -314,19 +324,23 @@ function Detail() {
     );
   };
   const handleJoin = () => {
-    joinActivity(id, userUid);
+    setLoadingStatus(true);
+    setTimeout(() => {
+      setLoadingStatus(false);
+      joinActivity(id, userUid);
+      setDetailData({
+        ...detailData,
+        applicants: [
+          ...detailData.applicants, //資料結構不同，才有辦法更新
+          { name: userName, uid: userUid },
+        ],
+      });
+    }, 20000);
 
     // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
 
     // setData((data) => [...data, ...dataList]);   //append新東西到array
     // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
-    setDetailData({
-      ...detailData,
-      applicants: [
-        ...detailData.applicants, //資料結構不同，才有辦法更新
-        { name: userName, uid: userUid },
-      ],
-    });
   };
   const handleVisitor = () => {
     alert("登入以使用此功能");
@@ -435,9 +449,10 @@ function Detail() {
           disabled={!activityStatus}
           onClick={() => {
             handleJoin();
+            // handleIsLoading();
           }}
         >
-          我要報名
+          {loadingStatus ? <IsLoadingBlack /> : "我要報名"}
         </JoinButton>
       );
     }
@@ -449,6 +464,10 @@ function Detail() {
 
     getData();
   }, [id]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   //useEffect在每次detailData變化後執行
   //   useEffect(() => {
@@ -506,9 +525,10 @@ const ActivityContainer = styled.div`
   }
 `;
 const ActivityDetail = styled.div`
-  width: 400px;
+  width: 300px;
   text-align: left;
-  margin-right: 20px;
+  margin: 50px 50px 50px 0;
+  height: 450px;
   @media (max-width: 888px) {
     width: 100%;
   }
@@ -518,9 +538,12 @@ const TitleContainer = styled.div`
   position: relative;
 `;
 const Title = styled.div`
-  font-size: 28px;
+  font-size: 24px;
+  font-weight: 700;
   border-bottom: 1px solid #979797;
   color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
 `;
 const CloseTitle = styled.div`
   position: absolute;
@@ -529,15 +552,17 @@ const CloseTitle = styled.div`
   font-size: 16px;
 `;
 const ItemField = styled.div`
-  padding-left: 20px;
+  padding-left: 10px;
   @media (max-width: 888px) {
     width: 100%;
   }
 `;
 
 const InfoBar = styled.div`
-  line-height: 20px;
-  color: #979797;
+  line-height: 30px;
+  color: white;
+  font-weight: 400;
+  /* opacity: 0.8; */
 `;
 const InfoBarSecond = styled.div`
   margin-top: 20px;
@@ -546,8 +571,8 @@ const InfoBarSecond = styled.div`
 `;
 
 const CommentItem = styled.div`
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 20px auto;
   line-height: 30px;
 `;
@@ -555,23 +580,51 @@ const TypeItem = styled.div``;
 const Item = styled.div`
   width: 100%;
 `;
+
+const FadeInOpacity = keyframes`
+
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+`;
+const FlyIn = keyframes`
+	0% {
+ transform: translateX(200%);
+	}
+	100% {
+transform: translateX(0);
+	}
+`;
 const ImageContainer = styled.div`
-  width: calc(100% - 400px);
+  width: calc(100% - 300px);
   /* width: 600px; */
-  margin-top: 20px;
+  height: 500px;
+  margin: 20px 0;
+
+  opacity: 1;
+  animation: ${FadeInOpacity};
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.5s;
+
   @media (max-width: 888px) {
     width: 100%;
   }
 `;
+
 const ActivityImage = styled.img`
   width: 100%;
-  max-height: 400px;
-  border-radius: 20px;
+  height: 100%;
+  /* border-radius: 20px; */
   object-fit: cover;
 `;
 const ButtonField = styled.div`
   margin-top: 20px;
   text-align: right;
+  display: none;
   @media (max-width: 888px) {
     display: none;
   }
@@ -584,8 +637,11 @@ const ButtonField = styled.div`
 `;
 const RWDButtonField = styled.div`
   /* margin-top: -50px; */
+  width: 100%;
+
   text-align: right;
-  display: none;
+  display: flex;
+  padding: 10px;
   @media (max-width: 888px) {
     display: block;
   }
@@ -596,11 +652,12 @@ const RWDButtonField = styled.div`
 
 const Btn = styled.button`
   border: 1px solid #979797;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 150px;
   height: 50px;
   cursor: pointer;
   color: #fff;
+  transition: 0.2s;
   @media (max-width: 576px) {
     width: 50%;
   }
@@ -610,8 +667,22 @@ const ShareButton = styled(Btn)`
 `;
 const RWDShareButton = styled(Btn)`
   margin-right: 20px;
+  &:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+  }
 `;
-const JoinButton = styled(Btn)``;
+const JoinButton = styled(Btn)`
+  position: relative;
+  color: black;
+  background: #43e8d8;
+  border: none;
+  &:hover {
+    background: #7efff3;
+    transform: translateY(-2px);
+  }
+`;
 const ApplicantButton = styled(Btn)`
   cursor: not-allowed;
 `;
@@ -621,6 +692,8 @@ const AttendantButton = styled(Btn)`
 const CommentTitle = styled.div`
   color: white;
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   text-align: left;
   border-bottom: 1px solid #979797;
 `;
@@ -724,12 +797,16 @@ const VideoIframe = styled.iframe`
 `;
 const HostTitle = styled.div`
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   border-bottom: 1px solid #979797;
 `;
 
 const EachAttendantField = styled.div``;
 const AttendantsTitle = styled.div`
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   border-bottom: 1px solid #979797;
 `;
 const ProfileImg = styled.img`

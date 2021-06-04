@@ -6,6 +6,14 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { newUser } from "../../utils/firebase";
 import MultiSelect from "react-multi-select-component";
 
+const StyledMultiSelect = styled(MultiSelect)`
+  border: 1px solid #979797;
+  --rmsc-border: unset !important;
+  --rmsc-h: 38px !important;
+  --rmsc-p: 5px !important;
+  width: 250px;
+  text-align: left;
+`;
 // Initialize Firebase
 const db = window.firebase.firestore();
 let userEmail = "";
@@ -27,6 +35,14 @@ function Register() {
   });
 
   const [skill, setSkill] = useState([]);
+  let override = {
+    allItemsAreSelected: "我全都會",
+    clearSearch: "Clear Search",
+    noOptions: "No options",
+    search: "搜尋",
+    selectAll: "全選",
+    selectSomeItems: "請選擇樂器",
+  };
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -186,9 +202,10 @@ function Register() {
         <ItemField>
           <RequireField>*</RequireField>
 
-          <Label for="name">名稱</Label>
+          <Label for="name">用戶名稱</Label>
           <InputField
             id="name"
+            placeholder="例: 小明"
             style={
               nameState
                 ? { border: "1px solid #979797" }
@@ -240,9 +257,10 @@ function Register() {
 
           <Label for="skill">會的樂器</Label>
           <SkillSelectDiv>
-            <MultiSelect
+            <StyledMultiSelect
               id="skill"
               options={options}
+              overrideStrings={override}
               value={skill}
               onChange={setSkill}
               labelledBy="Select"
@@ -292,8 +310,7 @@ function Register() {
 const ItemField = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 5px;
-  margin-bottom: 20px;
+  margin: 30px 0 30px 0;
 `;
 const Label = styled.label`
   display: inline-block;
@@ -324,11 +341,24 @@ const RequireField = styled.span`
   color: red;
 `;
 const RegisterButton = styled.button`
-  width: 90px;
+  /* width: 90px; */
   margin: 0 auto;
-  height: 40px;
+  padding: 12px 40px;
+  /* height: 40px; */
   border: 1px solid #979797;
+  border-radius: 4px;
   margin-top: 30px;
   margin-bottom: 30px;
+  background: #121212;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  /* opacity: 0.7; */
+  &:hover {
+    opacity: 0.85;
+
+    color: white;
+    transform: translateY(-2px);
+  }
 `;
 export default Register;
