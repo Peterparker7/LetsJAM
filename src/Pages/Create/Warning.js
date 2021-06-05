@@ -97,12 +97,12 @@ const warningImageHTML = (image, status) => {
 };
 
 const Warning = styled.div`
-  width: 60px;
+  width: auto;
   font-size: 12px;
   padding-left: 10px;
-  /* position: absolute;
-  right: 0;
-  bottom: -20px; */
+  position: absolute;
+  left: 80px;
+  bottom: -25px;
 `;
 
 export { warningTitleHTML };

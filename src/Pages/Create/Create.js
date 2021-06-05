@@ -24,7 +24,7 @@ const db = window.firebase.firestore();
 // let checked = false;
 
 const StyledMultiSelect = styled(MultiSelect)`
-  border: 1px solid #979797;
+  border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
 `;
 
@@ -492,10 +492,9 @@ function Create(props) {
                   }}
                 ></Inputfield> */}
                 <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
-
                 {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
-              <InputFieldDiv style={{ alignItems: "unset" }}>
+              <InputFieldDiv>
                 <Label>活動備註</Label>
                 <InputTextArea
                   placeholder={"請填活動說明"}
@@ -532,51 +531,41 @@ function Create(props) {
                 ></Inputfield>
               </InputFieldDiv> */}
             </CreateDetailContent>
-            <CreateDetailImage src={imgUrl} />
-            <div
+            <CreateDetailImageContainer>
+              <CreateDetailImage src={imgUrl} />
+            </CreateDetailImageContainer>
+          </CreateDetail>
+          <ButtonField>
+            <Button
+              style={
+                !isLoading ? { display: "inline-block" } : { display: "none" }
+              }
+              className="createBtn"
+              onClick={() => {
+                clickCreate();
+              }}
+            >
+              建立活動
+              {/* <CircularIndeterminate
+              style={!isLoading ? { display: "block" } : { display: "none" }}
+            /> */}
+            </Button>
+            <Button
+              disabled={!isLoading}
               style={
                 isLoading
                   ? {
-                      width: "20px",
-                      height: "20px",
-                      background: "blue",
-                      display: "block",
+                      display: "inline-block",
                     }
                   : { display: "none" }
               }
-            ></div>
-          </CreateDetail>
+            >
+              <CircularIndeterminate
+                style={isLoading ? { display: "block" } : { display: "none" }}
+              />
+            </Button>
+          </ButtonField>
         </CreateDetailContainer>
-        <ButtonField>
-          <Button
-            style={
-              !isLoading ? { display: "inline-block" } : { display: "none" }
-            }
-            className="createBtn"
-            onClick={() => {
-              clickCreate();
-            }}
-          >
-            建立活動
-            {/* <CircularIndeterminate
-              style={!isLoading ? { display: "block" } : { display: "none" }}
-            /> */}
-          </Button>
-          <Button
-            disabled={!isLoading}
-            style={
-              isLoading
-                ? {
-                    display: "inline-block",
-                  }
-                : { display: "none" }
-            }
-          >
-            <CircularIndeterminate
-              style={isLoading ? { display: "block" } : { display: "none" }}
-            />
-          </Button>
-        </ButtonField>
       </Container>
     </MainContainer>
   );
@@ -592,11 +581,11 @@ const MainContainer = styled.div`
 const MainContainerCanvas = styled.div``;
 const Container = styled.div`
   text-align: left;
-  max-width: 960px;
+  max-width: 1024px;
   margin: 0 auto;
   height: 100%;
   border: 1px solid #979797;
-  padding: 50px 0;
+  padding: 50px 20px;
 `;
 const ProcessIntroContainer = styled.div`
   width: 960px;
@@ -606,11 +595,11 @@ const ProcessIntroContainer = styled.div`
 const ProcessIntro = styled.div``;
 const CreateDetailTopBar = styled.div`
   width: 100%;
-  height: 6px;
-  background: #ff0099;
+  height: 8px;
+  background: #43e8d8;
 `;
 const CreateDetailContainer = styled.div`
-  width: 720px;
+  max-width: 888px;
   margin: 0 auto;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -618,12 +607,14 @@ const CreateDetailContainer = styled.div`
   background: white;
   /* padding: 20px; */
   padding-top: 0px;
+  padding-bottom: 50px;
   @media (max-width: 768px) {
     width: 90%;
   }
 `;
 const CreateDetail = styled.div`
   display: flex;
+  /* flex-direction: column; */
   line-height: 30px;
   margin: 0px 20px;
   padding: 20px;
@@ -633,12 +624,21 @@ const CreateDetail = styled.div`
   }
 `;
 const CreateDetailContent = styled.div``;
-
+const CreateDetailImageContainer = styled.div`
+  width: 50%;
+  padding: 0 0 20px 10px;
+  height: auto;
+  @media (max-width: 768px) {
+    height: 300px;
+    margin-left: 0px;
+    display: none;
+  }
+`;
 const CreateDetailImage = styled.img`
   background: #979797;
   object-fit: cover;
-  width: 300px;
-  height: auto;
+  width: 100%;
+  height: 100%;
   /* margin-left: 20px; */
   @media (max-width: 768px) {
     height: 300px;
@@ -648,21 +648,21 @@ const CreateDetailImage = styled.img`
 `;
 const Title = styled.div`
   font-size: 24px;
-  margin: 10px;
-  padding: 10px;
+  margin: 20px 40px 0px 40px;
+  padding: 10px 0;
   border-bottom: 1px solid #979797;
 `;
 const InputFieldDiv = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
   position: relative;
   /* text-align: center; */
 `;
 const Inputfield = styled.input`
-  border: 1px solid #979797;
+  border-bottom: 1px solid #979797;
   width: 220px;
-  height: 30px;
+  height: 40px;
   padding: 5px;
   @media (max-width: 768px) {
     width: 70%;
@@ -687,6 +687,13 @@ const InputTextArea = styled.textarea`
   border: 1px solid #979797;
   padding: 5px;
   resize: none;
+  line-height: 20px;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
+  @media (max-width: 576px) {
+    width: 220px;
+  }
 `;
 const InputfieldImage = styled.input`
   width: 220px;
@@ -722,13 +729,17 @@ const ButtonField = styled.div`
   text-align: center;
 `;
 const Button = styled.button`
-  border: 1px solid #979797;
+  /* border: 1px solid #979797; */
   padding: 5px;
-  border-radius: 10px;
-  width: 90px;
-  height: 40px;
+  border-radius: 4px;
+  padding: 12px 40px;
+  background: #43e8d8;
   cursor: pointer;
-  background: #fff000;
+  transition: 0.2s;
+  &:hover {
+    background: #4cffee;
+    transform: translateY(-2px);
+  }
 `;
 const RequireField = styled.span`
   color: red;

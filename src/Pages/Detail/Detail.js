@@ -12,6 +12,7 @@ import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import IsLoadingBlack from "../../Components/IsLoadingBlack";
+import noAttendant from "../../images/noAttendant.png";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -188,6 +189,7 @@ function Detail() {
               src={`${detailData.fileSource}`}
               alt=""
             ></ActivityImage>
+            <ImageLine></ImageLine>
             <ButtonField>
               <ShareButton
                 disabled={!activityStatus}
@@ -275,6 +277,21 @@ function Detail() {
     //     </EachAttendantField>
     //   );
     // });
+    const noAttendantsHTML = () => {
+      if (detailData.attendants.length === 0) {
+        console.log("??????????");
+        return (
+          <NoAttendantContainer>
+            <NoAttendantImageContainer>
+              <NoAttendantImage src={noAttendant} />
+            </NoAttendantImageContainer>
+            <NoAttendant>尚未有出席者~</NoAttendant>
+            {/* <JoinButton></JoinButton> */}
+          </NoAttendantContainer>
+        );
+      }
+    };
+
     const attendantsHTML = Object.values(detailData.attendants).map(
       (data, index) => {
         return (
@@ -320,6 +337,7 @@ function Detail() {
         </MemberHostField>
         <AttendantsTitle>出席成員</AttendantsTitle>
         <MemberField>{attendantsHTML}</MemberField>
+        {noAttendantsHTML()}
       </MemberInfoContainer>
     );
   };
@@ -335,7 +353,7 @@ function Detail() {
           { name: userName, uid: userUid },
         ],
       });
-    }, 20000);
+    }, 2000);
 
     // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
 
@@ -527,10 +545,12 @@ const ActivityContainer = styled.div`
 const ActivityDetail = styled.div`
   width: 300px;
   text-align: left;
-  margin: 50px 50px 50px 0;
+  margin: 50px 30px 50px 0;
   height: 450px;
   @media (max-width: 888px) {
     width: 100%;
+    margin: 0;
+    height: auto;
   }
 `;
 
@@ -603,7 +623,7 @@ const ImageContainer = styled.div`
   /* width: 600px; */
   height: 500px;
   margin: 20px 0;
-
+  position: relative;
   opacity: 1;
   animation: ${FadeInOpacity};
   animation-iteration-count: 1;
@@ -612,12 +632,17 @@ const ImageContainer = styled.div`
 
   @media (max-width: 888px) {
     width: 100%;
+    padding: 0 10px;
+  }
+  @media (max-width: 576px) {
+    height: 300px;
   }
 `;
 
 const ActivityImage = styled.img`
   width: 100%;
   height: 100%;
+  z-index: 3;
   /* border-radius: 20px; */
   object-fit: cover;
 `;
@@ -629,7 +654,7 @@ const ButtonField = styled.div`
     display: none;
   }
   @media (max-width: 576px) {
-    display: flex;
+    display: none;
 
     width: 100%;
     justify-content: space-between;
@@ -643,10 +668,11 @@ const RWDButtonField = styled.div`
   display: flex;
   padding: 10px;
   @media (max-width: 888px) {
-    display: block;
+    display: flex;
+    justify-content: space-between;
   }
   @media (max-width: 576px) {
-    display: none;
+    /* display: none; */
   }
 `;
 
@@ -658,6 +684,9 @@ const Btn = styled.button`
   cursor: pointer;
   color: #fff;
   transition: 0.2s;
+  @media (max-width: 888px) {
+    width: 50%;
+  }
   @media (max-width: 576px) {
     width: 50%;
   }
@@ -672,6 +701,9 @@ const RWDShareButton = styled(Btn)`
     color: black;
     transform: translateY(-2px);
   }
+  @media (max-width: 888px) {
+    width: 50%;
+  }
 `;
 const JoinButton = styled(Btn)`
   position: relative;
@@ -682,11 +714,21 @@ const JoinButton = styled(Btn)`
     background: #7efff3;
     transform: translateY(-2px);
   }
+  @media (max-width: 888px) {
+    width: 50%;
+  }
 `;
 const ApplicantButton = styled(Btn)`
+  color: black;
+  background: #ffe700;
+  opacity: 0.7;
+  border: none;
   cursor: not-allowed;
 `;
 const AttendantButton = styled(Btn)`
+  color: black;
+  background: #74ee15;
+  border: none;
   cursor: not-allowed;
 `;
 const CommentTitle = styled.div`
@@ -817,5 +859,42 @@ const ProfileImg = styled.img`
   /* background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%; */
+`;
+
+const NoAttendantContainer = styled.div`
+  margin: 20px auto;
+  width: 150px;
+  position: relative;
+`;
+const NoAttendantImageContainer = styled.div`
+  width: 100px;
+`;
+const NoAttendantImage = styled.img`
+  width: 100%;
+`;
+
+const NoAttendant = styled.div`
+  position: absolute;
+  top: 70px;
+  right: -20px;
+  font-weight: 700;
+  color: white;
+`;
+const ImageLine = styled.div`
+  height: 480px;
+  width: calc(100% - 20px);
+  border: 1px solid white;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  @media (max-width: 888px) {
+    right: 20px;
+
+    width: calc(100% - 40px);
+  }
+  @media (max-width: 576px) {
+    height: 280px;
+  }
 `;
 export default Detail;

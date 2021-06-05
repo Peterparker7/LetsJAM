@@ -53,7 +53,7 @@ function Place(props) {
   console.log(address);
   props.setPlace(address);
   return (
-    <div>
+    <InputField>
       <PlacesAutocomplete
         style={{ position: "relative", width: "100%" }}
         value={address}
@@ -65,7 +65,7 @@ function Place(props) {
         searchOptions={searchOptions}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div>
+          <div style={{ width: "100%" }}>
             <PlaceInput
               {...getInputProps({
                 placeholder: "請輸入地點",
@@ -101,21 +101,29 @@ function Place(props) {
           </div>
         )}
       </PlacesAutocomplete>
-    </div>
+    </InputField>
   );
 }
-
-const PlaceInput = styled.input`
-  /* position: relative; */
-  border: 1px solid #979797;
+const InputField = styled.div`
   width: 220px;
-  height: 30px;
-  padding: 5px;
+  height: 40px;
   @media (max-width: 768px) {
-    /* width: 70%; */
+    width: 70%;
   }
   @media (max-width: 576px) {
     width: 220px;
+  }
+`;
+const PlaceInput = styled.input`
+  /* position: relative; */
+  border-bottom: 1px solid #979797;
+  width: 220px;
+  height: 40px;
+  padding: 5px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  @media (max-width: 576px) {
   }
 `;
 const PlaceOption = styled.div`
