@@ -19,6 +19,7 @@ import {
   updateInvitation,
 } from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { Animated } from "react-animated-css";
 
 function Header() {
   const [userData, setUserData] = useState([]);
@@ -159,8 +160,16 @@ function Header() {
         style={mailBoxDisplay ? { display: "block" } : { display: "none" }}
       >
         {" "}
-        <MailBoxTitle>已收到邀請</MailBoxTitle>
-        <MailBoxContainer>{invitedActivityHTML()}</MailBoxContainer>
+        {/* <Animated
+          animationIn="fadeInRightBig"
+          animationOut="fadeOutUp"
+          isVisible={mailBoxDisplay}
+        > */}
+        <MailBoxDivWrapper>
+          <MailBoxTitle>已收到邀請</MailBoxTitle>
+          <MailBoxContainer>{invitedActivityHTML()}</MailBoxContainer>
+        </MailBoxDivWrapper>
+        {/* </Animated> */}
       </MailBoxDiv>
     );
   };
@@ -537,18 +546,24 @@ const Item = styled.div`
   color: #fff;
 `;
 const ItemOne = styled(Item)`
-  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShine} 3s linear infinite;
 `;
 const ItemTwo = styled(Item)`
-  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShineTwo} 5s linear infinite;
 `;
 const ItemThree = styled(Item)`
-  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1);
+  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShineThree} 5s linear infinite;
 `;
 
@@ -579,16 +594,31 @@ const MailBoxIconCircle = styled.div`
 `;
 const MailBoxDiv = styled.div`
   position: absolute;
+  top: 0px;
+  right: 0px;
+  /* position: absolute;
   width: 400px;
   height: 600px;
   background: white;
   top: 80px;
   right: 0px;
   z-index: 5;
+  text-align: left; */
+`;
+const MailBoxDivWrapper = styled.div`
+  position: absolute;
+  width: 400px;
+  height: 600px;
+  background: #121212;
+  color: white;
+  top: 80px;
+  right: 0px;
+  z-index: 5;
   text-align: left;
 `;
 const MailBoxTitle = styled.div`
-  font-size: 28px;
+  font-size: 24px;
+  font-weight: 600;
   margin: 20px;
 `;
 const MailBoxContainer = styled.div``;
@@ -602,7 +632,7 @@ const EachMailDiv = styled.div`
   width: 100%;
   height: 90px;
   /* margin-left: 20px; */
-  border: 1px solid;
+  /* border: 1px solid; */
 `;
 const EachMailDivCanvas = styled.div`
   position: absolute;
@@ -613,13 +643,16 @@ const EachMailDivCanvas = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 const EachMailContent = styled.div`
-  padding: 10px 10px;
+  padding: 10px 20px;
 `;
 const EachMailTitle = styled.div`
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
   color: white;
   margin-bottom: 20px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 const EachMailMsg = styled.div`
   font-size: 16px;

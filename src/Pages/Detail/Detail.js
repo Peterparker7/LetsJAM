@@ -719,15 +719,20 @@ const JoinButton = styled(Btn)`
   }
 `;
 const ApplicantButton = styled(Btn)`
-  color: black;
-  background: #ffe700;
-  opacity: 0.7;
-  border: none;
+  color: #fff;
+  /* background: #ffe700; */
+  box-shadow: 0 0 5px #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+
+  border: 1px solid #ff00ff;
   cursor: not-allowed;
 `;
 const AttendantButton = styled(Btn)`
-  color: black;
-  background: #74ee15;
+  color: white;
+  background: #ff00ff;
+  box-shadow: 0 0 10px #ff00ff;
+  text-shadow: 0 0 10px #ff00ff;
   border: none;
   cursor: not-allowed;
 `;

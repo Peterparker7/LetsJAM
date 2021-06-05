@@ -530,13 +530,21 @@ const BtnConfirm = styled(Btn)`
 `;
 const BtnCancel = styled(Btn)``;
 const EditBtn = styled.button`
-  border: 1px solid none;
-  border-radius: 10px;
+  /* border: 1px solid #979797; */
+  border-radius: 8px;
   width: 90px;
   height: 40px;
   padding: 5px;
-  background: #ff00ff;
+  /* background: #ff00ff; */
+  background: #565656;
+  color: #fff;
   cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #272727;
+    transform: translateY(-2px);
+  }
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;

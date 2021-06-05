@@ -280,13 +280,25 @@ const BtnClose = styled.button`
   cursor: pointer;
 `;
 const CheckApplicantBtn = styled.button`
-  border: 1px solid none;
+  border: 1px solid #ff00ff;
   border-radius: 10px;
   width: 90px;
   height: 40px;
   padding: 5px;
-  background: #ffff00;
+  color: white;
+  /* background: #ffff00; */
+  /* background: #ffe700; */
+  box-shadow: 0 0 5px #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+  transition: 0.3s;
   cursor: pointer;
+  &:hover {
+    /* background: #fff05c; */
+    background: #ff00ff;
+    color: white;
+    transform: translateY(-2px);
+  }
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;

@@ -736,9 +736,11 @@ const Button = styled.button`
   background: #43e8d8;
   cursor: pointer;
   transition: 0.2s;
+
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
+    box-shadow: 0 0 10px #43e8d8;
   }
 `;
 const RequireField = styled.span`
