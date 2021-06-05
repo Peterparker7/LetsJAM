@@ -121,6 +121,7 @@ const PlaceInput = styled.input`
 const PlaceOption = styled.div`
   position: absolute;
   border: 1px solid #979797;
+  z-index: 2;
 `;
 
 export default Place;

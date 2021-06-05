@@ -1,6 +1,8 @@
 import "../../App.css";
 import "../../normalize.css";
 import styled from "styled-components";
+import { keyframes } from "styled-components";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSpecificData } from "../../utils/firebase";
@@ -9,6 +11,7 @@ import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import IsLoadingBlack from "../../Components/IsLoadingBlack";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -29,28 +32,25 @@ function Detail() {
   const [userUid, setUserUid] = useState();
   const [userName, setUserName] = useState();
   const [activityStatus, setActivityStatus] = useState(true);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   let activityDetail = {};
 
   //取得使用者資料
-  window.firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      // 使用者已登入，可以取得資料
-      var email = user.email;
-      var uid = user.uid;
-      console.log(email, uid);
-    } else {
-      // 使用者未登入
-    }
-  });
+  // window.firebase.auth().onAuthStateChanged(function (user) {
+  //   if (user) {
+  //     // 使用者已登入，可以取得資料
+  //     var email = user.email;
+  //     var uid = user.uid;
+  //   } else {
+  //     // 使用者未登入
+  //   }
+  // });
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
-    console.log(userUid);
     const userData = await getUserData(userUid);
-    console.log(userData);
     setUserUid(userUid);
     setUserName(userData.name);
-    console.log(userUid);
   };
 
   const getData = async () => {
@@ -59,7 +59,6 @@ function Detail() {
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
     const currentUser = await getUserData(userUid);
-    console.log(data);
     //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
     const applicantsDetailArray = [];
     data.applicants.forEach((applicants) => {
@@ -94,7 +93,6 @@ function Detail() {
     }
   };
 
-  console.log(detailData);
   //   const detailHTML = detailData.() => {
   //     return <div></div>;
   //   };
@@ -105,14 +103,18 @@ function Detail() {
       "menubar=1,resizable=1,width=500,height=500"
     );
   };
+  // const handleIsLoading = () => {
+  //   setLoadingStatus(true);
+  //   setTimeout(() => {
+  //     setLoadingStatus(false);
+  //   }, 2000);
+  // };
 
   const renderDetail = () => {
-    console.log("??");
     let requirementHTML = detailData.requirement.map((item, index) => {
-      return <span>{item} </span>;
+      return <span key={index}>{item} </span>;
     });
     let activityTime = detailData.timestamp.toDate().toString();
-    console.log(activityTime.slice(0, 21));
     let showTime = activityTime.slice(0, 21);
     let limit = "";
 
@@ -217,9 +219,7 @@ function Detail() {
   };
 
   //   const userData = async () => {
-  //     console.log("!!");
   //     let data = await getUserData(userId);
-  //     console.log(data);
   //   };
   //   userData();
 
@@ -257,11 +257,7 @@ function Detail() {
       }
     };
 
-    console.log(detailData.host.name);
-    console.log(detailData.applicants);
     // const applicantsHTML = Object.values(detailData.applicants).map((data) => {
-    //   console.log(data);
-    //   console.log(data.name);
     //   return (
     //     <EachAttendantField>
     //       <ProfileBlock>
@@ -279,27 +275,27 @@ function Detail() {
     //     </EachAttendantField>
     //   );
     // });
-    const attendantsHTML = Object.values(detailData.attendants).map((data) => {
-      console.log(data);
-      console.log(data.name);
-      return (
-        <EachAttendantField>
-          <ProfileBlock>
-            <ProfileImg
-              src={`${data.profileImage}`}
-              // style={{
-              //   background: `url(${data.profileImage})`,
-              //   backgroundSize: "cover",
-              //   backgroundPosition: "",
-              // }}
-            />
+    const attendantsHTML = Object.values(detailData.attendants).map(
+      (data, index) => {
+        return (
+          <EachAttendantField key={index}>
+            <ProfileBlock>
+              <ProfileImg
+                src={`${data.profileImage}`}
+                // style={{
+                //   background: `url(${data.profileImage})`,
+                //   backgroundSize: "cover",
+                //   backgroundPosition: "",
+                // }}
+              />
 
-            <div>{data.name}</div>
-            <MemberCard data={data} />
-          </ProfileBlock>
-        </EachAttendantField>
-      );
-    });
+              <div>{data.name}</div>
+              <MemberCard data={data} />
+            </ProfileBlock>
+          </EachAttendantField>
+        );
+      }
+    );
     return (
       <MemberInfoContainer>
         <HostTitle>關於揪團主</HostTitle>
@@ -326,26 +322,25 @@ function Detail() {
         <MemberField>{attendantsHTML}</MemberField>
       </MemberInfoContainer>
     );
-
-    console.log(detailData.host);
   };
   const handleJoin = () => {
-    console.log("join click!");
-
-    joinActivity(id, userUid);
+    setLoadingStatus(true);
+    setTimeout(() => {
+      setLoadingStatus(false);
+      joinActivity(id, userUid);
+      setDetailData({
+        ...detailData,
+        applicants: [
+          ...detailData.applicants, //資料結構不同，才有辦法更新
+          { name: userName, uid: userUid },
+        ],
+      });
+    }, 20000);
 
     // detailData Object {...detailData, applicants:[...detailData.applicants,{}]}
 
     // setData((data) => [...data, ...dataList]);   //append新東西到array
     // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
-    console.log(currentUserData);
-    setDetailData({
-      ...detailData,
-      applicants: [
-        ...detailData.applicants, //資料結構不同，才有辦法更新
-        { name: userName, uid: userUid },
-      ],
-    });
   };
   const handleVisitor = () => {
     alert("登入以使用此功能");
@@ -353,8 +348,6 @@ function Detail() {
 
   const renderJoinButton = () => {
     const isApplicant = detailData.applicants.filter((item) => {
-      console.log(userUid);
-      console.log(item.uid);
       if (userUid && item.uid === userUid) {
         return item;
       }
@@ -364,8 +357,6 @@ function Detail() {
         return item;
       }
     });
-    console.log(isApplicant);
-    console.log(isAttendant);
     if (isApplicant.length !== 0) {
       return (
         <ApplicantButton
@@ -427,8 +418,6 @@ function Detail() {
         </JoinButton>
       );
     } else if (detailData.host.uid === userUid) {
-      console.log(detailData.host.uid);
-      console.log(userUid);
       return (
         <JoinButton
           onClick={() => {
@@ -460,9 +449,10 @@ function Detail() {
           disabled={!activityStatus}
           onClick={() => {
             handleJoin();
+            // handleIsLoading();
           }}
         >
-          我要報名
+          {loadingStatus ? <IsLoadingBlack /> : "我要報名"}
         </JoinButton>
       );
     }
@@ -475,6 +465,10 @@ function Detail() {
     getData();
   }, [id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   //useEffect在每次detailData變化後執行
   //   useEffect(() => {
   //     renderDetail();
@@ -484,7 +478,6 @@ function Detail() {
   if (!detailData) {
     return "isLoading";
   }
-  console.log(detailData);
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
       <DetailContent>
@@ -532,9 +525,10 @@ const ActivityContainer = styled.div`
   }
 `;
 const ActivityDetail = styled.div`
-  width: 400px;
+  width: 300px;
   text-align: left;
-  margin-right: 20px;
+  margin: 50px 50px 50px 0;
+  height: 450px;
   @media (max-width: 888px) {
     width: 100%;
   }
@@ -544,9 +538,12 @@ const TitleContainer = styled.div`
   position: relative;
 `;
 const Title = styled.div`
-  font-size: 28px;
+  font-size: 24px;
+  font-weight: 700;
   border-bottom: 1px solid #979797;
   color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
 `;
 const CloseTitle = styled.div`
   position: absolute;
@@ -555,15 +552,17 @@ const CloseTitle = styled.div`
   font-size: 16px;
 `;
 const ItemField = styled.div`
-  padding-left: 20px;
+  padding-left: 10px;
   @media (max-width: 888px) {
     width: 100%;
   }
 `;
 
 const InfoBar = styled.div`
-  line-height: 20px;
-  color: #979797;
+  line-height: 30px;
+  color: white;
+  font-weight: 400;
+  /* opacity: 0.8; */
 `;
 const InfoBarSecond = styled.div`
   margin-top: 20px;
@@ -572,8 +571,8 @@ const InfoBarSecond = styled.div`
 `;
 
 const CommentItem = styled.div`
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 20px auto;
   line-height: 30px;
 `;
@@ -581,23 +580,51 @@ const TypeItem = styled.div``;
 const Item = styled.div`
   width: 100%;
 `;
+
+const FadeInOpacity = keyframes`
+
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+`;
+const FlyIn = keyframes`
+	0% {
+ transform: translateX(200%);
+	}
+	100% {
+transform: translateX(0);
+	}
+`;
 const ImageContainer = styled.div`
-  width: calc(100% - 400px);
+  width: calc(100% - 300px);
   /* width: 600px; */
-  margin-top: 20px;
+  height: 500px;
+  margin: 20px 0;
+
+  opacity: 1;
+  animation: ${FadeInOpacity};
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.5s;
+
   @media (max-width: 888px) {
     width: 100%;
   }
 `;
+
 const ActivityImage = styled.img`
   width: 100%;
-  max-height: 400px;
-  border-radius: 20px;
+  height: 100%;
+  /* border-radius: 20px; */
   object-fit: cover;
 `;
 const ButtonField = styled.div`
   margin-top: 20px;
   text-align: right;
+  display: none;
   @media (max-width: 888px) {
     display: none;
   }
@@ -610,8 +637,11 @@ const ButtonField = styled.div`
 `;
 const RWDButtonField = styled.div`
   /* margin-top: -50px; */
+  width: 100%;
+
   text-align: right;
-  display: none;
+  display: flex;
+  padding: 10px;
   @media (max-width: 888px) {
     display: block;
   }
@@ -622,11 +652,12 @@ const RWDButtonField = styled.div`
 
 const Btn = styled.button`
   border: 1px solid #979797;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 150px;
   height: 50px;
   cursor: pointer;
   color: #fff;
+  transition: 0.2s;
   @media (max-width: 576px) {
     width: 50%;
   }
@@ -636,8 +667,22 @@ const ShareButton = styled(Btn)`
 `;
 const RWDShareButton = styled(Btn)`
   margin-right: 20px;
+  &:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+  }
 `;
-const JoinButton = styled(Btn)``;
+const JoinButton = styled(Btn)`
+  position: relative;
+  color: black;
+  background: #43e8d8;
+  border: none;
+  &:hover {
+    background: #7efff3;
+    transform: translateY(-2px);
+  }
+`;
 const ApplicantButton = styled(Btn)`
   cursor: not-allowed;
 `;
@@ -647,6 +692,8 @@ const AttendantButton = styled(Btn)`
 const CommentTitle = styled.div`
   color: white;
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   text-align: left;
   border-bottom: 1px solid #979797;
 `;
@@ -750,12 +797,16 @@ const VideoIframe = styled.iframe`
 `;
 const HostTitle = styled.div`
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   border-bottom: 1px solid #979797;
 `;
 
 const EachAttendantField = styled.div``;
 const AttendantsTitle = styled.div`
   font-size: 24px;
+  font-weight: 700;
+  padding: 10px;
   border-bottom: 1px solid #979797;
 `;
 const ProfileImg = styled.img`

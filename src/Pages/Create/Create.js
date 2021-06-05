@@ -3,6 +3,8 @@ import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+
 import MyComponent from "../../Map";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
@@ -16,20 +18,29 @@ import * as Warning from "./Warning";
 import UsePlace from "./UsePlace";
 import Place from "./Place";
 
+import CircularIndeterminate from "./CircularProgress";
+
 const db = window.firebase.firestore();
 // let checked = false;
 
-function Create() {
+const StyledMultiSelect = styled(MultiSelect)`
+  border: 1px solid #979797;
+  --rmsc-border: unset !important;
+`;
+
+function Create(props) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("流行");
   const [limit, setLimit] = useState("");
-  const [imgUrl, setimgUrl] = useState("");
+  const [imgUrl, setimgUrl] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
+  );
   const [level, setLevel] = useState("");
   const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [place, setPlace] = useState("");
 
   const [titleStatus, setTitleStatus] = useState(true);
@@ -42,7 +53,12 @@ function Create() {
   const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
   const [imageStatus, setImageStatus] = useState(true);
+  // const [userUid, setUserUid] = useState();
 
+  const [requirement, setRequirement] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  let history = useHistory();
   // let limitinit = 0;
   // let comment = "";
   let youtubeUrl = "";
@@ -55,6 +71,26 @@ function Create() {
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
   const refContainer = useRef("");
+
+  function addDays(date, days) {
+    if (days === 0) {
+      let result = new Date(date);
+      result.setDate(result.getDate() + 7);
+      return result;
+    }
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  let nowDate = new Date();
+  // console.log(nowDate.getDay());
+  // let sat = nowDate.addDays(6 - nowDate.getDay());
+  // console.log(sat);
+
+  let sat = addDays(nowDate, 6 - nowDate.getDay())
+    .toISOString()
+    .substr(0, 10);
 
   const convertDateTime = () => {
     let formatDateYear = date.slice(0, 4);
@@ -72,26 +108,45 @@ function Create() {
     };
   };
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    if (!userUid) {
-      window.location.href = "/";
-      return "redirection";
-    }
-  };
+  // const checkUserIsLogin = async () => {
+  //   const userUid = await getAuthUser();
+  //   setUserUid(userUid);
+  //   if (!userUid) {
+  //     history.push("/");
+  //     return "redirection";
+  //   }
+  // };
 
   useEffect(() => {
-    checkUserIsLogin();
+    // checkUserIsLogin();
+    setDate(sat);
+    setTime("16:00");
   }, []);
 
+  if (props.userUid === "") {
+    return null;
+  } else if (!props.userUid) {
+    history.push("/");
+    return "redirection";
+  }
+
   const createFormCheck = () => {
+    let nowDate = Date.now();
+    let a = time.split(":");
+    let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+    let deviation = 8 * 60 * 60000;
+    console.log(nowDate);
+    console.log(Date.parse(date) + milliseconds - deviation);
+    console.log(timeStatus);
+    console.log(dateStatus);
+
     if (!title || title.length > 10) {
       setTitleStatus(false);
     }
-    if (!date) {
+    if (!date || nowDate >= Date.parse(date) + 16 * 60 * 60000) {
       setDateStatus(false);
     }
-    if (!time) {
+    if (!time || nowDate >= Date.parse(date) + milliseconds - deviation) {
       setTimeStatus(false);
     }
     if (!type) {
@@ -103,9 +158,9 @@ function Create() {
     if (!limit && !checked) {
       setLimitStatus(false);
     }
-    if (!level) {
-      setLevelStatus(false);
-    }
+    // if (!level) {
+    //   setLevelStatus(false);
+    // }
     if (!place) {
       setPlaceStatus(false);
     }
@@ -115,10 +170,10 @@ function Create() {
     if (
       !titleStatus ||
       !dateStatus ||
+      !timeStatus ||
       !typeStatus ||
       requirement.length === 0 ||
       !limitStatus ||
-      !levelStatus ||
       !placeStatus ||
       !imgUrl
     ) {
@@ -133,8 +188,12 @@ function Create() {
     if (checked) {
       setLimit(0);
     }
+    console.log(time);
+    console.log(date);
+    console.log(type);
     console.log(place);
     console.log(location);
+    console.log(limit);
     convertDateTime();
     let timestamp = new Date(
       convertDateTime().formatDateYear,
@@ -171,13 +230,21 @@ function Create() {
       date: date,
       time: time,
     };
+
     if (createFormCheck()) {
       await activityData.set(newData);
       window.location.replace("./");
     }
   };
 
-  const [requirement, setRequirement] = useState([]);
+  let override = {
+    allItemsAreSelected: "我全都要",
+    clearSearch: "Clear Search",
+    noOptions: "No options",
+    search: "搜尋",
+    selectAll: "全選",
+    selectSomeItems: "請選擇樂器",
+  };
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -191,7 +258,16 @@ function Create() {
     requirementArray.push(data.value);
   });
 
+  if (!userDataRedux) {
+    return "isloading";
+  }
+  // if (!userUid) {
+  //   return "isLoading";
+  // }
   function handleChange(e, changeType) {
+    let nowDate = Date.now();
+    let deviation = 8 * 60 * 60000;
+
     if (changeType === "title") {
       setTitle(e.target.value);
       setTitleStatus(true);
@@ -199,10 +275,19 @@ function Create() {
     if (changeType === "date") {
       setDate(e.target.value);
       setDateStatus(true);
+      if (nowDate >= Date.parse(e.target.value) + 16 * 60 * 60000) {
+        setDateStatus(false);
+      }
     }
     if (changeType === "time") {
+      let a = e.target.value.split(":");
+      let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+
       setTime(e.target.value);
       setTimeStatus(true);
+      if (nowDate >= Date.parse(date) + milliseconds - deviation) {
+        setTimeStatus(false);
+      }
     }
     if (changeType === "type") {
       setType(e.target.value);
@@ -210,7 +295,7 @@ function Create() {
     }
     if (changeType === "level") {
       setLevel(e.target.value);
-      setLevelStatus(true);
+      // setLevelStatus(true);
     }
     if (changeType === "limit") {
       setLimit(e.target.value);
@@ -261,10 +346,15 @@ function Create() {
   };
 
   async function handleUploadImage(e) {
+    setIsLoading(true);
     if (e.target.value) {
       imgSource = e.target.files[0];
+      // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
+      setIsLoading(false);
+
       setimgUrl(imageUrl);
+      console.log(imageUrl);
     }
   }
 
@@ -276,10 +366,12 @@ function Create() {
         {/* <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} /> */}
         {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
+          <CreateDetailTopBar></CreateDetailTopBar>
           <Title>我要開團</Title>
           <CreateDetail>
             <CreateDetailContent>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>活動名稱</Label>
                 <Inputfield
                   name="title"
@@ -291,8 +383,10 @@ function Create() {
                 {Warning.warningTitleHTML(title, titleStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>日期</Label>
                 <Inputfield
+                  defaultValue={sat}
                   type="date"
                   onChange={(e) => {
                     handleChange(e, "date");
@@ -301,15 +395,17 @@ function Create() {
                 {Warning.warningDateHTML(date, dateStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>時間</Label>
                 <Inputfield
+                  defaultValue="16:00:00"
                   type="time"
                   onChange={(e) => {
                     handleChange(e, "time");
                   }}
                   step={300}
                 ></Inputfield>
-                {Warning.warningTimeHTML(time, timeStatus)}
+                {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>音樂類型</Label>
@@ -323,9 +419,9 @@ function Create() {
                     handleChange(e, "type");
                   }}
                 >
-                  <option value="" disabled selected>
+                  {/* <option value="" disabled selected>
                     請選擇主要曲風
-                  </option>
+                  </option> */}
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
@@ -334,11 +430,13 @@ function Create() {
               </InputFieldDiv>
 
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
-                <MultiSelect
+                <StyledMultiSelect
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
+                  overrideStrings={override}
                   onChange={(value) => {
                     setRequirement(value);
                     setRequirementStatus(true);
@@ -353,6 +451,7 @@ function Create() {
                   <Label>人數限制</Label>
                   <LimitboxHTML></LimitboxHTML>
                   <LimitCheckBoxField
+                    checked={checked}
                     type="checkbox"
                     id="noLimit"
                     onChange={() => {
@@ -366,7 +465,7 @@ function Create() {
                     }}
                   />
 
-                  <label for="noLimit">無</label>
+                  <label htmlFor="noLimit">無</label>
                 </LimitDiv>
                 {Warning.warningLimitHTML(limit, limitStatus)}
               </InputFieldDiv>
@@ -379,9 +478,10 @@ function Create() {
                     handleChange(e, "level");
                   }}
                 ></Inputfield>
-                {Warning.warningLevelHTML(level, levelStatus)}
+                {/* {Warning.warningLevelHTML(level, levelStatus)} */}
               </InputFieldDiv>
               <InputFieldDiv>
+                <RequireField>*</RequireField>
                 <Label>地點</Label>
                 {/* <Inputfield
                   defaultValue={place}
@@ -395,14 +495,15 @@ function Create() {
 
                 {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
-              <InputFieldDiv>
-                <Label>備註</Label>
-                <Inputfield
+              <InputFieldDiv style={{ alignItems: "unset" }}>
+                <Label>活動備註</Label>
+                <InputTextArea
+                  placeholder={"請填活動說明"}
                   onChange={(e) => {
                     handleChange(e, "comment");
                     // comment = e.target.value;
                   }}
-                ></Inputfield>
+                ></InputTextArea>
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>活動封面</Label>
@@ -431,17 +532,49 @@ function Create() {
                 ></Inputfield>
               </InputFieldDiv> */}
             </CreateDetailContent>
-            <CreateDetailImage></CreateDetailImage>
+            <CreateDetailImage src={imgUrl} />
+            <div
+              style={
+                isLoading
+                  ? {
+                      width: "20px",
+                      height: "20px",
+                      background: "blue",
+                      display: "block",
+                    }
+                  : { display: "none" }
+              }
+            ></div>
           </CreateDetail>
         </CreateDetailContainer>
         <ButtonField>
           <Button
-            class="createBtn"
+            style={
+              !isLoading ? { display: "inline-block" } : { display: "none" }
+            }
+            className="createBtn"
             onClick={() => {
               clickCreate();
             }}
           >
             建立活動
+            {/* <CircularIndeterminate
+              style={!isLoading ? { display: "block" } : { display: "none" }}
+            /> */}
+          </Button>
+          <Button
+            disabled={!isLoading}
+            style={
+              isLoading
+                ? {
+                    display: "inline-block",
+                  }
+                : { display: "none" }
+            }
+          >
+            <CircularIndeterminate
+              style={isLoading ? { display: "block" } : { display: "none" }}
+            />
           </Button>
         </ButtonField>
       </Container>
@@ -471,6 +604,11 @@ const ProcessIntroContainer = styled.div`
   margin: 0 auto;
 `;
 const ProcessIntro = styled.div``;
+const CreateDetailTopBar = styled.div`
+  width: 100%;
+  height: 6px;
+  background: #ff0099;
+`;
 const CreateDetailContainer = styled.div`
   width: 720px;
   margin: 0 auto;
@@ -478,7 +616,8 @@ const CreateDetailContainer = styled.div`
   margin-bottom: 20px;
   color: black;
   background: white;
-  padding: 20px;
+  /* padding: 20px; */
+  padding-top: 0px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -486,6 +625,7 @@ const CreateDetailContainer = styled.div`
 const CreateDetail = styled.div`
   display: flex;
   line-height: 30px;
+  margin: 0px 20px;
   padding: 20px;
   justify-content: space-between;
   @media (max-width: 768px) {
@@ -494,8 +634,9 @@ const CreateDetail = styled.div`
 `;
 const CreateDetailContent = styled.div``;
 
-const CreateDetailImage = styled.div`
+const CreateDetailImage = styled.img`
   background: #979797;
+  object-fit: cover;
   width: 300px;
   height: auto;
   /* margin-left: 20px; */
@@ -507,6 +648,7 @@ const CreateDetailImage = styled.div`
 `;
 const Title = styled.div`
   font-size: 24px;
+  margin: 10px;
   padding: 10px;
   border-bottom: 1px solid #979797;
 `;
@@ -514,6 +656,7 @@ const InputFieldDiv = styled.div`
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  position: relative;
   /* text-align: center; */
 `;
 const Inputfield = styled.input`
@@ -529,6 +672,7 @@ const Inputfield = styled.input`
   }
 `;
 const SelectType = styled.select`
+  padding: 5px;
   width: 220px;
   @media (max-width: 768px) {
     width: 70%;
@@ -536,6 +680,13 @@ const SelectType = styled.select`
   @media (max-width: 576px) {
     width: 220px;
   }
+`;
+const InputTextArea = styled.textarea`
+  width: 220px;
+  height: 80px;
+  border: 1px solid #979797;
+  padding: 5px;
+  resize: none;
 `;
 const InputfieldImage = styled.input`
   width: 220px;
@@ -578,6 +729,12 @@ const Button = styled.button`
   height: 40px;
   cursor: pointer;
   background: #fff000;
+`;
+const RequireField = styled.span`
+  color: red;
+  display: inline-block;
+  position: absolute;
+  left: -10px;
 `;
 // const Warning = styled.div`
 //   width: 120px;

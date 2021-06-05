@@ -126,9 +126,10 @@ function EditActivitiesMemberButton(props) {
   if (!applicantsData || !attendantsData) {
     return "isLoading";
   }
-  if (!activityChange) {
-    return "isLoading";
-  }
+  //加了下面 刪除活動時查看申請button會出現isLoading
+  // if (!activityChange) {
+  //   return "isLoading";
+  // }
   if (!initApplicantsData) {
     return "isLoading";
   }
@@ -199,26 +200,38 @@ function EditActivitiesMemberButton(props) {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
-        <EditMemberCol>
-          <ApplicantTitle>申請中</ApplicantTitle>
-          <MemberDivField>{renderApplicants()}</MemberDivField>
-          <AttendantTitle>已加入成員</AttendantTitle>
-          <MemberDivField>{renderAttendants()}</MemberDivField>
+        <TopBar></TopBar>
+        <Container>
+          <EditMemberCol>
+            <ApplicantTitle>申請中</ApplicantTitle>
+            <MemberDivField>{renderApplicants()}</MemberDivField>
+            <AttendantTitle>已加入成員</AttendantTitle>
+            <MemberDivField>{renderAttendants()}</MemberDivField>
 
-          <BtnClose onClick={toggleModal}>+</BtnClose>
-          <span>找不到成員？ 試試</span>
-          <InviteButton data={props} />
-        </EditMemberCol>
+            <BtnClose onClick={toggleModal}>+</BtnClose>
+            <span>找不到成員？ 試試</span>
+            <InviteButton data={props} />
+          </EditMemberCol>
+        </Container>
       </StyledModal>
     </div>
   );
 }
-
+const TopBar = styled.div`
+  height: 6px;
+  width: 100%;
+  background: #ff0099;
+`;
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 const EditMemberCol = styled.div`
   text-align: left;
   width: 80%;
   height: 90%;
   position: relative;
+  margin: 20px auto;
 `;
 const ApplicantTitle = styled.div`
   font-size: 20px;

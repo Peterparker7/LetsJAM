@@ -161,7 +161,7 @@ const ItemField = styled.div`
   display: flex;
   align-items: center;
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin: 30px 0 30px 0;
 `;
 const Label = styled.label`
   display: inline-block;
@@ -182,11 +182,23 @@ const RequireField = styled.span`
   color: red;
 `;
 const LoginButton = styled.button`
-  width: 90px;
+  /* width: 90px; */
+  padding: 12px 40px;
+  align-items: center;
   margin: 0 auto;
-  height: 40px;
+
+  background: #121212;
+  color: #fff;
   border: 1px solid #979797;
+  border-radius: 4px;
   margin-top: 30px;
   margin-bottom: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+  }
 `;
 export default Login;

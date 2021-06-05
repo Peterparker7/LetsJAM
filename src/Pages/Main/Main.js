@@ -13,6 +13,10 @@ import {
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
 import InstrumentBanner from "./InstrumentBanner";
+import PaginationControlled from "./PaginationControlled";
+import IsLoading from "../../Components/IsLoading";
+import { Animated } from "react-animated-css";
+import CircularIndeterminate from "../Create/CircularProgress";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -20,21 +24,23 @@ let allActivitiesArray = [];
 
 function Main() {
   const [data, setData] = useState([]);
+  const [currentPageData, setCurrentPageData] = useState([]);
   const [userDataUid, setUserDataUid] = useState();
-  console.log(data);
+  const [page, setPage] = useState(1);
+  const [pageNum, setPageNum] = useState(1);
+  const [allPaginateArray, setAllPaginateArray] = useState([]);
+  let pageLen = 9;
 
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
     allActivitiesArray.push(...data);
     allActivitiesArrayCopy.push(...data);
-    console.log(allActivitiesArray);
 
     //也顯示揪團主，待更改
     //   data.forEach(async (item, index) => {
     //     const eachHost = await getUserData(item.host).then((res) => {
     //       // hostDetailArray.push(res);
-    //       // console.log(hostDetailArray);
     //       data[index].host = res;
 
     //       return res;
@@ -44,11 +50,31 @@ function Main() {
     // setData(data);
     // allActivitiesArray.push(...data);
     // allActivitiesArrayCopy.push(...data);
-    // console.log(allActivitiesArray);
   };
   //Promise.all(promises.then((result)=>{
 
   //   }))
+
+  const handlePagination = () => {
+    let allPageArray = [];
+
+    let currentTime = Date.now();
+
+    let openActivityArray = data.filter((item) => {
+      return item.timestamp.toMillis() > currentTime;
+    });
+
+    const pageArray = openActivityArray.slice(0, pageLen);
+    const pageNum = Math.ceil(openActivityArray.length / pageLen);
+    setPageNum(pageNum);
+    for (let i = 0; i < openActivityArray.length; i = i + pageLen) {
+      let pageArray = openActivityArray.slice(i, i + pageLen);
+      allPageArray.push(pageArray);
+    }
+
+    setAllPaginateArray(allPageArray);
+  };
+
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -59,6 +85,14 @@ function Main() {
 
   // const activitiesFilterHTML = () => {};
 
+  const checkUserIsLogin = async () => {
+    const userUid = await getAuthUser();
+    if (userUid) {
+      setUserDataUid(userUid);
+      const userData = await getUserData(userUid);
+    }
+  };
+
   useEffect(() => {
     //渲染頁面之前先把存活動的array清空，避免array裡面有重複之前的data
     allActivitiesArray = [];
@@ -66,17 +100,23 @@ function Main() {
     getFirebaseData();
   }, []);
 
-  if (!data) {
-    return "isLoading";
-  }
+  useEffect(() => {
+    handlePagination();
+  }, [data]);
+  // if (!data) {
+  //   return "isLoading";
+  // }
+  // if (!data) {
+  //   return "Loading";
+  // }
+
+  // if (!data || allPaginateArray.length <= 0) {
+  //   return <div style={{ minHeight: `calc(100vh - 180px) ` }}>Loading</div>;
+  // }
 
   const handleFilter = (e, filter) => {
-    console.log(allActivitiesArrayCopy);
-    console.log(e);
-    console.log(allActivitiesArray);
     const selectType = document.querySelector("#selectType");
     const selectRequirement = document.querySelector("#selectRequirement");
-    console.log(selectType.value);
     if (filter === "type") {
       if (e === "所有類型") {
         if (selectRequirement.value === "所有樂器") {
@@ -92,12 +132,10 @@ function Main() {
         return;
       }
       const iscontain = allActivitiesArray.filter((item) => {
-        console.log(item);
         if (item.type.includes(e)) {
           return item;
         }
       });
-      console.log(iscontain);
       setData(iscontain);
       if (selectRequirement.value === "所有樂器") {
         setData(iscontain);
@@ -125,12 +163,10 @@ function Main() {
         return;
       }
       const iscontain = allActivitiesArray.filter((item) => {
-        console.log(item);
         if (item.requirement.includes(e)) {
           return item;
         }
       });
-      console.log(iscontain);
       if (selectType.value === "所有類型") {
         setData(iscontain);
       } else {
@@ -148,16 +184,6 @@ function Main() {
 
   const handleRequirementFilter = () => {};
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    console.log(userUid);
-    if (userUid) {
-      setUserDataUid(userUid);
-      const userData = await getUserData(userUid);
-      console.log(userData);
-    }
-  };
-
   const sloganButtonHTML = () => {
     if (userDataUid) {
       return (
@@ -174,54 +200,87 @@ function Main() {
     }
   };
 
-  const ActivityHTML = data.map((item, index) => {
-    let firebaseTime = item.timestamp.toMillis();
-    let activityTime = item.timestamp.toDate().toString();
-    let showTime = activityTime.slice(0, 21);
-    let currentTime = Date.now();
+  if (allPaginateArray.length === 0) {
+    return <IsLoading />;
+  }
 
-    let requirementHTML = item.requirement.map((data) => {
-      return <span>{data} </span>;
-    });
-    let attendantsNum = item.attendants.length;
+  const ActivityHTML =
+    allPaginateArray.length > 0 ? (
+      allPaginateArray[page - 1].map((item, index) => {
+        let firebaseTime = item.timestamp.toMillis();
+        let activityTime = item.timestamp.toDate().toString();
+        let showTime = activityTime.slice(0, 21);
+        let currentTime = Date.now();
 
-    if (firebaseTime > currentTime) {
-      return (
-        <Link to={`/activities/${item.id}`}>
-          <ActivityItem style={{ backgroundImage: `url(${item.fileSource})` }}>
-            <Canvas>
-              {/* <div>{item.id}</div> */}
-              <ActivityContent>
-                <Time>{showTime}</Time>
+        let requirementHTML = item.requirement.map((data) => {
+          return <span key={data}>{data} </span>;
+        });
+        let attendantsNum = item.attendants.length;
 
-                <Title>{item.title}</Title>
-                <Type>{item.type}</Type>
-                <Requirement>{requirementHTML}</Requirement>
-                <Location>{item.location}</Location>
-                {/* <Host>揪團主：{item.host.name}</Host> */}
-                <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-                {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
-              </ActivityContent>
-            </Canvas>
-          </ActivityItem>
-        </Link>
-      );
-    }
-  });
+        if (firebaseTime > currentTime) {
+          return (
+            <Animated
+              animationIn="bounceInLeft"
+              // animationOut="fadeOut"
+              isVisible={true}
+              animationInDelay={index * 100}
+            >
+              <Link to={`/activities/${item.id}`} key={index}>
+                <ActivityItem
+                // style={{
+                //   backgroundImage: `url(${item.fileSource})`,
+                // }}
+                >
+                  <ActivityImage src={item.fileSource} />
+                  <Canvas>
+                    {/* <div>{item.id}</div> */}
+                    <ActivityContent>
+                      <Time>{showTime}</Time>
+
+                      <Title>{item.title}</Title>
+                      <Type>{item.type}</Type>
+                      <Requirement>{requirementHTML}</Requirement>
+                      <Location>{item.location}</Location>
+                      {/* <Host>揪團主：{item.host.name}</Host> */}
+                      <AttendantNum>{attendantsNum} 出席者</AttendantNum>
+                      {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
+                    </ActivityContent>
+                  </Canvas>
+                </ActivityItem>
+              </Link>
+            </Animated>
+          );
+        }
+      })
+    ) : (
+      <NoResultContainer>
+        <NoResult>無符合條件的活動</NoResult>
+      </NoResultContainer>
+    );
 
   return (
     <MainContainer>
       <Carosul>
-        {/* <MainImg src={neonBand} alt="" /> */}
-        <Slogan>
-          整個城市<br></br>都是我的練團室
-        </Slogan>
+        {/* <MainImgContainer>
+          <MainImg src={neonBand} alt="" />
+        </MainImgContainer> */}
+        <Animated
+          animationIn="fadeInLeft"
+          animationInDelay="500"
+          // animationOut="fadeOut"
+          isVisible={true}
+        >
+          <Slogan>
+            整個城市<br></br>都是我的練團室
+          </Slogan>
+        </Animated>
         <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
       </Carosul>
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
       {/* <div>
         <InstrumentBanner />
       </div> */}
+
       <ActivityFilter>
         <FilterTitle>篩選活動 依 </FilterTitle>
         <FilterBar>
@@ -259,8 +318,9 @@ function Main() {
           </select>
         </FilterBar>
       </ActivityFilter>
+
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
-      <Link to={`./`}>
+      {/* <Link to={`./`}>
         <button
           onClick={(e) => {
             logOut();
@@ -268,7 +328,10 @@ function Main() {
         >
           logout
         </button>
-      </Link>
+      </Link> */}
+      <PageControllContainer>
+        <PaginationControlled count={pageNum} page={page} setPage={setPage} />
+      </PageControllContainer>
     </MainContainer>
   );
   {
@@ -279,13 +342,16 @@ function Main() {
 }
 const MainContainer = styled.main`
   /* background-color: #846767; */
-  background-color: #7b7b7b;
+  /* background-color: #7b7b7b; */
+  background-color: #1b1b1b;
   /* background-color: #4e3a3a; */
-  height: 100%;
+  min-height: calc(100vh - 180px);
+  padding-bottom: 50px;
 `;
 
 const Carosul = styled.div`
-  height: 500px;
+  height: 600px;
+  /* background: black; */
   background: url(${neonBand});
   background-size: cover;
   background-repeat: no-repeat;
@@ -333,31 +399,43 @@ const JoinButtonContainer = styled.div`
 `;
 const JoinButton = styled.button`
   border: 1px solid none;
-  border-radius: 20px;
-  background: #ff00ff;
-  height: 40px;
-  width: 200px;
+  border-radius: 30px;
+  background: #43e8d8;
+  /* background: #ff00ff; */
+  padding: 12px 48px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background: #4cffee;
+    transform: translateY(-2px);
+  }
 `;
-
+const MainImgContainer = styled.div`
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  right: 50px;
+  top: 50px;
+`;
 const MainImg = styled.img`
   max-width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 
   /* object-fit: cover; */
 `;
 
 const ActivityFilter = styled.div`
   display: flex;
-  margin: 0 auto;
-  margin-top: 20px;
+  margin: 50px auto;
+  /* margin-top: 20px; */
   max-width: 1024px;
   justify-content: flex-end;
   padding: 0 20px;
   color: white;
-  margin-bottom: 20px;
+
   align-items: center;
 `;
 
@@ -400,21 +478,24 @@ const FilterBar = styled.div`
 const ActivitiesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   grid-column-gap: 20px;
-  grid-row-gap: 20px;
+  grid-row-gap: 40px;
   /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
   max-width: 1024px;
   justify-items: center;
-
+  position: relative;
+  min-height: 960px;
+  /* align-items: center; */
   /* justify-content: space-around; */
 
   @media (max-width: 985px) {
     grid-template-columns: 1fr 1fr;
     justify-items: center;
     grid-column-gap: 0px;
-    grid-row-gap: 20px;
+    grid-row-gap: 40px;
     max-width: 700px;
   }
   @media (max-width: 768px) {
@@ -426,27 +507,26 @@ const ActivitiesContainer = styled.div`
 `;
 
 const ActivityItem = styled.div`
-  border: 1px solid #979797;
+  /* border: 1px solid #979797; */
   width: 300px;
   height: 300px;
-  border-radius: 20px;
+  border-radius: 4px;
   background: #000;
   /* margin-bottom: 40px; */
-  text-align: left;
-  padding-top: 20px;
-  padding-left: 30px;
+  /* text-align: left; */
+  /* padding-top: 20px;
+  padding-left: 30px; */
   line-height: 30px;
   color: #fff;
+  align-items: center;
 
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   position: relative;
 
-  &:hover {
-    background: white;
-    color: black;
-  }
+  overflow: hidden;
+
   @media (max-width: 768px) {
     width: 90%;
     height: 200px;
@@ -460,13 +540,17 @@ const Canvas = styled.div`
   left: 0;
   width: 300px;
   height: 300px;
-  border-radius: 20px;
+  border-radius: 4px;
 
-  background: rgba(0, 0, 0, 0.7);
-  &:hover {
-    background: white;
+  background: rgba(0, 0, 0, 0.6);
+  /* &:hover {
+    background: rgba(0, 0, 0, 0.8);
     color: black;
-  }
+    transform: scale(1.05);
+  } */
+  pointer-events: none;
+  /* z-index: -1; */
+
   @media (max-width: 768px) {
     width: 100%;
     height: 200px;
@@ -474,26 +558,43 @@ const Canvas = styled.div`
 `;
 
 const ActivityContent = styled.div`
-  margin: 20px 25px;
+  border: 1px solid #979797;
+  margin: 10px 10px;
+  padding: 10px;
   position: relative;
   @media (max-width: 768px) {
     /* margin-top: 10px;
     margin-left: 20px; */
   }
 `;
-
+const NoResultContainer = styled.div`
+  position: absolute;
+  width: 200px;
+  text-align: center;
+  align-items: center;
+`;
+const NoResult = styled.div`
+  font-size: 20px;
+`;
+const PageControllContainer = styled.div`
+  margin: 30px auto;
+  max-width: 1024px;
+  display: flex;
+`;
 const Title = styled.div`
-  font-size: 24px;
+  font-size: 16px;
+  font-weight: 600;
   height: 30px;
 `;
 const Time = styled.div`
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 300;
 `;
 const Type = styled.div`
   font-size: 16px;
 `;
 const Requirement = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   margin-top: 10px;
   height: 80px;
   @media (max-width: 768px) {
@@ -520,7 +621,20 @@ const AttendantNum = styled.div`
   }
 `;
 const ActivityImage = styled.img`
-  width: 300px;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 4px;
+  /* background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)); */
+
+  transition: all 0.5s ease 0s;
+  &:hover {
+    transform: scale(1.2);
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 200px;
+  }
 `;
 
 const Neon = styled.div`

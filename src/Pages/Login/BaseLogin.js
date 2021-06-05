@@ -2,13 +2,39 @@ import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 // import { useParams } from "react-router-dom";
+import { getAuthUser } from "../../utils/firebase";
+import iconTaylorBlack from "../../images/icon-Taylor-black.png";
 
 import Login from "./Login";
 import Register from "./Register";
+import { useSelector, useDispatch } from "react-redux";
 
-function BaseLogin() {
+function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
+  // const [userUid, setUserUid] = useState();
+  const userDataRedux = useSelector((state) => state.userData);
+  let history = useHistory();
+
+  console.log(props.userUid);
+  // if (props.userUid) {
+  //   history.push("/");
+  //   return "redirection";
+  // }
+
+  if (props.userUid === "") {
+    return null;
+  } else if (props.userUid) {
+    history.push("/");
+    return "redirection";
+  }
+
+  // if (userDataRedux.length !== 0) {
+  //   // window.location.href = "/";
+  //   history.push("/");
+  //   return "redirection";
+  // }
 
   const baseHTML = () => {
     if (toggle) {
@@ -31,6 +57,11 @@ function BaseLogin() {
 
   return (
     <PageContainer>
+      <LogoContainer>
+        <Logo src={iconTaylorBlack}></Logo>
+        <Slogan>-最懂你的音樂夥伴</Slogan>
+      </LogoContainer>
+
       <Container>
         <SelectContainer>
           <SelectTag
@@ -73,12 +104,36 @@ function BaseLogin() {
 }
 
 const PageContainer = styled.div`
-  height: 70vh;
-`;
-const Container = styled.div`
-  width: 600px;
-  margin: 50px auto;
+  /* height: ; */
+  min-height: calc(100vh - 180px);
   border: 1px solid #979797;
+  width: 100%;
+  background: white;
+
+  margin: auto;
+`;
+const LogoContainer = styled.div`
+  max-width: 600px;
+  margin: 40px auto 0px;
+  position: relative;
+`;
+const Logo = styled.img`
+  width: 100%;
+`;
+const Slogan = styled.div`
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+`;
+
+const Container = styled.div`
+  max-width: 600px;
+  margin: 30px auto 100px;
+  border: 1px solid #979797;
+  background: white;
+  border-radius: 4px;
 `;
 const SelectContainer = styled.div`
   display: flex;
