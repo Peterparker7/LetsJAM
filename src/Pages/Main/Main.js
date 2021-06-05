@@ -29,6 +29,7 @@ function Main() {
   const [page, setPage] = useState(1);
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
+  const [completePaginate, setCompletePaginate] = useState();
   let pageLen = 9;
 
   const getFirebaseData = async () => {
@@ -73,6 +74,7 @@ function Main() {
     }
 
     setAllPaginateArray(allPageArray);
+    setCompletePaginate(true);
   };
 
   const options = [
@@ -200,9 +202,13 @@ function Main() {
     }
   };
 
-  if (allPaginateArray.length === 0) {
+  if (!completePaginate) {
     return <IsLoading />;
   }
+  //filter不到活動會卡住
+  // if (allPaginateArray.length === 0) {
+  //   return <IsLoading />;
+  // }
 
   const ActivityHTML =
     allPaginateArray.length > 0 ? (
@@ -378,7 +384,7 @@ const Slogan = styled.div`
   position: absolute;
   white-space: pre;
   text-align: left;
-  font-size: 48px;
+  font-size: 72px;
   font-weight: bold;
   top: 50px;
   left: 120px;
@@ -405,13 +411,16 @@ const JoinButton = styled.button`
   background: #43e8d8;
   /* background: #ff00ff; */
   padding: 12px 48px;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
+  }
+  @media (max-width: 576px) {
+    font-size: 16px;
   }
 `;
 const MainImgContainer = styled.div`

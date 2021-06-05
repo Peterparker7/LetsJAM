@@ -108,7 +108,7 @@ const PageContainer = styled.div`
   min-height: calc(100vh - 180px);
   border: 1px solid #979797;
   width: 100%;
-  background: white;
+  background: #f8f8ff;
 
   margin: auto;
 `;

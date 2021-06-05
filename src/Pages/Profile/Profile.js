@@ -38,6 +38,7 @@ import Alert from "@material-ui/lab/Alert";
 import { AlertTitle } from "@material-ui/lab";
 import Collapse from "@material-ui/core/Collapse";
 import CircularIndeterminate from "../Create/CircularProgress";
+import IsLoading from "../../Components/IsLoading";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -184,7 +185,8 @@ function Profile(props) {
 
   if (!userActivities || !userJoinActivities) {
     // return "isLoading";
-    return <CircularIndeterminate />;
+    // return <CircularIndeterminate />;
+    return <IsLoading />;
   }
 
   // handleOpenTag();

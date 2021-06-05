@@ -26,6 +26,7 @@ const db = window.firebase.firestore();
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
+  --rmsc-bg: #f8f8ff;
 `;
 
 function Create(props) {
@@ -351,7 +352,9 @@ function Create(props) {
       imgSource = e.target.files[0];
       // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
 
       setimgUrl(imageUrl);
       console.log(imageUrl);
@@ -604,7 +607,7 @@ const CreateDetailContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
   color: black;
-  background: white;
+  background: #f8f8ff;
   /* padding: 20px; */
   padding-top: 0px;
   padding-bottom: 50px;
@@ -733,6 +736,10 @@ const Button = styled.button`
   padding: 5px;
   border-radius: 4px;
   padding: 12px 40px;
+  /*按鈕大一點才可包住spinner */
+  width: 200px;
+  height: 50px;
+  font-size: 20px;
   background: #43e8d8;
   cursor: pointer;
   transition: 0.2s;
