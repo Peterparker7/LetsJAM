@@ -29,6 +29,7 @@ function Main() {
   const [page, setPage] = useState(1);
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
+  const [completePaginate, setCompletePaginate] = useState();
   let pageLen = 9;
 
   const getFirebaseData = async () => {
@@ -73,6 +74,7 @@ function Main() {
     }
 
     setAllPaginateArray(allPageArray);
+    setCompletePaginate(true);
   };
 
   const options = [
@@ -200,9 +202,13 @@ function Main() {
     }
   };
 
-  if (allPaginateArray.length === 0) {
+  if (!completePaginate) {
     return <IsLoading />;
   }
+  //filter不到活動會卡住
+  // if (allPaginateArray.length === 0) {
+  //   return <IsLoading />;
+  // }
 
   const ActivityHTML =
     allPaginateArray.length > 0 ? (
@@ -282,7 +288,7 @@ function Main() {
       </div> */}
 
       <ActivityFilter>
-        <FilterTitle>篩選活動 依 </FilterTitle>
+        <FilterTitle>篩選</FilterTitle>
         <FilterBar>
           <Filterlabel>類型</Filterlabel>
           <select
@@ -378,12 +384,14 @@ const Slogan = styled.div`
   position: absolute;
   white-space: pre;
   text-align: left;
-  font-size: 48px;
+  font-size: 72px;
   font-weight: bold;
   top: 50px;
   left: 120px;
   text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
     0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
+  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   animation: ${NeonShine} 3s 1s linear infinite;
   @media (max-width: 576px) {
     font-size: 36px;
@@ -403,13 +411,16 @@ const JoinButton = styled.button`
   background: #43e8d8;
   /* background: #ff00ff; */
   padding: 12px 48px;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
+  }
+  @media (max-width: 576px) {
+    font-size: 16px;
   }
 `;
 const MainImgContainer = styled.div`
@@ -462,7 +473,7 @@ const Filterlabel = styled.label`
 `;
 const FilterBar = styled.div`
   border: 1px solid white;
-  height: 30px;
+  height: 33px;
 
   align-items: center;
   margin-left: 20px;
@@ -565,6 +576,8 @@ const ActivityContent = styled.div`
   @media (max-width: 768px) {
     /* margin-top: 10px;
     margin-left: 20px; */
+    max-height: 180px;
+    /* text-align: left; */
   }
 `;
 const NoResultContainer = styled.div`
@@ -582,7 +595,7 @@ const PageControllContainer = styled.div`
   display: flex;
 `;
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   height: 30px;
 `;
@@ -616,7 +629,7 @@ const AttendantNum = styled.div`
   @media (max-width: 768px) {
     position: absolute;
     right: 20px;
-    bottom: 25px;
+    bottom: 10px;
     font-size: 16px;
   }
 `;

@@ -38,6 +38,7 @@ import Alert from "@material-ui/lab/Alert";
 import { AlertTitle } from "@material-ui/lab";
 import Collapse from "@material-ui/core/Collapse";
 import CircularIndeterminate from "../Create/CircularProgress";
+import IsLoading from "../../Components/IsLoading";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -112,20 +113,23 @@ function Profile(props) {
   };
 
   const renderProfile = () => {
+    let requirementHTML = userDataRedux.skill.map((data) => {
+      return <span>{data} &nbsp;</span>;
+    });
     return (
       <ProfileDetail>
         <ProfileImg src={`${userDataRedux.profileImage}`} />
         <ProfileTextField>
-          <Wrapper>
+          <WrapperProfileName>
             <ProfileName>{userDataRedux.name}</ProfileName>
-          </Wrapper>
-          <Wrapper>
+          </WrapperProfileName>
+          <WrapperProfileDetail>
             <ProfileItemIntro>{userDataRedux.intro}</ProfileItemIntro>
             {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
             <ProfileItem>偏好類型：{userDataRedux.preferType}</ProfileItem>
-            <ProfileItem>會的樂器：{userDataRedux.skill}</ProfileItem>
+            <ProfileItem>會的樂器：{requirementHTML}</ProfileItem>
             <div>{userDataRedux.favSinger}</div>
-          </Wrapper>
+          </WrapperProfileDetail>
         </ProfileTextField>
       </ProfileDetail>
     );
@@ -181,7 +185,8 @@ function Profile(props) {
 
   if (!userActivities || !userJoinActivities) {
     // return "isLoading";
-    return <CircularIndeterminate />;
+    // return <CircularIndeterminate />;
+    return <IsLoading />;
   }
 
   // handleOpenTag();
@@ -204,22 +209,26 @@ function Profile(props) {
         if (newFormatDate > nowDate) {
           return (
             <EachActivityContainer
+              key={data.id}
               style={toggleFilter ? { display: "block" } : { display: "none" }}
             >
               <Link to={`/activities/${data.id}`}>
-                <EachActivityField className="Field">
-                  <EachActivitityIsOpen>
-                    {handleOpenTag(newFormatDate)}
-                  </EachActivitityIsOpen>
-                  <EachActivityContent>
-                    {/* <div>{data.host}</div> */}
-                    <Time>{showTime}</Time>
-                    <Title>{data.title}</Title>
+                <ActivityImage src={data.fileSource} />
+                <Canvas>
+                  <EachActivityField className="Field">
+                    {/* <EachActivitityIsOpen>
+                      {handleOpenTag(newFormatDate)}
+                    </EachActivitityIsOpen> */}
+                    <EachActivityContent>
+                      {/* <div>{data.host}</div> */}
+                      <Time>{showTime}</Time>
+                      <Title>{data.title}</Title>
 
-                    {/* <div>{data.id}</div> */}
-                    <Requirement>{requirementHTML}</Requirement>
-                  </EachActivityContent>
-                </EachActivityField>
+                      {/* <div>{data.id}</div> */}
+                      <Requirement>{requirementHTML}</Requirement>
+                    </EachActivityContent>
+                  </EachActivityField>
+                </Canvas>
               </Link>
 
               <ButtonField>
@@ -245,19 +254,22 @@ function Profile(props) {
               style={!toggleFilter ? { display: "block" } : { display: "none" }}
             >
               <Link to={`/activities/${data.id}`}>
-                <EachActivityField className="Field">
-                  <EachActivitityIsOpen>
-                    {handleOpenTag(newFormatDate)}
-                  </EachActivitityIsOpen>
-                  <EachActivityContent>
-                    {/* <div>{data.host}</div> */}
-                    <Time>{showTime}</Time>
-                    <Title>{data.title}</Title>
+                <ActivityImage src={data.fileSource} />
+                <Canvas>
+                  <EachActivityField className="Field">
+                    {/* <EachActivitityIsOpen>
+                      {handleOpenTag(newFormatDate)}
+                    </EachActivitityIsOpen> */}
+                    <EachActivityContent>
+                      {/* <div>{data.host}</div> */}
+                      <Time>{showTime}</Time>
+                      <Title>{data.title}</Title>
 
-                    {/* <div>{data.id}</div> */}
-                    <Requirement>{requirementHTML}</Requirement>
-                  </EachActivityContent>
-                </EachActivityField>
+                      {/* <div>{data.id}</div> */}
+                      <Requirement>{requirementHTML}</Requirement>
+                    </EachActivityContent>
+                  </EachActivityField>
+                </Canvas>
               </Link>
             </EachHistoryActivityContainer>
           );
@@ -285,9 +297,9 @@ function Profile(props) {
 
         const applyStatusHTML = () => {
           if (data.attendants.includes(userDataRedux.uid)) {
-            return <div style={{ backgroundColor: "green" }}>已加入</div>;
+            return <ApplyStatusTagJoin>已加入</ApplyStatusTagJoin>;
           } else if (data.applicants.includes(userDataRedux.uid)) {
-            return <div style={{ backgroundColor: "yellow" }}>申請中</div>;
+            return <ApplyStatusTagWait>申請中</ApplyStatusTagWait>;
           }
           return applyStatusHTML;
         };
@@ -301,15 +313,18 @@ function Profile(props) {
               }
             >
               <Link to={`/activities/${data.id}`}>
-                <EachActivityField className="Field">
-                  <EachActivityContent>
-                    <Time>{showTime}</Time>
-                    <Title>{data.title}</Title>
-                    <Requirement>{requirementHTML}</Requirement>
-                  </EachActivityContent>
+                <ActivityImage src={data.fileSource} />
+                <Canvas>
+                  <EachActivityField className="Field">
+                    <EachActivityContent>
+                      <Time>{showTime}</Time>
+                      <Title>{data.title}</Title>
+                      <Requirement>{requirementHTML}</Requirement>
+                    </EachActivityContent>
 
-                  <StatusTag>{applyStatusHTML()}</StatusTag>
-                </EachActivityField>
+                    <StatusTag>{applyStatusHTML()}</StatusTag>
+                  </EachActivityField>
+                </Canvas>
               </Link>
 
               <CheckActivityButtonField>
@@ -334,13 +349,17 @@ function Profile(props) {
               }
             >
               <Link to={`/activities/${data.id}`}>
-                <EachActivityField className="Field">
-                  <EachActivityContent>
-                    <Time>{showTime}</Time>
-                    <Title>{data.title}</Title>
-                    <Requirement>{requirementHTML}</Requirement>
-                  </EachActivityContent>
-                </EachActivityField>
+                <ActivityImage src={data.fileSource} />
+
+                <Canvas>
+                  <EachActivityField className="Field">
+                    <EachActivityContent>
+                      <Time>{showTime}</Time>
+                      <Title>{data.title}</Title>
+                      <Requirement>{requirementHTML}</Requirement>
+                    </EachActivityContent>
+                  </EachActivityField>
+                </Canvas>
               </Link>
             </EachHistoryActivityContainer>
           );
@@ -363,7 +382,7 @@ function Profile(props) {
                 <FilterBtn
                   style={
                     toggleFilter
-                      ? { background: "white", color: "black" }
+                      ? { background: "#43ede8", color: "black" }
                       : { background: "black", color: "white" }
                   }
                   onClick={() => {
@@ -375,7 +394,7 @@ function Profile(props) {
                 <FilterBtn
                   style={
                     !toggleFilter
-                      ? { background: "white", color: "black" }
+                      ? { background: "#43ede8", color: "black" }
                       : { background: "black", color: "white" }
                   }
                   onClick={() => {
@@ -395,7 +414,7 @@ function Profile(props) {
                 <FilterBtn
                   style={
                     toggleJoinFilter
-                      ? { background: "white", color: "black" }
+                      ? { background: "#43ede8", color: "black" }
                       : { background: "black", color: "white" }
                   }
                   onClick={() => {
@@ -407,7 +426,7 @@ function Profile(props) {
                 <FilterBtn
                   style={
                     !toggleJoinFilter
-                      ? { background: "white", color: "black" }
+                      ? { background: "#43ede8", color: "black" }
                       : { background: "black", color: "white" }
                   }
                   onClick={() => {
@@ -442,9 +461,10 @@ const FadingBackground = styled(BaseModalBackground)`
 `;
 const MainContainer = styled.div`
   min-height: calc(100vh - 180px);
-  background: #555;
+  background: #121212;
   /* background: black; */
-  background: url(${amplifierImg});
+  background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.8)),
+    url(${amplifierImg});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -456,7 +476,7 @@ const ProfilePageContainer = styled.div`
   width: 1024px;
   justify-content: space-around;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: 60px 20px;
   @media (max-width: 1024px) {
     flex-direction: column-reverse;
     max-width: 768px;
@@ -468,10 +488,10 @@ const ProfilePageContainer = styled.div`
 `;
 const ProfileCol = styled.div`
   width: 360px;
-  padding: 20px 50px;
-  margin: 0 30px;
-  background: #000;
-  border: 2px solid #ff0099;
+  padding: 30px 50px;
+  margin: 25px 30px;
+  background: #121212;
+  /* border: 2px solid #ff0099; */
   height: 100%;
   @media (max-width: 1024px) {
     width: 100%;
@@ -522,31 +542,51 @@ const ProfileTextField = styled.div`
 `;
 const ProfileName = styled.div`
   font-size: 28px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+
+  margin: 10px auto;
+
   width: auto;
   @media (max-width: 1024px) {
   }
 `;
 const ProfileItem = styled.div`
   margin-top: 10px;
+  letter-spacing: 1px;
 `;
 
 const ProfileItemIntro = styled(ProfileItem)`
-  padding: 10px 10px;
+  /* padding: 10px 10px; */
+  letter-spacing: 1px;
+  line-height: 20px;
+  margin-bottom: 20px;
 `;
 const Wrapper = styled.div`
   text-align: left;
   margin-bottom: 30px;
 `;
+const WrapperProfileName = styled.div`
+  text-align: center;
+  margin-bottom: 30px;
+`;
+const WrapperProfileDetail = styled.div`
+  text-align: left;
+`;
 const LogoutBtn = styled.button`
-  border: 1px solid none;
-  border-radius: 20px;
+  border: 1px solid #ff00ff;
+  border-radius: 8px;
   width: 116px;
   height: 40px;
   padding: 10px;
-  background: #ff00ff;
+  color: #ff00ff;
+  /* background: #ff00ff; */
   cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #ff00ff;
+  text-shadow: 0 0 10px #ff00ff;
+  &:hover {
+    background: #ff00ff;
+    color: white;
+  }
 `;
 const ActivitiesCol = styled.div`
   display: flex;
@@ -558,7 +598,11 @@ const ActivitiesCol = styled.div`
   }
 `;
 const MyHostTitle = styled.div`
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
   border-bottom: 1px solid #979797;
   text-align: left;
   margin: 0 auto;
@@ -568,7 +612,11 @@ const MyHostTitle = styled.div`
   position: relative;
 `;
 const MyJoinTitle = styled.div`
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   border-bottom: 1px solid #979797;
   text-align: left;
   margin: 0 auto;
@@ -654,6 +702,30 @@ const EachHistoryActivityContainer = styled.div`
 const EachActivityField = styled.div`
   width: 250px;
   height: 250px;
+  position: relative;
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 180px;
+  }
+`;
+const ActivityImage = styled.img`
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 4px;
+  @media (max-width: 768px) {
+    height: 180px;
+  }
+`;
+const Canvas = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+  border-radius: 4px;
+
+  background: rgba(0, 0, 0, 0.7);
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;
@@ -661,23 +733,30 @@ const EachActivityField = styled.div`
 `;
 
 const EachActivityContent = styled.div`
-  text-align: left;
-  padding: 10px 25px;
+  /* text-align: left; */
+  padding: 10px;
+  margin: 10px;
   line-height: 30px;
   color: white;
+  height: 230px;
+  border: 1px solid #979797;
   @media (max-width: 768px) {
-    width: 70%;
+    max-width: 100%;
+    height: 160px;
+    text-align: left;
   }
 `;
 const Title = styled.div`
   font-size: 20px;
+  font-weight: 600;
   height: 50px;
   @media (max-width: 414px) {
     font-size: 14px;
   }
 `;
 const Time = styled.div`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 300;
   @media (max-width: 414px) {
     font-size: 8px;
   }
@@ -691,12 +770,13 @@ const Requirement = styled.div`
 const ButtonField = styled.div`
   display: flex;
   /* padding: 0 30px; */
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 20px;
   position: absolute;
   bottom: 20px;
   margin: 0 auto;
   max-width: 200px;
+  width: 100%;
   left: 25px;
   @media (max-width: 768px) {
     left: unset;
@@ -708,10 +788,13 @@ const ButtonField = styled.div`
     right: 10px;
   }
 `;
-const ProfileButtonField = styled.div``;
+const ProfileButtonField = styled.div`
+  padding: 20px;
+`;
 const CheckActivityButtonField = styled(ButtonField)`
-  max-width: 90px;
-  left: 80px;
+  /* max-width: 90px;
+  left: 80px; */
+  width: 100%;
   @media (max-width: 768px) {
     left: unset;
     right: 20px;
@@ -726,13 +809,21 @@ const CheckActivityButtonField = styled(ButtonField)`
 //   padding: 0 30px;
 // `;
 const CheckActivityBtn = styled.button`
-  border: 1px solid none;
-  border-radius: 10px;
+  /* border: 1px solid #43e8d8; */
+  border-radius: 8px;
   width: 90px;
   height: 40px;
-  padding: 5px;
-  background: #ff00ff;
+  /* padding: 12px 40px; */
+  background: #565656;
+  color: #fff;
+  margin: 0 auto;
   cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    color: white;
+    background: #272727;
+    transform: translateY(-2px);
+  }
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;
@@ -756,8 +847,8 @@ const FilterBtn = styled.button`
 `;
 const StatusTag = styled.div`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0px;
+  right: -5px;
 `;
 const EachActivitityIsOpen = styled.div`
   position: absolute;
@@ -775,5 +866,27 @@ const IsCloseTag = styled.div`
   height: 20px;
   border-radius: 50%;
   background: grey;
+`;
+const ApplyStatusTag = styled.div`
+  /* width: 20px;
+  height: 20px; */
+  /* border-radius: 50%; */
+  /* background: white; */
+`;
+const ApplyStatusTagJoin = styled(ApplyStatusTag)`
+  color: white;
+  transform: rotate(0.1turn);
+  border: 1px solid rgb(67 232 216);
+  box-shadow: 0 0 5px rgb(67 232 216);
+  text-shadow: 0 0 5px rgb(67 232 216), 0 0 10px rgb(67 232 216),
+    0 0 20px rgb(67 232 216), 0 0 40px rgb(67 232 216);
+`;
+const ApplyStatusTagWait = styled(ApplyStatusTag)`
+  color: white;
+  border: 1px solid #ff00ff;
+  box-shadow: 0 0 5px #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+  transform: rotate(0.96turn);
 `;
 export default Profile;

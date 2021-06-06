@@ -394,12 +394,19 @@ const EditImageIcon = styled.img`
 `;
 const EditBtn = styled.button`
   border: 1px solid none;
-  border-radius: 20px;
-  background: #00ffff;
+  border-radius: 8px;
+  /* background: #00ffff; */
+  background: #43e8d8;
   padding: 10px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   height: 40px;
+  transition: 0.2s;
+  box-shadow: 0 0 10px #43e8d8;
+  &:hover {
+    background: #4cffee;
+    transform: translateY(-2px);
+  }
 `;
 
 export default EditProfileButton;
