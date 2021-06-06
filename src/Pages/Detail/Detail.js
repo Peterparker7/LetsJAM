@@ -484,7 +484,7 @@ function Detail() {
   }, [id]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(-10, -50);
   }, []);
 
   //useEffect在每次detailData變化後執行

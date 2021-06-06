@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { useHistory } from "react-router-dom";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -165,7 +166,6 @@ const logOut = async () => {
     .then(function () {
       // 登出後強制重整一次頁面
       alert("已登出");
-
       window.location.href = "./";
     })
     .catch(function (error) {

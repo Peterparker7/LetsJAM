@@ -25,7 +25,7 @@ const StyledMultiSelect = styled(MultiSelect)`
 `;
 const StyledModal = Modal.styled`
 width: 35rem;
-height: 40rem;
+height: 80%;
 display: flex;
 flex-direction: column;
 align-items: center;

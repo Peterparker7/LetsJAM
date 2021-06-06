@@ -18,18 +18,31 @@ import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import xIconBlack from "../../images/xBlack.svg";
 
+const StyledMultiSelect = styled(MultiSelect)`
+  border-bottom: 1px solid #979797;
+  --rmsc-border: unset !important;
+  --rmsc-bg: #fff8f8;
+  --rmsc-hover: #ff00ff96;
+  --rmsc-selected: #43ede8a6;
+  --rmsc-h: 40px !important;
+  color: black;
+  text-align: left;
+`;
 const StyledModal = Modal.styled`
-width: 30rem;
-height: 30rem;
+width: 35rem;
+height: 80%;
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background-color: white;
+background-color: #fff8f8;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
-position: relative`;
+position: relative;
+overflow-y: auto;
+border-radius: 4px;`;
 
 function EditActivitiesButton(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -133,6 +146,7 @@ function EditActivitiesButton(props) {
       level: oneactivityData.level,
       location: oneactivityData.location,
       comment: oneactivityData.comment,
+      fileSource: oneactivityData.fileSource,
       requirement: requirementArray,
       youtubeSource: oneactivityData.youtubeSource,
     };
@@ -162,7 +176,14 @@ function EditActivitiesButton(props) {
   requirement.forEach((data) => {
     requirementArray.push(data.value);
   });
-
+  let override = {
+    allItemsAreSelected: "我全都要",
+    clearSearch: "Clear Search",
+    noOptions: "No options",
+    search: "搜尋",
+    selectAll: "全選",
+    selectSomeItems: "請選擇樂器",
+  };
   const options = [
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
@@ -217,15 +238,15 @@ function EditActivitiesButton(props) {
 
   const handleDelete = async () => {
     Swal.fire({
-      title: "確定要刪除嗎?",
-      text: "刪除後將無法復原",
-      icon: "warning",
+      title: "<div style=font-size:24px>確定要刪除嗎?</div>",
+      // text: "刪除後將無法復原",
+      customClass: "customTitle",
       background: "black",
-      html: "<div style=color:white;>刪除後將無法復原</div>",
+      // html: "<div style=color:#595959;>刪除後將無法復原</div>",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "確定刪除",
+      confirmButtonColor: "#43e8d8",
+      cancelButtonColor: "#565656",
+      confirmButtonText: "<span  style=color:#000>確定刪除</span",
       cancelButtonText: "取消",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -386,9 +407,10 @@ function EditActivitiesButton(props) {
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>樂器需求</Label>
-            <MultiSelect
+            <StyledMultiSelect
               className="EditActivitiesMulti"
               options={options}
+              overrideStrings={override}
               value={requirement}
               onChange={setRequirement}
               labelledBy="Select"
@@ -467,48 +489,100 @@ function EditActivitiesButton(props) {
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
-        <div>{renderEditActivityField()}</div>
-        <BtnClose onClick={toggleCancel}>+</BtnClose>
+        <Container>
+          <CloseIconContainer>
+            <CloseIcon src={xIconBlack} onClick={toggleCancel} />
+          </CloseIconContainer>
+          <TopBar></TopBar>
+          <ContentTitle>編輯活動內容</ContentTitle>
+          {renderEditActivityField()}
+        </Container>
+        {/* <BtnClose onClick={toggleCancel}>+</BtnClose> */}
       </StyledModal>
     </div>
   );
 }
 
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  background: #fff8f8;
+  position: relative;
+`;
+const TopBar = styled.div`
+  height: 6px;
+  width: 100%;
+
+  background: #ff0099;
+`;
+const ContentTitle = styled.div`
+  color: black;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: left;
+  margin: 20px;
+  padding: 10px;
+`;
+const CloseIconContainer = styled.div`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 15px;
+  right: 15px;
+  z-index: 5;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background: #979797;
+  }
+`;
+const CloseIcon = styled.img`
+  width: 100%;
+`;
+
 const InputFieldDiv = styled.div`
   /* text-align: left; */
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
 `;
 const InputFieldInput = styled.input`
-  border: 1px solid #979797;
-  height: 30px;
+  border-bottom: 1px solid #979797;
+  height: 40px;
   width: calc(100% - 80px);
   padding: 5px;
 `;
 const EditActivityCol = styled.div`
-  margin: 0 auto;
+  width: 80%;
+  margin: 0 auto 40px auto;
+  padding-bottom: 20px;
 `;
 const EditActivityDetail = styled.div`
-  text-align: left;
-  width: 300px;
+  /* text-align: left;
+  width: 300px; */
+  max-width: 400px;
+  margin: 20px auto;
 `;
 const LimitInputField = styled.input`
   width: 50px;
-  height: 30px;
+  height: 40px;
   padding: 5px;
-  border: 1px solid #979797;
+  border-bottom: 1px solid #979797;
 `;
 const LimitCheckBoxField = styled.input`
   width: 30px;
 `;
 const SelectType = styled.select`
   width: calc(100% - 80px);
+  padding: 5px;
+  height: 40px;
+  border-bottom: 1px solid #979797;
 `;
 const EditActivityButtonDiv = styled.div`
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  margin: 40px 50px;
 `;
 const Label = styled.label`
   /* margin-right: 10px; */
@@ -518,17 +592,37 @@ const Label = styled.label`
 
 const Btn = styled.button`
   border: 1px solid #979797;
-  padding: 5px;
-  border-radius: 10px;
-  width: 90px;
-  height: 40px;
+  border-radius: 8px;
+  padding: 12px 40px;
+  transition: 0.2s;
+
   cursor: pointer;
 `;
 const BtnConfirm = styled(Btn)`
-  background: #ff6600;
-  border: none;
+  border: 1px solid #43e8d8;
+  padding: 12px 40px;
+  cursor: pointer;
+  color: #000;
+  background: #43e8d8;
+  transition: 0.2s;
+
+  box-shadow: 0 0 10px #43e8d8;
+  &:hover {
+    border: 1px solid #4cffee;
+
+    background: #4cffee;
+    transform: translateY(-2px);
+  }
 `;
-const BtnCancel = styled(Btn)``;
+const BtnCancel = styled(Btn)`
+  background: #565656;
+  color: #fff;
+
+  &:hover {
+    background: #272727;
+    transform: translateY(-2px);
+  }
+`;
 const EditBtn = styled.button`
   /* border: 1px solid #979797; */
   border-radius: 8px;

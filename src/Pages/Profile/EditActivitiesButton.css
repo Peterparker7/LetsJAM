@@ -33,3 +33,10 @@ a {
 .EditActivitiesMulti {
   width: calc(100% - 80px);
 }
+
+.customTitle > .swal2-title {
+  color: white;
+}
+
+input[type="checkbox"] {
+}
