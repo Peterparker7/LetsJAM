@@ -19,6 +19,7 @@ import UsePlace from "./UsePlace";
 import Place from "./Place";
 
 import CircularIndeterminate from "./CircularProgress";
+import SelectTypeComponent from "../../Components/SelectType";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -431,7 +432,7 @@ function Create(props) {
                 </SelectType>
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-
+              <SelectTypeComponent />
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>

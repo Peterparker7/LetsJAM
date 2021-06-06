@@ -386,7 +386,7 @@ const ContentContainer = styled.div`
 const ProfileDetail = styled.div`
   /* text-align: center; */
   /* text-align: left; */
-  width: 350px;
+  max-width: 400px;
   margin: 20px auto;
 `;
 const Label = styled.label`

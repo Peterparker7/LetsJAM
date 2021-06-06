@@ -184,7 +184,7 @@ const newUser = async (userEmail, userUid, userInfo) => {
       skill: userInfo.skill,
       intro: "",
       profileImage:
-        "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/133-1332476_male-clipart.png?alt=media&token=07badd84-8b19-47e1-983b-dd63a56909ab",
+        "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/istockphoto-1246254218-612x612.jpg?alt=media&token=2c69d8b3-25e8-46e7-a85d-1371db23086c",
       youtubeUrl: "",
     })
     .then(() => {

@@ -725,6 +725,7 @@ const NoContent = styled.div`
   font-size: 24px;
   position: absolute;
   top: 50%;
+  color: white;
   @media (max-width: 1024px) {
   }
 `;
