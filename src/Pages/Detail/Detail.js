@@ -13,6 +13,7 @@ import MemberCard from "./MemberCard";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import IsLoadingBlack from "../../Components/IsLoadingBlack";
 import noAttendant from "../../images/noAttendant.png";
+import neonGuitar1 from "../../images/neonGuitar1.png";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -279,11 +280,10 @@ function Detail() {
     // });
     const noAttendantsHTML = () => {
       if (detailData.attendants.length === 0) {
-        console.log("??????????");
         return (
           <NoAttendantContainer>
             <NoAttendantImageContainer>
-              <NoAttendantImage src={noAttendant} />
+              <NoAttendantImage src={neonGuitar1} />
             </NoAttendantImageContainer>
             <NoAttendant>尚未有出席者~</NoAttendant>
             {/* <JoinButton></JoinButton> */}
@@ -721,7 +721,7 @@ const JoinButton = styled(Btn)`
 const ApplicantButton = styled(Btn)`
   color: #fff;
   /* background: #ffe700; */
-  box-shadow: 0 0 5px #ff00ff;
+  box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff;
 
@@ -872,10 +872,11 @@ const NoAttendantContainer = styled.div`
   position: relative;
 `;
 const NoAttendantImageContainer = styled.div`
-  width: 100px;
+  width: 50px;
 `;
 const NoAttendantImage = styled.img`
   width: 100%;
+  transform: rotate(0.125turn);
 `;
 
 const NoAttendant = styled.div`
@@ -884,15 +885,19 @@ const NoAttendant = styled.div`
   right: -20px;
   font-weight: 700;
   color: white;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
 `;
 const ImageLine = styled.div`
   height: 480px;
   width: calc(100% - 20px);
-  border: 1px solid white;
+  border: 2px solid white;
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 1;
+  box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
+
   @media (max-width: 888px) {
     right: 20px;
 

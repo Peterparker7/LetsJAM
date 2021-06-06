@@ -552,6 +552,7 @@ const ProfileName = styled.div`
 const ProfileItem = styled.div`
   margin-top: 10px;
   letter-spacing: 1px;
+  margin-bottom: 20px;
 `;
 
 const ProfileItemIntro = styled(ProfileItem)`
@@ -581,7 +582,8 @@ const LogoutBtn = styled.button`
   /* background: #ff00ff; */
   cursor: pointer;
   transition: 0.3s;
-  box-shadow: 0 0 10px #ff00ff;
+  box-shadow: inset 0 0 10px #ff00ff, 0 0 10px #ff00ff;
+
   text-shadow: 0 0 10px #ff00ff;
   &:hover {
     background: #ff00ff;
@@ -844,6 +846,9 @@ const FilterBtnField = styled.div`
 const FilterBtn = styled.button`
   width: 60px;
   height: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  cursor: pointer;
 `;
 const StatusTag = styled.div`
   position: absolute;

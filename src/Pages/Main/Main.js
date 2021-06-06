@@ -17,6 +17,7 @@ import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
 import { Animated } from "react-animated-css";
 import CircularIndeterminate from "../Create/CircularProgress";
+import neonGuitar1 from "../../images/neonGuitar1.png";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -202,6 +203,20 @@ function Main() {
     }
   };
 
+  const noActivitiesHTML = () => {
+    if (allPaginateArray.length === 0) {
+      return (
+        <NoActivitiesContainer>
+          <NoActivitiesImageContainer>
+            <NoActivitiesImage src={neonGuitar1} />
+          </NoActivitiesImageContainer>
+          <NoActivities>無符合條件的活動~</NoActivities>
+          {/* <JoinButton></JoinButton> */}
+        </NoActivitiesContainer>
+      );
+    }
+  };
+
   if (!completePaginate) {
     return <IsLoading />;
   }
@@ -260,7 +275,8 @@ function Main() {
       })
     ) : (
       <NoResultContainer>
-        <NoResult>無符合條件的活動</NoResult>
+        {/* <NoResult>無符合條件的活動</NoResult> */}
+        {noActivitiesHTML()}
       </NoResultContainer>
     );
 
@@ -291,7 +307,7 @@ function Main() {
         <FilterTitle>篩選</FilterTitle>
         <FilterBar>
           <Filterlabel>類型</Filterlabel>
-          <select
+          <FilterSelect
             style={{ color: "white" }}
             id="selectType"
             defaultValue="所有類型"
@@ -303,11 +319,11 @@ function Main() {
             <option>流行</option>
             <option>嘻哈</option>
             <option>古典</option>
-          </select>
+          </FilterSelect>
         </FilterBar>
         <FilterBar>
           <Filterlabel>需求</Filterlabel>
-          <select
+          <FilterSelect
             style={{ color: "white" }}
             id="selectRequirement"
             defaultValue="所有樂器"
@@ -321,7 +337,7 @@ function Main() {
             <option>木箱鼓</option>
             <option>電吉他</option>
             <option>烏克麗麗</option>
-          </select>
+          </FilterSelect>
         </FilterBar>
       </ActivityFilter>
 
@@ -349,7 +365,7 @@ function Main() {
 const MainContainer = styled.main`
   /* background-color: #846767; */
   /* background-color: #7b7b7b; */
-  background-color: #1b1b1b;
+  background-color: #121212;
   /* background-color: #4e3a3a; */
   min-height: calc(100vh - 180px);
   padding-bottom: 50px;
@@ -384,7 +400,7 @@ const Slogan = styled.div`
   position: absolute;
   white-space: pre;
   text-align: left;
-  font-size: 72px;
+  font-size: 66px;
   font-weight: bold;
   top: 50px;
   left: 120px;
@@ -417,6 +433,8 @@ const JoinButton = styled.button`
   transition: 0.2s;
   &:hover {
     background: #4cffee;
+    box-shadow: 0 0 10px #43e8d8;
+
     transform: translateY(-2px);
   }
   @media (max-width: 576px) {
@@ -470,6 +488,9 @@ const Filterlabel = styled.label`
   @media (max-width: 414px) {
     margin: 0 5px;
   }
+`;
+const FilterSelect = styled.select`
+  cursor: pointer;
 `;
 const FilterBar = styled.div`
   border: 1px solid white;
@@ -685,6 +706,29 @@ const Neon = styled.div`
     opacity: 0.5;
     filter: blur(100px);
   }
+`;
+
+const NoActivitiesContainer = styled.div`
+  margin: 20px auto;
+  width: 150px;
+  position: relative;
+`;
+const NoActivitiesImageContainer = styled.div`
+  width: 50px;
+`;
+const NoActivitiesImage = styled.img`
+  width: 100%;
+  transform: rotate(0.125turn);
+`;
+
+const NoActivities = styled.div`
+  position: absolute;
+  top: 70px;
+  right: -10px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
 `;
 
 export default Main;
