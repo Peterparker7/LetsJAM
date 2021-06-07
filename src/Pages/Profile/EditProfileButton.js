@@ -287,7 +287,7 @@ function EditProfileButton(props) {
                   labelledBy="Select"
                 />
               </InputFieldContainer>
-              <InputFieldContainer>
+              <InputFieldContainer style={{ alignItems: "unset" }}>
                 <Label for="intro">自我介紹</Label>
                 {/* <InputFieldInput
                 id="intro"

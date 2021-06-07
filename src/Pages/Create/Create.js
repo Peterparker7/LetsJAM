@@ -35,7 +35,7 @@ function Create(props) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [type, setType] = useState("流行");
-  const [limit, setLimit] = useState("");
+  const [limit, setLimit] = useState(0);
   const [imgUrl, setimgUrl] = useState(
     "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
   );
@@ -504,8 +504,8 @@ function Create(props) {
                 <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
                 {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
-              <InputFieldDiv style={{ alignItem: "unset" }}>
-                <Label>活動備註</Label>
+              <InputFieldDiv style={{ alignItems: "unset" }}>
+                <Label>活動說明</Label>
                 <InputTextArea
                   placeholder={"請填活動說明"}
                   onChange={(e) => {

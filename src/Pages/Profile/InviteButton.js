@@ -302,8 +302,13 @@ const AllMemberCol = styled.div`
   padding: 10px;
 `;
 const MemberField = styled.div`
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
+  justify-content: space-around; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
   width: 100%;
   margin: 20px auto;
 `;
@@ -326,7 +331,7 @@ const RequirementField = styled.div`
 `;
 const RequirementDiv = styled.div``;
 const EachUser = styled.div`
-  width: 100px;
+  width: 90px;
   height: 150px;
   text-align: center;
 `;

@@ -556,7 +556,7 @@ const ProfileCol = styled.div`
   height: 100%;
   @media (max-width: 1024px) {
     width: 100%;
-    height: 300px;
+    /* height: 300px; */
     margin: 0 auto;
     display: flex;
     align-items: center;

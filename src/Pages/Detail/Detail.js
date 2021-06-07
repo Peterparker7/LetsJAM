@@ -161,7 +161,7 @@ function Detail() {
                 <Item>適合程度： {detailData.level}</Item>
                 <Item>人數限制： {limit}</Item>
                 <Item>地點： {detailData.location}</Item>
-                <div>{detailData.id}</div>
+                {/* <div>{detailData.id}</div> */}
               </InfoBarSecond>
             </ItemField>
             <RWDButtonField>

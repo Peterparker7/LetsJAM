@@ -42,6 +42,7 @@ opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 position: relative;
 overflow-y: auto;
+border-top: 6px solid #43e8d8;
 border-radius: 4px;`;
 
 function EditActivitiesButton(props) {
@@ -493,7 +494,7 @@ function EditActivitiesButton(props) {
           <CloseIconContainer>
             <CloseIcon src={xIconBlack} onClick={toggleCancel} />
           </CloseIconContainer>
-          <TopBar></TopBar>
+          {/* <TopBar></TopBar> */}
           <ContentTitle>編輯活動內容</ContentTitle>
           {renderEditActivityField()}
         </Container>
@@ -512,7 +513,6 @@ const Container = styled.div`
 const TopBar = styled.div`
   height: 6px;
   width: 100%;
-
   background: #ff0099;
 `;
 const ContentTitle = styled.div`
