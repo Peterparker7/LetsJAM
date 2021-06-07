@@ -5,7 +5,7 @@ import { keyframes } from "styled-components";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSpecificData } from "../../utils/firebase";
+import { getSpecificData, subscribe } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
@@ -35,6 +35,7 @@ function Detail() {
   const [userName, setUserName] = useState();
   const [activityStatus, setActivityStatus] = useState(true);
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [activityChange, setActivityChange] = useState([]);
 
   let activityDetail = {};
 
@@ -173,6 +174,7 @@ function Detail() {
                   !activityStatus
                     ? {
                         background: "grey",
+                        pointerEvents: "none",
                         cursor: "not-allowed",
                         opacity: "0.5",
                       }
@@ -191,6 +193,7 @@ function Detail() {
               alt=""
             ></ActivityImage>
             <ImageLine></ImageLine>
+            {/* <ImageLine2></ImageLine2> */}
             <ButtonField>
               <ShareButton
                 disabled={!activityStatus}
@@ -382,7 +385,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -402,7 +405,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -425,7 +428,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -458,7 +461,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -476,24 +479,43 @@ function Detail() {
     }
   };
 
+  //0607新增監聽 加入活動即時更新
+  const handlefirebaseChange = async () => {
+    console.log(activityChange);
+    getData();
+  };
   //useEffect只在第一次render後執行
   useEffect(() => {
     checkUserIsLogin();
 
     getData();
   }, [id]);
+  //網址有變化重新getData
 
   useEffect(() => {
-    window.scrollTo(-10, -50);
+    window.scrollTo(0, 0);
   }, []);
 
+  //0607新增監聽 加入活動即時更新
+  useEffect(() => {
+    subscribe(setActivityChange, id);
+  }, []);
+
+  //0607新增監聽 加入活動即時更新
+  useEffect(() => {
+    if (activityChange.length !== 0) {
+      handlefirebaseChange();
+      console.log(activityChange);
+    }
+  }, [activityChange]);
+
   //useEffect在每次detailData變化後執行
-  //   useEffect(() => {
-  //     renderDetail();
-  //   }, [detailData]);
+  // useEffect(() => {
+  //   renderDetail();
+  // }, [detailData]);
 
   //防止第一次render抓不到東西，先return null跳出 (幫下面的renderDetail擋避免undifine)
-  if (!detailData) {
+  if (!detailData || !activityChange) {
     return "isLoading";
   }
   return (
@@ -567,7 +589,7 @@ const Title = styled.div`
 `;
 const CloseTitle = styled.div`
   position: absolute;
-  left: 160px;
+  right: 0px;
   bottom: 5px;
   font-size: 16px;
 `;
@@ -642,6 +664,8 @@ const ImageContainer = styled.div`
 const ActivityImage = styled.img`
   width: 100%;
   height: 100%;
+  position: absolute;
+  left: 0;
   z-index: 3;
   /* border-radius: 20px; */
   object-fit: cover;
@@ -889,14 +913,42 @@ const NoAttendant = styled.div`
     0 0 40px #ff00ff;
 `;
 const ImageLine = styled.div`
-  height: 480px;
-  width: calc(100% - 20px);
-  border: 2px solid white;
+  height: 500px;
+  width: calc(100%);
+  /* height: 480px;
+  width: calc(100% - 20px); */
+  border: 3px solid white;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  /* top: 10px;
+  right: 10px; */
+  top: -16px;
+  right: -16px;
   z-index: 1;
-  box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
+  box-shadow: 0 0 15px #ff00ff, inset 0 0 10px #ff00ff;
+
+  @media (max-width: 888px) {
+    right: 20px;
+
+    width: calc(100% - 40px);
+  }
+  @media (max-width: 576px) {
+    height: 280px;
+  }
+`;
+
+const ImageLine2 = styled.div`
+  height: 500px;
+  width: calc(100%);
+  /* height: 480px;
+  width: calc(100% - 20px); */
+  border: 3px solid white;
+  position: absolute;
+  /* top: 10px;
+  right: 10px; */
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+  box-shadow: 0 0 15px #43e8d8, inset 0 0 10px #43e8d8;
 
   @media (max-width: 888px) {
     right: 20px;

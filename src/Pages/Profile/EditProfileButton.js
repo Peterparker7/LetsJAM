@@ -475,13 +475,15 @@ const ProfileImg = styled.img`
 const ProfileImageContainer = styled.div`
   align-items: center;
   position: relative;
+  width: 200px;
+  margin: 0 auto;
 `;
 const EditProfileImageField = styled.div``;
 const EditImageIcon = styled.img`
   width: 25px;
   position: absolute;
-  top: 0;
-  right: 150px;
+  top: 0px;
+  right: 0px;
   cursor: pointer;
   &:hover {
     transform: translateY(-2px);

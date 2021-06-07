@@ -5,6 +5,7 @@ import { getAllUser, sendUserInvite, subscribe } from "../../utils/firebase";
 
 import MemberCard from "./MemberCard.js";
 import xIcon from "../../images/x.svg";
+import Swal from "sweetalert2";
 
 const StyledModal = Modal.styled`
   width: 40rem;
@@ -129,11 +130,22 @@ function InviteButton(props) {
   };
 
   const sendInvite = async (uid) => {
-    let data = {
-      id: activityDetail.id,
-      message: "Let's JAM!!",
-    };
-    sendUserInvite(data, uid);
+    Swal.fire({
+      title: "<span style=font-size:24px>已寄送邀請</span>",
+      customClass: "customSwal2Title",
+
+      background: "black",
+      confirmButtonColor: "#43e8d8",
+      confirmButtonText: "<span  style=color:#000>確定</span",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let data = {
+          id: activityDetail.id,
+          message: "Let's JAM!!",
+        };
+        sendUserInvite(data, uid);
+      }
+    });
   };
 
   const renderAllUser = () => {
@@ -224,15 +236,20 @@ function InviteButton(props) {
   );
 }
 const Btn = styled.div`
-  border: 1px solid #ff0099;
+  /* border: 1px solid #ff0099; */
+  border: 1px solid #fff200;
   padding: 6px 8px;
   border-radius: 8px;
-  color: #ff0099;
+  color: #000;
+  background: #fff200;
+  /* color: #ff0099; */
   margin: 10px;
   cursor: pointer;
+  box-shadow: 0 0 10px #fffbaa;
+
   &:hover {
-    background: #ff0099;
-    color: white;
+    background: #fff860;
+    color: black;
     transform: translateY(-3px);
   }
 `;

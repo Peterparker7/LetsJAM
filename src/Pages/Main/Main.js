@@ -1,5 +1,6 @@
 import "../../App.css";
 import "../../normalize.css";
+import "../../Components/swal2.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
 import React, { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import IsLoading from "../../Components/IsLoading";
 import { Animated } from "react-animated-css";
 import CircularIndeterminate from "../Create/CircularProgress";
 import neonGuitar1 from "../../images/neonGuitar1.png";
+import Swal from "sweetalert2";
 
 const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
@@ -106,6 +108,7 @@ function Main() {
   useEffect(() => {
     handlePagination();
   }, [data]);
+
   // if (!data) {
   //   return "isLoading";
   // }
@@ -186,7 +189,26 @@ function Main() {
   };
 
   const handleRequirementFilter = () => {};
-
+  const handleCreateNow = () => {
+    if (userDataUid) {
+      return (
+        <Link to={`/activities/create`}>
+          <CreateNow>馬上開團</CreateNow>
+        </Link>
+      );
+    } else {
+      let LogInAlert = () => {
+        Swal.fire({
+          title: "<span style=font-size:24px>登入以使用此功能</span>",
+          customClass: "customSwal2Title",
+          background: "black",
+          confirmButtonColor: "#43e8d8",
+          confirmButtonText: "<span  style=color:#000>確定</span",
+        });
+      };
+      return <CreateNow onClick={LogInAlert}>馬上開團</CreateNow>;
+    }
+  };
   const sloganButtonHTML = () => {
     if (userDataUid) {
       return (
@@ -211,6 +233,7 @@ function Main() {
             <NoActivitiesImage src={neonGuitar1} />
           </NoActivitiesImageContainer>
           <NoActivities>無符合條件的活動~</NoActivities>
+          {handleCreateNow()}
           {/* <JoinButton></JoinButton> */}
         </NoActivitiesContainer>
       );
@@ -218,6 +241,9 @@ function Main() {
   };
 
   if (!completePaginate) {
+    return <IsLoading />;
+  }
+  if (!data) {
     return <IsLoading />;
   }
   //filter不到活動會卡住
@@ -296,7 +322,14 @@ function Main() {
             整個城市<br></br>都是我的練團室
           </Slogan>
         </Animated>
-        <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
+        <Animated
+          animationIn="fadeIn"
+          animationInDelay="500"
+          // animationOut="fadeOut"
+          isVisible={true}
+        >
+          <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
+        </Animated>
       </Carosul>
       {/* <Neon data-text="成果牆">成果牆</Neon> */}
       {/* <div>
@@ -426,7 +459,7 @@ const JoinButton = styled.button`
   border-radius: 30px;
   background: #43e8d8;
   /* background: #ff00ff; */
-  padding: 12px 48px;
+  padding: 12px 60px;
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
@@ -606,6 +639,9 @@ const NoResultContainer = styled.div`
   width: 200px;
   text-align: center;
   align-items: center;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 const NoResult = styled.div`
   font-size: 20px;
@@ -618,7 +654,7 @@ const PageControllContainer = styled.div`
 const Title = styled.div`
   font-size: 20px;
   font-weight: 600;
-  height: 30px;
+  height: 60px;
 `;
 const Time = styled.div`
   font-size: 16px;
@@ -630,14 +666,14 @@ const Type = styled.div`
 const Requirement = styled.div`
   font-size: 16px;
   margin-top: 10px;
-  height: 80px;
+  height: 60px;
   @media (max-width: 768px) {
     font-size: 16px;
     height: unset;
   }
 `;
 const Location = styled.div`
-  height: 50px;
+  height: 40px;
   line-height: 20px;
 
   @media (max-width: 768px) {
@@ -729,6 +765,31 @@ const NoActivities = styled.div`
   color: white;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff;
+`;
+const CreateNow = styled.button`
+  padding: 6px 10px;
+  border: 1px solid #ff00ff;
+  border-radius: 8px;
+  background: #ff00ff;
+  color: #fff;
+  font-weight: 600;
+  position: absolute;
+  top: 100px;
+  left: 25px;
+  /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff; */
+  box-shadow: 0 0 5px #ff00ff;
+
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    /* background: #fff05c; */
+    background: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff;
+
+    color: white;
+    transform: translateY(-2px);
+  }
 `;
 
 export default Main;

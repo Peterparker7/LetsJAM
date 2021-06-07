@@ -124,6 +124,9 @@ function Create(props) {
     setDate(sat);
     setTime("16:00");
   }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (props.userUid === "") {
     return null;
@@ -432,7 +435,7 @@ function Create(props) {
                 </SelectType>
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-              <SelectTypeComponent />
+              {/* <SelectTypeComponent /> */}
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
@@ -498,7 +501,7 @@ function Create(props) {
                 <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
                 {Warning.warningLocationHTML(place, placeStatus)}
               </InputFieldDiv>
-              <InputFieldDiv>
+              <InputFieldDiv style={{ alignItem: "unset" }}>
                 <Label>活動備註</Label>
                 <InputTextArea
                   placeholder={"請填活動說明"}
@@ -651,13 +654,14 @@ const CreateDetailImage = styled.img`
   }
 `;
 const Title = styled.div`
-  font-size: 24px;
-  margin: 20px 40px 0px 40px;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 20px 40px 20px 40px;
   padding: 10px 0;
   border-bottom: 1px solid #979797;
 `;
 const InputFieldDiv = styled.div`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   position: relative;
@@ -666,7 +670,7 @@ const InputFieldDiv = styled.div`
 const Inputfield = styled.input`
   border-bottom: 1px solid #979797;
   width: 220px;
-  height: 40px;
+  height: 20px;
   padding: 5px;
   @media (max-width: 768px) {
     width: 70%;
@@ -741,6 +745,7 @@ const Button = styled.button`
   width: 200px;
   height: 50px;
   font-size: 20px;
+  font-weight: 600;
   background: #43e8d8;
   cursor: pointer;
   transition: 0.2s;

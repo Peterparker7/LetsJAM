@@ -120,6 +120,8 @@ function Profile(props) {
     let requirementHTML = userDataRedux.skill.map((data) => {
       return <span>{data} &nbsp;</span>;
     });
+    let skillArray = userDataRedux.skill;
+    let skillArrayDelimiter = skillArray.join(", ");
     return (
       <ProfileDetail>
         <ProfileImg src={`${userDataRedux.profileImage}`} />
@@ -131,7 +133,7 @@ function Profile(props) {
             <ProfileItemIntro>{userDataRedux.intro}</ProfileItemIntro>
             {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
             <ProfileItem>偏好類型：{userDataRedux.preferType}</ProfileItem>
-            <ProfileItem>會的樂器：{requirementHTML}</ProfileItem>
+            <ProfileItem>會的樂器：{skillArrayDelimiter}</ProfileItem>
             <div>{userDataRedux.favSinger}</div>
           </WrapperProfileDetail>
         </ProfileTextField>
@@ -504,7 +506,6 @@ function Profile(props) {
           </ProfileCol>
         </ProfilePageContainer>
       </MainContainer>
-      <div>hi</div>
     </ModalProvider>
   );
 }
@@ -555,7 +556,7 @@ const ProfileCol = styled.div`
     align-items: center;
   }
   @media (max-width: 768px) {
-    width: 360px;
+    width: 90%;
     height: 100%;
     flex-direction: column;
   }
@@ -597,11 +598,14 @@ const ProfileTextField = styled.div`
 `;
 const ProfileName = styled.div`
   font-size: 28px;
-
+  font-weight: 600;
   margin: 10px auto;
 
   width: auto;
   @media (max-width: 1024px) {
+    text-align: left;
+  }
+  @media (max-width: 768px) {
   }
 `;
 const ProfileItem = styled.div`
@@ -749,9 +753,10 @@ const EachHistoryActivityContainer = styled.div`
   width: 250px;
   height: 250px;
   background: #555;
-  border-radius: 20px;
+  border-radius: 4px;
   margin-bottom: 20px;
   position: relative;
+  overflow: hidden;
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;
@@ -814,7 +819,7 @@ const EachActivityContent = styled.div`
 const Title = styled.div`
   font-size: 20px;
   font-weight: 600;
-  height: 50px;
+  height: 60px;
   @media (max-width: 414px) {
     font-size: 14px;
   }
@@ -827,7 +832,8 @@ const Time = styled.div`
   }
 `;
 const Requirement = styled.div`
-  height: 80px;
+  margin-top: 10px;
+  height: 60px;
   @media (max-width: 414px) {
     font-size: 10px;
   }
@@ -855,6 +861,11 @@ const ButtonField = styled.div`
 `;
 const ProfileButtonField = styled.div`
   padding: 20px;
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
 `;
 const CheckActivityButtonField = styled(ButtonField)`
   /* max-width: 90px;

@@ -21,6 +21,7 @@ background-color: black;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 overflow-y: scroll;
+border-radius: 4px;
 `;
 
 function MemberCard(props) {
@@ -45,6 +46,12 @@ function MemberCard(props) {
     });
   }
 
+  const skillArrange = () => {
+    console.log(props.data.skill);
+    let skillArray = props.data.skill;
+    let skillArrayDelimiter = skillArray.join(`, `);
+    return skillArrayDelimiter;
+  };
   const handleYoutube = () => {
     if (props.data.youtubeUrl) {
       const videoUrl = props.data.youtubeUrl;
@@ -86,7 +93,7 @@ function MemberCard(props) {
           <IntroTitle>介紹</IntroTitle>
           <Intro>{props.data.intro}</Intro>
           <PreferType>偏好類型：{props.data.preferType}</PreferType>
-          <Skill>樂器技能：{props.data.skill}</Skill>
+          <Skill>樂器技能：{skillArrange()}</Skill>
           <VideoTitle>練習</VideoTitle>
           <YoutubeUrl>{handleYoutube()}</YoutubeUrl>
         </Container>
@@ -131,45 +138,54 @@ const ProfileImg = styled.img`
   position: relative;
 `;
 const Name = styled.div`
-  margin: 0 50px;
+  margin: 30px 10px 40px 215px;
   font-size: 28px;
-  text-align: right;
-  height: 120px;
+  font-weight: 600;
+  /* text-align: right; */
+  /* height: 120px; */
+
   display: grid;
   align-items: center;
+  padding: 10px;
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
 `;
 const IntroTitle = styled.div`
   text-align: left;
-  margin: 10px auto 10px 20px;
+  margin: 20px 30px 20px 30px;
   font-size: 24px;
+  font-weight: 600;
 `;
 const Intro = styled.div`
-  /* width: 100%; */
   text-align: left;
-  padding: 10px 50px;
+  padding: 10px 0px;
   padding-bottom: 20px;
+  margin: 0px 30px;
+
+  letter-spacing: 1px;
+  line-height: 24px;
 `;
 const PreferType = styled.div`
-  margin: 10px 40px;
+  margin: 10px 30px;
 
   text-align: left;
   padding-bottom: 10px;
 `;
 const Skill = styled.div`
-  margin: 0px 40px;
+  margin: 0px 30px;
   text-align: left;
   height: 40px;
 `;
 const VideoTitle = styled.div`
   text-align: left;
-  margin: 10px 20px 10px 20px;
+  margin: 30px 30px 10px 30px;
   font-size: 24px;
+  font-weight: 600;
   padding-bottom: 10px;
-  border-bottom: 1px solid #979797;
 `;
 const YoutubeUrl = styled.div`
-  width: 90%;
-  margin: 0 auto;
+  /* width: 90%; */
+  margin: 0 30px;
   padding-bottom: 30px;
 `;
 const Btn = styled.button`

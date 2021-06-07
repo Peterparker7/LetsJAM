@@ -165,7 +165,7 @@ const logOut = async () => {
     .signOut()
     .then(function () {
       // 登出後強制重整一次頁面
-      alert("已登出");
+      // alert("已登出");
       window.location.href = "./";
     })
     .catch(function (error) {
@@ -182,6 +182,7 @@ const newUser = async (userEmail, userUid, userInfo) => {
       name: userInfo.name,
       preferType: userInfo.preferType,
       skill: userInfo.skill,
+      invitation: [],
       intro: "",
       profileImage:
         "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/istockphoto-1246254218-612x612.jpg?alt=media&token=2c69d8b3-25e8-46e7-a85d-1371db23086c",

@@ -606,9 +606,9 @@ const BtnConfirm = styled(Btn)`
   background: #43e8d8;
   transition: 0.2s;
 
-  box-shadow: 0 0 10px #43e8d8;
   &:hover {
     border: 1px solid #4cffee;
+    box-shadow: 0 0 10px #43e8d8;
 
     background: #4cffee;
     transform: translateY(-2px);

@@ -2,6 +2,7 @@ import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 let userEmail = "";
 let userPassword = "";
@@ -14,6 +15,8 @@ function Login() {
   const [passwordState, setPasswordState] = useState(true);
   const [passwordValue, setPasswordValue] = useState(true);
   const [passwordAuthState, setPasswordAuthState] = useState(true);
+
+  let history = useHistory();
 
   const handleEmailChange = (e) => {
     userEmail = e;
@@ -40,6 +43,7 @@ function Login() {
           alert("登入成功！");
         })
         .then(() => {
+          // history.push("/");
           window.location.href = "./";
         })
         .catch((error) => {

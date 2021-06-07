@@ -163,7 +163,7 @@ function EditActivitiesMemberButton(props) {
       });
       return applicantsHTML;
     } else {
-      return <div>沒有申請者</div>;
+      return <NoMember>沒有申請者</NoMember>;
     }
   };
 
@@ -272,10 +272,10 @@ const ContentTitle = styled.div`
 `;
 const EditMemberCol = styled.div`
   text-align: left;
-  width: 80%;
+  /* width: 80%; */
   height: 90%;
   position: relative;
-  margin: 30px auto;
+  margin: 30px 20px;
   padding-bottom: 20px;
 `;
 const ApplicantTitle = styled.div`
@@ -309,7 +309,9 @@ const MemberContainer = styled.div`
   margin: 0 auto;
 `;
 const NoMember = styled.div`
-  margin: 50px auto;
+  font-size: 20px;
+  font-weight: 600;
+  margin: auto auto;
 `;
 const MemberImg = styled.img`
   width: 80px;
