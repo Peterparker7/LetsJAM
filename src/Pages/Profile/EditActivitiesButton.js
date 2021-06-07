@@ -250,7 +250,7 @@ function EditActivitiesButton(props) {
       cancelButtonText: "取消",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
         handleActivityInvitationDelete();
         const deleteActivity = deleteActivityData(props.data.id);
         // alert("已刪除活動");

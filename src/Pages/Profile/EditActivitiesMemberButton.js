@@ -16,6 +16,7 @@ import InviteButton from "./InviteButton.js";
 import MemberCard from "./MemberCard.js";
 import { setIn } from "formik";
 import xIcon from "../../images/x.svg";
+import { Animated } from "react-animated-css";
 
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -142,8 +143,14 @@ function EditActivitiesMemberButton(props) {
 
   const renderApplicants = () => {
     if (applicantsData.length !== 0) {
-      const applicantsHTML = applicantsData.map((item) => {
+      const applicantsHTML = applicantsData.map((item, index) => {
         return (
+          // <Animated
+          //   animationIn="fadeIn"
+          //   // animationOut="fadeOut"
+          //   isVisible={true}
+          //   animationInDelay={index * 50}
+          // >
           <EachMemberDiv>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
@@ -159,6 +166,7 @@ function EditActivitiesMemberButton(props) {
               同意
             </BtnAccept>
           </EachMemberDiv>
+          // </Animated>
         );
       });
       return applicantsHTML;

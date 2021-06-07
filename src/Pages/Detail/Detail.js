@@ -897,6 +897,8 @@ const NoAttendantContainer = styled.div`
 `;
 const NoAttendantImageContainer = styled.div`
   width: 50px;
+  position: absolute;
+  left: 40px;
 `;
 const NoAttendantImage = styled.img`
   width: 100%;
@@ -927,12 +929,14 @@ const ImageLine = styled.div`
   box-shadow: 0 0 15px #ff00ff, inset 0 0 10px #ff00ff;
 
   @media (max-width: 888px) {
-    right: 20px;
+    /* right: 20px;
 
-    width: calc(100% - 40px);
+    width: calc(100% - 40px); */
+    width: calc(100%-20px);
+    top: 20px;
   }
   @media (max-width: 576px) {
-    height: 280px;
+    height: 300px;
   }
 `;
 

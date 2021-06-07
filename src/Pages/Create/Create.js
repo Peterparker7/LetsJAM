@@ -256,6 +256,9 @@ function Create(props) {
     { label: "木箱鼓", value: "木箱鼓" },
     { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    // { label: "貝斯", value: "貝斯" },
+    // { label: "鍵盤", value: "鍵盤" },
+    // { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   let requirementArray = [];
@@ -584,6 +587,7 @@ const MainContainer = styled.div`
   background-position: 50% 50%;
   padding: 50px 20px;
   position: relative;
+  min-height: calc(100vh-180px);
 `;
 const MainContainerCanvas = styled.div``;
 const Container = styled.div`
@@ -608,7 +612,7 @@ const CreateDetailTopBar = styled.div`
 const CreateDetailContainer = styled.div`
   max-width: 888px;
   margin: 0 auto;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   margin-bottom: 20px;
   color: black;
   background: #f8f8ff;
@@ -656,7 +660,7 @@ const CreateDetailImage = styled.img`
 const Title = styled.div`
   font-size: 28px;
   font-weight: 600;
-  margin: 20px 40px 20px 40px;
+  margin: 20px 40px 10px 40px;
   padding: 10px 0;
   border-bottom: 1px solid #979797;
 `;
@@ -753,7 +757,7 @@ const Button = styled.button`
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
-    box-shadow: 0 0 10px #43e8d8;
+    box-shadow: 0 0 20px #43e8d8;
   }
 `;
 const RequireField = styled.span`

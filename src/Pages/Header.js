@@ -20,6 +20,7 @@ import {
 } from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Animated } from "react-animated-css";
+import xIcon from "../images/x.svg";
 
 function Header(props) {
   const [userData, setUserData] = useState([]);
@@ -123,6 +124,9 @@ function Header(props) {
               <EachMailField>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
+                    onClick={() => {
+                      maskClick();
+                    }}
                     style={{
                       background: `url(${item.fileSource})`,
                       backgroundPosition: "50% 50%",
@@ -295,6 +299,14 @@ function Header(props) {
     if (sideBarDisplay) {
       return (
         <MenuSideBar>
+          <CloseIconContainer>
+            <CloseIcon
+              src={xIcon}
+              onClick={() => {
+                handleMenuSideBar();
+              }}
+            />
+          </CloseIconContainer>
           <MenuItem>{menuLoginHTML()}</MenuItem>
           <MenuSideBarItem>成果牆</MenuSideBarItem>
           {menuCreateHTML()}
@@ -660,17 +672,37 @@ const EachMailMsg = styled.div`
 `;
 const IgnoreBtn = styled.button`
   transform: rotate(0.125turn);
-  font-size: 24px;
+  font-size: 28px;
   color: white;
   position: absolute;
   top: 0;
   right: 0;
   z-index: 2;
+  cursor: pointer;
+  &:hover {
+  }
 `;
 const NoInvite = styled.div`
   margin: 0 auto;
   width: 80px;
   font-size: 20px;
+`;
+const CloseIconContainer = styled.div`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 26px;
+  right: 20px;
+  z-index: 5;
+  cursor: pointer;
+  transition: 0.1s;
+  &:hover {
+    background: #2d2d2d;
+  }
+`;
+const CloseIcon = styled.img`
+  width: 100%;
 `;
 
 const Neon = styled.div`

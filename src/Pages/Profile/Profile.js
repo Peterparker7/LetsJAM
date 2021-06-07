@@ -184,13 +184,13 @@ function Profile(props) {
   const handleLogOut = async () => {
     Swal.fire({
       title: "<span style=font-size:24px>確定要登出嗎?</span>",
-      customClass: "customSwal2Title",
+      customClass: "customSwal2TitleLogOut",
 
       background: "black",
       showCancelButton: true,
-      confirmButtonColor: "#ff00ff",
+      confirmButtonColor: "none",
       cancelButtonColor: "#565656",
-      confirmButtonText: "<span  style=color:#000>登出</span",
+      confirmButtonText: "<span  style=color:#fff>登出</span",
       cancelButtonText: "取消",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -362,38 +362,44 @@ function Profile(props) {
         if (newFormatDate > nowDate) {
           return (
             // <Link to={`/activities/${data.id}`}>
-            <EachActivityContainer
-              style={
-                toggleJoinFilter ? { display: "block" } : { display: "none" }
-              }
+            <Animated
+              animationIn="fadeIn"
+              // animationOut="fadeOut"
+              isVisible={true}
             >
-              <Link to={`/activities/${data.id}`}>
-                <ActivityImage src={data.fileSource} />
-                <Canvas>
-                  <EachActivityField className="Field">
-                    <EachActivityContent>
-                      <Time>{showTime}</Time>
-                      <Title>{data.title}</Title>
-                      <Requirement>{requirementHTML}</Requirement>
-                    </EachActivityContent>
+              <EachActivityContainer
+                style={
+                  toggleJoinFilter ? { display: "block" } : { display: "none" }
+                }
+              >
+                <Link to={`/activities/${data.id}`}>
+                  <ActivityImage src={data.fileSource} />
+                  <Canvas>
+                    <EachActivityField className="Field">
+                      <EachActivityContent>
+                        <Time>{showTime}</Time>
+                        <Title>{data.title}</Title>
+                        <Requirement>{requirementHTML}</Requirement>
+                      </EachActivityContent>
 
-                    <StatusTag>{applyStatusHTML()}</StatusTag>
-                  </EachActivityField>
-                </Canvas>
-              </Link>
+                      <StatusTag>{applyStatusHTML()}</StatusTag>
+                    </EachActivityField>
+                  </Canvas>
+                </Link>
 
-              <CheckActivityButtonField>
-                {/* <Link to={`/activities/${data.id}`}> */}
-                <CheckActivityBtn
-                  onClick={() => {
-                    handleCancelJoin(data.id, userDataRedux.uid);
-                  }}
-                >
-                  退出活動
-                </CheckActivityBtn>
-                {/* </Link> */}
-              </CheckActivityButtonField>
-            </EachActivityContainer>
+                <CheckActivityButtonField>
+                  {/* <Link to={`/activities/${data.id}`}> */}
+                  <CheckActivityBtn
+                    onClick={() => {
+                      handleCancelJoin(data.id, userDataRedux.uid);
+                    }}
+                  >
+                    退出活動
+                  </CheckActivityBtn>
+                  {/* </Link> */}
+                </CheckActivityButtonField>
+              </EachActivityContainer>
+            </Animated>
             // </Link>
           );
         } else if (newFormatDate < nowDate) {
@@ -560,6 +566,10 @@ const ProfileCol = styled.div`
     height: 100%;
     flex-direction: column;
   }
+  @media (max-width: 576px) {
+    width: 100%;
+    padding: 30px 30px;
+  }
   @media (max-width: 414px) {
     width: 100%;
   }
@@ -637,15 +647,18 @@ const LogoutBtn = styled.button`
   width: 116px;
   height: 40px;
   padding: 10px;
-  color: #ff00ff;
+  color: #fff;
   /* background: #ff00ff; */
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
   box-shadow: inset 0 0 10px #ff00ff, 0 0 10px #ff00ff;
-
-  text-shadow: 0 0 10px #ff00ff;
   &:hover {
+    transform: translateY(-2px);
+
     background: #ff00ff;
+    box-shadow: inset 0 0 20px #ff00ff, 0 0 20px #ff00ff;
     color: white;
   }
 `;
@@ -865,6 +878,10 @@ const ProfileButtonField = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-around;
+  }
+  @media (max-width: 414px) {
+    justify-content: space-between;
+    padding: unset;
   }
 `;
 const CheckActivityButtonField = styled(ButtonField)`

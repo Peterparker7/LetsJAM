@@ -453,6 +453,7 @@ const BtnConfirm = styled.div`
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
+    box-shadow: 0 0 20px #43e8d8;
   }
 `;
 const ProfileImage = styled.div`
@@ -503,6 +504,7 @@ const EditBtn = styled.button`
   &:hover {
     background: #4cffee;
     transform: translateY(-2px);
+    box-shadow: 0 0 20px #43e8d8;
   }
 `;
 

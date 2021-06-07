@@ -1,3 +1,19 @@
 .customSwal2Title .swal2-title {
   color: white;
 }
+.customSwal2TitleLogOut .swal2-title {
+  color: white;
+}
+.customSwal2TitleLogOut > .swal2-actions > .swal2-confirm {
+  color: white;
+  background: transparent;
+  border: 1px solid #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+  box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
+}
+
+.customSwal2TitleLogOut > .swal2-actions > .swal2-confirm:hover {
+  background: #ff00ff;
+  box-shadow: 0 0 20px #ff00ff, inset 0 0 20px #ff00ff;
+}
