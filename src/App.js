@@ -14,6 +14,7 @@ import { getAuthUser } from "./utils/firebase";
 
 function App() {
   const [userUid, setUserUid] = useState("");
+  const [isLogIn, setIsLogIn] = useState(false);
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
@@ -21,27 +22,28 @@ function App() {
   };
 
   useEffect(() => {
+    console.log("HHHHH");
     checkUserIsLogin();
-  }, []);
+  }, [isLogIn]);
 
   return (
     <div className="App">
       <Router>
-        <Header />
+        <Header userUid={userUid} />
 
         <MainDiv>
           <Switch>
             <Route exact path="/activities/login">
-              <BaseLogin userUid={userUid} />
+              <BaseLogin userUid={userUid} setIsLogIn={setIsLogIn} />
             </Route>
             <Route exact path="/activities">
-              <Main />
+              <Main userUid={userUid} />
             </Route>
             <Route exact path="/activities/create">
               <Create userUid={userUid} />
             </Route>
             <Route exact path="/activities/profile">
-              <Profile userUid={userUid} />
+              <Profile userUid={userUid} setIsLogIn={setIsLogIn} />
             </Route>
             <Route exact path="/activities/:id">
               <Detail />

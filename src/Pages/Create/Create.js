@@ -591,8 +591,8 @@ const Container = styled.div`
   max-width: 1024px;
   margin: 0 auto;
   height: 100%;
-  border: 1px solid #979797;
-  padding: 50px 20px;
+  /* border: 1px solid #979797; */
+  /* padding: 50px 20px; */
 `;
 const ProcessIntroContainer = styled.div`
   width: 960px;

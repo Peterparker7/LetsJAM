@@ -8,7 +8,7 @@ let userEmail = "";
 let userPassword = "";
 let userInfo = {};
 
-function Login() {
+function Login(props) {
   const [emailState, setEmailState] = useState(true);
   const [emailValue, setEmailValue] = useState();
   const [emailAuthState, setEmailAuthState] = useState(true);
@@ -41,10 +41,11 @@ function Login() {
           console.log("Login");
           console.log(result.uid);
           alert("登入成功！");
+          props.props.setIsLogIn(true);
         })
         .then(() => {
-          // history.push("/");
-          window.location.href = "./";
+          history.push("/");
+          // window.location.href = "./";
         })
         .catch((error) => {
           console.log(error);

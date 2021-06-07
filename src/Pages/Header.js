@@ -21,7 +21,7 @@ import {
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Animated } from "react-animated-css";
 
-function Header() {
+function Header(props) {
   const [userData, setUserData] = useState([]);
   const [invitationData, setInvitationData] = useState([]);
   const [sideBarDisplay, setSideBarDisplay] = useState(false);
@@ -91,7 +91,7 @@ function Header() {
 
   useEffect(() => {
     checkUserIsLogin();
-  }, []);
+  }, [props.userUid]);
 
   useEffect(() => {
     arrangeInvitationData();
