@@ -19,4 +19,5 @@
 }
 .customSwal2TitleLogOut > .swal2-actions > .swal2-loader {
   background: none;
+  border-color: transparent;
 }

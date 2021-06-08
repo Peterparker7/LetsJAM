@@ -720,6 +720,8 @@ const ShareButton = styled(Btn)`
 `;
 const RWDShareButton = styled(Btn)`
   margin-right: 20px;
+  font-weight: 600;
+
   &:hover {
     background: white;
     color: black;
@@ -732,6 +734,7 @@ const RWDShareButton = styled(Btn)`
 const JoinButton = styled(Btn)`
   position: relative;
   color: black;
+  font-weight: 600;
   background: #43e8d8;
   border: none;
   &:hover {
@@ -744,6 +747,8 @@ const JoinButton = styled(Btn)`
 `;
 const ApplicantButton = styled(Btn)`
   color: #fff;
+  font-weight: 600;
+
   /* background: #ffe700; */
   box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
@@ -753,6 +758,8 @@ const ApplicantButton = styled(Btn)`
   cursor: not-allowed;
 `;
 const AttendantButton = styled(Btn)`
+  font-weight: 600;
+
   color: white;
   background: #ff00ff;
   box-shadow: 0 0 10px #ff00ff;
