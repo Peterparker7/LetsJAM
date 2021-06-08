@@ -69,6 +69,12 @@ function Create(props) {
 
   const userDataRedux = useSelector((state) => state.userData);
 
+  console.log(titleStatus);
+  console.log(dateStatus);
+  console.log(timeStatus);
+  console.log(requirementStatus);
+  console.log(placeStatus);
+
   //   const [requirement, setRequirement] = useState("");
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
@@ -142,8 +148,11 @@ function Create(props) {
     let deviation = 8 * 60 * 60000;
     console.log(nowDate);
     console.log(Date.parse(date) + milliseconds - deviation);
-    console.log(timeStatus);
+    console.log(titleStatus);
     console.log(dateStatus);
+    console.log(timeStatus);
+    console.log(requirementStatus);
+    console.log(placeStatus);
 
     if (!title || title.length > 10) {
       setTitleStatus(false);
@@ -173,12 +182,14 @@ function Create(props) {
       setImageStatus(false);
     }
     if (
+      !title ||
       !titleStatus ||
       !dateStatus ||
       !timeStatus ||
       !typeStatus ||
       requirement.length === 0 ||
       !limitStatus ||
+      !place ||
       !placeStatus ||
       !imgUrl
     ) {
@@ -387,7 +398,11 @@ function Create(props) {
                   name="title"
                   placeholder="請輸入活動名稱 最多10字"
                   onChange={(e) => {
-                    handleChange(e, "title");
+                    if (e.target.value) {
+                      handleChange(e, "title");
+                    } else {
+                      setTitleStatus(false);
+                    }
                   }}
                 ></Inputfield>
                 {Warning.warningTitleHTML(title, titleStatus)}
@@ -634,9 +649,11 @@ const CreateDetail = styled.div`
     flex-direction: column;
   }
 `;
-const CreateDetailContent = styled.div``;
+const CreateDetailContent = styled.div`
+  margin: 0 10px;
+`;
 const CreateDetailImageContainer = styled.div`
-  width: 50%;
+  width: 60%;
   padding: 0 0 20px 10px;
   height: auto;
   @media (max-width: 768px) {
@@ -700,6 +717,7 @@ const InputTextArea = styled.textarea`
   padding: 5px;
   resize: none;
   line-height: 20px;
+  white-space: pre-line;
   @media (max-width: 768px) {
     width: 70%;
   }

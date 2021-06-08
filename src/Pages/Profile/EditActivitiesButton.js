@@ -441,9 +441,9 @@ function EditActivitiesButton(props) {
               }}
             ></InputFieldInput>
           </InputFieldDiv>
-          <InputFieldDiv>
-            <Label for="comment">備註說明</Label>
-            <InputFieldInput
+          <InputFieldDiv style={{ alignItems: "baseline" }}>
+            <Label for="comment">活動說明</Label>
+            <InputTextArea
               id="comment"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -451,7 +451,7 @@ function EditActivitiesButton(props) {
               onInput={(e) => {
                 handleActivityChange(e.target.value, "comment");
               }}
-            ></InputFieldInput>
+            ></InputTextArea>
           </InputFieldDiv>
           {/* <InputFieldDiv>
             <Label for="activityImage">上傳照片</Label>
@@ -552,6 +552,16 @@ const InputFieldInput = styled.input`
   height: 40px;
   width: calc(100% - 80px);
   padding: 5px;
+`;
+
+const InputTextArea = styled.textarea`
+  width: calc(100% - 80px);
+  height: 80px;
+  border: 1px solid #979797;
+  padding: 5px;
+  resize: none;
+  line-height: 20px;
+  white-space: pre-line;
 `;
 const EditActivityCol = styled.div`
   width: 80%;
