@@ -220,7 +220,9 @@ function EditActivitiesMemberButton(props) {
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleModal} />
           </CloseIconContainer>
+
           <ContentTitle>成員一覽</ContentTitle>
+
           <EditMemberCol>
             <ApplicantTitle>申請中</ApplicantTitle>
             <MemberDivField>{renderApplicants()}</MemberDivField>
@@ -405,7 +407,7 @@ const CheckApplicantBtn = styled.button`
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;
-    width: 70px;
+    width: 90px;
 
     height: 30px;
   }

@@ -642,7 +642,7 @@ const EditBtn = styled.button`
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;
-    width: 70px;
+    width: 90px;
 
     height: 30px;
   }

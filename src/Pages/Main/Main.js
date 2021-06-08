@@ -19,6 +19,7 @@ import IsLoading from "../../Components/IsLoading";
 import { Animated } from "react-animated-css";
 import CircularIndeterminate from "../Create/CircularProgress";
 import neonGuitar1 from "../../images/neonGuitar1.png";
+import arrowRight from "../../images/arrow-right-short.svg";
 import Swal from "sweetalert2";
 
 const db = window.firebase.firestore();
@@ -322,6 +323,20 @@ function Main() {
             整個城市<br></br>都是我的練團室
           </Slogan>
         </Animated>
+
+        <Animated
+          animationIn="fadeIn"
+          animationInDelay="1500"
+          // animationOut="fadeOut"
+          isVisible={true}
+        >
+          <SubSlogan>遇見更多音樂同好、即刻成團</SubSlogan>
+          <LearnMore>
+            <LearnMoreSlogan>Learn More</LearnMoreSlogan>
+            <ArrowRight src={arrowRight}></ArrowRight>
+          </LearnMore>
+        </Animated>
+
         <Animated
           animationIn="fadeIn"
           animationInDelay="500"
@@ -447,31 +462,80 @@ const Slogan = styled.div`
     left: 60px;
   }
 `;
+const SubSlogan = styled.div`
+  color: white;
+  position: absolute;
+  font-size: 24px;
+  font-weight: 600;
+  top: 40%;
+  left: 120px;
+  line-height: 40px;
+  @media (max-width: 576px) {
+    font-size: 16px;
+    left: 60px;
+    top: 47%;
+  }
+`;
+const LearnMore = styled.div`
+  color: white;
+  position: absolute;
+  font-size: 24px;
+  font-weight: 600;
+  top: 47%;
+  left: 120px;
+  display: flex;
+  @media (max-width: 576px) {
+    font-size: 16px;
+    left: 60px;
+    top: 57%;
+  }
+`;
+const LearnMoreSlogan = styled.div``;
+const ArrowRight = styled.img`
+  text-align: center;
+
+  width: 32px;
+  @media (max-width: 576px) {
+    width: 20px;
+  }
+`;
 
 const JoinButtonContainer = styled.div`
   width: 100%;
   text-align: center;
   position: absolute;
   top: 80%;
+  @media (max-width: 576px) {
+    top: 75%;
+  }
 `;
 const JoinButton = styled.button`
-  border: 1px solid none;
   border-radius: 30px;
-  background: #43e8d8;
+  /* background: #43e8d8; */
   /* background: #ff00ff; */
+  border: 3px solid #43e8d8;
+
   padding: 12px 60px;
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
+  color: white;
+  text-shadow: 0 0 5px #43e8d8, 0 0 10px #43e8d8, 0 0 20px #43e8d8,
+    0 0 40px #43e8d8;
+  box-shadow: 0 0 20px #43e8d8, inset 0 0 20px #43e8d8;
   &:hover {
+    border: 3px solid #4cffee;
+
     background: #4cffee;
-    box-shadow: 0 0 10px #43e8d8;
+    box-shadow: 0 0 30px #4cffee;
+    color: black;
 
     transform: translateY(-2px);
   }
   @media (max-width: 576px) {
     font-size: 16px;
+    padding: 12px 48px;
   }
 `;
 const MainImgContainer = styled.div`

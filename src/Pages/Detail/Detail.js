@@ -300,19 +300,34 @@ function Detail() {
         return (
           <EachAttendantField key={index}>
             <ProfileBlock>
-              <ProfileImg
+              {/* <ProfileImg
                 src={`${data.profileImage}`}
                 // style={{
                 //   background: `url(${data.profileImage})`,
                 //   backgroundSize: "cover",
                 //   backgroundPosition: "",
                 // }}
-              />
+              /> */}
 
-              <div>{data.name}</div>
               <MemberCard data={data} />
+              {/* <div>{data.name}</div> */}
             </ProfileBlock>
           </EachAttendantField>
+          // {/* <EachAttendantField key={index}>
+          //   <ProfileBlock>
+          //     <ProfileImg
+          //       src={`${data.profileImage}`}
+          //       // style={{
+          //       //   background: `url(${data.profileImage})`,
+          //       //   backgroundSize: "cover",
+          //       //   backgroundPosition: "",
+          //       // }}
+          //     />
+
+          //     <div>{data.name}</div>
+          //     <MemberCard data={data} />
+          //   </ProfileBlock>
+          // </EachAttendantField> */}
         );
       }
     );
@@ -322,16 +337,16 @@ function Detail() {
         <MemberHostField>
           <ImageIntroBlock>
             <HostProfileBlock>
-              <ProfileImg
+              {/* <ProfileImg
                 // style={{
                 //   background: `url(${detailData.host.profileImage})`,
                 //   backgroundSize: "cover",
                 //   backgroundPosition: "",
                 // }}
                 src={detailData.host.profileImage}
-              />
+              /> */}
 
-              <div>{detailData.host.name}</div>
+              {/* <div>{detailData.host.name}</div> */}
               <MemberCard data={detailData.host} />
             </HostProfileBlock>
             <IntroBlock>{detailData.host.intro}</IntroBlock>
@@ -810,10 +825,12 @@ const MemberField = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 `;
 const MemberHostField = styled.div`
   padding: 10px 0px;
   width: 100%;
+  min-height: 250px;
   display: flex;
   align-items: center;
   @media (max-width: 888px) {
@@ -830,8 +847,12 @@ const ImageIntroBlock = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  min-height: 250px;
   @media (max-width: 888px) {
     width: 100%;
+  }
+  @media (max-width: 576px) {
+    flex-direction: column;
   }
 `;
 const HostProfileBlock = styled.div`

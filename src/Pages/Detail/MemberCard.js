@@ -72,7 +72,12 @@ function MemberCard(props) {
 
   return (
     <div>
-      <Btn onClick={toggleModal}></Btn>
+      <Btn onClick={toggleModal}>
+        <ProfileColumn>
+          <Avatar className="avatar" src={props.data.profileImage}></Avatar>
+          <AvatarName className="avatarName">{props.data.name}</AvatarName>
+        </ProfileColumn>
+      </Btn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -102,6 +107,22 @@ function MemberCard(props) {
     </div>
   );
 }
+const ProfileColumn = styled.div``;
+const Avatar = styled.img`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 5px;
+  border: 3px solid white;
+  box-shadow: 0 0 20px #ff00ff;
+  transition: 0.3s;
+`;
+const AvatarName = styled.div`
+  margin-top: 10px;
+  font-weight: 500;
+  color: white;
+`;
 const Container = styled.div`
   position: relative;
   width: 100%;
@@ -193,6 +214,13 @@ const Btn = styled.button`
   height: 120px;
   top: 0;
   left: 0;
-  position: absolute;
+
+  /* position: absolute; */
+  &:hover ${Avatar} {
+    transform: scale(1.05);
+    transform: translateY(-3px);
+    /* border: 1px solid #ff00ff; */
+    box-shadow: 0 0 50px #ff00ff;
+  }
 `;
 export default MemberCard;

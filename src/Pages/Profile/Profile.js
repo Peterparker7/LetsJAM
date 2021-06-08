@@ -834,7 +834,8 @@ const Title = styled.div`
   font-weight: 600;
   height: 60px;
   @media (max-width: 414px) {
-    font-size: 14px;
+    font-size: 20px;
+    width: calc(100% - 100px);
   }
 `;
 const Time = styled.div`
@@ -849,6 +850,9 @@ const Requirement = styled.div`
   height: 60px;
   @media (max-width: 414px) {
     font-size: 10px;
+    margin-top: 0px;
+    height: unset;
+    width: calc(100% - 100px);
   }
 `;
 const ButtonField = styled.div`
@@ -867,9 +871,12 @@ const ButtonField = styled.div`
     right: 20px;
     flex-direction: column;
     bottom: 40px;
+    max-width: 100px;
   }
   @media (max-width: 414px) {
-    right: 10px;
+    right: 15px;
+    width: 100px;
+    bottom: 50px;
   }
 `;
 const ProfileButtonField = styled.div`
@@ -895,7 +902,8 @@ const CheckActivityButtonField = styled(ButtonField)`
     bottom: 20px;
   }
   @media (max-width: 414px) {
-    right: 10px;
+    right: 15px;
+    width: 100px;
   }
 `;
 // const CheckActivityButtonField = styled.div`
@@ -920,7 +928,7 @@ const CheckActivityBtn = styled.button`
   @media (max-width: 414px) {
     font-size: 14px;
     padding: 2px;
-    width: 70px;
+    width: 90px;
 
     height: 30px;
   }
@@ -940,6 +948,10 @@ const FilterBtn = styled.button`
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    box-shadow: 0 0 10px #fff;
+  }
 `;
 const StatusTag = styled.div`
   position: absolute;
