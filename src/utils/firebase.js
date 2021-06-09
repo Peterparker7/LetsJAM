@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { useHistory } from "react-router-dom";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -40,18 +41,27 @@ const deleteActivityData = async (id) => {
 
 const uploadImage = async (img) => {
   const path = img.name;
+  console.log("🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ path", path);
   // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
   const storageReference = window.firebase.storage().ref(path);
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 49 ~ uploadImage ~ storageReference",
+    storageReference
+  );
 
   // .put() 方法把東西丟到該位置裡
-  const task = storageReference.put(img);
+  const task = await storageReference.put(img);
   const fileRef = window.firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 58 ~ downloadUrl ~ downloadUrl",
+    downloadUrl
+  );
 
   return downloadUrl;
 
@@ -164,8 +174,7 @@ const logOut = async () => {
     .signOut()
     .then(function () {
       // 登出後強制重整一次頁面
-      alert("已登出");
-
+      // alert("已登出");
       window.location.href = "./";
     })
     .catch(function (error) {
@@ -182,9 +191,10 @@ const newUser = async (userEmail, userUid, userInfo) => {
       name: userInfo.name,
       preferType: userInfo.preferType,
       skill: userInfo.skill,
+      invitation: [],
       intro: "",
       profileImage:
-        "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/133-1332476_male-clipart.png?alt=media&token=07badd84-8b19-47e1-983b-dd63a56909ab",
+        "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/istockphoto-1246254218-612x612.jpg?alt=media&token=2c69d8b3-25e8-46e7-a85d-1371db23086c",
       youtubeUrl: "",
     })
     .then(() => {

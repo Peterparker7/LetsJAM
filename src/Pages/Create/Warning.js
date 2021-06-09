@@ -73,16 +73,30 @@ const warningLimitHTML = (limit, status) => {
   }
 };
 const warningLevelHTML = (level, status) => {
+  if (level.length > 20) {
+    return (
+      <Warning style={{ display: "inline-block", color: "red" }}>
+        字數太多了
+      </Warning>
+    );
+  }
+  // if (!status) {
+  //   return (
+  //     <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
+  //   );
+  // }
+};
+const warningLocationHTML = (location, status, setPlaceStatus) => {
   if (!status) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
-};
-const warningLocationHTML = (location, status) => {
-  if (!status) {
+  if (location.length > 30) {
     return (
-      <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
+      <Warning style={{ display: "inline-block", color: "red" }}>
+        字數上限為30字
+      </Warning>
     );
   }
 };

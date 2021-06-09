@@ -5,7 +5,7 @@ import { keyframes } from "styled-components";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSpecificData } from "../../utils/firebase";
+import { getSpecificData, subscribe } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
@@ -13,6 +13,7 @@ import MemberCard from "./MemberCard";
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import IsLoadingBlack from "../../Components/IsLoadingBlack";
 import noAttendant from "../../images/noAttendant.png";
+import neonGuitar1 from "../../images/neonGuitar1.png";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -34,6 +35,7 @@ function Detail() {
   const [userName, setUserName] = useState();
   const [activityStatus, setActivityStatus] = useState(true);
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [activityChange, setActivityChange] = useState([]);
 
   let activityDetail = {};
 
@@ -159,7 +161,7 @@ function Detail() {
                 <Item>適合程度： {detailData.level}</Item>
                 <Item>人數限制： {limit}</Item>
                 <Item>地點： {detailData.location}</Item>
-                <div>{detailData.id}</div>
+                {/* <div>{detailData.id}</div> */}
               </InfoBarSecond>
             </ItemField>
             <RWDButtonField>
@@ -172,6 +174,7 @@ function Detail() {
                   !activityStatus
                     ? {
                         background: "grey",
+                        pointerEvents: "none",
                         cursor: "not-allowed",
                         opacity: "0.5",
                       }
@@ -190,6 +193,7 @@ function Detail() {
               alt=""
             ></ActivityImage>
             <ImageLine></ImageLine>
+            {/* <ImageLine2></ImageLine2> */}
             <ButtonField>
               <ShareButton
                 disabled={!activityStatus}
@@ -279,11 +283,10 @@ function Detail() {
     // });
     const noAttendantsHTML = () => {
       if (detailData.attendants.length === 0) {
-        console.log("??????????");
         return (
           <NoAttendantContainer>
             <NoAttendantImageContainer>
-              <NoAttendantImage src={noAttendant} />
+              <NoAttendantImage src={neonGuitar1} />
             </NoAttendantImageContainer>
             <NoAttendant>尚未有出席者~</NoAttendant>
             {/* <JoinButton></JoinButton> */}
@@ -297,19 +300,34 @@ function Detail() {
         return (
           <EachAttendantField key={index}>
             <ProfileBlock>
-              <ProfileImg
+              {/* <ProfileImg
                 src={`${data.profileImage}`}
                 // style={{
                 //   background: `url(${data.profileImage})`,
                 //   backgroundSize: "cover",
                 //   backgroundPosition: "",
                 // }}
-              />
+              /> */}
 
-              <div>{data.name}</div>
               <MemberCard data={data} />
+              {/* <div>{data.name}</div> */}
             </ProfileBlock>
           </EachAttendantField>
+          // {/* <EachAttendantField key={index}>
+          //   <ProfileBlock>
+          //     <ProfileImg
+          //       src={`${data.profileImage}`}
+          //       // style={{
+          //       //   background: `url(${data.profileImage})`,
+          //       //   backgroundSize: "cover",
+          //       //   backgroundPosition: "",
+          //       // }}
+          //     />
+
+          //     <div>{data.name}</div>
+          //     <MemberCard data={data} />
+          //   </ProfileBlock>
+          // </EachAttendantField> */}
         );
       }
     );
@@ -319,16 +337,16 @@ function Detail() {
         <MemberHostField>
           <ImageIntroBlock>
             <HostProfileBlock>
-              <ProfileImg
+              {/* <ProfileImg
                 // style={{
                 //   background: `url(${detailData.host.profileImage})`,
                 //   backgroundSize: "cover",
                 //   backgroundPosition: "",
                 // }}
                 src={detailData.host.profileImage}
-              />
+              /> */}
 
-              <div>{detailData.host.name}</div>
+              {/* <div>{detailData.host.name}</div> */}
               <MemberCard data={detailData.host} />
             </HostProfileBlock>
             <IntroBlock>{detailData.host.intro}</IntroBlock>
@@ -382,7 +400,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -402,7 +420,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -425,7 +443,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -458,7 +476,7 @@ function Detail() {
           style={
             !activityStatus
               ? {
-                  background: "grey",
+                  // background: "grey",
                   cursor: "not-allowed",
                   opacity: "0.5",
                 }
@@ -476,24 +494,43 @@ function Detail() {
     }
   };
 
+  //0607新增監聽 加入活動即時更新
+  const handlefirebaseChange = async () => {
+    console.log(activityChange);
+    getData();
+  };
   //useEffect只在第一次render後執行
   useEffect(() => {
     checkUserIsLogin();
 
     getData();
   }, [id]);
+  //網址有變化重新getData
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  //0607新增監聽 加入活動即時更新
+  useEffect(() => {
+    subscribe(setActivityChange, id);
+  }, []);
+
+  //0607新增監聽 加入活動即時更新
+  useEffect(() => {
+    if (activityChange.length !== 0) {
+      handlefirebaseChange();
+      console.log(activityChange);
+    }
+  }, [activityChange]);
+
   //useEffect在每次detailData變化後執行
-  //   useEffect(() => {
-  //     renderDetail();
-  //   }, [detailData]);
+  // useEffect(() => {
+  //   renderDetail();
+  // }, [detailData]);
 
   //防止第一次render抓不到東西，先return null跳出 (幫下面的renderDetail擋避免undifine)
-  if (!detailData) {
+  if (!detailData || !activityChange) {
     return "isLoading";
   }
   return (
@@ -567,7 +604,7 @@ const Title = styled.div`
 `;
 const CloseTitle = styled.div`
   position: absolute;
-  left: 160px;
+  right: 0px;
   bottom: 5px;
   font-size: 16px;
 `;
@@ -642,6 +679,8 @@ const ImageContainer = styled.div`
 const ActivityImage = styled.img`
   width: 100%;
   height: 100%;
+  position: absolute;
+  left: 0;
   z-index: 3;
   /* border-radius: 20px; */
   object-fit: cover;
@@ -696,6 +735,8 @@ const ShareButton = styled(Btn)`
 `;
 const RWDShareButton = styled(Btn)`
   margin-right: 20px;
+  font-weight: 600;
+
   &:hover {
     background: white;
     color: black;
@@ -708,6 +749,7 @@ const RWDShareButton = styled(Btn)`
 const JoinButton = styled(Btn)`
   position: relative;
   color: black;
+  font-weight: 600;
   background: #43e8d8;
   border: none;
   &:hover {
@@ -720,8 +762,10 @@ const JoinButton = styled(Btn)`
 `;
 const ApplicantButton = styled(Btn)`
   color: #fff;
+  font-weight: 600;
+
   /* background: #ffe700; */
-  box-shadow: 0 0 5px #ff00ff;
+  box-shadow: 0 0 10px #ff00ff, inset 0 0 10px #ff00ff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff;
 
@@ -729,6 +773,8 @@ const ApplicantButton = styled(Btn)`
   cursor: not-allowed;
 `;
 const AttendantButton = styled(Btn)`
+  font-weight: 600;
+
   color: white;
   background: #ff00ff;
   box-shadow: 0 0 10px #ff00ff;
@@ -748,6 +794,7 @@ const CommentField = styled.div`
   margin-top: 30px;
   color: white;
   text-align: left;
+  white-space: pre-line;
 `;
 const UpField = styled.div`
   display: flex;
@@ -779,10 +826,12 @@ const MemberField = styled.div`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 `;
 const MemberHostField = styled.div`
   padding: 10px 0px;
   width: 100%;
+  min-height: 250px;
   display: flex;
   align-items: center;
   @media (max-width: 888px) {
@@ -799,8 +848,12 @@ const ImageIntroBlock = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  min-height: 250px;
   @media (max-width: 888px) {
     width: 100%;
+  }
+  @media (max-width: 576px) {
+    flex-direction: column;
   }
 `;
 const HostProfileBlock = styled.div`
@@ -872,10 +925,13 @@ const NoAttendantContainer = styled.div`
   position: relative;
 `;
 const NoAttendantImageContainer = styled.div`
-  width: 100px;
+  width: 50px;
+  position: absolute;
+  left: 40px;
 `;
 const NoAttendantImage = styled.img`
   width: 100%;
+  transform: rotate(0.125turn);
 `;
 
 const NoAttendant = styled.div`
@@ -884,15 +940,49 @@ const NoAttendant = styled.div`
   right: -20px;
   font-weight: 700;
   color: white;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
 `;
 const ImageLine = styled.div`
-  height: 480px;
-  width: calc(100% - 20px);
-  border: 1px solid white;
+  height: 500px;
+  width: calc(100%);
+  /* height: 480px;
+  width: calc(100% - 20px); */
+  border: 3px solid white;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  /* top: 10px;
+  right: 10px; */
+  top: -16px;
+  right: -16px;
   z-index: 1;
+  box-shadow: 0 0 15px #ff00ff, inset 0 0 10px #ff00ff;
+
+  @media (max-width: 888px) {
+    /* right: 20px;
+
+    width: calc(100% - 40px); */
+    width: calc(100%-20px);
+    top: 20px;
+  }
+  @media (max-width: 576px) {
+    height: 300px;
+  }
+`;
+
+const ImageLine2 = styled.div`
+  height: 500px;
+  width: calc(100%);
+  /* height: 480px;
+  width: calc(100% - 20px); */
+  border: 3px solid white;
+  position: absolute;
+  /* top: 10px;
+  right: 10px; */
+  top: 20px;
+  right: 20px;
+  z-index: 5;
+  box-shadow: 0 0 15px #43e8d8, inset 0 0 10px #43e8d8;
+
   @media (max-width: 888px) {
     right: 20px;
 

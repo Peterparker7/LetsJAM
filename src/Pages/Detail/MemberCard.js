@@ -21,6 +21,7 @@ background-color: black;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 overflow-y: scroll;
+border-radius: 4px;
 `;
 
 function MemberCard(props) {
@@ -45,6 +46,12 @@ function MemberCard(props) {
     });
   }
 
+  const skillArrange = () => {
+    console.log(props.data.skill);
+    let skillArray = props.data.skill;
+    let skillArrayDelimiter = skillArray.join(`, `);
+    return skillArrayDelimiter;
+  };
   const handleYoutube = () => {
     if (props.data.youtubeUrl) {
       const videoUrl = props.data.youtubeUrl;
@@ -65,7 +72,12 @@ function MemberCard(props) {
 
   return (
     <div>
-      <Btn onClick={toggleModal}></Btn>
+      <Btn onClick={toggleModal}>
+        <ProfileColumn>
+          <Avatar className="avatar" src={props.data.profileImage}></Avatar>
+          <AvatarName className="avatarName">{props.data.name}</AvatarName>
+        </ProfileColumn>
+      </Btn>
       <StyledModal
         isOpen={isOpen}
         afterOpen={afterOpen}
@@ -86,7 +98,7 @@ function MemberCard(props) {
           <IntroTitle>介紹</IntroTitle>
           <Intro>{props.data.intro}</Intro>
           <PreferType>偏好類型：{props.data.preferType}</PreferType>
-          <Skill>樂器技能：{props.data.skill}</Skill>
+          <Skill>樂器技能：{skillArrange()}</Skill>
           <VideoTitle>練習</VideoTitle>
           <YoutubeUrl>{handleYoutube()}</YoutubeUrl>
         </Container>
@@ -95,6 +107,22 @@ function MemberCard(props) {
     </div>
   );
 }
+const ProfileColumn = styled.div``;
+const Avatar = styled.img`
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 5px;
+  border: 3px solid white;
+  box-shadow: 0 0 20px #ff00ff;
+  transition: 0.3s;
+`;
+const AvatarName = styled.div`
+  margin-top: 10px;
+  font-weight: 500;
+  color: white;
+`;
 const Container = styled.div`
   position: relative;
   width: 100%;
@@ -131,45 +159,54 @@ const ProfileImg = styled.img`
   position: relative;
 `;
 const Name = styled.div`
-  margin: 0 50px;
+  margin: 30px 10px 40px 215px;
   font-size: 28px;
-  text-align: right;
-  height: 120px;
+  font-weight: 600;
+  /* text-align: right; */
+  /* height: 120px; */
+
   display: grid;
   align-items: center;
+  padding: 10px;
+  text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
+    0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
 `;
 const IntroTitle = styled.div`
   text-align: left;
-  margin: 10px auto 10px 20px;
+  margin: 20px 30px 20px 30px;
   font-size: 24px;
+  font-weight: 600;
 `;
 const Intro = styled.div`
-  /* width: 100%; */
   text-align: left;
-  padding: 10px 50px;
+  padding: 10px 0px;
   padding-bottom: 20px;
+  margin: 0px 30px;
+
+  letter-spacing: 1px;
+  line-height: 24px;
 `;
 const PreferType = styled.div`
-  margin: 10px 40px;
+  margin: 10px 30px;
 
   text-align: left;
   padding-bottom: 10px;
 `;
 const Skill = styled.div`
-  margin: 0px 40px;
+  margin: 0px 30px;
   text-align: left;
   height: 40px;
 `;
 const VideoTitle = styled.div`
   text-align: left;
-  margin: 10px 20px 10px 20px;
+  margin: 30px 30px 10px 30px;
   font-size: 24px;
+  font-weight: 600;
   padding-bottom: 10px;
-  border-bottom: 1px solid #979797;
 `;
 const YoutubeUrl = styled.div`
-  width: 90%;
-  margin: 0 auto;
+  /* width: 90%; */
+  margin: 0 30px;
   padding-bottom: 30px;
 `;
 const Btn = styled.button`
@@ -177,6 +214,13 @@ const Btn = styled.button`
   height: 120px;
   top: 0;
   left: 0;
-  position: absolute;
+
+  /* position: absolute; */
+  &:hover ${Avatar} {
+    transform: scale(1.05);
+    transform: translateY(-3px);
+    /* border: 1px solid #ff00ff; */
+    box-shadow: 0 0 50px #ff00ff;
+  }
 `;
 export default MemberCard;

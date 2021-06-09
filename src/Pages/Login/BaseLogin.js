@@ -41,7 +41,7 @@ function BaseLogin(props) {
       console.log(toggle);
       return (
         <div>
-          <Login />
+          <Login props={props} />
         </div>
       );
     } else {

@@ -20,8 +20,9 @@ import {
 } from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Animated } from "react-animated-css";
+import xIcon from "../images/x.svg";
 
-function Header() {
+function Header(props) {
   const [userData, setUserData] = useState([]);
   const [invitationData, setInvitationData] = useState([]);
   const [sideBarDisplay, setSideBarDisplay] = useState(false);
@@ -91,7 +92,7 @@ function Header() {
 
   useEffect(() => {
     checkUserIsLogin();
-  }, []);
+  }, [props.userUid]);
 
   useEffect(() => {
     arrangeInvitationData();
@@ -123,6 +124,9 @@ function Header() {
               <EachMailField>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
+                    onClick={() => {
+                      maskClick();
+                    }}
                     style={{
                       background: `url(${item.fileSource})`,
                       backgroundPosition: "50% 50%",
@@ -295,6 +299,14 @@ function Header() {
     if (sideBarDisplay) {
       return (
         <MenuSideBar>
+          <CloseIconContainer>
+            <CloseIcon
+              src={xIcon}
+              onClick={() => {
+                handleMenuSideBar();
+              }}
+            />
+          </CloseIconContainer>
           <MenuItem>{menuLoginHTML()}</MenuItem>
           <MenuSideBarItem>成果牆</MenuSideBarItem>
           {menuCreateHTML()}
@@ -538,12 +550,31 @@ const NeonShineThree = keyframes`
   65% {opacity: 1}
   100% {opacity: 1}
 `;
+const NeonShineCircle = keyframes`
+  0% {opacity: 1}
+  1%{opacity:0;}
+  2%{opacity:1;}
+  5%{opacity:1;}
+  6%{opacity:0;}
+  7%{opacity:1;}
+  9%{opacity:0;}
+  10%{opacity:1;}
+  67% {opacity: 1}
+  68% {opacity: 0}
+  69% {opacity: 1}
+  90% {opacity: 1}
+`;
 const Item = styled.div`
   /* width: 90px; */
   font-weight: bold;
   margin-right: 5px;
   margin-left: 20px;
   color: #fff;
+  &:hover {
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px #4cffee, 0 0 40px #4cffee, 0 0 50px #4cffee,
+      0 0 60px #4cffee;
+  }
 `;
 const ItemOne = styled(Item)`
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
@@ -579,6 +610,10 @@ const MailBoxIconContainer = styled.div`
   margin-left: 20px;
   position: relative;
   z-index: 5;
+  cursor: pointer;
+  &:hover {
+    transform: translateY(-3px);
+  }
 `;
 const MailBoxIcon = styled.img`
   width: 30px;
@@ -588,7 +623,13 @@ const MailBoxIconCircle = styled.div`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #ff3737;
+  /* background-color: #ff3737; */
+  background-color: white;
+  color: white;
+  box-shadow: 0 2px 5px #ff00ff, 0 -2px 5px #ff00ff, 2px 2px 10px #ff00ff,
+    2px -2px 10px #ff00ff;
+  /* animation: ${NeonShineCircle} 10s linear infinite; */
+
   bottom: 2px;
   right: -2px;
 `;
@@ -660,17 +701,37 @@ const EachMailMsg = styled.div`
 `;
 const IgnoreBtn = styled.button`
   transform: rotate(0.125turn);
-  font-size: 24px;
+  font-size: 28px;
   color: white;
   position: absolute;
   top: 0;
   right: 0;
   z-index: 2;
+  cursor: pointer;
+  &:hover {
+  }
 `;
 const NoInvite = styled.div`
   margin: 0 auto;
   width: 80px;
   font-size: 20px;
+`;
+const CloseIconContainer = styled.div`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 26px;
+  right: 20px;
+  z-index: 5;
+  cursor: pointer;
+  transition: 0.1s;
+  &:hover {
+    background: #2d2d2d;
+  }
+`;
+const CloseIcon = styled.img`
+  width: 100%;
 `;
 
 const Neon = styled.div`

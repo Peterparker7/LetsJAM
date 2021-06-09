@@ -19,6 +19,18 @@ a {
   color: black;
 }
 
+/* html {
+  overflow: hidden;
+  height: 100%;
+}
+body {
+  overflow: auto;
+  height: 100%;
+} */
+body {
+  overscroll-behavior-y: none;
+}
+
 .rmsc {
   --rmsc-main: #4285f4;
   --rmsc-hover: #f1f3f5;
