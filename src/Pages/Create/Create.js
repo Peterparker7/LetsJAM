@@ -11,6 +11,7 @@ import MultiSelect from "react-multi-select-component";
 import { uploadImage, getAuthUser } from "../../utils/firebase";
 import exampleImg from "../../images/startgroupexample.png";
 import concertImg from "../../images/concert1.jpg";
+import cloudUpload from "../../images/cloud-upload.svg";
 import { useSelector } from "react-redux";
 
 import CreateDetailForm from "./Formik";
@@ -28,6 +29,12 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #f8f8ff;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+    width: 90%;
+  }
 `;
 
 function Create(props) {
@@ -141,6 +148,11 @@ function Create(props) {
     return "redirection";
   }
 
+  const clickUpload = () => {
+    let uploadFile = document.querySelector("#uploadFile");
+    uploadFile.click();
+  };
+
   const createFormCheck = () => {
     let nowDate = Date.now();
     let a = time.split(":");
@@ -153,6 +165,9 @@ function Create(props) {
     console.log(timeStatus);
     console.log(requirementStatus);
     console.log(placeStatus);
+    console.log(levelStatus);
+    console.log(imgUrl);
+    console.log(checked);
 
     if (!title || title.length > 10) {
       setTitleStatus(false);
@@ -181,16 +196,20 @@ function Create(props) {
     if (!imgUrl) {
       setImageStatus(false);
     }
+
     if (
       !title ||
+      title.length > 10 ||
       !titleStatus ||
       !dateStatus ||
       !timeStatus ||
       !typeStatus ||
       requirement.length === 0 ||
       !limitStatus ||
+      !levelStatus ||
       !place ||
       !placeStatus ||
+      place.length > 30 ||
       !imgUrl
     ) {
       console.log("Validation fail");
@@ -365,14 +384,19 @@ function Create(props) {
   };
 
   async function handleUploadImage(e) {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (e.target.value) {
+      setIsLoading(true);
+
+      console.log(e.target.value);
+      console.log("handleUploadImage");
       imgSource = e.target.files[0];
+      console.log(imgSource);
       // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
       setTimeout(() => {
         setIsLoading(false);
-      }, 1000);
+      }, 2000);
 
       setimgUrl(imageUrl);
       console.log(imageUrl);
@@ -474,23 +498,30 @@ function Create(props) {
               <InputFieldDiv>
                 <LimitDiv>
                   <Label>人數限制</Label>
-                  <LimitboxHTML></LimitboxHTML>
-                  <LimitCheckBoxField
-                    checked={checked}
-                    type="checkbox"
-                    id="noLimit"
-                    onChange={() => {
-                      setChecked(!checked);
-                      setLimitStatus(true);
-                      console.log(checked);
-                      //第一次按下還沒有值，在這邊先設定不然到送出時limit會是空的
-                      if (!checked) {
-                        setLimit(0);
-                      }
-                    }}
-                  />
+                  <LimitInputContainer>
+                    <LimitboxHTML></LimitboxHTML>
+                    <LimitCheckBoxField
+                      checked={checked}
+                      type="checkbox"
+                      id="noLimit"
+                      onChange={() => {
+                        setChecked(!checked);
+                        setLimitStatus(true);
 
-                  <label htmlFor="noLimit">無</label>
+                        console.log(checked);
+                        //第一次按下還沒有值，在這邊先設定不然到送出時limit會是空的
+                        if (!checked) {
+                          setLimit(0);
+                        }
+                        //取消checkbox時要把limit設1,
+                        else if (checked) {
+                          setLimit(1);
+                        }
+                      }}
+                    />
+
+                    <label htmlFor="noLimit">無</label>
+                  </LimitInputContainer>
                 </LimitDiv>
                 {Warning.warningLimitHTML(limit, limitStatus)}
               </InputFieldDiv>
@@ -501,9 +532,15 @@ function Create(props) {
                   placeholder="請描述 如：初階/進階"
                   onChange={(e) => {
                     handleChange(e, "level");
+                    if (e.target.value.length > 20) {
+                      console.log("too many");
+                      setLevelStatus(false);
+                    } else {
+                      setLevelStatus(true);
+                    }
                   }}
                 ></Inputfield>
-                {/* {Warning.warningLevelHTML(level, levelStatus)} */}
+                {Warning.warningLevelHTML(level, levelStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <RequireField>*</RequireField>
@@ -517,7 +554,11 @@ function Create(props) {
                   }}
                 ></Inputfield> */}
                 <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
-                {Warning.warningLocationHTML(place, placeStatus)}
+                {Warning.warningLocationHTML(
+                  place,
+                  placeStatus,
+                  setPlaceStatus
+                )}
               </InputFieldDiv>
               <InputFieldDiv style={{ alignItems: "unset" }}>
                 <Label>活動說明</Label>
@@ -532,6 +573,8 @@ function Create(props) {
               <InputFieldDiv>
                 <Label>活動封面</Label>
                 <InputfieldImage
+                  style={{ display: "none" }}
+                  id="uploadFile"
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -540,10 +583,19 @@ function Create(props) {
                       setImageStatus(true);
                     } else {
                       setImageStatus(false);
+                      console.log("no input");
                     }
                   }}
                 ></InputfieldImage>
-                {Warning.warningImageHTML(imageUrl, imageStatus)}
+                <UploadImageContainer
+                  onClick={() => {
+                    clickUpload();
+                  }}
+                >
+                  <UploadImageIcon src={cloudUpload} />
+                  <UploadImageText>上傳</UploadImageText>
+                </UploadImageContainer>
+                {/* {Warning.warningImageHTML(imageUrl, imageStatus)} */}
               </InputFieldDiv>
 
               {/* <InputFieldDiv>
@@ -637,6 +689,9 @@ const CreateDetailContainer = styled.div`
   @media (max-width: 768px) {
     width: 90%;
   }
+  @media (max-width: 576px) {
+    width: 100%;
+  }
 `;
 const CreateDetail = styled.div`
   display: flex;
@@ -648,18 +703,26 @@ const CreateDetail = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
   }
+  @media (max-width: 414px) {
+    margin: 0;
+  }
 `;
 const CreateDetailContent = styled.div`
-  margin: 0 10px;
+  margin-left: 10px;
 `;
 const CreateDetailImageContainer = styled.div`
-  width: 60%;
+  width: 55%;
   padding: 0 0 20px 10px;
-  height: auto;
+  height: 585.98px;
   @media (max-width: 768px) {
     height: 300px;
     margin-left: 0px;
-    display: none;
+    width: 100%;
+    padding-left: 0px;
+    /* display: none; */
+  }
+  @media (max-width: 576px) {
+    /* max-height: 300px; */
   }
 `;
 const CreateDetailImage = styled.img`
@@ -669,9 +732,9 @@ const CreateDetailImage = styled.img`
   height: 100%;
   /* margin-left: 20px; */
   @media (max-width: 768px) {
-    height: 300px;
+    max-height: 300px;
     margin-left: 0px;
-    display: none;
+    /* display: none; */
   }
 `;
 const Title = styled.div`
@@ -680,6 +743,9 @@ const Title = styled.div`
   margin: 20px 40px 10px 40px;
   padding: 10px 0;
   border-bottom: 1px solid #979797;
+  @media (max-width: 414px) {
+    margin: 20px 20px 10px 20px;
+  }
 `;
 const InputFieldDiv = styled.div`
   margin-bottom: 20px;
@@ -691,23 +757,25 @@ const InputFieldDiv = styled.div`
 const Inputfield = styled.input`
   border-bottom: 1px solid #979797;
   width: 220px;
-  height: 20px;
+  height: auto;
   padding: 5px;
   @media (max-width: 768px) {
-    width: 70%;
+    width: 90%;
   }
   @media (max-width: 576px) {
-    width: 220px;
+    width: 90%;
   }
 `;
 const SelectType = styled.select`
   padding: 5px;
   width: 220px;
+  border-bottom: 1px solid #979797;
+
   @media (max-width: 768px) {
-    width: 70%;
+    width: 90%;
   }
   @media (max-width: 576px) {
-    width: 220px;
+    width: 90%;
   }
 `;
 const InputTextArea = styled.textarea`
@@ -719,10 +787,10 @@ const InputTextArea = styled.textarea`
   line-height: 20px;
   white-space: pre-line;
   @media (max-width: 768px) {
-    width: 70%;
+    width: 90%;
   }
   @media (max-width: 576px) {
-    width: 220px;
+    width: 90%;
   }
 `;
 const InputfieldImage = styled.input`
@@ -734,16 +802,59 @@ const InputfieldImage = styled.input`
     width: 220px;
   }
 `;
+const UploadImageContainer = styled.button`
+  display: flex;
+  width: 220px;
+  height: 40px;
+  /* border: 1px solid #979797; */
+  border-radius: 8px;
+  background: #dedede;
+
+  padding: 12px auto;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    transform: translateY(-3px);
+    /* border: 1px solid #979797; */
+    background: #bdbdbd;
+  }
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+    width: 90%;
+  }
+`;
+const UploadImageText = styled.div``;
+const UploadImageIcon = styled.img`
+  width: 28px;
+`;
 const LimitInputField = styled.input`
   width: 50px;
   height: 30px;
   padding: 5px;
   border: 1px solid #979797;
+  @media (max-width: 768px) {
+  }
+  @media (max-width: 576px) {
+  }
 `;
 const LimitCheckBoxField = styled.input`
   width: 30px;
 `;
-
+const LimitInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    padding-left: 15px;
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+    width: 90%;
+  }
+`;
 const LimitDiv = styled.div`
   display: flex;
   align-items: center;
@@ -761,7 +872,7 @@ const ButtonField = styled.div`
 const Button = styled.button`
   /* border: 1px solid #979797; */
   padding: 5px;
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 12px 40px;
   /*按鈕大一點才可包住spinner */
   width: 200px;
@@ -776,6 +887,9 @@ const Button = styled.button`
     background: #4cffee;
     transform: translateY(-2px);
     box-shadow: 0 0 20px #43e8d8;
+  }
+  @media (max-width: 768px) {
+    margin: 10px auto;
   }
 `;
 const RequireField = styled.span`

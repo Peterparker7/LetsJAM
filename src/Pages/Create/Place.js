@@ -108,17 +108,17 @@ const InputField = styled.div`
   width: 220px;
   height: 40px;
   @media (max-width: 768px) {
-    width: 70%;
+    width: 90%;
   }
   @media (max-width: 576px) {
-    width: 220px;
+    width: 90%;
   }
 `;
 const PlaceInput = styled.input`
   /* position: relative; */
   border-bottom: 1px solid #979797;
   width: 220px;
-  height: 40px;
+  /* height: 40px; */
   padding: 5px;
   @media (max-width: 768px) {
     width: 100%;

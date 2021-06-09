@@ -41,18 +41,27 @@ const deleteActivityData = async (id) => {
 
 const uploadImage = async (img) => {
   const path = img.name;
+  console.log("🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ path", path);
   // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
   const storageReference = window.firebase.storage().ref(path);
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 49 ~ uploadImage ~ storageReference",
+    storageReference
+  );
 
   // .put() 方法把東西丟到該位置裡
-  const task = storageReference.put(img);
+  const task = await storageReference.put(img);
   const fileRef = window.firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
+  console.log(
+    "🚀 ~ file: firebase.js ~ line 58 ~ downloadUrl ~ downloadUrl",
+    downloadUrl
+  );
 
   return downloadUrl;
 
