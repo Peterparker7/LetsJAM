@@ -331,7 +331,8 @@ const RequirementField = styled.div`
 `;
 const RequirementDiv = styled.div``;
 const EachUser = styled.div`
-  width: 90px;
+  /* width: 90px; */
+  width: auto;
   height: 150px;
   text-align: center;
 `;

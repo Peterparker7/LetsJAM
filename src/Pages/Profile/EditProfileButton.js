@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
 import { getUserData, updateUserData, uploadImage } from "../../utils/firebase";
+import * as Warning from "./Validate";
 
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
@@ -41,6 +42,8 @@ let imgSource = "";
 function EditProfileButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
+
+  const [validationResult, setValidationResult] = useState(true);
 
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
@@ -123,12 +126,15 @@ function EditProfileButton(props) {
       youtubeUrl: userData.youtubeUrl,
     };
     console.log(data);
-    let updateToFirebase = await updateUserData(data, userDataRedux.uid);
-    // setUserData(data);
-    dispatch({ type: "UPDATE_USERDATA", data: data });
 
-    setOpacity(0);
-    setIsOpen(!isOpen);
+    if (inputValidation()) {
+      let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+      // setUserData(data);
+      dispatch({ type: "UPDATE_USERDATA", data: data });
+
+      setOpacity(0);
+      setIsOpen(!isOpen);
+    }
   }
   //
   function handleProfileChange(e, type) {
@@ -152,6 +158,21 @@ function EditProfileButton(props) {
     console.log(userProfileImage);
     setImgCover("cover");
   }
+  function inputValidation() {
+    if (
+      userData.name.length === 0 ||
+      userData.name.length > 10 ||
+      userData.intro.length > 250 ||
+      skill.length === 0
+    ) {
+      console.log("valid fail");
+      setValidationResult(false);
+      return false;
+    } else {
+      setValidationResult(true);
+      return true;
+    }
+  }
 
   function toggleModal(e) {
     setOpacity(0);
@@ -160,8 +181,9 @@ function EditProfileButton(props) {
   function toggleCancel(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
-
     //取消時把值設回Redux上的值
+    setValidationResult(true);
+
     setUserData(userDataRedux);
     setUserProfileImage(userDataRedux.profileImage);
     setSkill(skillFormat);
@@ -258,6 +280,7 @@ function EditProfileButton(props) {
                 />
 
                 {/* </div> */}
+                {Warning.warningProfileNameHTML(userData.name)}
               </InputFieldContainer>
 
               <InputFieldContainer>
@@ -286,6 +309,7 @@ function EditProfileButton(props) {
                   onChange={setSkill}
                   labelledBy="Select"
                 />
+                {Warning.warningProfileSkillHTML(skill)}
               </InputFieldContainer>
               <InputFieldContainer style={{ alignItems: "unset" }}>
                 <Label for="intro">自我介紹</Label>
@@ -309,6 +333,7 @@ function EditProfileButton(props) {
                   }}
                   defaultValue={userDataRedux.intro}
                 ></IntroTextArea>
+                {Warning.warningProfileIntroHTML(userData.intro)}
               </InputFieldContainer>
               <InputFieldContainer>
                 <Label for="youtubeSource">YouTube</Label>
@@ -328,7 +353,18 @@ function EditProfileButton(props) {
             </ProfileDetail>
             <BtnField>
               {/* <BtnCancel onClick={toggleCancel}>取消</BtnCancel> */}
-              <BtnConfirm onClick={editConfirm}>儲存</BtnConfirm>
+              <BtnConfirm onClick={editConfirm}>
+                儲存
+                <ValidationResult
+                  style={
+                    !validationResult
+                      ? { display: "block" }
+                      : { display: "none" }
+                  }
+                >
+                  請檢查所有欄位是否正確
+                </ValidationResult>
+              </BtnConfirm>
             </BtnField>
           </ContentContainer>
         </Container>
@@ -388,6 +424,11 @@ const ProfileDetail = styled.div`
   /* text-align: left; */
   max-width: 400px;
   margin: 20px auto;
+  @media (max-width: 576px) {
+    margin: 20px auto;
+
+    width: 90%;
+  }
 `;
 const Label = styled.label`
   width: 80px;
@@ -396,6 +437,7 @@ const InputFieldContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
+  position: relative;
 `;
 
 const InputFieldInput = styled.input`
@@ -443,7 +485,7 @@ const BtnConfirm = styled.div`
   /* width: 100px; */
   padding: 12px 40px;
   align-items: center;
-
+  position: relative;
   cursor: pointer;
   color: #000;
   background: #43e8d8;
@@ -456,6 +498,19 @@ const BtnConfirm = styled.div`
     box-shadow: 0 0 20px #43e8d8;
   }
 `;
+const ValidationResult = styled.div`
+  position: absolute;
+  color: white;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+  width: auto;
+  font-size: 14px;
+  width: 160px;
+  bottom: -30px;
+  left: -24px;
+  @media (max-width: 576px) {
+  }
+`;
+
 const ProfileImage = styled.div`
   margin: 0 auto;
   width: 180px;
@@ -486,8 +541,9 @@ const EditImageIcon = styled.img`
   top: 0px;
   right: 0px;
   cursor: pointer;
+  transition: 0.3s;
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 `;
 const EditBtn = styled.button`
