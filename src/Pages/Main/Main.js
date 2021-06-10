@@ -110,6 +110,9 @@ function Main() {
     handlePagination();
   }, [data]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // if (!data) {
   //   return "isLoading";
   // }
@@ -457,6 +460,9 @@ const Slogan = styled.div`
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
     0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   animation: ${NeonShine} 3s 1s linear infinite;
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 36px;
     left: 60px;
@@ -470,6 +476,9 @@ const SubSlogan = styled.div`
   top: 40%;
   left: 120px;
   line-height: 40px;
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
@@ -484,6 +493,9 @@ const LearnMore = styled.div`
   top: 47%;
   left: 120px;
   display: flex;
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;

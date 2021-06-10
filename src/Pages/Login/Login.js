@@ -3,6 +3,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
 
 let userEmail = "";
 let userPassword = "";
@@ -40,10 +41,17 @@ function Login(props) {
         .then((result) => {
           console.log("Login");
           console.log(result.uid);
-          alert("登入成功！");
+          // alert("登入成功！");
           props.props.setIsLogIn(true);
         })
         .then(() => {
+          Swal.fire({
+            title: "<span style=font-size:24px>登入成功！歡迎回來</span>",
+            customClass: "customSwal2Title",
+            background: "black",
+            showConfirmButton: false,
+            timer: 2000,
+          });
           history.push("/");
           // window.location.href = "./";
         })
@@ -56,6 +64,16 @@ function Login(props) {
           }
           if (error.code === "auth/invalid-email") {
             setEmailAuthState(false);
+            return;
+          }
+          if (error.code === "auth/user-not-found") {
+            Swal.fire({
+              title: "<span style=font-size:24px>無此帳號</span>",
+              customClass: "customSwal2Title",
+              background: "black",
+              showConfirmButton: false,
+              timer: 2000,
+            });
             return;
           }
           alert(error.message);
@@ -117,7 +135,7 @@ function Login(props) {
 
   const loginHTML = () => {
     return (
-      <div>
+      <ItemFieldContainer>
         <ItemField>
           <Label for="email">帳號</Label>
           <InputField
@@ -149,24 +167,33 @@ function Login(props) {
           ></InputField>
           {warningPasswordHTML()}
         </ItemField>
+        <TestAccount>Test Account : test@gmail.com/000000</TestAccount>
 
         <LoginButton onClick={(e) => handleLogin()}>登入</LoginButton>
-      </div>
+      </ItemFieldContainer>
     );
   };
 
   return (
     <div>
-      <div>{loginHTML()}</div>
+      <Container>{loginHTML()}</Container>
     </div>
   );
 }
-
+const Container = styled.div``;
+const TestAccount = styled.div`
+  color: #979797;
+`;
+const ItemFieldContainer = styled.div`
+  margin: 0 auto;
+  /* width: 90%; */
+`;
 const ItemField = styled.div`
   display: flex;
   align-items: center;
   margin-top: 5px;
   margin: 30px 0 30px 0;
+  position: relative;
 `;
 const Label = styled.label`
   display: inline-block;
@@ -177,10 +204,20 @@ const InputField = styled.input`
   padding: 5px;
   width: 250px;
   height: 38px;
+  margin: 0 10px;
+  @media (max-width: 576px) {
+    max-width: 70%;
+  }
+  @media (max-width: 414px) {
+    max-width: 200px;
+  }
 `;
 const Warning = styled.div`
   width: 80px;
   font-size: 12px;
+  position: absolute;
+  bottom: -20px;
+  left: 70px;
 `;
 
 const RequireField = styled.span`
@@ -194,8 +231,9 @@ const LoginButton = styled.button`
 
   background: #121212;
   color: #fff;
-  border: 1px solid #979797;
-  border-radius: 4px;
+  font-weight: 500;
+  border: 1px solid none;
+  border-radius: 8px;
   margin-top: 30px;
   margin-bottom: 30px;
   cursor: pointer;

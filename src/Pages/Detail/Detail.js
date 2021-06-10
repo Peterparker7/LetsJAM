@@ -14,6 +14,7 @@ import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import IsLoadingBlack from "../../Components/IsLoadingBlack";
 import noAttendant from "../../images/noAttendant.png";
 import neonGuitar1 from "../../images/neonGuitar1.png";
+import Swal from "sweetalert2";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -379,7 +380,14 @@ function Detail() {
     // setData([...data, ...dataList]);   //會後面覆蓋前面的因為結構都依樣
   };
   const handleVisitor = () => {
-    alert("登入以使用此功能");
+    Swal.fire({
+      title: "<span style=font-size:24px>請先登入</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    // alert("登入以使用此功能");
   };
 
   const renderJoinButton = () => {

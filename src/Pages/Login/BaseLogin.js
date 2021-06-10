@@ -10,6 +10,7 @@ import iconTaylorBlack from "../../images/icon-Taylor-black.png";
 import Login from "./Login";
 import Register from "./Register";
 import { useSelector, useDispatch } from "react-redux";
+import concert2 from "../../images/concert2.jpg";
 
 function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
@@ -49,7 +50,7 @@ function BaseLogin(props) {
 
       return (
         <div>
-          <Register />
+          <Register props={props} />
         </div>
       );
     }
@@ -109,14 +110,26 @@ const PageContainer = styled.div`
   border: 1px solid #979797;
   width: 100%;
   background: #f8f8ff;
-
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    ),
+    url(${concert2});
+  background-size: cover;
+  background-position: 50% 50%;
   margin: auto;
 `;
 const LogoContainer = styled.div`
   max-width: 600px;
   margin: 40px auto 0px;
+  padding: 10px;
   position: relative;
+  @media (max-width: 576px) {
+    width: 90%;
+    margin-top: 10px;
+  }
 `;
+
 const Logo = styled.img`
   width: 100%;
 `;
@@ -126,6 +139,12 @@ const Slogan = styled.div`
   bottom: 20px;
   font-size: 24px;
   font-weight: 700;
+  @media (max-width: 576px) {
+    bottom: 0px;
+  }
+  @media (max-width: 414px) {
+    font-size: 20px;
+  }
 `;
 
 const Container = styled.div`
@@ -134,6 +153,11 @@ const Container = styled.div`
   border: 1px solid #979797;
   background: white;
   border-radius: 4px;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+  }
 `;
 const SelectContainer = styled.div`
   display: flex;
@@ -151,6 +175,9 @@ const FormDetail = styled.div`
   margin-top: 40px;
   width: 400px;
   justify-content: space-between;
+  @media (max-width: 576px) {
+    width: 80%;
+  }
 `;
 
 export default BaseLogin;

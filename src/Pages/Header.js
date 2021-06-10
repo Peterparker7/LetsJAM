@@ -20,6 +20,8 @@ import {
 } from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Animated } from "react-animated-css";
+import Swal from "sweetalert2";
+
 import xIcon from "../images/x.svg";
 
 function Header(props) {
@@ -200,7 +202,14 @@ function Header(props) {
           <StyledLink to={`/activities/login`}>
             <MenuSideBarItem
               onClick={() => {
-                alert("登入以使用開團功能");
+                Swal.fire({
+                  title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                  customClass: "customSwal2Title",
+                  background: "black",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+                // alert("登入以使用開團功能");
               }}
             >
               我要開團
@@ -331,7 +340,14 @@ function Header(props) {
         <StyledLink to={`/activities/login`}>
           <ItemTwo
             onClick={() => {
-              alert("登入以使用開團功能");
+              Swal.fire({
+                title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                customClass: "customSwal2Title",
+                background: "black",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              // alert("登入以使用開團功能");
             }}
           >
             我要開團
@@ -462,6 +478,10 @@ const IconUser = styled.img`
   margin-left: 10px;
   object-fit: cover;
   border-radius: 50%;
+  transition: 0.2s;
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const NavItem = styled.div`
@@ -570,6 +590,8 @@ const Item = styled.div`
   margin-right: 5px;
   margin-left: 20px;
   color: #fff;
+  transition: 0.2s;
+  cursor: pointer;
   &:hover {
     transform: translateY(-2px);
     text-shadow: 0 0 10px #4cffee, 0 0 40px #4cffee, 0 0 50px #4cffee,
@@ -611,6 +633,8 @@ const MailBoxIconContainer = styled.div`
   position: relative;
   z-index: 5;
   cursor: pointer;
+  transition: 0.2s;
+
   &:hover {
     transform: translateY(-3px);
   }
