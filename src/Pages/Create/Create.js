@@ -376,6 +376,7 @@ function Create(props) {
               // limitinit = e.target.value;
               // setLimit(e.target.value);
               handleChange(e, "limit");
+              // limit = e.target.value;
             }}
           />
         </div>

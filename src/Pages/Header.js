@@ -36,10 +36,14 @@ function Header(props) {
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
+
     if (userUid) {
       const data = await getUserData(userUid);
       setUserData(data);
       dispatch({ type: "UPDATE_USERDATA", data: data });
+    } else {
+      //沒有usedUid要把userData設回空的不然會留著之前的state
+      setUserData([]);
     }
   };
 

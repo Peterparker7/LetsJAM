@@ -145,7 +145,7 @@ function Login(props) {
             }}
             style={
               emailState && emailAuthState
-                ? { border: "1px solid #979797" }
+                ? { border: "1px solid #b7b7b7" }
                 : { border: "1px solid red" }
             }
           ></InputField>
@@ -161,7 +161,7 @@ function Login(props) {
             }}
             style={
               passwordState && passwordAuthState
-                ? { border: "1px solid #979797" }
+                ? { border: "1px solid #b7b7b7" }
                 : { border: "1px solid red" }
             }
           ></InputField>
@@ -194,6 +194,7 @@ const ItemField = styled.div`
   margin-top: 5px;
   margin: 30px 0 30px 0;
   position: relative;
+  color: #2f2f2f;
 `;
 const Label = styled.label`
   display: inline-block;

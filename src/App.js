@@ -19,6 +19,9 @@ function App() {
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
     setUserUid(userUid);
+    if (userUid) {
+      setIsLogIn(true);
+    }
   };
 
   useEffect(() => {
@@ -26,6 +29,8 @@ function App() {
     checkUserIsLogin();
   }, [isLogIn]);
 
+  console.log(userUid);
+  console.log(isLogIn);
   return (
     <div className="App">
       <Router>
@@ -43,7 +48,11 @@ function App() {
               <Create userUid={userUid} />
             </Route>
             <Route exact path="/activities/profile">
-              <Profile userUid={userUid} setIsLogIn={setIsLogIn} />
+              <Profile
+                userUid={userUid}
+                setIsLogIn={setIsLogIn}
+                isLogIn={isLogIn}
+              />
             </Route>
             <Route exact path="/activities/:id">
               <Detail />

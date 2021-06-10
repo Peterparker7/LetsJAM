@@ -802,7 +802,7 @@ const CommentField = styled.div`
   margin-top: 30px;
   color: white;
   text-align: left;
-  white-space: pre-line;
+  white-space: pre-wrap;
 `;
 const UpField = styled.div`
   display: flex;

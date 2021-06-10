@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import * as LoginValidate from "./LoginValidate";
 
 const StyledMultiSelect = styled(MultiSelect)`
-  border: 1px solid #979797;
+  border: 1px solid #b7b7b7;
   --rmsc-border: unset !important;
   --rmsc-h: 38px !important;
   --rmsc-p: 5px !important;
@@ -213,7 +213,7 @@ function Register(props) {
             }}
             style={
               emailState
-                ? { border: "1px solid #979797" }
+                ? { border: "1px solid #b7b7b7" }
                 : { border: "1px solid red" }
             }
           ></InputField>
@@ -241,7 +241,7 @@ function Register(props) {
             }}
             style={
               passwordState
-                ? { border: "1px solid #979797" }
+                ? { border: "1px solid #b7b7b7" }
                 : { border: "1px solid red" }
             }
           ></InputField>
@@ -265,7 +265,7 @@ function Register(props) {
             placeholder="例: 小明"
             style={
               nameState
-                ? { border: "1px solid #979797" }
+                ? { border: "1px solid #b7b7b7" }
                 : { border: "1px solid red" }
             }
             onChange={(e) => {
@@ -377,6 +377,7 @@ const ItemField = styled.div`
   align-items: center;
   margin: 30px 0 30px 0;
   position: relative;
+  color: #2f2f2f;
 `;
 const Label = styled.label`
   display: inline-block;
@@ -384,7 +385,7 @@ const Label = styled.label`
 `;
 
 const InputField = styled.input`
-  border: 1px solid #979797;
+  border: 1px solid #b7b7b7;
   padding: 5px;
   width: 250px;
   height: 38px;
@@ -418,6 +419,7 @@ const RequireField = styled.span`
 const RegisterButton = styled.button`
   /* width: 90px; */
   margin: 0 auto;
+  font-weight: 500;
   padding: 12px 40px;
   /* height: 40px; */
   border: 1px solid none;

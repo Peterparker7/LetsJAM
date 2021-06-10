@@ -175,7 +175,7 @@ const logOut = async () => {
     .then(function () {
       // 登出後強制重整一次頁面
       // alert("已登出");
-      window.location.href = "./";
+      // window.location.href = "./";
     })
     .catch(function (error) {
       console.log(error.message);

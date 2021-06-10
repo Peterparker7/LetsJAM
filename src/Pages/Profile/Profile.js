@@ -180,7 +180,7 @@ function Profile(props) {
       }
     });
   };
-
+  console.log(props.isLogIn);
   const handleLogOut = async () => {
     Swal.fire({
       title: "<span style=font-size:24px>確定要登出嗎?</span>",
@@ -192,14 +192,36 @@ function Profile(props) {
       cancelButtonColor: "#565656",
       confirmButtonText: "<span  style=color:#fff>登出</span",
       cancelButtonText: "取消",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        const response = await logOut();
-        //有bug
-        // history.push("/");
-      }
-    });
+    })
+      .then(async (result) => {
+        console.log(props.isLogIn);
+        if (result.isConfirmed) {
+          // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          props.setIsLogIn(false);
+
+          const response = await logOut();
+          //有bug
+          // history.push("/");
+
+          Swal.fire({
+            title: "<span style=font-size:24px>已登出</span>",
+            customClass: "customSwal2Title",
+            background: "black",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .then(() => {
+        console.log(props.isLogIn);
+
+        console.log(props.isLogIn);
+        //跑不進來, 因為isLogIn還是true, 是靠app.js傳進來的props.uid redirect到首頁
+        if (props.isLogIn === false) {
+          console.log("isLogin = false");
+          history.push("/");
+        }
+      });
   };
   //?? 應該是沒用到
   function onEdit(arr) {
@@ -629,6 +651,7 @@ const ProfileItemIntro = styled(ProfileItem)`
   letter-spacing: 1px;
   line-height: 20px;
   margin-bottom: 20px;
+  white-space: pre-wrap;
 `;
 const Wrapper = styled.div`
   text-align: left;

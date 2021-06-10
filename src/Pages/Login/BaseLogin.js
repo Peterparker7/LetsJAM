@@ -73,8 +73,8 @@ function BaseLogin(props) {
             style={
               toggle
                 ? {
-                    borderBottom: "1px solid #979797",
-                    borderRight: "1px solid #979797",
+                    borderBottom: "1px solid #b7b7b7",
+                    borderRight: "1px solid #b7b7b7",
                   }
                 : { borderBottom: "none" }
             }
@@ -90,8 +90,8 @@ function BaseLogin(props) {
               toggle
                 ? { borderBottom: "none" }
                 : {
-                    borderBottom: "1px solid #979797",
-                    borderLeft: "1px solid #979797",
+                    borderBottom: "1px solid #b7b7b7",
+                    borderLeft: "1px solid #b7b7b7",
                   }
             }
           >
@@ -107,7 +107,7 @@ function BaseLogin(props) {
 const PageContainer = styled.div`
   /* height: ; */
   min-height: calc(100vh - 180px);
-  border: 1px solid #979797;
+  border: 1px solid #b7b7b7;
   width: 100%;
   background: #f8f8ff;
   background: linear-gradient(
@@ -150,7 +150,7 @@ const Slogan = styled.div`
 const Container = styled.div`
   max-width: 600px;
   margin: 30px auto 100px;
-  border: 1px solid #979797;
+  border: 1px solid #b7b7b7;
   background: white;
   border-radius: 4px;
   @media (max-width: 768px) {
@@ -168,6 +168,7 @@ const SelectTag = styled.button`
   width: 300px;
   padding-top: 20px;
   padding-bottom: 20px;
+  color: #2f2f2f;
 `;
 
 const FormDetail = styled.div`
