@@ -21,14 +21,17 @@ import * as Warning from "./Validate";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import xIconBlack from "../../images/xBlack.svg";
+import { SelectTypeWhiteEditHTML } from "../../Components/SelectComponent";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
-  --rmsc-bg: #fff8f8;
-  --rmsc-hover: #ff00ff96;
-  --rmsc-selected: #43ede8a6;
+  --rmsc-bg: #f8f8ff;
+  --rmsc-hover: #d0d0d0;
+  --rmsc-selected: #43ede8;
   --rmsc-h: 40px !important;
+  --rmsc-main: none;
+
   color: black;
   text-align: left;
 `;
@@ -188,6 +191,7 @@ function EditActivitiesButton(props) {
   };
 
   const editConfirm = async () => {
+    console.log(oneactivityData.type);
     if (checked) {
       oneactivityData.limit = 0;
     } else if (!checked && oneactivityData.limit === 0) {
@@ -255,8 +259,10 @@ function EditActivitiesButton(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   userHostActivityDataRedux.requirement.forEach((data) => {
@@ -442,16 +448,11 @@ function EditActivitiesButton(props) {
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="type">音樂類型</Label>
-            {/* <InputFieldInput
-              id="type"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={props.data.type}
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "type");
-              }}
-            ></InputFieldInput> */}
-            <SelectType
+            <SelectTypeWhiteEditHTML
+              defaultValue={userHostActivityDataRedux.type}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <SelectType
               defaultValue={userHostActivityDataRedux.type}
               onChange={(e) => {
                 handleActivityChange(e.target.value, "type");
@@ -460,7 +461,7 @@ function EditActivitiesButton(props) {
               <option>流行</option>
               <option>嘻哈</option>
               <option>古典</option>
-            </SelectType>
+            </SelectType> */}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="limit">人數限制</Label>
@@ -596,7 +597,7 @@ function EditActivitiesButton(props) {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background: #fff8f8;
+  background: #f8f8ff;
   position: relative;
 `;
 const TopBar = styled.div`

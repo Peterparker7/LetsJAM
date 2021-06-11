@@ -42,7 +42,7 @@ function Main() {
   const [allPaginateArray, setAllPaginateArray] = useState([]);
   const [completePaginate, setCompletePaginate] = useState();
   let pageLen = 9;
-
+  new window.WOW().init();
   const [type, setType] = useState("所有類型");
   const [require, setRequire] = useState("所有樂器");
   const getFirebaseData = async () => {
@@ -347,6 +347,7 @@ function Main() {
         if (firebaseTime > currentTime) {
           return (
             <Animated
+              // className="wow"
               animationIn="bounceInLeft"
               // animationOut="fadeOut"
               isVisible={true}

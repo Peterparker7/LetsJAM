@@ -18,9 +18,13 @@ import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
 import UsePlace from "./UsePlace";
 import Place from "./Place";
+import IsLoading from "../../Components/IsLoading";
 
 import CircularIndeterminate from "./CircularProgress";
-import { SelectTypeWhiteHTML } from "../../Components/SelectComponent";
+import {
+  SelectTypeWhiteHTML,
+  SelectRequireWhiteHTML,
+} from "../../Components/SelectComponent";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -29,6 +33,12 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #f8f8ff;
+  --rmsc-selected: #43ede8a6;
+  --rmsc-main: none;
+  .dropdown-heading {
+    padding: 0;
+  }
+  padding: 5px;
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -143,7 +153,8 @@ function Create(props) {
   }, []);
 
   if (props.userUid === "") {
-    return null;
+    return <IsLoading />;
+    // return null;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
@@ -290,11 +301,10 @@ function Create(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
-    // { label: "貝斯", value: "貝斯" },
-    // { label: "鍵盤", value: "鍵盤" },
-    // { label: "爵士鼓", value: "爵士鼓" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   let requirementArray = [];
@@ -467,26 +477,20 @@ function Create(props) {
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>音樂類型</Label>
-                {/* <Inputfield
-          onChange={(e) => {
-            setType(e.target.value);
-          }}
-        ></Inputfield> */}
-                <SelectType
+                <SelectTypeWhiteHTML setType={setType} />
+
+                {/* <SelectType
                   onChange={(e) => {
                     handleChange(e, "type");
                   }}
                 >
-                  {/* <option value="" disabled selected>
-                    請選擇主要曲風
-                  </option> */}
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
-                </SelectType>
+                </SelectType> */}
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-              <SelectTypeWhiteHTML />
+              {/* <SelectRequireWhiteHTML setRequirement={setRequirement} /> */}
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
@@ -494,6 +498,7 @@ function Create(props) {
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
+                  disableSearch={true}
                   overrideStrings={override}
                   onChange={(value) => {
                     setRequirement(value);

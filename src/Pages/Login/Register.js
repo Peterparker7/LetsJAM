@@ -58,8 +58,11 @@ function Register(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
+    { label: "直笛", value: "直笛" },
   ];
 
   let skillArray = [];

@@ -552,6 +552,7 @@ const MainContainer = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  background-attachment: fixed;
   position: relative;
 `;
 
@@ -726,38 +727,67 @@ const MyJoinTitle = styled.div`
 const MyHost = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 20px;
-  min-height: 270px;
+  justify-content: flex-start;
+  padding: 0;
+  min-height: 285px;
   position: relative;
 
   @media (max-width: 1024px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 640px;
+    margin: 0 auto;
   }
+
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
+    width: 100%;
   }
 `;
+// const MyJoin = styled.div`
+//   /* width: 100%; */
+//   display: flex;
+
+//   flex-wrap: wrap;
+//   justify-content: space-between;
+//   padding: 0 20px;
+//   position: relative;
+//   min-height: 270px;
+
+//   @media (max-width: 1024px) {
+//     display: grid;
+//     grid-template-columns: 1fr 1fr;
+//     justify-items: center;
+//   }
+//   @media (max-width: 768px) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// `;
 const MyJoin = styled.div`
   /* width: 100%; */
   display: flex;
+
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 20px;
+  justify-content: flex-start;
+  /* margin-right: 30px; */
+  padding: 0;
   position: relative;
-  min-height: 270px;
+  min-height: 285px;
 
   @media (max-width: 1024px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 640px;
+    margin: 0 auto;
   }
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
+    width: 100%;
   }
 `;
 const NoContent = styled.div`
@@ -775,15 +805,19 @@ const EachActivityContainer = styled.div`
   height: 250px;
   background: #555;
   border-radius: 4px;
-  margin-bottom: 20px;
+
+  margin: 0px 18px 36px 18px;
   position: relative;
   overflow: hidden;
-
+  @media (max-width: 1024px) {
+    margin: 0px 35px 35px 35px;
+  }
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
   }
 `;
 const EachHistoryActivityContainer = styled.div`
@@ -791,9 +825,14 @@ const EachHistoryActivityContainer = styled.div`
   height: 250px;
   background: #555;
   border-radius: 4px;
-  margin-bottom: 20px;
+
+  margin: 0px 18px 36px 18px;
+
   position: relative;
   overflow: hidden;
+  @media (max-width: 1024px) {
+    margin: 0px 35px 35px 35px;
+  }
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;

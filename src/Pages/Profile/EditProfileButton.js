@@ -13,14 +13,17 @@ import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch } from "react-redux";
 import settingIcon from "../../images/gear.svg";
 import xIcon from "../../images/x.svg";
+import { SelectTypeBlackEditHTML } from "../../Components/SelectComponent";
 
 const StyledMultiSelect = styled(MultiSelect)`
-  /* border-bottom: 1px solid #979797; */
+  border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #121212;
   --rmsc-hover: #ff00ff96;
   --rmsc-selected: #43ede8a6;
   --rmsc-h: 40px !important;
+  --rmsc-main: none;
+
   color: white;
   text-align: left;
 `;
@@ -78,8 +81,10 @@ function EditProfileButton(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   const getUserProfileData = async () => {
@@ -287,7 +292,11 @@ function EditProfileButton(props) {
                 {handlePreferTypeDefault()}
 
                 <Label for="preferType">偏好類型</Label>
-                <SelectType
+                <SelectTypeBlackEditHTML
+                  defaultValue={defaultPreferType}
+                  handleProfileChange={handleProfileChange}
+                />
+                {/* <SelectType
                   defaultValue={defaultPreferType}
                   onChange={(e) => {
                     handleProfileChange(e.target.value, "preferType");
@@ -296,7 +305,7 @@ function EditProfileButton(props) {
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
-                </SelectType>
+                </SelectType> */}
               </InputFieldContainer>
               <InputFieldContainer>
                 <Label for="skill">會的樂器</Label>

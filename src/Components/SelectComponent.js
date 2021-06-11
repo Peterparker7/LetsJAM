@@ -11,9 +11,15 @@ import Select from "@material-ui/core/Select";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import InputBase from "@material-ui/core/InputBase";
 import ReactSelect, { NonceProvider } from "react-select";
+import { warningPasswordHTML } from "../Pages/Login/LoginValidate";
 
 const options = [
   { value: "所有類型", label: "所有類型" },
+  { value: "流行", label: "流行" },
+  { value: "嘻哈", label: "嘻哈" },
+  { value: "古典", label: "古典" },
+];
+const optionsCreate = [
   { value: "流行", label: "流行" },
   { value: "嘻哈", label: "嘻哈" },
   { value: "古典", label: "古典" },
@@ -41,20 +47,95 @@ const ReactSelectComponent = styled(ReactSelect)`
 `;
 const ReactSelectComponentWhite = styled(ReactSelect)`
   width: 220px;
+  .Prefix__single-value {
+    color: #000;
+  }
+  .Prefix__dropdown-indicator {
+    color: #aaa;
+  }
+  .Prefix__option--is-focused {
+    background: #f6f6f6;
+    color: black;
+  }
+  .Prefix__option--is-selected {
+    background-color: #43e8d8;
+    color: black;
+  }
+  transition: 0.3s;
 
+  @media (max-width: 768px) {
+    width: 90%;
+  }
   @media (max-width: 576px) {
+    width: 90%;
   }
-  @media (max-width: 414px) {
-    margin-left: 10px;
-    width: 130px;
+`;
+const ReactSelectComponentWhiteEdit = styled(ReactSelect)`
+  text-align: left;
+  width: calc(100% - 80px);
+  .Prefix__single-value {
+    color: #000;
   }
+  .Prefix__placeholder {
+    color: black;
+  }
+  .Prefix__dropdown-indicator {
+    color: #aaa;
+  }
+  .Prefix__option--is-focused {
+    background: #d0d0d0;
+    color: black;
+  }
+  .Prefix__option--is-selected {
+    background-color: #43e8d8;
+    color: black;
+  }
+  .Prefix__menu {
+    background-color: #f8f8ff;
+  }
+  transition: 0.3s;
+`;
+const ReactSelectComponentBlackEdit = styled(ReactSelect)`
+  text-align: left;
+  width: calc(100% - 80px);
+  .Prefix__control {
+    background-color: #121212;
+    border-bottom: 1px solid #979797;
+    border-radius: 0px;
+  }
+  .Prefix__single-value {
+    color: #fff;
+  }
+  .Prefix__value-container {
+    padding: 10px;
+  }
+  .Prefix__placeholder {
+    color: white;
+    margin-left: 0px;
+  }
+  .Prefix__dropdown-indicator {
+    color: #aaa;
+    padding-right: 12px;
+  }
+  .Prefix__option--is-focused {
+    background: #d0d0d0;
+    color: #121212;
+  }
+  .Prefix__option--is-selected {
+    background-color: #43e8d8;
+    color: black;
+  }
+  .Prefix__menu {
+    background-color: #121212;
+  }
+  transition: 0.3s;
 `;
 
 const SelectTypeWhiteHTML = (props) => {
   return (
     <ReactSelectComponentWhite
-      options={options}
-      defaultValue={options[0]}
+      options={optionsCreate}
+      defaultValue={optionsCreate[0]}
       // placeholder={"類型"}
       className={"ReactSelectClassWhite"}
       classNamePrefix={"Prefix"}
@@ -64,7 +145,7 @@ const SelectTypeWhiteHTML = (props) => {
           border: "none",
           boxShadow: "none",
           "&:hover": {
-            borderBottom: "1px solid #fff",
+            // borderBottom: "1px solid #fff",
           },
         }),
         dropdownIndicator: (base) => ({
@@ -73,11 +154,115 @@ const SelectTypeWhiteHTML = (props) => {
         }),
       }}
       onChange={(value) => {
-        props.setType(value);
-        props.handleFilter(value.value, "type");
+        props.setType(value.value);
       }}
       components={{
         IndicatorSeparator: () => null,
+      }}
+    />
+  );
+};
+const SelectTypeWhiteEditHTML = (props) => {
+  return (
+    <ReactSelectComponentWhiteEdit
+      options={optionsCreate}
+      defaultValue={props.defaultValue}
+      placeholder={props.defaultValue}
+      className={"ReactSelectClassWhite"}
+      classNamePrefix={"Prefix"}
+      styles={{
+        control: (base) => ({
+          ...base,
+          border: "none",
+          boxShadow: "none",
+          "&:hover": {
+            // borderBottom: "1px solid #fff",
+          },
+        }),
+        dropdownIndicator: (base) => ({
+          ...base,
+          color: "#aaa", // Custom colour
+        }),
+      }}
+      onChange={(value) => {
+        props.handleActivityChange(value.value, "type");
+      }}
+      components={{
+        IndicatorSeparator: () => null,
+      }}
+    />
+  );
+};
+const SelectTypeBlackEditHTML = (props) => {
+  return (
+    <ReactSelectComponentBlackEdit
+      options={optionsCreate}
+      defaultValue={props.defaultValue}
+      placeholder={props.defaultValue}
+      classNamePrefix={"Prefix"}
+      styles={{
+        control: (base) => ({
+          ...base,
+          border: "none",
+          boxShadow: "none",
+          "&:hover": {
+            // borderBottom: "1px solid #fff",
+          },
+        }),
+        dropdownIndicator: (base) => ({
+          ...base,
+          color: "#aaa", // Custom colour
+        }),
+      }}
+      onChange={(value) => {
+        props.handleProfileChange(value.value, "preferType");
+      }}
+      components={{
+        IndicatorSeparator: () => null,
+      }}
+    />
+  );
+};
+const SelectRequireWhiteHTML = (props) => {
+  return (
+    <ReactSelectComponentWhite
+      options={requireOptions}
+      isMulti
+      // placeholder={"類型"}
+      className={"ReactSelectClassWhite"}
+      classNamePrefix={"Prefix"}
+      styles={{
+        control: (base) => ({
+          ...base,
+          border: "none",
+          boxShadow: "none",
+
+          "&:hover": {
+            borderBottom: "1px solid #fff",
+          },
+        }),
+        dropdownIndicator: (base) => ({
+          ...base,
+          color: "#aaa", // Custom colour
+        }),
+        container: (base) => ({
+          ...base,
+          display: "inline-block",
+
+          // flex: 1,
+          // flexWrap: "no-wrap",
+        }),
+        multiValue: (base) => ({
+          ...base,
+          maxWidth: "80px",
+        }),
+      }}
+      onChange={(value) => {
+        props.setRequirement(value);
+      }}
+      components={{
+        IndicatorSeparator: () => null,
+        ClearIndicator: () => null,
       }}
     />
   );
@@ -138,6 +323,9 @@ const SelectRequireHTML = (props) => {
 };
 
 export { SelectTypeWhiteHTML };
+export { SelectTypeWhiteEditHTML };
+export { SelectTypeBlackEditHTML };
+export { SelectRequireWhiteHTML };
 export { SelectTypeHTML };
 export { SelectRequireHTML };
 
