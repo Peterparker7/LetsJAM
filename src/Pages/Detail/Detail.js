@@ -5,6 +5,7 @@ import { keyframes } from "styled-components";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getSpecificData, subscribe } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
@@ -15,6 +16,7 @@ import IsLoadingBlack from "../../Components/IsLoadingBlack";
 import noAttendant from "../../images/noAttendant.png";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import Swal from "sweetalert2";
+import IsLoading from "../../Components/IsLoading";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -38,6 +40,7 @@ function Detail() {
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [activityChange, setActivityChange] = useState([]);
 
+  const history = useHistory();
   let activityDetail = {};
 
   //取得使用者資料
@@ -59,7 +62,10 @@ function Detail() {
 
   const getData = async () => {
     let data = await getSpecificData(id);
-
+    if (!data) {
+      history.push("/error404");
+      return;
+    }
     //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
     const host = await getUserData(data.host);
     const currentUser = await getUserData(userUid);
@@ -539,7 +545,8 @@ function Detail() {
 
   //防止第一次render抓不到東西，先return null跳出 (幫下面的renderDetail擋避免undifine)
   if (!detailData || !activityChange) {
-    return "isLoading";
+    return <IsLoading />;
+    // return "isLoading";
   }
   return (
     <ModalProvider backgroundComponent={FadingBackground}>
@@ -567,7 +574,7 @@ const FadingBackground = styled(BaseModalBackground)`
 const DetailContent = styled.div`
   height: 100%;
   padding-bottom: 180px;
-  background: #000;
+  background: #121212;
 `;
 const ActivityContainer = styled.div`
   width: 1024px;

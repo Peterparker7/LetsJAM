@@ -1,0 +1,66 @@
+.ReactSelectClass > .Prefix__control {
+  background-color: #121212;
+  border: 1px solid white;
+  border-radius: 0px;
+}
+.ReactSelectClass .Prefix__placeholder {
+  color: white;
+  font-weight: 600;
+}
+
+.ReactSelectClass .Prefix__control--is-focused {
+  border-color: none;
+}
+.ReactSelectClass > .Prefix__control > .Prefix__control--menu-is-open {
+  border-color: none;
+}
+.ReactSelectClass
+  > .Prefix__control
+  > .Prefix__value-container--has-value
+  :hover {
+  border-color: none;
+}
+.ReactSelectClass > .Prefix__control > .Prefix__control--menu-is-open :hover {
+  border-color: none;
+}
+.ReactSelectClass > .Prefix__control > .Prefix__control--is-focused :hover {
+  border-color: none;
+}
+
+.ReactSelectClass .Prefix__single-value {
+  color: white;
+  font-weight: 600;
+}
+.ReactSelectClass > .Prefix__menu {
+  background-color: #121212;
+  text-align: left;
+}
+
+.ReactSelectClass .Prefix__option--is-focused {
+  background-color: #43e8d8;
+  color: black;
+}
+.ReactSelectClass .Prefix__option--is-selected {
+  background-color: #43e8d8;
+  color: black;
+}
+
+/* <div class="Prefix__menu css-26l3qy-menu"><div class="Prefix__menu-list css-4ljt47-MenuList"><div class="Prefix__option Prefix__option--is-focused css-1n7v3ny-option" id="react-select-3-option-0" tabindex="-1">所有類型</div><div class="Prefix__option css-yt9ioa-option" id="react-select-3-option-1" tabindex="-1">流行</div><div class="Prefix__option Prefix__option--is-selected css-9gakcf-option" id="react-select-3-option-2" tabindex="-1">嘻哈</div><div class="Prefix__option css-yt9ioa-option" id="react-select-3-option-3" tabindex="-1">古典</div></div></div> */
+
+/* <div class="Prefix__control css-yk16xz-control"><div class="Prefix__value-container Prefix__value-container--has-value css-g1d714-ValueContainer"><div class="Prefix__single-value css-1uccc91-singleValue">所有類型</div><div class="css-b8ldur-Input"><div class="Prefix__input" style="display: inline-block;"><input autocapitalize="none" autocomplete="off" autocorrect="off" id="react-select-3-input" spellcheck="false" tabindex="0" type="text" aria-autocomplete="list" value="" style="box-sizing: content-box; width: 2px; background: 0px center; border: 0px; font-size: inherit; opacity: 1; outline: 0px; padding: 0px; color: inherit;"><div style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-size: 16px; font-family: &quot;Noto Sans TC&quot;, sans-serif; font-weight: 400; font-style: normal; letter-spacing: normal; text-transform: none;"></div></div></div></div><div class="Prefix__indicators css-1hb7zxy-IndicatorsContainer"><div class="Prefix__indicator Prefix__dropdown-indicator css-tlfecz-indicatorContainer" aria-hidden="true"><svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" class="css-tj5bde-Svg"><path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"></path></svg></div></div></div> */
+
+.ReactSelectClassWhite > .Prefix__control {
+  background-color: #f8f8ff;
+  border-bottom: 1px solid #979797;
+  border-radius: 0px;
+  padding: 0px;
+}
+.ReactSelectClassWhite > .Prefix__control > .Prefix__value-container {
+  padding: 0px 5px;
+}
+.ReactSelectClassWhite
+  > .Prefix__control
+  > .Prefix__dropdown-indicator
+  > .css-tj5bde-Svg {
+  color: #aaa;
+}

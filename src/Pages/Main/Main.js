@@ -16,6 +16,13 @@ import neonBand from "../../images/neon-band.jpg";
 import InstrumentBanner from "./InstrumentBanner";
 import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
+import SelectTypeComponent from "../../Components/SelectComponent";
+import Select from "react-select";
+import {
+  SelectTypeHTML,
+  SelectRequireHTML,
+} from "../../Components/SelectComponent";
+
 import { Animated } from "react-animated-css";
 import CircularIndeterminate from "../Create/CircularProgress";
 import neonGuitar1 from "../../images/neonGuitar1.png";
@@ -36,6 +43,8 @@ function Main() {
   const [completePaginate, setCompletePaginate] = useState();
   let pageLen = 9;
 
+  const [type, setType] = useState("所有類型");
+  const [require, setRequire] = useState("所有樂器");
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
@@ -125,16 +134,16 @@ function Main() {
   // }
 
   const handleFilter = (e, filter) => {
-    const selectType = document.querySelector("#selectType");
-    const selectRequirement = document.querySelector("#selectRequirement");
+    // const selectType = document.querySelector("#selectType");
+    // const selectRequirement = document.querySelector("#selectRequirement");
     if (filter === "type") {
       if (e === "所有類型") {
-        if (selectRequirement.value === "所有樂器") {
+        if (require === "所有樂器") {
           setData(allActivitiesArray);
           return;
         }
         const alltype = allActivitiesArray.filter((item) => {
-          if (item.requirement.includes(selectRequirement.value)) {
+          if (item.requirement.includes(require)) {
             return item;
           }
         });
@@ -147,11 +156,11 @@ function Main() {
         }
       });
       setData(iscontain);
-      if (selectRequirement.value === "所有樂器") {
+      if (require === "所有樂器") {
         setData(iscontain);
       } else {
         const bothcontain = iscontain.filter((item) => {
-          if (item.requirement.includes(selectRequirement.value)) {
+          if (item.requirement.includes(require)) {
             return item;
           }
         });
@@ -160,12 +169,12 @@ function Main() {
     }
     if (filter === "requirement") {
       if (e === "所有樂器") {
-        if (selectType.value === "所有類型") {
+        if (type === "所有類型") {
           setData(allActivitiesArray);
           return;
         }
         const allrequirement = allActivitiesArray.filter((item) => {
-          if (item.type.includes(selectType.value)) {
+          if (item.type.includes(type)) {
             return item;
           }
         });
@@ -177,11 +186,11 @@ function Main() {
           return item;
         }
       });
-      if (selectType.value === "所有類型") {
+      if (type === "所有類型") {
         setData(iscontain);
       } else {
         const bothcontain = iscontain.filter((item) => {
-          if (item.type.includes(selectType.value)) {
+          if (item.type.includes(type)) {
             return item;
           }
         });
@@ -191,6 +200,73 @@ function Main() {
       // allActivitiesArray = iscontain;
     }
   };
+  // const handleFilter = (e, filter) => {
+  //   const selectType = document.querySelector("#selectType");
+  //   const selectRequirement = document.querySelector("#selectRequirement");
+  //   if (filter === "type") {
+  //     if (e === "所有類型") {
+  //       if (selectRequirement.value === "所有樂器") {
+  //         setData(allActivitiesArray);
+  //         return;
+  //       }
+  //       const alltype = allActivitiesArray.filter((item) => {
+  //         if (item.requirement.includes(selectRequirement.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(alltype);
+  //       return;
+  //     }
+  //     const iscontain = allActivitiesArray.filter((item) => {
+  //       if (item.type.includes(e)) {
+  //         return item;
+  //       }
+  //     });
+  //     setData(iscontain);
+  //     if (selectRequirement.value === "所有樂器") {
+  //       setData(iscontain);
+  //     } else {
+  //       const bothcontain = iscontain.filter((item) => {
+  //         if (item.requirement.includes(selectRequirement.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(bothcontain);
+  //     }
+  //   }
+  //   if (filter === "requirement") {
+  //     if (e === "所有樂器") {
+  //       if (selectType.value === "所有類型") {
+  //         setData(allActivitiesArray);
+  //         return;
+  //       }
+  //       const allrequirement = allActivitiesArray.filter((item) => {
+  //         if (item.type.includes(selectType.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(allrequirement);
+  //       return;
+  //     }
+  //     const iscontain = allActivitiesArray.filter((item) => {
+  //       if (item.requirement.includes(e)) {
+  //         return item;
+  //       }
+  //     });
+  //     if (selectType.value === "所有類型") {
+  //       setData(iscontain);
+  //     } else {
+  //       const bothcontain = iscontain.filter((item) => {
+  //         if (item.type.includes(selectType.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(bothcontain);
+  //     }
+
+  //     // allActivitiesArray = iscontain;
+  //   }
+  // };
 
   const handleRequirementFilter = () => {};
   const handleCreateNow = () => {
@@ -356,6 +432,13 @@ function Main() {
 
       <ActivityFilter>
         <FilterTitle>篩選</FilterTitle>
+        {/* <SelectTypeComponent /> */}
+        <SelectTypeHTML setType={setType} handleFilter={handleFilter} />
+        <SelectRequireHTML
+          setRequire={setRequire}
+          handleFilter={handleFilter}
+        />
+
         <FilterBar>
           <Filterlabel>類型</Filterlabel>
           <FilterSelect
@@ -575,13 +658,23 @@ const ActivityFilter = styled.div`
   color: white;
 
   align-items: center;
+
+  @media (max-width: 768px) {
+    margin: 50px 20px;
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+    padding: 0px 0px;
+    width: 90%;
+    justify-content: space-around;
+  }
 `;
 
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
   @media (max-width: 576px) {
-    font-size: 12px;
+    font-size: 16px;
     padding-left: 0px;
   }
 `;
@@ -608,6 +701,8 @@ const FilterBar = styled.div`
   align-items: center;
   margin-left: 20px;
   padding-right: 10px;
+  /* 隱藏但不能拿掉不然filter會壞掉 */
+  display: none;
   @media (max-width: 576px) {
     font-size: 12px;
   }

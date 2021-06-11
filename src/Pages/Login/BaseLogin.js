@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import { getAuthUser } from "../../utils/firebase";
 import iconTaylorBlack from "../../images/icon-Taylor-black.png";
+import iconTaylorWhite from "../../images/icon-Taylor-white.png";
 
 import Login from "./Login";
 import Register from "./Register";
@@ -59,7 +60,7 @@ function BaseLogin(props) {
   return (
     <PageContainer>
       <LogoContainer>
-        <Logo src={iconTaylorBlack}></Logo>
+        <Logo src={iconTaylorWhite}></Logo>
         <Slogan>-最懂你的音樂夥伴</Slogan>
       </LogoContainer>
 
@@ -106,18 +107,18 @@ function BaseLogin(props) {
 
 const PageContainer = styled.div`
   /* height: ; */
-  min-height: calc(100vh - 180px);
-  border: 1px solid #b7b7b7;
+  /* min-height: calc(100vh - 180px); */
+  min-height: 980px;
+  /* border: 1px solid #b7b7b7; */
   width: 100%;
   background: #f8f8ff;
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.8)
-    ),
+  background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2)),
     url(${concert2});
   background-size: cover;
   background-position: 50% 50%;
   margin: auto;
+  padding-bottom: 20px;
+  padding-top: 20px;
 `;
 const LogoContainer = styled.div`
   max-width: 600px;
@@ -135,6 +136,7 @@ const Logo = styled.img`
 `;
 const Slogan = styled.div`
   position: absolute;
+  color: white;
   right: 20px;
   bottom: 20px;
   font-size: 24px;

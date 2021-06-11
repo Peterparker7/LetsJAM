@@ -245,7 +245,8 @@ function Profile(props) {
   }, [userData]);
 
   if (props.userUid === "") {
-    return null;
+    return <IsLoading />;
+    // return null;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";

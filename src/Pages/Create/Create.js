@@ -20,7 +20,7 @@ import UsePlace from "./UsePlace";
 import Place from "./Place";
 
 import CircularIndeterminate from "./CircularProgress";
-import SelectTypeComponent from "../../Components/SelectType";
+import { SelectTypeWhiteHTML } from "../../Components/SelectComponent";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -36,6 +36,7 @@ const StyledMultiSelect = styled(MultiSelect)`
     width: 90%;
   }
 `;
+let currentNumber = 1;
 
 function Create(props) {
   const [title, setTitle] = useState("");
@@ -220,8 +221,12 @@ function Create(props) {
   };
 
   const clickCreate = async () => {
+    console.log(currentNumber);
     if (checked) {
       setLimit(0);
+      currentNumber = 0;
+    } else {
+      setLimit(currentNumber);
     }
     console.log(time);
     console.log(date);
@@ -248,7 +253,8 @@ function Create(props) {
       id: activityData.id,
       title: title,
       type: type,
-      limit: limit,
+      limit: currentNumber,
+      // limit: limit,
       newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
       timestamp: timestamp, //firebase內建timestamp
       location: place,
@@ -336,8 +342,9 @@ function Create(props) {
       // setLevelStatus(true);
     }
     if (changeType === "limit") {
-      setLimit(e.target.value);
+      // setLimit(e.target.value);
       setLimitStatus(true);
+      currentNumber = e.target.value;
     }
     if (changeType === "location") {
       setLocation(e.target.value);
@@ -369,7 +376,8 @@ function Create(props) {
         <div>
           <LimitInputField
             type="number"
-            defaultValue={limit}
+            defaultValue={currentNumber}
+            // defaultValue={limit}
             min="1"
             max="20"
             onChange={(e) => {
@@ -478,7 +486,7 @@ function Create(props) {
                 </SelectType>
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-              {/* <SelectTypeComponent /> */}
+              <SelectTypeWhiteHTML />
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
