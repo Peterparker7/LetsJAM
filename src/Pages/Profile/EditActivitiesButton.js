@@ -27,13 +27,19 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #f8f8ff;
-  --rmsc-hover: #d0d0d0;
+  --rmsc-hover: #efefef;
   --rmsc-selected: #43ede8;
   --rmsc-h: 40px !important;
   --rmsc-main: none;
+  --rmsc-p: 5px;
 
   color: black;
   text-align: left;
+  .dropdown-content {
+  }
+  .item-renderer {
+    padding: 10px 5px;
+  }
 `;
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -42,7 +48,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background-color: #fff8f8;
+background-color: #f8f8ff;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 position: relative;
@@ -491,6 +497,7 @@ function EditActivitiesButton(props) {
             <StyledMultiSelect
               className="EditActivitiesMulti"
               options={options}
+              disableSearch={true}
               overrideStrings={override}
               value={requirement}
               onChange={setRequirement}

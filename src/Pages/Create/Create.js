@@ -25,6 +25,10 @@ import {
   SelectTypeWhiteHTML,
   SelectRequireWhiteHTML,
 } from "../../Components/SelectComponent";
+import {
+  MaterialUIPickersTime,
+  MaterialUIPickersDate,
+} from "../../Components/DateTimePicker";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -35,10 +39,18 @@ const StyledMultiSelect = styled(MultiSelect)`
   --rmsc-bg: #f8f8ff;
   --rmsc-selected: #43ede8a6;
   --rmsc-main: none;
+  --rmsc-h: 38px !important;
+
+  --rmsc-p: 5px;
+  transition: 0.3s;
   .dropdown-heading {
-    padding: 0;
   }
-  padding: 5px;
+  .dropdown-content {
+  }
+  .item-renderer {
+    padding: 5px 5px;
+  }
+
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -245,16 +257,21 @@ function Create(props) {
     console.log(place);
     console.log(location);
     console.log(limit);
-    convertDateTime();
-    let timestamp = new Date(
-      convertDateTime().formatDateYear,
-      convertDateTime().formatDateMonth - 1,
-      convertDateTime().formatDateDate,
-      convertDateTime().formatTimeHour,
-      convertDateTime().formatTimeSecond
-    );
+    // convertDateTime();
+    // let timestamp = new Date(
+    //   convertDateTime().formatDateYear,
+    //   convertDateTime().formatDateMonth - 1,
+    //   convertDateTime().formatDateDate,
+    //   convertDateTime().formatTimeHour,
+    //   convertDateTime().formatTimeSecond
+    // );
 
     let newTimestamp = new Date(`${date}T${time}`);
+    let timestamp = new Date(`${date}T${time}`);
+    console.log(
+      "🚀 ~ file: Create.js ~ line 268 ~ clickCreate ~ timestamp",
+      timestamp
+    );
 
     // imageUrl = await uploadImage(imgSource);
 
@@ -327,17 +344,20 @@ function Create(props) {
       setTitleStatus(true);
     }
     if (changeType === "date") {
-      setDate(e.target.value);
+      setDate(e);
+      console.log(e);
       setDateStatus(true);
-      if (nowDate >= Date.parse(e.target.value) + 16 * 60 * 60000) {
+      if (nowDate >= Date.parse(e) + 16 * 60 * 60000) {
         setDateStatus(false);
       }
     }
     if (changeType === "time") {
-      let a = e.target.value.split(":");
+      let a = e.split(":");
+      // let a = e.target.value.split(":");
       let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
-
-      setTime(e.target.value);
+      console.log("kkk");
+      setTime(e);
+      // setTime(e.target.value);
       setTimeStatus(true);
       if (nowDate >= Date.parse(date) + milliseconds - deviation) {
         setTimeStatus(false);
@@ -432,6 +452,7 @@ function Create(props) {
         <CreateDetailContainer>
           <CreateDetailTopBar></CreateDetailTopBar>
           <Title>我要開團</Title>
+
           <CreateDetail>
             <CreateDetailContent>
               <InputFieldDiv>
@@ -453,26 +474,37 @@ function Create(props) {
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>日期</Label>
-                <Inputfield
+                {/* <Inputfield
                   defaultValue={sat}
                   type="date"
                   onChange={(e) => {
                     handleChange(e, "date");
                   }}
-                ></Inputfield>
+                ></Inputfield> */}
+                <MaterialUIPickersDate
+                  handleChange={handleChange}
+                  // time={time}
+                  // datesat={date}
+                />
                 {Warning.warningDateHTML(date, dateStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>時間</Label>
-                <Inputfield
+                {/* <Inputfield
                   defaultValue="16:00:00"
                   type="time"
                   onChange={(e) => {
                     handleChange(e, "time");
+                    console.log(e.target.value);
                   }}
                   step={300}
-                ></Inputfield>
+                ></Inputfield> */}
+                <MaterialUIPickersTime
+                  handleChange={handleChange}
+                  time={time}
+                  datesat={date}
+                />
                 {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
@@ -766,6 +798,7 @@ const InputFieldDiv = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  /* height: 40px; */
   /* text-align: center; */
 `;
 const Inputfield = styled.input`
@@ -773,6 +806,9 @@ const Inputfield = styled.input`
   width: 220px;
   height: auto;
   padding: 5px;
+  ::placeholder {
+    color: #aaa;
+  }
   @media (max-width: 768px) {
     width: 90%;
   }

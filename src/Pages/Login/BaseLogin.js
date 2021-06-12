@@ -12,6 +12,7 @@ import Login from "./Login";
 import Register from "./Register";
 import { useSelector, useDispatch } from "react-redux";
 import concert2 from "../../images/concert2.jpg";
+import IsLoading from "../../Components/IsLoading";
 
 function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
@@ -26,7 +27,8 @@ function BaseLogin(props) {
   // }
 
   if (props.userUid === "") {
-    return null;
+    return <IsLoading />;
+    // return null;
   } else if (props.userUid) {
     history.push("/");
     return "redirection";
@@ -153,7 +155,7 @@ const Container = styled.div`
   max-width: 600px;
   margin: 30px auto 100px;
   border: 1px solid #b7b7b7;
-  background: white;
+  background: #f8f8ff;
   border-radius: 4px;
   @media (max-width: 768px) {
     width: 90%;

@@ -19,7 +19,8 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #121212;
-  --rmsc-hover: #ff00ff96;
+  /* --rmsc-hover: #ff00ff96; */
+  --rmsc-hover: #979797;
   --rmsc-selected: #43ede8a6;
   --rmsc-h: 40px !important;
   --rmsc-main: none;
@@ -312,6 +313,7 @@ function EditProfileButton(props) {
                 <StyledMultiSelect
                   className="EditProfileMulti"
                   overrideStrings={override}
+                  disableSearch={true}
                   style={{ width: "100px" }}
                   options={options}
                   value={skill}

@@ -54,6 +54,8 @@
   border-bottom: 1px solid #979797;
   border-radius: 0px;
   padding: 0px;
+  /* max-height: 30px;
+  min-height: unset; */
 }
 .ReactSelectClassWhite > .Prefix__control > .Prefix__value-container {
   padding: 0px 5px;

@@ -9,14 +9,28 @@ import { newUser } from "../../utils/firebase";
 import MultiSelect from "react-multi-select-component";
 import Swal from "sweetalert2";
 import * as LoginValidate from "./LoginValidate";
+import { SelectTypeWhiteRegisterHTML } from "../../Components/SelectComponent";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border: 1px solid #b7b7b7;
   --rmsc-border: unset !important;
   --rmsc-h: 38px !important;
   --rmsc-p: 5px !important;
+  --rmsc-bg: #f8f8ff;
+  --rmsc-selected: #43ede8a6;
+
+  --rmsc-main: none;
   width: 250px;
   text-align: left;
+  .dropdown-heading {
+    padding-left: 5px;
+  }
+  .dropdown-content {
+  }
+  .item-renderer {
+    padding: 10px 5px;
+  }
+
   @media (max-width: 576px) {
     max-width: 100%;
   }
@@ -146,6 +160,8 @@ function Register(props) {
   };
 
   const formCheck = () => {
+    console.log(userInfoValue.preferType);
+    console.log(skill);
     // userInfo = { ...userInfo, skill: skillArray };
     WarningHTML();
     let emailRule =
@@ -206,7 +222,7 @@ function Register(props) {
       <Container>
         <ItemField>
           <RequireField>*</RequireField>
-          <Label for="email">電子信箱</Label>
+          <Label htmlFor="email">電子信箱</Label>
           <InputField
             id="email"
             placeholder="example@gmail.com"
@@ -234,7 +250,7 @@ function Register(props) {
         <ItemField>
           <RequireField>*</RequireField>
 
-          <Label for="password">設定密碼</Label>
+          <Label htmlFor="password">設定密碼</Label>
           <InputField
             placeholder="密碼長度至少6碼"
             id="password"
@@ -262,7 +278,7 @@ function Register(props) {
         <ItemField>
           <RequireField>*</RequireField>
 
-          <Label for="name">用戶名稱</Label>
+          <Label htmlFor="name">用戶名稱</Label>
           <InputField
             id="name"
             placeholder="例: 小明"
@@ -289,8 +305,9 @@ function Register(props) {
         <ItemField>
           <RequireField>*</RequireField>
 
-          <Label for="preferType">偏好類型</Label>
-          <SelectPreferType
+          <Label htmlFor="preferType">偏好類型</Label>
+          <SelectTypeWhiteRegisterHTML handleChange={handleChange} />
+          {/* <SelectPreferType
             id="preferType"
             onChange={(e) => {
               handleChange(e.target.value, "preferType");
@@ -302,7 +319,7 @@ function Register(props) {
             <option>流行</option>
             <option>嘻哈</option>
             <option>古典</option>
-          </SelectPreferType>
+          </SelectPreferType> */}
           <Warning
             style={
               preferTypeState
@@ -320,11 +337,12 @@ function Register(props) {
         <ItemField>
           <RequireField>*</RequireField>
 
-          <Label for="skill">會的樂器</Label>
+          <Label htmlFor="skill">會的樂器</Label>
           <SkillSelectDiv>
             <StyledMultiSelect
               id="skill"
               options={options}
+              disableSearch={true}
               overrideStrings={override}
               value={skill}
               onChange={setSkill}
@@ -392,7 +410,13 @@ const InputField = styled.input`
   padding: 5px;
   width: 250px;
   height: 38px;
+  ::placeholder {
+    color: #aaa;
+  }
   @media (max-width: 576px) {
+    max-width: 70%;
+  }
+  @media (max-width: 414px) {
     max-width: 60%;
   }
 `;
@@ -412,6 +436,9 @@ const SelectPreferType = styled.select`
 const SkillSelectDiv = styled.div`
   width: 250px;
   @media (max-width: 576px) {
+    max-width: 70%;
+  }
+  @media (max-width: 414px) {
     max-width: 60%;
   }
 `;

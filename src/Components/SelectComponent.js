@@ -49,6 +49,7 @@ const ReactSelectComponentWhite = styled(ReactSelect)`
   width: 220px;
   .Prefix__single-value {
     color: #000;
+    margin-left: 0px;
   }
   .Prefix__dropdown-indicator {
     color: #aaa;
@@ -94,6 +95,44 @@ const ReactSelectComponentWhiteEdit = styled(ReactSelect)`
     background-color: #f8f8ff;
   }
   transition: 0.3s;
+`;
+const ReactSelectComponentWhiteRegister = styled(ReactSelect)`
+  text-align: left;
+  width: 250px;
+  height: 38px;
+  .Prefix__control {
+    background-color: #f8f8ff;
+    border: 1px solid #b7b7b7;
+    border-radius: 0px;
+  }
+  .Prefix__single-value {
+    color: #2f2f2f;
+    margin-left: 0px;
+  }
+  .Prefix__placeholder {
+    color: #b7b7b7;
+    margin-left: 0px;
+  }
+  .Prefix__dropdown-indicator {
+    color: #aaa;
+  }
+  .Prefix__option--is-focused {
+    background: #f1f3f5;
+    color: black;
+  }
+  .Prefix__option--is-selected {
+    background-color: #43e8d8;
+    color: black;
+  }
+  .Prefix__menu {
+    background-color: #f8f8ff;
+  }
+  @media (max-width: 576px) {
+    max-width: 70%;
+  }
+  @media (max-width: 414px) {
+    max-width: 60%;
+  }
 `;
 const ReactSelectComponentBlackEdit = styled(ReactSelect)`
   text-align: left;
@@ -155,6 +194,37 @@ const SelectTypeWhiteHTML = (props) => {
       }}
       onChange={(value) => {
         props.setType(value.value);
+      }}
+      components={{
+        IndicatorSeparator: () => null,
+      }}
+    />
+  );
+};
+const SelectTypeWhiteRegisterHTML = (props) => {
+  return (
+    <ReactSelectComponentWhiteRegister
+      options={optionsCreate}
+      // defaultValue={optionsCreate[0]}
+      placeholder={"請選擇"}
+      className={"ReactSelectClassWhite"}
+      classNamePrefix={"Prefix"}
+      styles={{
+        control: (base) => ({
+          ...base,
+          border: "none",
+          boxShadow: "none",
+          "&:hover": {
+            // borderBottom: "1px solid #fff",
+          },
+        }),
+        dropdownIndicator: (base) => ({
+          ...base,
+          color: "#aaa", // Custom colour
+        }),
+      }}
+      onChange={(value) => {
+        props.handleChange(value.value, "preferType");
       }}
       components={{
         IndicatorSeparator: () => null,
@@ -323,6 +393,7 @@ const SelectRequireHTML = (props) => {
 };
 
 export { SelectTypeWhiteHTML };
+export { SelectTypeWhiteRegisterHTML };
 export { SelectTypeWhiteEditHTML };
 export { SelectTypeBlackEditHTML };
 export { SelectRequireWhiteHTML };

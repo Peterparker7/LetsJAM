@@ -137,7 +137,7 @@ function Login(props) {
     return (
       <ItemFieldContainer>
         <ItemField>
-          <Label for="email">帳號</Label>
+          <Label htmlFor="email">帳號</Label>
           <InputField
             id="email"
             onChange={(e) => {
@@ -152,7 +152,7 @@ function Login(props) {
           {warningEmailHTML()}
         </ItemField>
         <ItemField>
-          <Label for="password">密碼</Label>
+          <Label htmlFor="password">密碼</Label>
           <InputField
             id="password"
             type="password"
