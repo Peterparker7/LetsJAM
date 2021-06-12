@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import settingIcon from "../../images/gear.svg";
 import xIcon from "../../images/x.svg";
 import { SelectTypeBlackEditHTML } from "../../Components/SelectComponent";
+import IsLoadingBlackSmall from "../../Components/IsLoadingBlackSmall";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
@@ -48,6 +49,7 @@ function EditProfileButton(props) {
   const [opacity, setOpacity] = useState(0);
 
   const [validationResult, setValidationResult] = useState(true);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
@@ -121,26 +123,30 @@ function EditProfileButton(props) {
       imageUrl = userDataRedux.profileImage;
     }
 
-    let data = {
-      uid: userData.uid,
-      name: userData.name,
-      intro: userData.intro,
-      preferType: userData.preferType,
-      skill: skillArray,
-      favSinger: userData.favSinger,
-      profileImage: imageUrl,
-      youtubeUrl: userData.youtubeUrl,
-    };
-    console.log(data);
+    setLoadingStatus(true);
+    setTimeout(async () => {
+      setLoadingStatus(false);
+      let data = {
+        uid: userData.uid,
+        name: userData.name,
+        intro: userData.intro,
+        preferType: userData.preferType,
+        skill: skillArray,
+        favSinger: userData.favSinger,
+        profileImage: imageUrl,
+        youtubeUrl: userData.youtubeUrl,
+      };
+      console.log(data);
 
-    if (inputValidation()) {
-      let updateToFirebase = await updateUserData(data, userDataRedux.uid);
-      // setUserData(data);
-      dispatch({ type: "UPDATE_USERDATA", data: data });
+      if (inputValidation()) {
+        let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+        // setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
 
-      setOpacity(0);
-      setIsOpen(!isOpen);
-    }
+        setOpacity(0);
+        setIsOpen(!isOpen);
+      }
+    }, 2000);
   }
   //
   function handleProfileChange(e, type) {
@@ -164,6 +170,12 @@ function EditProfileButton(props) {
     console.log(userProfileImage);
     setImgCover("cover");
   }
+  const handleIsLoading = () => {
+    setLoadingStatus(true);
+    setTimeout(() => {
+      setLoadingStatus(false);
+    }, 30000);
+  };
   function inputValidation() {
     if (
       userData.name.length === 0 ||
@@ -365,7 +377,8 @@ function EditProfileButton(props) {
             <BtnField>
               {/* <BtnCancel onClick={toggleCancel}>取消</BtnCancel> */}
               <BtnConfirm onClick={editConfirm}>
-                儲存
+                {loadingStatus ? <IsLoadingBlackSmall /> : "儲存"}
+
                 <ValidationResult
                   style={
                     !validationResult
