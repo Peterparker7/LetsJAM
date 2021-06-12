@@ -502,8 +502,8 @@ function Create(props) {
                 ></Inputfield> */}
                 <MaterialUIPickersTime
                   handleChange={handleChange}
-                  time={time}
-                  datesat={date}
+                  // time={time}
+                  // datesat={date}
                 />
                 {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>

@@ -22,6 +22,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import xIconBlack from "../../images/xBlack.svg";
 import { SelectTypeWhiteEditHTML } from "../../Components/SelectComponent";
+import {
+  MaterialUIPickersTimeActivity,
+  MaterialUIPickersDateActivity,
+} from "../../Components/DateTimePicker";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
@@ -420,7 +424,11 @@ function EditActivitiesButton(props) {
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="date">活動日期</Label>
-            <InputFieldInput
+            <MaterialUIPickersDateActivity
+              defaultValue={userHostActivityDataRedux.date}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <InputFieldInput
               id="date"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -429,7 +437,7 @@ function EditActivitiesButton(props) {
               onInput={(e) => {
                 handleActivityChange(e.target.value, "date");
               }}
-            ></InputFieldInput>
+            ></InputFieldInput> */}
             {Warning.warningDateHTML(
               oneactivityData.date,
               userHostActivityDataRedux.date
@@ -437,7 +445,12 @@ function EditActivitiesButton(props) {
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="time">活動時間</Label>
-            <InputFieldInput
+            <MaterialUIPickersTimeActivity
+              defaultDate={userHostActivityDataRedux.date}
+              defaultValue={userHostActivityDataRedux.time}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <InputFieldInput
               id="time"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -446,7 +459,7 @@ function EditActivitiesButton(props) {
               onInput={(e) => {
                 handleActivityChange(e.target.value, "time");
               }}
-            ></InputFieldInput>
+            ></InputFieldInput> */}
             {Warning.warningTimeHTML(
               oneactivityData.date,
               oneactivityData.time
