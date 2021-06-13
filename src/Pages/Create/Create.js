@@ -159,6 +159,7 @@ function Create(props) {
     // checkUserIsLogin();
     setDate(sat);
     setTime("16:00");
+    currentNumber = 1;
   }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -302,7 +303,9 @@ function Create(props) {
 
     if (createFormCheck()) {
       await activityData.set(newData);
-      window.location.replace("./");
+      history.push("/");
+      // window.location.replace("./");
+      currentNumber = 1;
     }
   };
 
