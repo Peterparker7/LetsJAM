@@ -2,17 +2,7 @@ import styled from "styled-components";
 import React from "react";
 
 const warningTitleHTML = (title, initValue, setStatus) => {
-  console.log(
-    "🚀 ~ file: Validate.js ~ line 5 ~ warningTitleHTML ~ initValue",
-    initValue
-  );
-  console.log(
-    "🚀 ~ file: Validate.js ~ line 5 ~ warningTitleHTML ~ title",
-    title
-  );
-
   if (title.length > 10) {
-    console.log("!!");
     // setStatus(false);
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
@@ -49,10 +39,6 @@ const warningDateHTML = (date, initValue, setStatus) => {
   //   }
 };
 const warningTimeHTML = (date, time, setStatus) => {
-  console.log(
-    "🚀 ~ file: Validate.js ~ line 45 ~ warningTimeHTML ~ time",
-    time
-  );
   let nowDate = Date.now();
   let a = time.split(":");
   let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
@@ -103,10 +89,6 @@ const warningLimitHTML = (limit, status) => {
   }
 };
 const warningLevelHTML = (level, status) => {
-  console.log(
-    "🚀 ~ file: Validate.js ~ line 106 ~ warningLevelHTML ~ level",
-    level
-  );
   if (level.length > 20) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
@@ -121,10 +103,6 @@ const warningLevelHTML = (level, status) => {
   // }
 };
 const warningLocationHTML = (location, status, setPlaceStatus) => {
-  console.log(
-    "🚀 ~ file: Validate.js ~ line 109 ~ warningLocationHTML ~ location",
-    location
-  );
   if (location.length === 0) {
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>

@@ -228,7 +228,7 @@ function EditProfileButton(props) {
         afterOpen={afterOpen}
         beforeClose={beforeClose}
         onBackgroundClick={toggleModal}
-        onEscapeKeydown={toggleModal}
+        // onEscapeKeydown={}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >

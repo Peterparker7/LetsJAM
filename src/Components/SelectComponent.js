@@ -47,6 +47,9 @@ const ReactSelectComponent = styled(ReactSelect)`
 `;
 const ReactSelectComponentWhite = styled(ReactSelect)`
   width: 220px;
+  .Prefix__control {
+    cursor: pointer;
+  }
   .Prefix__single-value {
     color: #000;
     margin-left: 0px;
@@ -63,6 +66,7 @@ const ReactSelectComponentWhite = styled(ReactSelect)`
     color: black;
   }
   transition: 0.3s;
+  cursor: pointer;
 
   @media (max-width: 768px) {
     width: 90%;
@@ -74,6 +78,9 @@ const ReactSelectComponentWhite = styled(ReactSelect)`
 const ReactSelectComponentWhiteEdit = styled(ReactSelect)`
   text-align: left;
   width: calc(100% - 80px);
+  .Prefix__control {
+    cursor: pointer;
+  }
   .Prefix__single-value {
     color: #000;
   }
@@ -100,10 +107,12 @@ const ReactSelectComponentWhiteRegister = styled(ReactSelect)`
   text-align: left;
   width: 250px;
   height: 38px;
+
   .Prefix__control {
     background-color: #f8f8ff;
     border: 1px solid #b7b7b7;
     border-radius: 0px;
+    cursor: pointer;
   }
   .Prefix__single-value {
     color: #2f2f2f;
@@ -141,6 +150,7 @@ const ReactSelectComponentBlackEdit = styled(ReactSelect)`
     background-color: #121212;
     border-bottom: 1px solid #979797;
     border-radius: 0px;
+    cursor: pointer;
   }
   .Prefix__single-value {
     color: #fff;

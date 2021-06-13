@@ -596,7 +596,7 @@ function EditActivitiesButton(props) {
         afterOpen={afterOpen}
         beforeClose={beforeClose}
         onBackgroundClick={toggleCancel}
-        onEscapeKeydown={toggleCancel}
+        // onEscapeKeydown={toggleCancel}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >

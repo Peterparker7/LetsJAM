@@ -842,6 +842,9 @@ const MemberField = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  @media (max-width: 414px) {
+    flex-direction: column;
+  }
 `;
 const MemberHostField = styled.div`
   padding: 10px 0px;
@@ -855,8 +858,9 @@ const MemberHostField = styled.div`
 `;
 const ProfileBlock = styled.div`
   text-align: center;
-  margin: 20px 20px;
+  margin: 20px 18px;
   position: relative;
+  margin-bottom: 40px;
 `;
 
 const ImageIntroBlock = styled.div`

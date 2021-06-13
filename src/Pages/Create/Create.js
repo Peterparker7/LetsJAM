@@ -3,6 +3,7 @@ import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import MyComponent from "../../Map";
@@ -29,6 +30,8 @@ import {
   MaterialUIPickersTime,
   MaterialUIPickersDate,
 } from "../../Components/DateTimePicker";
+import Tooltip from "@material-ui/core/Tooltip";
+import arrowLeft from "../../images/arrow-left-short.svg";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -246,12 +249,12 @@ function Create(props) {
 
   const clickCreate = async () => {
     console.log(currentNumber);
-    if (checked) {
-      setLimit(0);
-      currentNumber = 0;
-    } else {
-      setLimit(currentNumber);
-    }
+    // if (checked) {
+    //   setLimit(0);
+    //   currentNumber = 0;
+    // } else {
+    //   setLimit(currentNumber);
+    // }
     console.log(time);
     console.log(date);
     console.log(type);
@@ -278,30 +281,35 @@ function Create(props) {
 
     const activityData = db.collection("activityData").doc();
 
-    let newData = {
-      id: activityData.id,
-      title: title,
-      type: type,
-      limit: currentNumber,
-      // limit: limit,
-      newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
-      timestamp: timestamp, //firebase內建timestamp
-      location: place,
-      geo: ["10", "10"],
-      requirement: requirementArray,
-      level: level,
-      host: host, //or id?
-      attendants: [],
-      applicants: [],
-      comment: comment,
-      youtubeSource: youtubeUrl,
-      fileSource: imgUrl,
-      status: true,
-      date: date,
-      time: time,
-    };
-
     if (createFormCheck()) {
+      if (checked) {
+        setLimit(0);
+        currentNumber = 0;
+      } else {
+        setLimit(currentNumber);
+      }
+      let newData = {
+        id: activityData.id,
+        title: title,
+        type: type,
+        limit: currentNumber,
+        // limit: limit,
+        newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
+        timestamp: timestamp, //firebase內建timestamp
+        location: place,
+        geo: ["10", "10"],
+        requirement: requirementArray,
+        level: level,
+        host: host, //or id?
+        attendants: [],
+        applicants: [],
+        comment: comment,
+        youtubeSource: youtubeUrl,
+        fileSource: imgUrl,
+        status: true,
+        date: date,
+        time: time,
+      };
       await activityData.set(newData);
       history.push("/");
       // window.location.replace("./");
@@ -436,12 +444,12 @@ function Create(props) {
       console.log(imgSource);
       // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
 
       setimgUrl(imageUrl);
       console.log(imageUrl);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
     }
   }
 
@@ -454,6 +462,14 @@ function Create(props) {
         {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
           <CreateDetailTopBar></CreateDetailTopBar>
+          <Tooltip title="回上頁" interactive>
+            <BackArrowContainer>
+              <Link to={"/"}>
+                <BackArrow src={arrowLeft} />
+              </Link>
+            </BackArrowContainer>
+          </Tooltip>
+
           <Title>我要開團</Title>
 
           <CreateDetail>
@@ -711,6 +727,7 @@ const Container = styled.div`
   max-width: 1024px;
   margin: 0 auto;
   height: 100%;
+  position: relative;
   /* border: 1px solid #979797; */
   /* padding: 50px 20px; */
 `;
@@ -724,6 +741,20 @@ const CreateDetailTopBar = styled.div`
   width: 100%;
   height: 8px;
   background: #43e8d8;
+`;
+const BackArrowContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: -39px;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-3px);
+  }
+`;
+const BackArrow = styled.img`
+  width: 100%;
 `;
 const CreateDetailContainer = styled.div`
   max-width: 888px;
