@@ -41,7 +41,7 @@ function Main() {
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
   const [completePaginate, setCompletePaginate] = useState();
-  let pageLen = 9;
+  let pageLen = 6;
   new window.WOW().init();
   const [type, setType] = useState("所有類型");
   const [require, setRequire] = useState("所有樂器");
@@ -132,6 +132,15 @@ function Main() {
   // if (!data || allPaginateArray.length <= 0) {
   //   return <div style={{ minHeight: `calc(100vh - 180px) ` }}>Loading</div>;
   // }
+  const handleGallery = () => {
+    Swal.fire({
+      title: "<span style=font-size:24px>敬請期待！</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
 
   const handleFilter = (e, filter) => {
     // const selectType = document.querySelector("#selectType");
@@ -411,7 +420,11 @@ function Main() {
           isVisible={true}
         >
           <SubSlogan>遇見更多音樂同好、即刻成團</SubSlogan>
-          <LearnMore>
+          <LearnMore
+            onClick={() => {
+              handleGallery();
+            }}
+          >
             <LearnMoreSlogan>Learn More</LearnMoreSlogan>
             <ArrowRight src={arrowRight}></ArrowRight>
           </LearnMore>
@@ -507,7 +520,7 @@ const MainContainer = styled.main`
 `;
 
 const Carosul = styled.div`
-  height: 600px;
+  height: 650px;
   /* background: black; */
   background: url(${neonBand});
   background-size: cover;
@@ -515,7 +528,7 @@ const Carosul = styled.div`
   background-position: 50% 50%;
   position: relative;
   @media (max-width: 576px) {
-    height: 300px;
+    height: 600px;
   }
 `;
 const NeonShine = keyframes`
@@ -566,7 +579,8 @@ const SubSlogan = styled.div`
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    top: 47%;
+    /* top: 47%; */
+    top: 24%;
   }
 `;
 const LearnMore = styled.div`
@@ -577,13 +591,19 @@ const LearnMore = styled.div`
   top: 47%;
   left: 120px;
   display: flex;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-3px);
+  }
   @media (max-width: 768px) {
     left: 80px;
   }
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    top: 57%;
+    /* top: 57%; */
+    top: 30%;
   }
 `;
 const LearnMoreSlogan = styled.div``;
@@ -609,7 +629,7 @@ const JoinButton = styled.button`
   border-radius: 30px;
   /* background: #43e8d8; */
   /* background: #ff00ff; */
-  border: 3px solid #43e8d8;
+  border: 3px solid #fff;
 
   padding: 12px 60px;
   font-size: 24px;
@@ -619,7 +639,7 @@ const JoinButton = styled.button`
   color: white;
   text-shadow: 0 0 5px #43e8d8, 0 0 10px #43e8d8, 0 0 20px #43e8d8,
     0 0 40px #43e8d8;
-  box-shadow: 0 0 20px #43e8d8, inset 0 0 20px #43e8d8;
+  box-shadow: 0 0 20px #43e8d8, inset 0 0 20px #43e8d8, 0 0 40px #43e8d8;
   &:hover {
     border: 3px solid #4cffee;
 
@@ -630,7 +650,7 @@ const JoinButton = styled.button`
     transform: translateY(-2px);
   }
   @media (max-width: 576px) {
-    font-size: 16px;
+    font-size: 20px;
     padding: 12px 48px;
   }
 `;
@@ -659,9 +679,11 @@ const ActivityFilter = styled.div`
   color: white;
 
   align-items: center;
-
+  @media (max-width: 985px) {
+    max-width: 700px;
+  }
   @media (max-width: 768px) {
-    margin: 50px 20px;
+    /* margin: 50px 20px; */
     width: 90%;
   }
   @media (max-width: 576px) {
@@ -715,7 +737,8 @@ const FilterBar = styled.div`
 const ActivitiesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  /* grid-template-rows: 1fr 1fr 1fr; */
+  grid-template-rows: 1fr 1fr;
   grid-column-gap: 20px;
   grid-row-gap: 40px;
   /* flex-wrap: wrap; */
@@ -724,7 +747,9 @@ const ActivitiesContainer = styled.div`
   max-width: 1024px;
   justify-items: center;
   position: relative;
-  min-height: 960px;
+  /* 調整每頁顯示幾筆 */
+  /* min-height: 960px; */
+  min-height: 640px;
   /* align-items: center; */
   /* justify-content: space-around; */
 

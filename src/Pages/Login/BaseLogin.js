@@ -173,6 +173,7 @@ const SelectTag = styled.button`
   padding-top: 20px;
   padding-bottom: 20px;
   color: #2f2f2f;
+  cursor: pointer;
 `;
 
 const FormDetail = styled.div`

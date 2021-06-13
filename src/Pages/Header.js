@@ -78,6 +78,15 @@ function Header(props) {
     });
     updateInvitation(newInvitation, userDataRedux.uid);
   };
+  const handleGallery = () => {
+    Swal.fire({
+      title: "<span style=font-size:24px>敬請期待！</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
   const handleUserDataChange = () => {};
   const arrangeInvitationData = async () => {
     const invitation = userData.invitation;
@@ -302,10 +311,10 @@ function Header(props) {
           }
         };
         return (
-          <MenuSideBarItem>
+          <MenuSideBarItemInvite>
             邀請
             {invitedActivityHTML()}
-          </MenuSideBarItem>
+          </MenuSideBarItemInvite>
         );
       } else {
         return;
@@ -324,7 +333,13 @@ function Header(props) {
             />
           </CloseIconContainer>
           <MenuItem>{menuLoginHTML()}</MenuItem>
-          <MenuSideBarItem>成果牆</MenuSideBarItem>
+          <MenuSideBarItem
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </MenuSideBarItem>
           {menuCreateHTML()}
           {/* <MenuSideBarItem>邀請</MenuSideBarItem> */}
           {menuMailBoxHTML()}
@@ -411,7 +426,13 @@ function Header(props) {
           </StyledLink>
         </IconContainer>
         <NavItem>
-          <ItemOne>成果牆</ItemOne>
+          <ItemOne
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </ItemOne>
           {handleCreateHTML()}
           {handleLoginHTML()}
         </NavItem>
@@ -507,6 +528,7 @@ const NavMenu = styled.div`
 const MenuIcon = styled.img`
   width: 40px;
   height: 40px;
+  cursor: pointer;
 `;
 const MenuSideBar = styled.div`
   position: fixed;
@@ -530,9 +552,16 @@ const MenuSideBarItem = styled.div`
   margin-left: 10px;
   color: #fff;
   font-weight: bold;
+  cursor: pointer;
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
     0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
 `;
+const MenuSideBarItemInvite = styled.div`
+  margin-left: 10px;
+  color: #fff;
+  font-weight: bold;
+`;
+
 const MenuItem = styled.div``;
 const SideBarProfileContainer = styled.div`
   display: flex;
@@ -716,6 +745,9 @@ const EachMailDivCanvas = styled.div`
 `;
 const EachMailContent = styled.div`
   padding: 10px 20px;
+  @media (max-width: 768px) {
+    padding: 10px 10px;
+  }
 `;
 const EachMailTitle = styled.div`
   font-size: 20px;
