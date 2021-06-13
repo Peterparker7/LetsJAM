@@ -155,9 +155,10 @@ function EditActivitiesMemberButton(props) {
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
 
-              <MemberName>{item.name}</MemberName>
               <MemberCard data={item} />
             </MemberContainer>
+            <MemberName>{item.name}</MemberName>
+
             <BtnAccept
               onClick={() => {
                 handleAgree(item);
@@ -182,9 +183,9 @@ function EditActivitiesMemberButton(props) {
           <EachMemberDiv>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
-              <MemberName>{item.name}</MemberName>
               <MemberCard data={item} />
             </MemberContainer>
+            <MemberName>{item.name}</MemberName>
 
             <BtnKick
               onClick={() => {

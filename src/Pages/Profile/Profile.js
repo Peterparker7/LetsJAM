@@ -911,6 +911,13 @@ const Time = styled.div`
 const Requirement = styled.div`
   margin-top: 10px;
   height: 60px;
+
+  @media (max-width: 768px) {
+    margin-top: 0px;
+
+    line-height: 25px;
+    width: 60%;
+  }
   @media (max-width: 414px) {
     font-size: 10px;
     margin-top: 0px;

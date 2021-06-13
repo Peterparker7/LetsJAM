@@ -195,7 +195,8 @@ function Header(props) {
   };
   const showMenuSideBar = () => {
     const menuCreateHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <StyledLink to={`/activities/create`}>
             <MenuSideBarItem>我要開團</MenuSideBarItem>
@@ -224,7 +225,8 @@ function Header(props) {
     };
 
     const menuLoginHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <SideBarProfileContainer>
             <StyledLink to={`/activities/profile`}>
@@ -256,7 +258,8 @@ function Header(props) {
     };
 
     const menuMailBoxHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         const invitedActivityHTML = () => {
           if (invitationData.length !== 0) {
             const HTML = invitationData.map((item) => {
@@ -760,6 +763,7 @@ const CloseIconContainer = styled.div`
 `;
 const CloseIcon = styled.img`
   width: 100%;
+  position: absolute;
 `;
 
 const Neon = styled.div`

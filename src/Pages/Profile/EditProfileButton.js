@@ -409,7 +409,7 @@ const Container = styled.div`
 const TopBar = styled.div`
   height: 6px;
   width: 100%;
-  background: #ff0099;
+  background: #ff00ff;
 `;
 const CloseIconContainer = styled.div`
   position: absolute;

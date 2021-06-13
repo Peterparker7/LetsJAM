@@ -340,7 +340,7 @@ function Main() {
         let currentTime = Date.now();
 
         let requirementHTML = item.requirement.map((data) => {
-          return <span key={data}>{data} </span>;
+          return <EachInstrument key={data}>{data} </EachInstrument>;
         });
         let attendantsNum = item.attendants.length;
 
@@ -826,7 +826,8 @@ const PageControllContainer = styled.div`
 const Title = styled.div`
   font-size: 20px;
   font-weight: 600;
-  height: 60px;
+  height: 30px;
+  margin-bottom: 10px;
 `;
 const Time = styled.div`
   font-size: 16px;
@@ -834,22 +835,39 @@ const Time = styled.div`
 `;
 const Type = styled.div`
   font-size: 16px;
+  margin-bottom: 10px;
 `;
 const Requirement = styled.div`
   font-size: 16px;
   margin-top: 10px;
   height: 60px;
+  /* try flex */
+  display: flex;
+  flex-wrap: wrap;
+  width: 210px;
+  margin: 0px auto 10px auto;
+  justify-content: center;
+
   @media (max-width: 768px) {
     font-size: 16px;
-    height: unset;
+    height: 40px;
+
+    width: 100%;
+    align-items: center;
+    line-height: 20px;
   }
+`;
+const EachInstrument = styled.div`
+  margin-right: 5px;
 `;
 const Location = styled.div`
   height: 40px;
   line-height: 20px;
+  margin-bottom: 10px;
 
   @media (max-width: 768px) {
     margin-top: 10px;
+    display: none;
   }
 `;
 const Host = styled.div``;
@@ -860,6 +878,7 @@ const AttendantNum = styled.div`
     right: 20px;
     bottom: 10px;
     font-size: 16px;
+    display: none;
   }
 `;
 const ActivityImage = styled.img`

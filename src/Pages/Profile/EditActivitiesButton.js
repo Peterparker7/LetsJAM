@@ -644,7 +644,7 @@ const CloseIconContainer = styled.div`
   cursor: pointer;
   transition: 0.2s;
   &:hover {
-    background: #979797;
+    background: #e8e8e8;
   }
 `;
 const CloseIcon = styled.img`

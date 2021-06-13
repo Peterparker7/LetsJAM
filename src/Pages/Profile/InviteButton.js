@@ -90,36 +90,60 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="bass">Bass</Label>
+          <Label for="bass">貝斯</Label>
           <input
             id="bass"
             type="radio"
             name={"requireInstrument"}
-            value={"bass"}
+            value={"貝斯"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="piano">Piano</Label>
+          <Label for="piano">鍵盤</Label>
           <input
             id="piano"
             type="radio"
             name={"requireInstrument"}
-            value={"piano"}
+            value={"鍵盤"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="drum">木箱鼓</Label>
+          <Label for="cajon">木箱鼓</Label>
+          <input
+            id="cajon"
+            type="radio"
+            name={"requireInstrument"}
+            value={"木箱鼓"}
+            onChange={(e) => {
+              handleRequirement(e.target.value);
+            }}
+          />
+        </RequirementDiv>
+        <RequirementDiv>
+          <Label for="drum">爵士鼓</Label>
           <input
             id="drum"
             type="radio"
             name={"requireInstrument"}
-            value={"木箱鼓"}
+            value={"爵士鼓"}
+            onChange={(e) => {
+              handleRequirement(e.target.value);
+            }}
+          />
+        </RequirementDiv>
+        <RequirementDiv>
+          <Label for="flute">直笛</Label>
+          <input
+            id="flute"
+            type="radio"
+            name={"requireInstrument"}
+            value={"直笛"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
@@ -264,6 +288,7 @@ const TopBar = styled.div`
   height: 6px;
   width: 100%;
   background: #ff00ff;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
 `;
 const CloseIconContainer = styled.div`
   position: absolute;
@@ -306,8 +331,10 @@ const MemberField = styled.div`
   flex-wrap: wrap;
   justify-content: space-around; */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-rows: repeat(auto-fill, 170px);
+  /* grid-template-rows: 1fr 1fr 1fr 1fr 1fr; */
   justify-items: center;
   width: 100%;
   margin: 20px auto;
@@ -335,6 +362,7 @@ const EachUser = styled.div`
   width: auto;
   height: 150px;
   text-align: center;
+  margin-bottom: 20px;
 `;
 const ProfileImage = styled.div`
   width: 80px;
