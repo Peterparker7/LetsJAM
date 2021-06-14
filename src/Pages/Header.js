@@ -239,13 +239,14 @@ function Header(props) {
         return (
           <SideBarProfileContainer>
             <StyledLink to={`/activities/profile`}>
-              <SideBarIconUser
+              {/* <SideBarIconUser
                 style={{
                   background: `url(${userDataRedux.profileImage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "",
                 }}
-              ></SideBarIconUser>
+              ></SideBarIconUser> */}
+              <SideBarIconUser src={userDataRedux.profileImage} />
             </StyledLink>
             <StyledLink to={`/activities/profile`}>
               <MenuSideBarItem>{userDataRedux.name}</MenuSideBarItem>
@@ -572,12 +573,13 @@ const SideBarIconDefault = styled.img`
   height: 80px;
   margin-left: 70px;
 `;
-const SideBarIconUser = styled.div`
+const SideBarIconUser = styled.img`
   width: 80px;
   height: 80px;
   margin-left: 70px;
   border-radius: 50%;
-  background-position: 50% 50%;
+  /* background-position: 50% 50%; */
+  object-fit: cover;
 `;
 
 const NeonShine = keyframes`

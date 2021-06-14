@@ -42,7 +42,7 @@ const NeonBox = styled.div`
   transform: rotate(-0.05turn);
   box-shadow: 0 0 10px #43e8d8, 0 0 20px #43e8d8, inset 0 0 10px #43e8d8;
   animation: ${NeonShine2} 10s 1s linear infinite;
-  z-index: 10;
+  z-index: 4;
   @media (max-width: 576px) {
     /* display: none; */
     width: 80px;
@@ -75,7 +75,7 @@ const NeonBoxClose = styled.div`
   box-shadow: 0 0 10px rgba(255, 65, 65, 1), 0 0 20px rgba(255, 65, 65, 1),
     inset 0 0 10px rgba(255, 65, 65, 1);
   /* animation: ${NeonShine2} 10s 1s linear infinite; */
-  z-index: 10;
+  z-index: 4;
   @media (max-width: 576px) {
     /* display: none; */
     width: 80px;
