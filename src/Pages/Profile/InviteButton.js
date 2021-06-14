@@ -358,8 +358,13 @@ const RequirementField = styled.div`
   height: 30px;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 `;
-const RequirementDiv = styled.div``;
+const RequirementDiv = styled.div`
+  @media (max-width: 576px) {
+    width: 25%;
+  }
+`;
 const EachUser = styled.div`
   /* width: 90px; */
   width: auto;
