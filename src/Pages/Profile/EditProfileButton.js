@@ -39,11 +39,13 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background-color: white;
+background-color: #121212;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 overflow-y: scroll;
 border-radius: 4px;
+border-top: 6px solid #ff00ff;
+
 `;
 let imgSource = "";
 
@@ -274,7 +276,7 @@ function EditProfileButton(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
-          <TopBar></TopBar>
+          {/* <TopBar></TopBar> */}
           <ContentTitle>個人檔案詳細資料</ContentTitle>
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleCancel} />
