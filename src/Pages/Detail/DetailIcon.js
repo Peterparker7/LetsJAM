@@ -19,6 +19,14 @@ const NeonShine2 = keyframes`
 3%{opacity:0}
 4%{opacity:1}
 `;
+const NeonShine3 = keyframes`
+  0% {opacity: 1}
+  10%{opacity:0.5;}
+  20%{opacity:1;}
+  60%{opacity:1;}
+  85%{opacity:1;}
+  100% {opacity: 1}
+`;
 const LimitIconContainer = styled.div`
   width: 20px;
   height: 40px;
@@ -41,7 +49,7 @@ const NeonBox = styled.div`
   top: 10px;
   transform: rotate(-0.05turn);
   box-shadow: 0 0 10px #43e8d8, 0 0 20px #43e8d8, inset 0 0 10px #43e8d8;
-  animation: ${NeonShine2} 10s 1s linear infinite;
+  animation: ${NeonShine3} 10s 1s linear infinite;
   z-index: 4;
   @media (max-width: 576px) {
     /* display: none; */
