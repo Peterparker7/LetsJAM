@@ -22,6 +22,8 @@ import {
   levelIcon,
   limitIcon,
   locationIcon,
+  openlogo,
+  closelogo,
 } from "./DetailIcon";
 
 const StyledModal = Modal.styled`
@@ -146,10 +148,22 @@ function Detail() {
     let time = detailData.time;
     let newFormatDate = new Date(`${date}T${time}`);
     let nowDate = Date.now();
+    // let activityCloseTitleHTML = () => {
+    //   if (newFormatDate < nowDate) {
+    //     // setActivityStatus(false);
+    //     return <CloseTitle>活動已結束</CloseTitle>;
+    //   }
+    // };
     let activityCloseTitleHTML = () => {
       if (newFormatDate < nowDate) {
         // setActivityStatus(false);
-        return <CloseTitle>活動已結束</CloseTitle>;
+        return closelogo();
+      }
+    };
+    let activityOpenTitleHTML = () => {
+      if (newFormatDate > nowDate) {
+        // setActivityStatus(false);
+        return openlogo();
       }
     };
 
@@ -160,7 +174,7 @@ function Detail() {
             <TitleContainer>
               <Title>
                 {detailData.title}
-                {activityCloseTitleHTML()}
+                {/* {activityCloseTitleHTML()} */}
               </Title>
             </TitleContainer>
             <ItemField>
@@ -216,6 +230,8 @@ function Detail() {
           </ActivityDetail>
 
           <ImageContainer>
+            {activityOpenTitleHTML()}
+            {activityCloseTitleHTML()}
             <ActivityImage
               src={`${detailData.fileSource}`}
               alt=""
@@ -620,6 +636,7 @@ const ActivityDetail = styled.div`
   text-align: left;
   margin: 50px 30px 50px 0;
   height: 450px;
+  position: relative;
   @media (max-width: 888px) {
     width: 100%;
     margin: 0;

@@ -1,7 +1,24 @@
 import styled from "styled-components";
 
 import React, { useEffect, useState } from "react";
+import { keyframes } from "styled-components";
 
+const NeonShine = keyframes`
+  0% {opacity: 1}
+  10%{opacity:0.7;}
+  20%{opacity:1;}
+  60%{opacity:1;}
+  70%{opacity:0.7;}
+  85%{opacity:1;}
+  100% {opacity: 1}
+`;
+const NeonShine2 = keyframes`
+  0% {opacity: 1}
+1%{opacity:0}
+2%{opacity:1}
+3%{opacity:0}
+4%{opacity:1}
+`;
 const LimitIconContainer = styled.div`
   width: 20px;
   height: 40px;
@@ -12,6 +29,71 @@ const LimitIconContainer = styled.div`
 const Svg = styled.svg`
   width: 20px;
   height: 100%;
+`;
+const NeonBox = styled.div`
+  margin: 0 auto;
+  border: 4px solid white;
+  border-radius: 8px;
+  width: 100px;
+  padding: 10px;
+  position: absolute;
+  left: -20px;
+  top: 10px;
+  transform: rotate(-0.05turn);
+  box-shadow: 0 0 10px #43e8d8, 0 0 20px #43e8d8, inset 0 0 10px #43e8d8;
+  animation: ${NeonShine2} 10s 1s linear infinite;
+  z-index: 10;
+  @media (max-width: 576px) {
+    /* display: none; */
+    width: 80px;
+  }
+`;
+const NeonText = styled.div`
+  text-align: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1),
+    0 0 60px rgba(255, 65, 65, 1);
+  /* animation: ${NeonShine} 10s 1s linear infinite; */
+  @media (max-width: 576px) {
+    /* display: none; */
+    font-size: 16px;
+  }
+`;
+const NeonBoxClose = styled.div`
+  margin: 0 auto;
+  border: 4px solid white;
+  border-radius: 8px;
+  width: 100px;
+  padding: 10px;
+  position: absolute;
+  left: -20px;
+  top: 10px;
+  transform: rotate(0.05turn);
+  box-shadow: 0 0 10px rgba(255, 65, 65, 1), 0 0 20px rgba(255, 65, 65, 1),
+    inset 0 0 10px rgba(255, 65, 65, 1);
+  /* animation: ${NeonShine2} 10s 1s linear infinite; */
+  z-index: 10;
+  @media (max-width: 576px) {
+    /* display: none; */
+    width: 80px;
+  }
+`;
+const NeonTextClose = styled.div`
+  text-align: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
+    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1),
+    0 0 60px rgba(255, 65, 65, 1);
+  animation: ${NeonShine} 10s 1s linear infinite;
+  @media (max-width: 576px) {
+    /* display: none; */
+    font-size: 16px;
+  }
 `;
 function instrumentIcon(props) {
   return (
@@ -85,7 +167,24 @@ function locationIcon(props) {
   );
 }
 
+function openlogo() {
+  return (
+    <NeonBox>
+      <NeonText>OPEN</NeonText>
+    </NeonBox>
+  );
+}
+function closelogo() {
+  return (
+    <NeonBoxClose>
+      <NeonTextClose>CLOSE</NeonTextClose>
+    </NeonBoxClose>
+  );
+}
+
 export { instrumentIcon };
 export { levelIcon };
 export { limitIcon };
 export { locationIcon };
+export { openlogo };
+export { closelogo };
