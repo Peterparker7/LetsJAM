@@ -39,8 +39,14 @@ const StyledMultiSelect = styled(MultiSelect)`
 
   color: black;
   text-align: left;
+
   .dropdown-content {
   }
+
+  .dropdown-heading {
+    cursor: pointer;
+  }
+
   .item-renderer {
     padding: 10px 5px;
   }

@@ -443,7 +443,7 @@ function Main() {
       {/* <div>
         <InstrumentBanner />
       </div> */}
-
+      {/* <ActivityTitle>活動一覽</ActivityTitle> */}
       <ActivityFilter>
         <FilterTitle>篩選</FilterTitle>
         {/* <SelectTypeComponent /> */}
@@ -692,7 +692,15 @@ const ActivityFilter = styled.div`
     justify-content: space-around;
   }
 `;
-
+const ActivityTitle = styled.div`
+  margin: 20px auto;
+  padding: 0 20px;
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: left;
+  max-width: 1024px;
+`;
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
@@ -883,7 +891,8 @@ const Requirement = styled.div`
   }
 `;
 const EachInstrument = styled.div`
-  margin-right: 5px;
+  margin-right: 3px;
+  margin-left: 3px;
 `;
 const Location = styled.div`
   height: 40px;

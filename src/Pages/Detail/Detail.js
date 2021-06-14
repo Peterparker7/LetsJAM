@@ -17,6 +17,12 @@ import noAttendant from "../../images/noAttendant.png";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import Swal from "sweetalert2";
 import IsLoading from "../../Components/IsLoading";
+import {
+  instrumentIcon,
+  levelIcon,
+  limitIcon,
+  locationIcon,
+} from "./DetailIcon";
 
 const StyledModal = Modal.styled`
 width: 20rem;
@@ -124,6 +130,8 @@ function Detail() {
     let requirementHTML = detailData.requirement.map((item, index) => {
       return <span key={index}>{item} </span>;
     });
+    let requirementArrayDelimiter = detailData.requirement.join(", ");
+
     let activityTime = detailData.timestamp.toDate().toString();
     let showTime = activityTime.slice(0, 21);
     let limit = "";
@@ -164,10 +172,23 @@ function Detail() {
               <InfoBarSecond>
                 {/* <CommentItem>{detailData.comment}</CommentItem> */}
                 {/* <Item>{detailData.timestamp}</Item> */}
-                <Item>需求樂器： {requirementHTML}</Item>
-                <Item>適合程度： {detailData.level}</Item>
-                <Item>人數限制： {limit}</Item>
-                <Item>地點： {detailData.location}</Item>
+                <Item>
+                  {instrumentIcon()}
+                  <div>需求樂器： {requirementArrayDelimiter}</div>
+                </Item>
+                <Item>
+                  {levelIcon()}
+                  適合程度： {detailData.level}
+                </Item>
+
+                <Item>
+                  {limitIcon()}
+                  <div>人數限制： {limit}</div>
+                </Item>
+                <Item>
+                  {locationIcon()}
+                  <div>地點： {detailData.location}</div>
+                </Item>
                 {/* <div>{detailData.id}</div> */}
               </InfoBarSecond>
             </ItemField>
@@ -648,9 +669,12 @@ const CommentItem = styled.div`
   margin: 20px auto;
   line-height: 30px;
 `;
-const TypeItem = styled.div``;
+const TypeItem = styled.div`
+  font-weight: 600;
+`;
 const Item = styled.div`
   width: 100%;
+  display: flex;
 `;
 
 const FadeInOpacity = keyframes`
@@ -717,13 +741,14 @@ const ButtonField = styled.div`
 const RWDButtonField = styled.div`
   /* margin-top: -50px; */
   width: 100%;
-
+  margin-top: 10px;
   text-align: right;
   display: flex;
   padding: 10px;
   @media (max-width: 888px) {
     display: flex;
     justify-content: space-between;
+    margin-top: unset;
   }
   @media (max-width: 576px) {
     /* display: none; */

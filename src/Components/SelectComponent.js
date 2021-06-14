@@ -91,7 +91,7 @@ const ReactSelectComponentWhiteEdit = styled(ReactSelect)`
     color: #aaa;
   }
   .Prefix__option--is-focused {
-    background: #d0d0d0;
+    background: #f1f2f3;
     color: black;
   }
   .Prefix__option--is-selected {
@@ -100,6 +100,9 @@ const ReactSelectComponentWhiteEdit = styled(ReactSelect)`
   }
   .Prefix__menu {
     background-color: #f8f8ff;
+  }
+  .Prefix__option {
+    cursor: pointer;
   }
   transition: 0.3s;
 `;
@@ -167,7 +170,7 @@ const ReactSelectComponentBlackEdit = styled(ReactSelect)`
     padding-right: 12px;
   }
   .Prefix__option--is-focused {
-    background: #d0d0d0;
+    background: #43e8d8;
     color: #121212;
   }
   .Prefix__option--is-selected {

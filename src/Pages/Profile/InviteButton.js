@@ -54,7 +54,7 @@ function InviteButton(props) {
     return (
       <RequirementField>
         <RequirementDiv>
-          <Label for="vocal">Vocal</Label>
+          <Label htmlFor="vocal">Vocal</Label>
           <input
             id="vocal"
             type="radio"
@@ -66,7 +66,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="guitar">吉他</Label>
+          <Label htmlFor="guitar">吉他</Label>
           <input
             id="guitar"
             type="radio"
@@ -78,7 +78,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="electricguitar">電吉他</Label>
+          <Label htmlFor="electricguitar">電吉他</Label>
           <input
             id="electricguitar"
             type="radio"
@@ -90,7 +90,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="bass">貝斯</Label>
+          <Label htmlFor="bass">貝斯</Label>
           <input
             id="bass"
             type="radio"
@@ -102,7 +102,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="piano">鍵盤</Label>
+          <Label htmlFor="piano">鍵盤</Label>
           <input
             id="piano"
             type="radio"
@@ -114,7 +114,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="cajon">木箱鼓</Label>
+          <Label htmlFor="cajon">木箱鼓</Label>
           <input
             id="cajon"
             type="radio"
@@ -126,7 +126,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="drum">爵士鼓</Label>
+          <Label htmlFor="drum">爵士鼓</Label>
           <input
             id="drum"
             type="radio"
@@ -138,7 +138,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="flute">直笛</Label>
+          <Label htmlFor="flute">直笛</Label>
           <input
             id="flute"
             type="radio"
@@ -270,9 +270,12 @@ const Btn = styled.div`
   margin: 10px;
   cursor: pointer;
   box-shadow: 0 0 10px #fffbaa;
+  transition: 0.3s;
 
   &:hover {
     background: #fff860;
+    box-shadow: 0 0 10px #fff860, 0 0 20px #fff860;
+
     color: black;
     transform: translateY(-3px);
   }
@@ -393,11 +396,14 @@ const InviteEachButton = styled.button`
   color: #ff00ff;
   /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff; */
+  cursor: pointer;
+  transition: 0.2s;
 
   &:hover {
     background: #ff00ff;
     box-shadow: 0 0 10px #ff00ff;
     color: white;
+    font-weight: 600;
 
     transform: translateY(-2px);
   }

@@ -151,7 +151,7 @@ function EditActivitiesMemberButton(props) {
           //   isVisible={true}
           //   animationInDelay={index * 50}
           // >
-          <EachMemberDiv>
+          <EachMemberDiv key={item}>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
 
@@ -180,7 +180,7 @@ function EditActivitiesMemberButton(props) {
     if (attendantsData.length !== 0) {
       const attendantsHTML = attendantsData.map((item) => {
         return (
-          <EachMemberDiv>
+          <EachMemberDiv key={item}>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
               <MemberCard data={item} />

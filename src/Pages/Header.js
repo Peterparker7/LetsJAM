@@ -136,7 +136,7 @@ function Header(props) {
           // );
           if (item) {
             return (
-              <EachMailField>
+              <EachMailField key={item}>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
                     onClick={() => {
@@ -277,7 +277,7 @@ function Header(props) {
               // );
               if (item) {
                 return (
-                  <EachMailField>
+                  <EachMailField key={item}>
                     <Link to={`/activities/${item.id}`}>
                       <EachMailDiv
                         style={{

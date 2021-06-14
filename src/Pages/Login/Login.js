@@ -39,9 +39,7 @@ function Login(props) {
         .auth()
         .signInWithEmailAndPassword(userEmail, userPassword)
         .then((result) => {
-          console.log("Login");
           console.log(result.uid);
-          // alert("登入成功！");
           props.props.setIsLogIn(true);
         })
         .then(() => {
@@ -81,9 +79,9 @@ function Login(props) {
     }
   };
 
-  console.log(userInfo);
-  console.log(userEmail);
-  console.log(userPassword);
+  // console.log(userInfo);
+  // console.log(userEmail);
+  // console.log(userPassword);
 
   const formCheck = () => {
     // userInfo = { ...userInfo, skill: skillArray };

@@ -28,6 +28,9 @@ const StyledMultiSelect = styled(MultiSelect)`
 
   color: white;
   text-align: left;
+  .dropdown-heading {
+    cursor: pointer;
+  }
 `;
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -113,19 +116,10 @@ function EditProfileButton(props) {
 
   async function editConfirm(e) {
     if (userProfileImageSource) {
-      console.log("1");
-      console.log(userProfileImageSource);
+      //有變更照片，儲存時顯示isLoading
+      setLoadingStatus(true);
       imageUrl = await uploadImage(userProfileImageSource);
-      console.log(imageUrl);
-    } else {
-      console.log("2");
 
-      imageUrl = userDataRedux.profileImage;
-    }
-
-    setLoadingStatus(true);
-    setTimeout(async () => {
-      setLoadingStatus(false);
       let data = {
         uid: userData.uid,
         name: userData.name,
@@ -136,7 +130,8 @@ function EditProfileButton(props) {
         profileImage: imageUrl,
         youtubeUrl: userData.youtubeUrl,
       };
-      console.log(data);
+
+      setLoadingStatus(false);
 
       if (inputValidation()) {
         let updateToFirebase = await updateUserData(data, userDataRedux.uid);
@@ -146,7 +141,54 @@ function EditProfileButton(props) {
         setOpacity(0);
         setIsOpen(!isOpen);
       }
-    }, 2000);
+    } else {
+      imageUrl = userDataRedux.profileImage;
+
+      let data = {
+        uid: userData.uid,
+        name: userData.name,
+        intro: userData.intro,
+        preferType: userData.preferType,
+        skill: skillArray,
+        favSinger: userData.favSinger,
+        profileImage: imageUrl,
+        youtubeUrl: userData.youtubeUrl,
+      };
+
+      if (inputValidation()) {
+        let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+        // setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+
+        setOpacity(0);
+        setIsOpen(!isOpen);
+      }
+    }
+
+    // setLoadingStatus(true);
+    // setTimeout(async () => {
+    //   setLoadingStatus(false);
+    //   let data = {
+    //     uid: userData.uid,
+    //     name: userData.name,
+    //     intro: userData.intro,
+    //     preferType: userData.preferType,
+    //     skill: skillArray,
+    //     favSinger: userData.favSinger,
+    //     profileImage: imageUrl,
+    //     youtubeUrl: userData.youtubeUrl,
+    //   };
+    //   console.log(data);
+
+    //   if (inputValidation()) {
+    //     let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+    //     // setUserData(data);
+    //     dispatch({ type: "UPDATE_USERDATA", data: data });
+
+    //     setOpacity(0);
+    //     setIsOpen(!isOpen);
+    //   }
+    // }, 1000);
   }
   //
   function handleProfileChange(e, type) {
@@ -166,8 +208,6 @@ function EditProfileButton(props) {
     imgSource = e.target.files[0];
     setUserProfileImage(URL.createObjectURL(imgSource));
     setUserProfileImageSource(imgSource);
-    console.log(imgSource);
-    console.log(userProfileImage);
     setImgCover("cover");
   }
   const handleIsLoading = () => {
@@ -205,6 +245,7 @@ function EditProfileButton(props) {
     setUserData(userDataRedux);
     setUserProfileImage(userDataRedux.profileImage);
     setSkill(skillFormat);
+    setUserProfileImageSource();
   }
 
   function afterOpen() {
@@ -227,7 +268,7 @@ function EditProfileButton(props) {
         isOpen={isOpen}
         afterOpen={afterOpen}
         beforeClose={beforeClose}
-        onBackgroundClick={toggleModal}
+        onBackgroundClick={toggleCancel}
         // onEscapeKeydown={}
         opacity={opacity}
         backgroundProps={{ opacity }}
@@ -507,7 +548,12 @@ const BtnConfirm = styled.div`
   border: 1px solid #43e8d8;
   border-radius: 8px;
   /* width: 100px; */
-  padding: 12px 40px;
+  /* padding: 12px 40px; */
+  /* 按鈕內要放isloading */
+  width: 120px;
+  height: 44px;
+  line-height: 44px;
+
   align-items: center;
   position: relative;
   cursor: pointer;
@@ -529,7 +575,7 @@ const ValidationResult = styled.div`
   width: auto;
   font-size: 14px;
   width: 160px;
-  bottom: -30px;
+  bottom: -40px;
   left: -24px;
   @media (max-width: 576px) {
   }

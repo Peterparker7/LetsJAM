@@ -9,6 +9,7 @@ import {
   getAllUser,
   sendUserInvite,
 } from "../../utils/firebase";
+import xIcon from "../../images/x.svg";
 
 const StyledModal = Modal.styled`
   width: 25rem;
@@ -87,6 +88,9 @@ function MemberCard(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
+          <CloseIconContainer>
+            <CloseIcon src={xIcon} onClick={toggleModal} />
+          </CloseIconContainer>
           <BackBar>
             <BackImg src={props.data.profileImage}></BackImg>
           </BackBar>
@@ -221,5 +225,23 @@ const Btn = styled.button`
     /* border: 1px solid #ff00ff; */
     box-shadow: 0 0 50px #ff00ff;
   }
+`;
+const CloseIconContainer = styled.div`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 20px;
+  right: 10px;
+  z-index: 5;
+  cursor: pointer;
+  transition: 0.1s;
+
+  &:hover {
+    background: #2d2d2d;
+  }
+`;
+const CloseIcon = styled.img`
+  width: 100%;
 `;
 export default MemberCard;

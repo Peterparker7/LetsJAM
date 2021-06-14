@@ -117,9 +117,9 @@ function Profile(props) {
   };
 
   const renderProfile = () => {
-    let requirementHTML = userDataRedux.skill.map((data) => {
-      return <span>{data} &nbsp;</span>;
-    });
+    // let requirementHTML = userDataRedux.skill.map((data) => {
+    //   return <span>{data} &nbsp;</span>;
+    // });
     let skillArray = userDataRedux.skill;
     let skillArrayDelimiter = skillArray.join(", ");
     return (
@@ -180,7 +180,7 @@ function Profile(props) {
       }
     });
   };
-  console.log(props.isLogIn);
+
   const handleLogOut = async () => {
     Swal.fire({
       title: "<span style=font-size:24px>確定要登出嗎?</span>",
@@ -272,19 +272,19 @@ function Profile(props) {
         let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
         let requirementHTML = data.requirement.map((data) => {
-          return <span>{data} </span>;
+          return <span key={data}>{data} </span>;
         });
 
         if (newFormatDate > nowDate) {
           return (
             <Animated
+              key={data.id}
               animationIn="fadeIn"
               // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 50}
             >
               <EachActivityContainer
-                key={data.id}
                 style={
                   toggleFilter ? { display: "block" } : { display: "none" }
                 }
@@ -329,6 +329,7 @@ function Profile(props) {
         } else if (newFormatDate < nowDate) {
           return (
             <EachHistoryActivityContainer
+              key={data}
               style={!toggleFilter ? { display: "block" } : { display: "none" }}
             >
               <Link to={`/activities/${data.id}`}>
@@ -370,14 +371,14 @@ function Profile(props) {
         let showTime = activityTime.slice(0, 21);
 
         let requirementHTML = data.requirement.map((data) => {
-          return <span>{data} </span>;
+          return <span key={data}>{data} </span>;
         });
 
         const applyStatusHTML = () => {
           if (data.attendants.includes(userDataRedux.uid)) {
-            return <ApplyStatusTagJoin>已加入</ApplyStatusTagJoin>;
+            return <ApplyStatusTagJoin key={data}>已加入</ApplyStatusTagJoin>;
           } else if (data.applicants.includes(userDataRedux.uid)) {
-            return <ApplyStatusTagWait>申請中</ApplyStatusTagWait>;
+            return <ApplyStatusTagWait key={data}>申請中</ApplyStatusTagWait>;
           }
           return applyStatusHTML;
         };
@@ -794,6 +795,7 @@ const NoContent = styled.div`
   width: 100%;
   margin: auto;
   font-size: 24px;
+  font-weight: 600;
   position: absolute;
   top: 50%;
   color: white;
