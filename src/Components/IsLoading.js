@@ -9,6 +9,8 @@ const StyleProgress = styled(CircularProgress)`
   }
 `;
 const StyleDiv = styled.div`
+  width: 100%;
+  min-height: 100vh;
   .MuiCircularProgress-root {
     color: #4cffee;
   }
@@ -16,7 +18,8 @@ const StyleDiv = styled.div`
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "50px auto",
+    margin: "0px auto",
+    paddingTop: "50px",
     display: "flex",
     width: "40px",
     justifyContent: "center",

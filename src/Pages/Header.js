@@ -20,6 +20,8 @@ import {
 } from "../utils/firebase";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Animated } from "react-animated-css";
+import Swal from "sweetalert2";
+
 import xIcon from "../images/x.svg";
 
 function Header(props) {
@@ -34,10 +36,14 @@ function Header(props) {
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
+
     if (userUid) {
       const data = await getUserData(userUid);
       setUserData(data);
       dispatch({ type: "UPDATE_USERDATA", data: data });
+    } else {
+      //沒有usedUid要把userData設回空的不然會留著之前的state
+      setUserData([]);
     }
   };
 
@@ -71,6 +77,15 @@ function Header(props) {
       invitation: newInvitation,
     });
     updateInvitation(newInvitation, userDataRedux.uid);
+  };
+  const handleGallery = () => {
+    Swal.fire({
+      title: "<span style=font-size:24px>敬請期待！</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
   const handleUserDataChange = () => {};
   const arrangeInvitationData = async () => {
@@ -121,7 +136,7 @@ function Header(props) {
           // );
           if (item) {
             return (
-              <EachMailField>
+              <EachMailField key={item}>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
                     onClick={() => {
@@ -189,7 +204,8 @@ function Header(props) {
   };
   const showMenuSideBar = () => {
     const menuCreateHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <StyledLink to={`/activities/create`}>
             <MenuSideBarItem>我要開團</MenuSideBarItem>
@@ -200,7 +216,14 @@ function Header(props) {
           <StyledLink to={`/activities/login`}>
             <MenuSideBarItem
               onClick={() => {
-                alert("登入以使用開團功能");
+                Swal.fire({
+                  title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                  customClass: "customSwal2Title",
+                  background: "black",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+                // alert("登入以使用開團功能");
               }}
             >
               我要開團
@@ -211,17 +234,19 @@ function Header(props) {
     };
 
     const menuLoginHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <SideBarProfileContainer>
             <StyledLink to={`/activities/profile`}>
-              <SideBarIconUser
+              {/* <SideBarIconUser
                 style={{
                   background: `url(${userDataRedux.profileImage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "",
                 }}
-              ></SideBarIconUser>
+              ></SideBarIconUser> */}
+              <SideBarIconUser src={userDataRedux.profileImage} />
             </StyledLink>
             <StyledLink to={`/activities/profile`}>
               <MenuSideBarItem>{userDataRedux.name}</MenuSideBarItem>
@@ -243,7 +268,8 @@ function Header(props) {
     };
 
     const menuMailBoxHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         const invitedActivityHTML = () => {
           if (invitationData.length !== 0) {
             const HTML = invitationData.map((item) => {
@@ -252,7 +278,7 @@ function Header(props) {
               // );
               if (item) {
                 return (
-                  <EachMailField>
+                  <EachMailField key={item}>
                     <Link to={`/activities/${item.id}`}>
                       <EachMailDiv
                         style={{
@@ -286,10 +312,10 @@ function Header(props) {
           }
         };
         return (
-          <MenuSideBarItem>
+          <MenuSideBarItemInvite>
             邀請
             {invitedActivityHTML()}
-          </MenuSideBarItem>
+          </MenuSideBarItemInvite>
         );
       } else {
         return;
@@ -308,7 +334,13 @@ function Header(props) {
             />
           </CloseIconContainer>
           <MenuItem>{menuLoginHTML()}</MenuItem>
-          <MenuSideBarItem>成果牆</MenuSideBarItem>
+          <MenuSideBarItem
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </MenuSideBarItem>
           {menuCreateHTML()}
           {/* <MenuSideBarItem>邀請</MenuSideBarItem> */}
           {menuMailBoxHTML()}
@@ -331,7 +363,14 @@ function Header(props) {
         <StyledLink to={`/activities/login`}>
           <ItemTwo
             onClick={() => {
-              alert("登入以使用開團功能");
+              Swal.fire({
+                title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                customClass: "customSwal2Title",
+                background: "black",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              // alert("登入以使用開團功能");
             }}
           >
             我要開團
@@ -388,7 +427,13 @@ function Header(props) {
           </StyledLink>
         </IconContainer>
         <NavItem>
-          <ItemOne>成果牆</ItemOne>
+          <ItemOne
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </ItemOne>
           {handleCreateHTML()}
           {handleLoginHTML()}
         </NavItem>
@@ -462,6 +507,10 @@ const IconUser = styled.img`
   margin-left: 10px;
   object-fit: cover;
   border-radius: 50%;
+  transition: 0.2s;
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const NavItem = styled.div`
@@ -480,6 +529,7 @@ const NavMenu = styled.div`
 const MenuIcon = styled.img`
   width: 40px;
   height: 40px;
+  cursor: pointer;
 `;
 const MenuSideBar = styled.div`
   position: fixed;
@@ -503,9 +553,16 @@ const MenuSideBarItem = styled.div`
   margin-left: 10px;
   color: #fff;
   font-weight: bold;
+  cursor: pointer;
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
     0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
 `;
+const MenuSideBarItemInvite = styled.div`
+  margin-left: 10px;
+  color: #fff;
+  font-weight: bold;
+`;
+
 const MenuItem = styled.div``;
 const SideBarProfileContainer = styled.div`
   display: flex;
@@ -516,12 +573,13 @@ const SideBarIconDefault = styled.img`
   height: 80px;
   margin-left: 70px;
 `;
-const SideBarIconUser = styled.div`
+const SideBarIconUser = styled.img`
   width: 80px;
   height: 80px;
   margin-left: 70px;
   border-radius: 50%;
-  background-position: 50% 50%;
+  /* background-position: 50% 50%; */
+  object-fit: cover;
 `;
 
 const NeonShine = keyframes`
@@ -570,6 +628,8 @@ const Item = styled.div`
   margin-right: 5px;
   margin-left: 20px;
   color: #fff;
+  transition: 0.2s;
+  cursor: pointer;
   &:hover {
     transform: translateY(-2px);
     text-shadow: 0 0 10px #4cffee, 0 0 40px #4cffee, 0 0 50px #4cffee,
@@ -611,6 +671,8 @@ const MailBoxIconContainer = styled.div`
   position: relative;
   z-index: 5;
   cursor: pointer;
+  transition: 0.2s;
+
   &:hover {
     transform: translateY(-3px);
   }
@@ -685,6 +747,9 @@ const EachMailDivCanvas = styled.div`
 `;
 const EachMailContent = styled.div`
   padding: 10px 20px;
+  @media (max-width: 768px) {
+    padding: 10px 10px;
+  }
 `;
 const EachMailTitle = styled.div`
   font-size: 20px;
@@ -732,6 +797,7 @@ const CloseIconContainer = styled.div`
 `;
 const CloseIcon = styled.img`
   width: 100%;
+  position: absolute;
 `;
 
 const Neon = styled.div`

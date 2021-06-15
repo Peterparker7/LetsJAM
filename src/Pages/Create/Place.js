@@ -120,6 +120,9 @@ const PlaceInput = styled.input`
   width: 220px;
   /* height: 40px; */
   padding: 5px;
+  ::placeholder {
+    color: #aaa;
+  }
   @media (max-width: 768px) {
     width: 100%;
   }

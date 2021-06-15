@@ -3,6 +3,7 @@ import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useRef } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import MyComponent from "../../Map";
@@ -18,9 +19,19 @@ import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
 import UsePlace from "./UsePlace";
 import Place from "./Place";
+import IsLoading from "../../Components/IsLoading";
 
 import CircularIndeterminate from "./CircularProgress";
-import SelectTypeComponent from "../../Components/SelectType";
+import {
+  SelectTypeWhiteHTML,
+  SelectRequireWhiteHTML,
+} from "../../Components/SelectComponent";
+import {
+  MaterialUIPickersTime,
+  MaterialUIPickersDate,
+} from "../../Components/DateTimePicker";
+import Tooltip from "@material-ui/core/Tooltip";
+import arrowLeft from "../../images/arrow-left-short.svg";
 
 const db = window.firebase.firestore();
 // let checked = false;
@@ -29,6 +40,20 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #f8f8ff;
+  --rmsc-selected: #43ede8a6;
+  --rmsc-main: none;
+  --rmsc-h: 38px !important;
+
+  --rmsc-p: 5px;
+  transition: 0.3s;
+  .dropdown-heading {
+  }
+  .dropdown-content {
+  }
+  .item-renderer {
+    padding: 5px 5px;
+  }
+
   @media (max-width: 768px) {
     width: 90%;
   }
@@ -36,6 +61,7 @@ const StyledMultiSelect = styled(MultiSelect)`
     width: 90%;
   }
 `;
+let currentNumber = 1;
 
 function Create(props) {
   const [title, setTitle] = useState("");
@@ -136,13 +162,15 @@ function Create(props) {
     // checkUserIsLogin();
     setDate(sat);
     setTime("16:00");
+    currentNumber = 1;
   }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   if (props.userUid === "") {
-    return null;
+    return <IsLoading />;
+    // return null;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
@@ -220,55 +248,72 @@ function Create(props) {
   };
 
   const clickCreate = async () => {
-    if (checked) {
-      setLimit(0);
-    }
+    console.log(currentNumber);
+    // if (checked) {
+    //   setLimit(0);
+    //   currentNumber = 0;
+    // } else {
+    //   setLimit(currentNumber);
+    // }
     console.log(time);
     console.log(date);
     console.log(type);
     console.log(place);
     console.log(location);
     console.log(limit);
-    convertDateTime();
-    let timestamp = new Date(
-      convertDateTime().formatDateYear,
-      convertDateTime().formatDateMonth - 1,
-      convertDateTime().formatDateDate,
-      convertDateTime().formatTimeHour,
-      convertDateTime().formatTimeSecond
-    );
+    // convertDateTime();
+    // let timestamp = new Date(
+    //   convertDateTime().formatDateYear,
+    //   convertDateTime().formatDateMonth - 1,
+    //   convertDateTime().formatDateDate,
+    //   convertDateTime().formatTimeHour,
+    //   convertDateTime().formatTimeSecond
+    // );
 
     let newTimestamp = new Date(`${date}T${time}`);
+    let timestamp = new Date(`${date}T${time}`);
+    console.log(
+      "🚀 ~ file: Create.js ~ line 268 ~ clickCreate ~ timestamp",
+      timestamp
+    );
 
     // imageUrl = await uploadImage(imgSource);
 
     const activityData = db.collection("activityData").doc();
 
-    let newData = {
-      id: activityData.id,
-      title: title,
-      type: type,
-      limit: limit,
-      newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
-      timestamp: timestamp, //firebase內建timestamp
-      location: place,
-      geo: ["10", "10"],
-      requirement: requirementArray,
-      level: level,
-      host: host, //or id?
-      attendants: [],
-      applicants: [],
-      comment: comment,
-      youtubeSource: youtubeUrl,
-      fileSource: imgUrl,
-      status: true,
-      date: date,
-      time: time,
-    };
-
     if (createFormCheck()) {
+      if (checked) {
+        setLimit(0);
+        currentNumber = 0;
+      } else {
+        setLimit(currentNumber);
+      }
+      let newData = {
+        id: activityData.id,
+        title: title,
+        type: type,
+        limit: currentNumber,
+        // limit: limit,
+        newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
+        timestamp: timestamp, //firebase內建timestamp
+        location: place,
+        geo: ["10", "10"],
+        requirement: requirementArray,
+        level: level,
+        host: host, //or id?
+        attendants: [],
+        applicants: [],
+        comment: comment,
+        youtubeSource: youtubeUrl,
+        fileSource: imgUrl,
+        status: true,
+        date: date,
+        time: time,
+      };
       await activityData.set(newData);
-      window.location.replace("./");
+      history.push("/");
+      // window.location.replace("./");
+      currentNumber = 1;
     }
   };
 
@@ -284,11 +329,10 @@ function Create(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
-    // { label: "貝斯", value: "貝斯" },
-    // { label: "鍵盤", value: "鍵盤" },
-    // { label: "爵士鼓", value: "爵士鼓" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   let requirementArray = [];
@@ -311,17 +355,20 @@ function Create(props) {
       setTitleStatus(true);
     }
     if (changeType === "date") {
-      setDate(e.target.value);
+      setDate(e);
+      console.log(e);
       setDateStatus(true);
-      if (nowDate >= Date.parse(e.target.value) + 16 * 60 * 60000) {
+      if (nowDate >= Date.parse(e) + 16 * 60 * 60000) {
         setDateStatus(false);
       }
     }
     if (changeType === "time") {
-      let a = e.target.value.split(":");
+      let a = e.split(":");
+      // let a = e.target.value.split(":");
       let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
-
-      setTime(e.target.value);
+      console.log("kkk");
+      setTime(e);
+      // setTime(e.target.value);
       setTimeStatus(true);
       if (nowDate >= Date.parse(date) + milliseconds - deviation) {
         setTimeStatus(false);
@@ -336,8 +383,9 @@ function Create(props) {
       // setLevelStatus(true);
     }
     if (changeType === "limit") {
-      setLimit(e.target.value);
+      // setLimit(e.target.value);
       setLimitStatus(true);
+      currentNumber = e.target.value;
     }
     if (changeType === "location") {
       setLocation(e.target.value);
@@ -369,13 +417,15 @@ function Create(props) {
         <div>
           <LimitInputField
             type="number"
-            defaultValue={limit}
+            defaultValue={currentNumber}
+            // defaultValue={limit}
             min="1"
             max="20"
             onChange={(e) => {
               // limitinit = e.target.value;
               // setLimit(e.target.value);
               handleChange(e, "limit");
+              // limit = e.target.value;
             }}
           />
         </div>
@@ -394,12 +444,12 @@ function Create(props) {
       console.log(imgSource);
       // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
 
       setimgUrl(imageUrl);
       console.log(imageUrl);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
     }
   }
 
@@ -412,7 +462,16 @@ function Create(props) {
         {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
           <CreateDetailTopBar></CreateDetailTopBar>
+          <Tooltip title="回上頁" interactive>
+            <BackArrowContainer>
+              <Link to={"/"}>
+                <BackArrow src={arrowLeft} />
+              </Link>
+            </BackArrowContainer>
+          </Tooltip>
+
           <Title>我要開團</Title>
+
           <CreateDetail>
             <CreateDetailContent>
               <InputFieldDiv>
@@ -434,50 +493,55 @@ function Create(props) {
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>日期</Label>
-                <Inputfield
+                {/* <Inputfield
                   defaultValue={sat}
                   type="date"
                   onChange={(e) => {
                     handleChange(e, "date");
                   }}
-                ></Inputfield>
+                ></Inputfield> */}
+                <MaterialUIPickersDate
+                  handleChange={handleChange}
+                  // time={time}
+                  // datesat={date}
+                />
                 {Warning.warningDateHTML(date, dateStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>時間</Label>
-                <Inputfield
+                {/* <Inputfield
                   defaultValue="16:00:00"
                   type="time"
                   onChange={(e) => {
                     handleChange(e, "time");
+                    console.log(e.target.value);
                   }}
                   step={300}
-                ></Inputfield>
+                ></Inputfield> */}
+                <MaterialUIPickersTime
+                  handleChange={handleChange}
+                  // time={time}
+                  // datesat={date}
+                />
                 {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>音樂類型</Label>
-                {/* <Inputfield
-          onChange={(e) => {
-            setType(e.target.value);
-          }}
-        ></Inputfield> */}
-                <SelectType
+                <SelectTypeWhiteHTML setType={setType} />
+
+                {/* <SelectType
                   onChange={(e) => {
                     handleChange(e, "type");
                   }}
                 >
-                  {/* <option value="" disabled selected>
-                    請選擇主要曲風
-                  </option> */}
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
-                </SelectType>
+                </SelectType> */}
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-              {/* <SelectTypeComponent /> */}
+              {/* <SelectRequireWhiteHTML setRequirement={setRequirement} /> */}
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
@@ -485,6 +549,7 @@ function Create(props) {
                   className="createPageMultiSelect"
                   options={options}
                   value={requirement}
+                  disableSearch={true}
                   overrideStrings={override}
                   onChange={(value) => {
                     setRequirement(value);
@@ -662,6 +727,7 @@ const Container = styled.div`
   max-width: 1024px;
   margin: 0 auto;
   height: 100%;
+  position: relative;
   /* border: 1px solid #979797; */
   /* padding: 50px 20px; */
 `;
@@ -675,6 +741,20 @@ const CreateDetailTopBar = styled.div`
   width: 100%;
   height: 8px;
   background: #43e8d8;
+`;
+const BackArrowContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: -39px;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-3px);
+  }
+`;
+const BackArrow = styled.img`
+  width: 100%;
 `;
 const CreateDetailContainer = styled.div`
   max-width: 888px;
@@ -752,6 +832,7 @@ const InputFieldDiv = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  /* height: 40px; */
   /* text-align: center; */
 `;
 const Inputfield = styled.input`
@@ -759,6 +840,9 @@ const Inputfield = styled.input`
   width: 220px;
   height: auto;
   padding: 5px;
+  ::placeholder {
+    color: #aaa;
+  }
   @media (max-width: 768px) {
     width: 90%;
   }

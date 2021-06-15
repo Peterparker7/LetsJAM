@@ -16,6 +16,13 @@ import neonBand from "../../images/neon-band.jpg";
 import InstrumentBanner from "./InstrumentBanner";
 import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
+import SelectTypeComponent from "../../Components/SelectComponent";
+import Select from "react-select";
+import {
+  SelectTypeHTML,
+  SelectRequireHTML,
+} from "../../Components/SelectComponent";
+
 import { Animated } from "react-animated-css";
 import CircularIndeterminate from "../Create/CircularProgress";
 import neonGuitar1 from "../../images/neonGuitar1.png";
@@ -34,8 +41,10 @@ function Main() {
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
   const [completePaginate, setCompletePaginate] = useState();
-  let pageLen = 9;
-
+  let pageLen = 6;
+  new window.WOW().init();
+  const [type, setType] = useState("所有類型");
+  const [require, setRequire] = useState("所有樂器");
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
@@ -110,6 +119,9 @@ function Main() {
     handlePagination();
   }, [data]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // if (!data) {
   //   return "isLoading";
   // }
@@ -120,18 +132,27 @@ function Main() {
   // if (!data || allPaginateArray.length <= 0) {
   //   return <div style={{ minHeight: `calc(100vh - 180px) ` }}>Loading</div>;
   // }
+  const handleGallery = () => {
+    Swal.fire({
+      title: "<span style=font-size:24px>敬請期待！</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
 
   const handleFilter = (e, filter) => {
-    const selectType = document.querySelector("#selectType");
-    const selectRequirement = document.querySelector("#selectRequirement");
+    // const selectType = document.querySelector("#selectType");
+    // const selectRequirement = document.querySelector("#selectRequirement");
     if (filter === "type") {
       if (e === "所有類型") {
-        if (selectRequirement.value === "所有樂器") {
+        if (require === "所有樂器") {
           setData(allActivitiesArray);
           return;
         }
         const alltype = allActivitiesArray.filter((item) => {
-          if (item.requirement.includes(selectRequirement.value)) {
+          if (item.requirement.includes(require)) {
             return item;
           }
         });
@@ -144,11 +165,11 @@ function Main() {
         }
       });
       setData(iscontain);
-      if (selectRequirement.value === "所有樂器") {
+      if (require === "所有樂器") {
         setData(iscontain);
       } else {
         const bothcontain = iscontain.filter((item) => {
-          if (item.requirement.includes(selectRequirement.value)) {
+          if (item.requirement.includes(require)) {
             return item;
           }
         });
@@ -157,12 +178,12 @@ function Main() {
     }
     if (filter === "requirement") {
       if (e === "所有樂器") {
-        if (selectType.value === "所有類型") {
+        if (type === "所有類型") {
           setData(allActivitiesArray);
           return;
         }
         const allrequirement = allActivitiesArray.filter((item) => {
-          if (item.type.includes(selectType.value)) {
+          if (item.type.includes(type)) {
             return item;
           }
         });
@@ -174,11 +195,11 @@ function Main() {
           return item;
         }
       });
-      if (selectType.value === "所有類型") {
+      if (type === "所有類型") {
         setData(iscontain);
       } else {
         const bothcontain = iscontain.filter((item) => {
-          if (item.type.includes(selectType.value)) {
+          if (item.type.includes(type)) {
             return item;
           }
         });
@@ -188,6 +209,73 @@ function Main() {
       // allActivitiesArray = iscontain;
     }
   };
+  // const handleFilter = (e, filter) => {
+  //   const selectType = document.querySelector("#selectType");
+  //   const selectRequirement = document.querySelector("#selectRequirement");
+  //   if (filter === "type") {
+  //     if (e === "所有類型") {
+  //       if (selectRequirement.value === "所有樂器") {
+  //         setData(allActivitiesArray);
+  //         return;
+  //       }
+  //       const alltype = allActivitiesArray.filter((item) => {
+  //         if (item.requirement.includes(selectRequirement.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(alltype);
+  //       return;
+  //     }
+  //     const iscontain = allActivitiesArray.filter((item) => {
+  //       if (item.type.includes(e)) {
+  //         return item;
+  //       }
+  //     });
+  //     setData(iscontain);
+  //     if (selectRequirement.value === "所有樂器") {
+  //       setData(iscontain);
+  //     } else {
+  //       const bothcontain = iscontain.filter((item) => {
+  //         if (item.requirement.includes(selectRequirement.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(bothcontain);
+  //     }
+  //   }
+  //   if (filter === "requirement") {
+  //     if (e === "所有樂器") {
+  //       if (selectType.value === "所有類型") {
+  //         setData(allActivitiesArray);
+  //         return;
+  //       }
+  //       const allrequirement = allActivitiesArray.filter((item) => {
+  //         if (item.type.includes(selectType.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(allrequirement);
+  //       return;
+  //     }
+  //     const iscontain = allActivitiesArray.filter((item) => {
+  //       if (item.requirement.includes(e)) {
+  //         return item;
+  //       }
+  //     });
+  //     if (selectType.value === "所有類型") {
+  //       setData(iscontain);
+  //     } else {
+  //       const bothcontain = iscontain.filter((item) => {
+  //         if (item.type.includes(selectType.value)) {
+  //           return item;
+  //         }
+  //       });
+  //       setData(bothcontain);
+  //     }
+
+  //     // allActivitiesArray = iscontain;
+  //   }
+  // };
 
   const handleRequirementFilter = () => {};
   const handleCreateNow = () => {
@@ -261,13 +349,14 @@ function Main() {
         let currentTime = Date.now();
 
         let requirementHTML = item.requirement.map((data) => {
-          return <span key={data}>{data} </span>;
+          return <EachInstrument key={data}>{data} </EachInstrument>;
         });
         let attendantsNum = item.attendants.length;
 
         if (firebaseTime > currentTime) {
           return (
             <Animated
+              // className="wow"
               animationIn="bounceInLeft"
               // animationOut="fadeOut"
               isVisible={true}
@@ -331,7 +420,11 @@ function Main() {
           isVisible={true}
         >
           <SubSlogan>遇見更多音樂同好、即刻成團</SubSlogan>
-          <LearnMore>
+          <LearnMore
+            onClick={() => {
+              handleGallery();
+            }}
+          >
             <LearnMoreSlogan>Learn More</LearnMoreSlogan>
             <ArrowRight src={arrowRight}></ArrowRight>
           </LearnMore>
@@ -350,9 +443,16 @@ function Main() {
       {/* <div>
         <InstrumentBanner />
       </div> */}
-
+      {/* <ActivityTitle>活動一覽</ActivityTitle> */}
       <ActivityFilter>
         <FilterTitle>篩選</FilterTitle>
+        {/* <SelectTypeComponent /> */}
+        <SelectTypeHTML setType={setType} handleFilter={handleFilter} />
+        <SelectRequireHTML
+          setRequire={setRequire}
+          handleFilter={handleFilter}
+        />
+
         <FilterBar>
           <Filterlabel>類型</Filterlabel>
           <FilterSelect
@@ -420,7 +520,7 @@ const MainContainer = styled.main`
 `;
 
 const Carosul = styled.div`
-  height: 600px;
+  height: 650px;
   /* background: black; */
   background: url(${neonBand});
   background-size: cover;
@@ -428,7 +528,7 @@ const Carosul = styled.div`
   background-position: 50% 50%;
   position: relative;
   @media (max-width: 576px) {
-    height: 300px;
+    height: 600px;
   }
 `;
 const NeonShine = keyframes`
@@ -457,6 +557,9 @@ const Slogan = styled.div`
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
     0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   animation: ${NeonShine} 3s 1s linear infinite;
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 36px;
     left: 60px;
@@ -470,10 +573,14 @@ const SubSlogan = styled.div`
   top: 40%;
   left: 120px;
   line-height: 40px;
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    top: 47%;
+    /* top: 47%; */
+    top: 24%;
   }
 `;
 const LearnMore = styled.div`
@@ -484,10 +591,19 @@ const LearnMore = styled.div`
   top: 47%;
   left: 120px;
   display: flex;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-3px);
+  }
+  @media (max-width: 768px) {
+    left: 80px;
+  }
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    top: 57%;
+    /* top: 57%; */
+    top: 30%;
   }
 `;
 const LearnMoreSlogan = styled.div``;
@@ -513,7 +629,7 @@ const JoinButton = styled.button`
   border-radius: 30px;
   /* background: #43e8d8; */
   /* background: #ff00ff; */
-  border: 3px solid #43e8d8;
+  border: 3px solid #fff;
 
   padding: 12px 60px;
   font-size: 24px;
@@ -523,7 +639,7 @@ const JoinButton = styled.button`
   color: white;
   text-shadow: 0 0 5px #43e8d8, 0 0 10px #43e8d8, 0 0 20px #43e8d8,
     0 0 40px #43e8d8;
-  box-shadow: 0 0 20px #43e8d8, inset 0 0 20px #43e8d8;
+  box-shadow: 0 0 20px #43e8d8, inset 0 0 20px #43e8d8, 0 0 40px #43e8d8;
   &:hover {
     border: 3px solid #4cffee;
 
@@ -534,7 +650,7 @@ const JoinButton = styled.button`
     transform: translateY(-2px);
   }
   @media (max-width: 576px) {
-    font-size: 16px;
+    font-size: 20px;
     padding: 12px 48px;
   }
 `;
@@ -563,13 +679,33 @@ const ActivityFilter = styled.div`
   color: white;
 
   align-items: center;
+  @media (max-width: 985px) {
+    max-width: 700px;
+  }
+  @media (max-width: 768px) {
+    /* margin: 50px 20px; */
+    width: 90%;
+  }
+  @media (max-width: 576px) {
+    padding: 0px 0px;
+    width: 90%;
+    justify-content: space-around;
+  }
 `;
-
+const ActivityTitle = styled.div`
+  margin: 20px auto;
+  padding: 0 20px;
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: left;
+  max-width: 1024px;
+`;
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
   @media (max-width: 576px) {
-    font-size: 12px;
+    font-size: 16px;
     padding-left: 0px;
   }
 `;
@@ -596,6 +732,8 @@ const FilterBar = styled.div`
   align-items: center;
   margin-left: 20px;
   padding-right: 10px;
+  /* 隱藏但不能拿掉不然filter會壞掉 */
+  display: none;
   @media (max-width: 576px) {
     font-size: 12px;
   }
@@ -607,7 +745,8 @@ const FilterBar = styled.div`
 const ActivitiesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  /* grid-template-rows: 1fr 1fr 1fr; */
+  grid-template-rows: 1fr 1fr;
   grid-column-gap: 20px;
   grid-row-gap: 40px;
   /* flex-wrap: wrap; */
@@ -616,7 +755,9 @@ const ActivitiesContainer = styled.div`
   max-width: 1024px;
   justify-items: center;
   position: relative;
-  min-height: 960px;
+  /* 調整每頁顯示幾筆 */
+  /* min-height: 960px; */
+  min-height: 640px;
   /* align-items: center; */
   /* justify-content: space-around; */
 
@@ -718,7 +859,8 @@ const PageControllContainer = styled.div`
 const Title = styled.div`
   font-size: 20px;
   font-weight: 600;
-  height: 60px;
+  height: 30px;
+  margin-bottom: 10px;
 `;
 const Time = styled.div`
   font-size: 16px;
@@ -726,22 +868,40 @@ const Time = styled.div`
 `;
 const Type = styled.div`
   font-size: 16px;
+  margin-bottom: 10px;
 `;
 const Requirement = styled.div`
   font-size: 16px;
   margin-top: 10px;
   height: 60px;
+  /* try flex */
+  display: flex;
+  flex-wrap: wrap;
+  width: 210px;
+  margin: 0px auto 10px auto;
+  justify-content: center;
+
   @media (max-width: 768px) {
     font-size: 16px;
-    height: unset;
+    height: 40px;
+
+    width: 100%;
+    align-items: center;
+    line-height: 20px;
   }
+`;
+const EachInstrument = styled.div`
+  margin-right: 3px;
+  margin-left: 3px;
 `;
 const Location = styled.div`
   height: 40px;
   line-height: 20px;
+  margin-bottom: 10px;
 
   @media (max-width: 768px) {
     margin-top: 10px;
+    display: none;
   }
 `;
 const Host = styled.div``;
@@ -752,6 +912,7 @@ const AttendantNum = styled.div`
     right: 20px;
     bottom: 10px;
     font-size: 16px;
+    display: none;
   }
 `;
 const ActivityImage = styled.img`

@@ -16,19 +16,40 @@ import {
 import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import * as Warning from "./Validate";
+
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import xIconBlack from "../../images/xBlack.svg";
+import { SelectTypeWhiteEditHTML } from "../../Components/SelectComponent";
+import {
+  MaterialUIPickersTimeActivity,
+  MaterialUIPickersDateActivity,
+} from "../../Components/DateTimePicker";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
-  --rmsc-bg: #fff8f8;
-  --rmsc-hover: #ff00ff96;
-  --rmsc-selected: #43ede8a6;
+  --rmsc-bg: #f8f8ff;
+  --rmsc-hover: #efefef;
+  --rmsc-selected: #43ede8;
   --rmsc-h: 40px !important;
+  --rmsc-main: none;
+  --rmsc-p: 5px;
+
   color: black;
   text-align: left;
+
+  .dropdown-content {
+  }
+
+  .dropdown-heading {
+    cursor: pointer;
+  }
+
+  .item-renderer {
+    padding: 10px 5px;
+  }
 `;
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -37,7 +58,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background-color: #fff8f8;
+background-color: #f8f8ff;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 position: relative;
@@ -52,6 +73,15 @@ function EditActivitiesButton(props) {
   const [oneactivityData, setActivityData] = useState();
   let limitInitial = 1;
   const [checked, setChecked] = useState();
+
+  const [titleStatus, setTitleStatus] = useState(true);
+  const [dateStatus, setDateStatus] = useState(true);
+  const [timeStatus, setTimeStatus] = useState(true);
+  const [requirementStatus, setRequirementStatus] = useState(true);
+  const [levelStatus, setLevelStatus] = useState(true);
+  const [locationStatus, setLocationStatus] = useState(true);
+  const [validationResult, setValidationResult] = useState(true);
+  let titlestate = "";
 
   const getActivity = async () => {
     const data = await getSpecificData(props.data.id);
@@ -90,6 +120,33 @@ function EditActivitiesButton(props) {
   function toggleCancel(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
+    console.log(oneactivityData);
+    console.log(userHostActivityDataRedux);
+    console.log(titleStatus);
+    setActivityData({
+      ...oneactivityData,
+      title: userHostActivityDataRedux.title,
+      date: userHostActivityDataRedux.date,
+      time: userHostActivityDataRedux.time,
+      level: userHostActivityDataRedux.level,
+      location: userHostActivityDataRedux.location,
+    });
+    // setActivityData({
+    //   ...oneactivityData,
+    //   date: userHostActivityDataRedux.date,
+    // });
+    // setActivityData({
+    //   ...oneactivityData,
+    //   time: userHostActivityDataRedux.time,
+    // });
+    // setActivityData({
+    //   ...oneactivityData,
+    //   level: userHostActivityDataRedux.level,
+    // });
+    // setActivityData({
+    //   ...oneactivityData,
+    //   location: userHostActivityDataRedux.location,
+    // });
     setRequirement(requirementFormat);
     if (userHostActivityDataRedux.limit === 0) {
       setChecked(true);
@@ -123,7 +180,34 @@ function EditActivitiesButton(props) {
     });
   }
 
+  const inputValidation = () => {
+    let nowDate = new Date();
+    let a = oneactivityData.time.split(":");
+    let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
+    let deviation = 8 * 60 * 60000;
+    if (
+      oneactivityData.title.length === 0 ||
+      oneactivityData.title.length > 10 ||
+      nowDate >= Date.parse(oneactivityData.date) + 16 * 60 * 60000 ||
+      nowDate >= Date.parse(oneactivityData.date) + milliseconds - deviation ||
+      requirement.length === 0 ||
+      oneactivityData.level.length > 20 ||
+      oneactivityData.location.length === 0 ||
+      oneactivityData.location.length > 30
+    ) {
+      console.log("valid fail");
+      setValidationResult(false);
+      return false;
+    } else {
+      console.log("pass");
+      setValidationResult(true);
+
+      return true;
+    }
+  };
+
   const editConfirm = async () => {
+    console.log(oneactivityData.type);
     if (checked) {
       oneactivityData.limit = 0;
     } else if (!checked && oneactivityData.limit === 0) {
@@ -152,23 +236,25 @@ function EditActivitiesButton(props) {
       youtubeSource: oneactivityData.youtubeSource,
     };
     console.log(data);
-    updateActivitiesData(data, props.data.id);
-    // props.setUserActivities({ ...data, title: data.title });
-    // props.setUserActivities((prevState) => [...prevState, data.title]);
+    if (inputValidation()) {
+      updateActivitiesData(data, props.data.id);
+      // props.setUserActivities({ ...data, title: data.title });
+      // props.setUserActivities((prevState) => [...prevState, data.title]);
 
-    // props.confirmArray.push(data);
+      // props.confirmArray.push(data);
 
-    // const dataArr = [];
-    // dataArr.push(data);
-    // props.onEdit(dataArr);
-    dispatch({
-      type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
-      data: data,
-    });
-    console.log(userHostActivityDataRedux);
+      // const dataArr = [];
+      // dataArr.push(data);
+      // props.onEdit(dataArr);
+      dispatch({
+        type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
+        data: data,
+      });
+      console.log(userHostActivityDataRedux);
 
-    setOpacity(0);
-    setIsOpen(!isOpen);
+      setOpacity(0);
+      setIsOpen(!isOpen);
+    }
   };
 
   let requirementFormat = [];
@@ -189,8 +275,10 @@ function EditActivitiesButton(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
   userHostActivityDataRedux.requirement.forEach((data) => {
@@ -332,12 +420,21 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.title}
               onInput={(e) => {
                 handleActivityChange(e.target.value, "title");
+                console.log(oneactivityData.title);
               }}
             ></InputFieldInput>
+            {Warning.warningTitleHTML(
+              oneactivityData.title,
+              userHostActivityDataRedux.title
+            )}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="date">活動日期</Label>
-            <InputFieldInput
+            <MaterialUIPickersDateActivity
+              defaultValue={userHostActivityDataRedux.date}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <InputFieldInput
               id="date"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -346,11 +443,20 @@ function EditActivitiesButton(props) {
               onInput={(e) => {
                 handleActivityChange(e.target.value, "date");
               }}
-            ></InputFieldInput>
+            ></InputFieldInput> */}
+            {Warning.warningDateHTML(
+              oneactivityData.date,
+              userHostActivityDataRedux.date
+            )}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="time">活動時間</Label>
-            <InputFieldInput
+            <MaterialUIPickersTimeActivity
+              defaultDate={userHostActivityDataRedux.date}
+              defaultValue={userHostActivityDataRedux.time}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <InputFieldInput
               id="time"
               contentEditable="true"
               suppressContentEditableWarning={true}
@@ -359,20 +465,19 @@ function EditActivitiesButton(props) {
               onInput={(e) => {
                 handleActivityChange(e.target.value, "time");
               }}
-            ></InputFieldInput>
+            ></InputFieldInput> */}
+            {Warning.warningTimeHTML(
+              oneactivityData.date,
+              oneactivityData.time
+            )}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="type">音樂類型</Label>
-            {/* <InputFieldInput
-              id="type"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={props.data.type}
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "type");
-              }}
-            ></InputFieldInput> */}
-            <SelectType
+            <SelectTypeWhiteEditHTML
+              defaultValue={userHostActivityDataRedux.type}
+              handleActivityChange={handleActivityChange}
+            />
+            {/* <SelectType
               defaultValue={userHostActivityDataRedux.type}
               onChange={(e) => {
                 handleActivityChange(e.target.value, "type");
@@ -381,7 +486,7 @@ function EditActivitiesButton(props) {
               <option>流行</option>
               <option>嘻哈</option>
               <option>古典</option>
-            </SelectType>
+            </SelectType> */}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="limit">人數限制</Label>
@@ -411,11 +516,13 @@ function EditActivitiesButton(props) {
             <StyledMultiSelect
               className="EditActivitiesMulti"
               options={options}
+              disableSearch={true}
               overrideStrings={override}
               value={requirement}
               onChange={setRequirement}
               labelledBy="Select"
             />
+            {Warning.warningRequirementHTML(requirement)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="level">建議程度</Label>
@@ -428,6 +535,7 @@ function EditActivitiesButton(props) {
                 handleActivityChange(e.target.value, "level");
               }}
             ></InputFieldInput>
+            {Warning.warningLevelHTML(oneactivityData.level)}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label for="location">活動地點</Label>
@@ -440,6 +548,7 @@ function EditActivitiesButton(props) {
                 handleActivityChange(e.target.value, "location");
               }}
             ></InputFieldInput>
+            {Warning.warningLocationHTML(oneactivityData.location)}
           </InputFieldDiv>
           <InputFieldDiv style={{ alignItems: "baseline" }}>
             <Label for="comment">活動說明</Label>
@@ -465,6 +574,13 @@ function EditActivitiesButton(props) {
             }}
           >
             確認修改
+            <ValidationResult
+              style={
+                !validationResult ? { display: "block" } : { display: "none" }
+              }
+            >
+              請檢查所有欄位是否正確
+            </ValidationResult>
           </BtnConfirm>
           <BtnCancel
             onClick={(e) => {
@@ -485,8 +601,8 @@ function EditActivitiesButton(props) {
         isOpen={isOpen}
         afterOpen={afterOpen}
         beforeClose={beforeClose}
-        onBackgroundClick={toggleModal}
-        onEscapeKeydown={toggleModal}
+        onBackgroundClick={toggleCancel}
+        // onEscapeKeydown={toggleCancel}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
@@ -507,7 +623,7 @@ function EditActivitiesButton(props) {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background: #fff8f8;
+  background: #f8f8ff;
   position: relative;
 `;
 const TopBar = styled.div`
@@ -534,7 +650,7 @@ const CloseIconContainer = styled.div`
   cursor: pointer;
   transition: 0.2s;
   &:hover {
-    background: #979797;
+    background: #e8e8e8;
   }
 `;
 const CloseIcon = styled.img`
@@ -546,6 +662,7 @@ const InputFieldDiv = styled.div`
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  position: relative;
 `;
 const InputFieldInput = styled.input`
   border-bottom: 1px solid #979797;
@@ -567,6 +684,9 @@ const EditActivityCol = styled.div`
   width: 80%;
   margin: 0 auto 40px auto;
   padding-bottom: 20px;
+  @media (max-width: 414px) {
+    width: 90%;
+  }
 `;
 const EditActivityDetail = styled.div`
   /* text-align: left;
@@ -593,6 +713,24 @@ const EditActivityButtonDiv = styled.div`
   display: flex;
   justify-content: space-around;
   margin: 40px 50px;
+
+  @media (max-width: 576px) {
+    margin: 40px auto;
+  }
+  @media (max-width: 414px) {
+    justify-content: space-between;
+  }
+`;
+const ValidationResult = styled.div`
+  position: absolute;
+  color: red;
+  font-size: 12px;
+  bottom: -20px;
+  left: 5px;
+  @media (max-width: 576px) {
+    bottom: -25px;
+    left: 5px;
+  }
 `;
 const Label = styled.label`
   /* margin-right: 10px; */
@@ -615,6 +753,7 @@ const BtnConfirm = styled(Btn)`
   color: #000;
   background: #43e8d8;
   transition: 0.2s;
+  position: relative;
 
   &:hover {
     border: 1px solid #4cffee;

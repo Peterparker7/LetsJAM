@@ -117,9 +117,9 @@ function Profile(props) {
   };
 
   const renderProfile = () => {
-    let requirementHTML = userDataRedux.skill.map((data) => {
-      return <span>{data} &nbsp;</span>;
-    });
+    // let requirementHTML = userDataRedux.skill.map((data) => {
+    //   return <span>{data} &nbsp;</span>;
+    // });
     let skillArray = userDataRedux.skill;
     let skillArrayDelimiter = skillArray.join(", ");
     return (
@@ -192,14 +192,36 @@ function Profile(props) {
       cancelButtonColor: "#565656",
       confirmButtonText: "<span  style=color:#fff>登出</span",
       cancelButtonText: "取消",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        const response = await logOut();
-        //有bug
-        // history.push("/");
-      }
-    });
+    })
+      .then(async (result) => {
+        console.log(props.isLogIn);
+        if (result.isConfirmed) {
+          // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          props.setIsLogIn(false);
+
+          const response = await logOut();
+          //有bug
+          // history.push("/");
+
+          Swal.fire({
+            title: "<span style=font-size:24px>已登出</span>",
+            customClass: "customSwal2Title",
+            background: "black",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .then(() => {
+        console.log(props.isLogIn);
+
+        console.log(props.isLogIn);
+        //跑不進來, 因為isLogIn還是true, 是靠app.js傳進來的props.uid redirect到首頁
+        if (props.isLogIn === false) {
+          console.log("isLogin = false");
+          history.push("/");
+        }
+      });
   };
   //?? 應該是沒用到
   function onEdit(arr) {
@@ -223,7 +245,8 @@ function Profile(props) {
   }, [userData]);
 
   if (props.userUid === "") {
-    return null;
+    return <IsLoading />;
+    // return null;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
@@ -249,19 +272,19 @@ function Profile(props) {
         let showTime = activityTime.toString().slice(0, 21);
         // let showTime = data.newTimestamp.toString().slice(0, 21);
         let requirementHTML = data.requirement.map((data) => {
-          return <span>{data} </span>;
+          return <span key={data}>{data} </span>;
         });
 
         if (newFormatDate > nowDate) {
           return (
             <Animated
+              key={data.id}
               animationIn="fadeIn"
               // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 50}
             >
               <EachActivityContainer
-                key={data.id}
                 style={
                   toggleFilter ? { display: "block" } : { display: "none" }
                 }
@@ -306,6 +329,7 @@ function Profile(props) {
         } else if (newFormatDate < nowDate) {
           return (
             <EachHistoryActivityContainer
+              key={data}
               style={!toggleFilter ? { display: "block" } : { display: "none" }}
             >
               <Link to={`/activities/${data.id}`}>
@@ -347,14 +371,14 @@ function Profile(props) {
         let showTime = activityTime.slice(0, 21);
 
         let requirementHTML = data.requirement.map((data) => {
-          return <span>{data} </span>;
+          return <span key={data}>{data} </span>;
         });
 
         const applyStatusHTML = () => {
           if (data.attendants.includes(userDataRedux.uid)) {
-            return <ApplyStatusTagJoin>已加入</ApplyStatusTagJoin>;
+            return <ApplyStatusTagJoin key={data}>已加入</ApplyStatusTagJoin>;
           } else if (data.applicants.includes(userDataRedux.uid)) {
-            return <ApplyStatusTagWait>申請中</ApplyStatusTagWait>;
+            return <ApplyStatusTagWait key={data}>申請中</ApplyStatusTagWait>;
           }
           return applyStatusHTML;
         };
@@ -529,6 +553,7 @@ const MainContainer = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  background-attachment: fixed;
   position: relative;
 `;
 
@@ -629,6 +654,7 @@ const ProfileItemIntro = styled(ProfileItem)`
   letter-spacing: 1px;
   line-height: 20px;
   margin-bottom: 20px;
+  white-space: pre-wrap;
 `;
 const Wrapper = styled.div`
   text-align: left;
@@ -702,44 +728,74 @@ const MyJoinTitle = styled.div`
 const MyHost = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 20px;
-  min-height: 270px;
+  justify-content: flex-start;
+  padding: 0;
+  min-height: 285px;
   position: relative;
 
   @media (max-width: 1024px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 640px;
+    margin: 0 auto;
   }
+
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
+    width: 100%;
   }
 `;
+// const MyJoin = styled.div`
+//   /* width: 100%; */
+//   display: flex;
+
+//   flex-wrap: wrap;
+//   justify-content: space-between;
+//   padding: 0 20px;
+//   position: relative;
+//   min-height: 270px;
+
+//   @media (max-width: 1024px) {
+//     display: grid;
+//     grid-template-columns: 1fr 1fr;
+//     justify-items: center;
+//   }
+//   @media (max-width: 768px) {
+//     display: flex;
+//     flex-direction: column;
+//   }
+// `;
 const MyJoin = styled.div`
   /* width: 100%; */
   display: flex;
+
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 20px;
+  justify-content: flex-start;
+  /* margin-right: 30px; */
+  padding: 0;
   position: relative;
-  min-height: 270px;
+  min-height: 285px;
 
   @media (max-width: 1024px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 640px;
+    margin: 0 auto;
   }
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
+    width: 100%;
   }
 `;
 const NoContent = styled.div`
   width: 100%;
   margin: auto;
   font-size: 24px;
+  font-weight: 600;
   position: absolute;
   top: 50%;
   color: white;
@@ -751,15 +807,19 @@ const EachActivityContainer = styled.div`
   height: 250px;
   background: #555;
   border-radius: 4px;
-  margin-bottom: 20px;
+
+  margin: 0px 18px 36px 18px;
   position: relative;
   overflow: hidden;
-
+  @media (max-width: 1024px) {
+    margin: 0px 35px 35px 35px;
+  }
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
   }
 `;
 const EachHistoryActivityContainer = styled.div`
@@ -767,9 +827,14 @@ const EachHistoryActivityContainer = styled.div`
   height: 250px;
   background: #555;
   border-radius: 4px;
-  margin-bottom: 20px;
+
+  margin: 0px 18px 36px 18px;
+
   position: relative;
   overflow: hidden;
+  @media (max-width: 1024px) {
+    margin: 0px 35px 35px 35px;
+  }
   @media (max-width: 768px) {
     width: 100%;
     height: 180px;
@@ -848,6 +913,13 @@ const Time = styled.div`
 const Requirement = styled.div`
   margin-top: 10px;
   height: 60px;
+
+  @media (max-width: 768px) {
+    margin-top: 0px;
+
+    line-height: 25px;
+    width: 60%;
+  }
   @media (max-width: 414px) {
     font-size: 10px;
     margin-top: 0px;

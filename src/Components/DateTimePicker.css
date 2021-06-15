@@ -1,0 +1,63 @@
+.MuiDialog-root .MuiPickersToolbar-toolbar {
+  background: #43e8d8;
+}
+
+.MuiDialog-root
+  .MuiPickersTimePickerToolbar-hourMinuteLabel
+  .MuiPickersTimePickerToolbar-separator {
+  color: #121212;
+}
+
+.MuiDialog-root .MuiPickersToolbarText-toolbarTxt {
+  color: rgba(77, 77, 77, 0.54);
+}
+.MuiDialog-root .MuiPickersTimePickerToolbar-ampmLabel {
+  color: rgba(77, 77, 77, 0.54);
+}
+.MuiDialog-root .MuiPickersToolbarText-toolbarBtnSelected {
+  color: #121212;
+  opacity: 1;
+}
+.MuiDialog-root .MuiButton-root {
+  color: #43e8d8;
+}
+
+.MuiDialog-root .MuiPickersBasePicker-pickerView .MuiPickersClock-pin {
+  background-color: #43e8d8;
+}
+.MuiDialog-root
+  .MuiPickersBasePicker-pickerView
+  .MuiPickersClockPointer-pointer {
+  background-color: #43e8d8;
+}
+
+.MuiDialog-root
+  .MuiPickersBasePicker-pickerView
+  .MuiPickersClockNumber-clockNumberSelected {
+  color: black;
+  background: #43e8d8;
+}
+
+/* DatePickers */
+.MuiPaper-root .MuiPickersDay-current {
+  color: #000;
+  background-color: #43e8d83d;
+}
+.MuiDialog-root .MuiPickersBasePicker-pickerView .MuiPickersClockPointer-thumb {
+  background: #fff;
+  border: 14px solid #43e8d8;
+}
+
+.MuiPaper-root .MuiPickersDay-daySelected {
+  background-color: #43e8d8;
+  color: #000;
+}
+.MuiPaper-root .MuiPickersDay-daySelected:hover {
+  background-color: #43e8d8;
+}
+.MuiFormControl-root .MuiIconButton-root {
+  padding: 5px;
+}
+.MuiFormControl-root .MuiInputBase-input {
+  padding: 5px;
+}
