@@ -1,17 +1,7 @@
 import "./SelectComponent.css";
 import React from "react";
 import styled from "styled-components";
-
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import InputBase from "@material-ui/core/InputBase";
-import ReactSelect, { NonceProvider } from "react-select";
-import { warningPasswordHTML } from "../Pages/Login/LoginValidate";
+import ReactSelect from "react-select";
 
 const options = [
   { value: "所有類型", label: "所有類型" },

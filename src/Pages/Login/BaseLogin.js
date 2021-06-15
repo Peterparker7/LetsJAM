@@ -1,23 +1,20 @@
 import "../../App.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 // import { useParams } from "react-router-dom";
-import { getAuthUser } from "../../utils/firebase";
-import iconTaylorBlack from "../../images/icon-Taylor-black.png";
 import iconTaylorWhite from "../../images/icon-Taylor-white.png";
 
 import Login from "./Login";
 import Register from "./Register";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector } from "react-redux";
 import concert2 from "../../images/concert2.jpg";
 import IsLoading from "../../Components/IsLoading";
 
 function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
   // const [userUid, setUserUid] = useState();
-  const userDataRedux = useSelector((state) => state.userData);
+  // const userDataRedux = useSelector((state) => state.userData);
   let history = useHistory();
 
   console.log(props.userUid);

@@ -1,7 +1,6 @@
 import "../App.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React from "react";
 import iconTaylorWhite from "../images/icon-Taylor-white.png";
 
 function Footer() {

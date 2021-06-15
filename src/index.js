@@ -5,8 +5,7 @@ import App from "./App";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./Redux/reducer";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Error404 from "./Pages/Error404";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const store = createStore(
   reducer,

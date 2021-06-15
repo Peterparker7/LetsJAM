@@ -1,8 +1,7 @@
 import "../../App.css";
 import "./swal2.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import { newUser } from "../../utils/firebase";
@@ -35,18 +34,17 @@ const StyledMultiSelect = styled(MultiSelect)`
     max-width: 100%;
   }
 `;
-// Initialize Firebase
-const db = window.firebase.firestore();
+
 let userEmail = "";
 let userPassword = "";
 let userInfo = {};
 
 function Register(props) {
-  const [emailState, setEmailState] = useState(true);
-  const [passwordState, setPasswordState] = useState(true);
-  const [nameState, setNameState] = useState(true);
-  const [preferTypeState, setPreferTypeState] = useState(true);
-  const [skillState, setSkillState] = useState(true);
+  // const [emailState, setEmailState] = useState(true);
+  // const [passwordState, setPasswordState] = useState(true);
+  // const [nameState, setNameState] = useState(true);
+  // const [preferTypeState, setPreferTypeState] = useState(true);
+  // const [skillState, setSkillState] = useState(true);
 
   let history = useHistory();
 
@@ -111,7 +109,7 @@ function Register(props) {
         })
         .then(async (uid) => {
           //這裡沒用await的話userData會來不及寫入
-          let create = await newUser(userEmail, uid, userInfo);
+          await newUser(userEmail, uid, userInfo);
           props.props.setIsLogIn(true);
         })
         .then(() => {
@@ -230,13 +228,13 @@ function Register(props) {
               handleEmailChange(e.target.value);
               // setWarningDisplay(false);
             }}
-            style={
-              emailState
-                ? { border: "1px solid #b7b7b7" }
-                : { border: "1px solid red" }
-            }
+            // style={
+            //   emailState
+            //     ? { border: "1px solid #b7b7b7" }
+            //     : { border: "1px solid red" }
+            // }
           ></InputField>
-          <Warning
+          {/* <Warning
             style={
               emailState
                 ? { display: "none" }
@@ -244,7 +242,7 @@ function Register(props) {
             }
           >
             此項必填
-          </Warning>
+          </Warning> */}
           {LoginValidate.warningEmailHTML(emailValue, warningDisplay)}
         </ItemField>
         <ItemField>
@@ -258,13 +256,13 @@ function Register(props) {
             onChange={(e) => {
               handlePasswordChange(e.target.value);
             }}
-            style={
-              passwordState
-                ? { border: "1px solid #b7b7b7" }
-                : { border: "1px solid red" }
-            }
+            // style={
+            //   passwordState
+            //     ? { border: "1px solid #b7b7b7" }
+            //     : { border: "1px solid red" }
+            // }
           ></InputField>
-          <Warning
+          {/* <Warning
             style={
               passwordState
                 ? { display: "none" }
@@ -272,7 +270,7 @@ function Register(props) {
             }
           >
             此項必填
-          </Warning>
+          </Warning> */}
           {LoginValidate.warningPasswordHTML(passwordValue, warningDisplay)}
         </ItemField>
         <ItemField>
@@ -282,16 +280,16 @@ function Register(props) {
           <InputField
             id="name"
             placeholder="例: 小明"
-            style={
-              nameState
-                ? { border: "1px solid #b7b7b7" }
-                : { border: "1px solid red" }
-            }
+            // style={
+            //   nameState
+            //     ? { border: "1px solid #b7b7b7" }
+            //     : { border: "1px solid red" }
+            // }
             onChange={(e) => {
               handleChange(e.target.value, "name");
             }}
           ></InputField>
-          <Warning
+          {/* <Warning
             style={
               nameState
                 ? { display: "none" }
@@ -299,7 +297,7 @@ function Register(props) {
             }
           >
             此項必填
-          </Warning>
+          </Warning> */}
           {LoginValidate.warningNameHTML(userInfoValue.name, warningDisplay)}
         </ItemField>
         <ItemField>
@@ -320,7 +318,7 @@ function Register(props) {
             <option>嘻哈</option>
             <option>古典</option>
           </SelectPreferType> */}
-          <Warning
+          {/* <Warning
             style={
               preferTypeState
                 ? { display: "none" }
@@ -328,7 +326,7 @@ function Register(props) {
             }
           >
             此項必填
-          </Warning>
+          </Warning> */}
           {LoginValidate.warningTypeHTML(
             userInfoValue.preferType,
             warningDisplay
@@ -349,7 +347,7 @@ function Register(props) {
               labelledBy="Select"
             />
           </SkillSelectDiv>
-          <Warning
+          {/* <Warning
             style={
               skillState
                 ? { display: "none" }
@@ -357,7 +355,7 @@ function Register(props) {
             }
           >
             此項必填
-          </Warning>
+          </Warning> */}
           {LoginValidate.warningSkillHTML(skill, warningDisplay)}
         </ItemField>
         <RegisterButton onClick={() => handleRegister()}>
@@ -420,18 +418,10 @@ const InputField = styled.input`
     max-width: 60%;
   }
 `;
-const Warning = styled.div`
-  width: 80px;
-  font-size: 12px;
-`;
-
-const SelectPreferType = styled.select`
-  width: 250px;
-  padding: 5px;
-  @media (max-width: 576px) {
-    max-width: 60%;
-  }
-`;
+// const Warning = styled.div`
+//   width: 80px;
+//   font-size: 12px;
+// `;
 
 const SkillSelectDiv = styled.div`
   width: 250px;

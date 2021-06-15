@@ -1,14 +1,14 @@
 import "../../App.css";
 import "./EditProfileButton.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
 import { getUserData, updateUserData, uploadImage } from "../../utils/firebase";
 import * as Warning from "./Validate";
 
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import Modal from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch } from "react-redux";
 import settingIcon from "../../images/gear.svg";
@@ -75,7 +75,6 @@ function EditProfileButton(props) {
   const [userData, setUserData] = useState();
   const [userProfileImage, setUserProfileImage] = useState();
   const [userProfileImageSource, setUserProfileImageSource] = useState();
-  const [imgCover, setImgCover] = useState(true);
 
   let override = {
     allItemsAreSelected: "我全都會",
@@ -95,11 +94,14 @@ function EditProfileButton(props) {
     { label: "爵士鼓", value: "爵士鼓" },
   ];
 
-  const getUserProfileData = async () => {
-    const data = await getUserData(userDataRedux.uid);
-    setUserData(data);
-    setUserProfileImage(data.profileImage);
-  };
+  const getUserProfileData = useCallback(() => {
+    const gettingUserProfileData = async () => {
+      const data = await getUserData(userDataRedux.uid);
+      setUserData(data);
+      setUserProfileImage(data.profileImage);
+    };
+    gettingUserProfileData();
+  }, [userDataRedux.uid]);
   //處理skill格式 讓default值可顯示於select
   userDataRedux.skill.forEach((data) => {
     let skill = {
@@ -111,7 +113,7 @@ function EditProfileButton(props) {
 
   useEffect(() => {
     getUserProfileData();
-  }, []);
+  }, [getUserProfileData]);
   if (!userData) {
     return "isLoading";
   }
@@ -136,7 +138,7 @@ function EditProfileButton(props) {
       setLoadingStatus(false);
 
       if (inputValidation()) {
-        let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+        await updateUserData(data, userDataRedux.uid);
         // setUserData(data);
         dispatch({ type: "UPDATE_USERDATA", data: data });
 
@@ -158,7 +160,7 @@ function EditProfileButton(props) {
       };
 
       if (inputValidation()) {
-        let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+        await updateUserData(data, userDataRedux.uid);
         // setUserData(data);
         dispatch({ type: "UPDATE_USERDATA", data: data });
 
@@ -210,14 +212,8 @@ function EditProfileButton(props) {
     imgSource = e.target.files[0];
     setUserProfileImage(URL.createObjectURL(imgSource));
     setUserProfileImageSource(imgSource);
-    setImgCover("cover");
   }
-  const handleIsLoading = () => {
-    setLoadingStatus(true);
-    setTimeout(() => {
-      setLoadingStatus(false);
-    }, 30000);
-  };
+
   function inputValidation() {
     if (
       userData.name.length === 0 ||
@@ -276,37 +272,12 @@ function EditProfileButton(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
-          {/* <TopBar></TopBar> */}
           <ContentTitle>個人檔案詳細資料</ContentTitle>
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleCancel} />
           </CloseIconContainer>
           <ContentContainer>
             <ProfileImageContainer>
-              {/* <label for="name">大頭照</label> */}
-              {/* <ProfileImage
-              // src={`${userProfileImage}`}
-              // src={`${userData.profileImage}`}
-              // alt=""
-              // style={{
-              //   background: `url(${userProfileImage})`,
-              //   backgroundSize: `${imgCover}`,
-              //   // backgroundPosition: "",
-              //   // backgroundPosition: "50% 50%",
-
-              // }}
-              style={
-                imgCover
-                  ? {
-                      background: `url(${userProfileImage})`,
-                      backgroundSize: "cover",
-                    }
-                  : {
-                      background: `url(${userProfileImage})`,
-                      backgroundSize: "cover",
-                    }
-              }
-            ></ProfileImage> */}
               <ProfileImg src={userProfileImage}></ProfileImg>
               <EditProfileImageField>
                 <input
@@ -418,7 +389,6 @@ function EditProfileButton(props) {
               </InputFieldContainer>
             </ProfileDetail>
             <BtnField>
-              {/* <BtnCancel onClick={toggleCancel}>取消</BtnCancel> */}
               <BtnConfirm onClick={editConfirm}>
                 {loadingStatus ? <IsLoadingBlackSmall /> : "儲存"}
 
@@ -448,11 +418,6 @@ const Container = styled.div`
   height: 100%;
   background: #121212;
   color: white;
-`;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff00ff;
 `;
 const CloseIconContainer = styled.div`
   position: absolute;
@@ -525,11 +490,11 @@ const IntroTextArea = styled.textarea`
   color: white;
 `;
 
-const SelectType = styled.select`
-  width: calc(100% - 80px);
-  color: white;
-  padding: 5px;
-`;
+// const SelectType = styled.select`
+//   width: calc(100% - 80px);
+//   color: white;
+//   padding: 5px;
+// `;
 
 const BtnField = styled.div`
   display: flex;
@@ -539,13 +504,6 @@ const BtnField = styled.div`
   margin: 30px auto;
 `;
 
-const BtnCancel = styled.div`
-  border: 1px solid #000;
-  border-radius: 20px;
-  width: 100px;
-  padding: 5px;
-  cursor: pointer;
-`;
 const BtnConfirm = styled.div`
   border: 1px solid #43e8d8;
   border-radius: 8px;
@@ -583,16 +541,6 @@ const ValidationResult = styled.div`
   }
 `;
 
-const ProfileImage = styled.div`
-  margin: 0 auto;
-  width: 180px;
-  height: 180px;
-  margin-bottom: 20px;
-  border-radius: 50%;
-  background-size: cover;
-
-  background-position: 50% 50%;
-`;
 const ProfileImg = styled.img`
   object-fit: cover;
   width: 200px;

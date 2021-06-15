@@ -1,14 +1,7 @@
 import "../../App.css";
 import Modal from "styled-react-modal";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import {
-  getSpecificData,
-  deleteActivityData,
-  updateActivitiesData,
-  getAllUser,
-  sendUserInvite,
-} from "../../utils/firebase";
+import React, { useState } from "react";
 import xIcon from "../../images/x.svg";
 
 const StyledModal = Modal.styled`

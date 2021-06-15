@@ -1,6 +1,6 @@
 import "./DateTimePicker.css";
 import "date-fns";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DateFnsUtils from "@date-io/date-fns";
 
@@ -66,7 +66,7 @@ function MaterialUIPickersTime(props) {
 
   useEffect(() => {
     setSelectedDate(new Date(`${sat}T16:00`));
-  }, []);
+  }, [sat]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -100,9 +100,6 @@ function MaterialUIPickersDate(props) {
   }
   let nowDate = new Date();
 
-  let sat = addDays(nowDate, 6 - nowDate.getDay())
-    .toString()
-    .substr(0, 10);
   let satOri = addDays(nowDate, 6 - nowDate.getDay()).toString();
 
   const handleDateChange = (date) => {
@@ -114,7 +111,7 @@ function MaterialUIPickersDate(props) {
   };
   useEffect(() => {
     setSelectedDate(new Date(`${satOri}`));
-  }, []);
+  }, [satOri]);
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersDate
@@ -145,7 +142,7 @@ function MaterialUIPickersDateActivity(props) {
   };
   useEffect(() => {
     setSelectedDate(new Date(`${props.defaultValue}T08:00`));
-  }, []);
+  }, [props.defaultValue]);
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersDateActivity
@@ -175,7 +172,7 @@ function MaterialUIPickersTimeActivity(props) {
   };
   useEffect(() => {
     setSelectedDate(new Date(`${props.defaultDate}T${props.defaultValue}`));
-  }, []);
+  }, [props.defaultDate, props.defaultValue]);
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersTimeActivity

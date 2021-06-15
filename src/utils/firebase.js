@@ -1,5 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
-import { useHistory } from "react-router-dom";
+// import { v4 as uuidv4 } from "uuid";
+// import { useHistory } from "react-router-dom";
+// import firebase from "firebase/app";
+// import "firebase/auth";
+// import "firebase/firestore";
+// import "firebase/storage";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -11,6 +15,8 @@ var firebaseConfig = {
   measurementId: "G-MXQWY9WWZK",
 };
 // Initialize Firebase
+// var app = firebase.initializeApp(firebaseConfig);
+// const db = firebase.firestore();
 window.firebase.initializeApp(firebaseConfig);
 const db = window.firebase.firestore();
 
@@ -52,7 +58,8 @@ const uploadImage = async (img) => {
   );
 
   // .put() 方法把東西丟到該位置裡
-  const task = await storageReference.put(img);
+  // const task = await storageReference.put(img);
+  await storageReference.put(img);
   const fileRef = window.firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
@@ -89,7 +96,7 @@ const uploadImage = async (img) => {
 const joinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   //firebase update方法
-  const data = await docRef
+  await docRef
     .update({
       applicants: window.firebase.firestore.FieldValue.arrayUnion(userId),
     })
@@ -102,7 +109,7 @@ const joinActivity = async (activityId, userId) => {
 const agreeJoinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   //firebase update方法
-  const data = await docRef
+  await docRef
     .update({
       applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
       attendants: window.firebase.firestore.FieldValue.arrayUnion(userId),
@@ -115,7 +122,7 @@ const agreeJoinActivity = async (activityId, userId) => {
 
 const kickActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  const data = await docRef
+  await docRef
     .update({
       attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
     })
@@ -184,7 +191,7 @@ const logOut = async () => {
 const newUser = async (userEmail, userUid, userInfo) => {
   let newCreate = db.collection("userData").doc(userUid);
 
-  const data = await newCreate
+  await newCreate
     .set({
       email: userEmail,
       uid: userUid,
@@ -207,7 +214,7 @@ const newUser = async (userEmail, userUid, userInfo) => {
 
 const updateUserData = async (newData, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .set(
       {
         name: newData.name,
@@ -229,7 +236,7 @@ const updateUserData = async (newData, userId) => {
 const getUserHostActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let hostActivitiesArray = [];
-  const hostActivities = await docRef
+  await docRef
     .where("host", "==", userId)
     .get()
     .then((data) => {
@@ -242,7 +249,7 @@ const getUserHostActivities = async (userId) => {
 const getUserJoinActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let joinActivitiesArray = [];
-  const joinActivities = await docRef
+  await docRef
     .where("attendants", "array-contains", userId)
     .get()
     .then((data) => {
@@ -256,7 +263,7 @@ const getUserJoinActivities = async (userId) => {
 const getUserApplyActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let applyActivitiesArray = [];
-  const applyActivities = await docRef
+  await docRef
     .where("applicants", "array-contains", userId)
     .get()
     .then((data) => {
@@ -290,7 +297,7 @@ const cancelJoinActivities = async (activityId, userId) => {
 
 const updateActivitiesData = async (data, activityId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  const activitiesData = await docRef
+  await docRef
     .set(
       {
         title: data.title,
@@ -319,7 +326,7 @@ const updateActivitiesData = async (data, activityId) => {
 };
 const sendUserInvite = async (inviteInfo, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .update({
       invitation: window.firebase.firestore.FieldValue.arrayUnion(inviteInfo),
     })
@@ -330,7 +337,7 @@ const sendUserInvite = async (inviteInfo, userId) => {
 };
 const updateInvitation = async (newInviteArray, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .set(
       {
         invitation: newInviteArray,

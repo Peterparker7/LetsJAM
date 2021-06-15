@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import React, { useEffect, useState, useRef } from "react";
-import error404 from "../images/404-error.svg";
+import React from "react";
+// import error404 from "../images/404-error.svg";
 import { useHistory } from "react-router-dom";
 import { keyframes } from "styled-components";
 
@@ -26,22 +26,22 @@ const Container = styled.div`
   height: 100vh;
   padding-top: 100px;
 `;
-const ErrorIconContainer = styled.div`
-  width: 250px;
-  height: 250px;
-  margin: 0px auto;
-  align-items: center;
-`;
+// const ErrorIconContainer = styled.div`
+//   width: 250px;
+//   height: 250px;
+//   margin: 0px auto;
+//   align-items: center;
+// `;
 
-const ErrorIcon = styled.img`
-  width: 100%;
-`;
-const ErrorText = styled.div`
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  text-align: center;
-`;
+// const ErrorIcon = styled.img`
+//   width: 100%;
+// `;
+// const ErrorText = styled.div`
+//   color: white;
+//   font-size: 24px;
+//   font-weight: 700;
+//   text-align: center;
+// `;
 const ButtonField = styled.div`
   margin: 20px auto;
   width: 200px;

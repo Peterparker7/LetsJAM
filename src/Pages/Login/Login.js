@@ -1,13 +1,12 @@
 import "../../App.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 
 let userEmail = "";
 let userPassword = "";
-let userInfo = {};
+// let userInfo = {};
 
 function Login(props) {
   const [emailState, setEmailState] = useState(true);
@@ -219,9 +218,6 @@ const Warning = styled.div`
   left: 70px;
 `;
 
-const RequireField = styled.span`
-  color: red;
-`;
 const LoginButton = styled.button`
   /* width: 90px; */
   padding: 12px 40px;

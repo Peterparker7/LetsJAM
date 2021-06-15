@@ -3,7 +3,7 @@ import "../../normalize.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { getSpecificData, subscribe } from "../../utils/firebase";
@@ -11,9 +11,8 @@ import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import IsLoadingBlack from "../../Components/IsLoadingBlack";
-import noAttendant from "../../images/noAttendant.png";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import Swal from "sweetalert2";
 import IsLoading from "../../Components/IsLoading";
@@ -26,22 +25,22 @@ import {
   closelogo,
 } from "./DetailIcon";
 
-const StyledModal = Modal.styled`
-width: 20rem;
-height: 20rem;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background-color: white;
-opacity: ${(props) => props.opacity};
-transition : all 0.3s ease-in-out;`;
+// const StyledModal = Modal.styled`
+// width: 20rem;
+// height: 20rem;
+// display: flex;
+// flex-direction: column;
+// align-items: center;
+// justify-content: center;
+// background-color: white;
+// opacity: ${(props) => props.opacity};
+// transition : all 0.3s ease-in-out;`;
 
 function Detail() {
   let { id } = useParams();
   // let userId = "vfjMHzp45ckI3o3kqDmO";
   const [detailData, setDetailData] = useState();
-  const [currentUserData, setCurrentUserData] = useState();
+  // const [currentUserData, setCurrentUserData] = useState();
   const [userUid, setUserUid] = useState();
   const [userName, setUserName] = useState();
   const [activityStatus, setActivityStatus] = useState(true);
@@ -49,7 +48,6 @@ function Detail() {
   const [activityChange, setActivityChange] = useState([]);
 
   const history = useHistory();
-  let activityDetail = {};
 
   //取得使用者資料
   // window.firebase.auth().onAuthStateChanged(function (user) {
@@ -68,48 +66,51 @@ function Detail() {
     setUserName(userData.name);
   };
 
-  const getData = async () => {
-    let data = await getSpecificData(id);
-    if (!data) {
-      history.push("/error404");
-      return;
-    }
-    //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
-    const host = await getUserData(data.host);
-    const currentUser = await getUserData(userUid);
-    //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
-    const applicantsDetailArray = [];
-    data.applicants.forEach((applicants) => {
-      const promise = getUserData(applicants).then((data) => {
-        return data;
+  const getData = useCallback(() => {
+    const gettingData = async () => {
+      let data = await getSpecificData(id);
+      if (!data) {
+        history.push("/error404");
+        return;
+      }
+      //再打一次userData, 取得 host 的userData詳細資料，放進detailData 裡面以便之後取用
+      const host = await getUserData(data.host);
+      // const currentUser = await getUserData(userUid);
+      //打多次userData, 一次取得多個 applicants 的userData詳細資料，放進detailData 裡面以便之後取用
+      const applicantsDetailArray = [];
+      data.applicants.forEach((applicants) => {
+        const promise = getUserData(applicants).then((data) => {
+          return data;
+        });
+        applicantsDetailArray.push(promise);
       });
-      applicantsDetailArray.push(promise);
-    });
-    const allApplicants = await Promise.all(applicantsDetailArray);
-    //打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
-    const attendantsDetailArray = [];
-    data.attendants.forEach((attendants) => {
-      const promise = getUserData(attendants).then((data) => {
-        return data;
+      const allApplicants = await Promise.all(applicantsDetailArray);
+      //打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
+      const attendantsDetailArray = [];
+      data.attendants.forEach((attendants) => {
+        const promise = getUserData(attendants).then((data) => {
+          return data;
+        });
+        attendantsDetailArray.push(promise);
       });
-      attendantsDetailArray.push(promise);
-    });
-    const allAttendants = await Promise.all(attendantsDetailArray);
+      const allAttendants = await Promise.all(attendantsDetailArray);
 
-    //把有detail的host & applicants塞到useState
-    data.host = host;
-    data.applicants = allApplicants;
-    data.attendants = allAttendants;
+      //把有detail的host & applicants塞到useState
+      data.host = host;
+      data.applicants = allApplicants;
+      data.attendants = allAttendants;
 
-    setDetailData(data);
-    setCurrentUserData(currentUser);
+      setDetailData(data);
+      // setCurrentUserData(currentUser);
 
-    let newFormatDate = new Date(`${data.date}T${data.time}`);
-    let nowDate = Date.now();
-    if (newFormatDate < nowDate) {
-      setActivityStatus(false);
-    }
-  };
+      let newFormatDate = new Date(`${data.date}T${data.time}`);
+      let nowDate = Date.now();
+      if (newFormatDate < nowDate) {
+        setActivityStatus(false);
+      }
+    };
+    gettingData();
+  }, [id, history]);
 
   //   const detailHTML = detailData.() => {
   //     return <div></div>;
@@ -129,9 +130,6 @@ function Detail() {
   // };
 
   const renderDetail = () => {
-    let requirementHTML = detailData.requirement.map((item, index) => {
-      return <span key={index}>{item} </span>;
-    });
     let requirementArrayDelimiter = detailData.requirement.join(", ");
 
     let activityTime = detailData.timestamp.toDate().toString();
@@ -438,11 +436,13 @@ function Detail() {
       if (userUid && item.uid === userUid) {
         return item;
       }
+      return null;
     });
     const isAttendant = detailData.attendants.filter((item) => {
       if (userUid && item.uid === userUid) {
         return item;
       }
+      return null;
     });
     if (isApplicant.length !== 0) {
       return (
@@ -546,16 +546,19 @@ function Detail() {
   };
 
   //0607新增監聽 加入活動即時更新
-  const handlefirebaseChange = async () => {
-    console.log(activityChange);
-    getData();
-  };
+  const handlefirebaseChange = useCallback(() => {
+    const handlingfirebaseChange = async () => {
+      console.log(activityChange);
+      getData();
+    };
+    handlingfirebaseChange();
+  }, [activityChange, getData]);
   //useEffect只在第一次render後執行
   useEffect(() => {
     checkUserIsLogin();
 
     getData();
-  }, [id]);
+  }, [id, getData]);
   //網址有變化重新getData
 
   useEffect(() => {
@@ -565,7 +568,7 @@ function Detail() {
   //0607新增監聽 加入活動即時更新
   useEffect(() => {
     subscribe(setActivityChange, id);
-  }, []);
+  }, [setActivityChange, id]);
 
   //0607新增監聽 加入活動即時更新
   useEffect(() => {
@@ -573,7 +576,7 @@ function Detail() {
       handlefirebaseChange();
       console.log(activityChange);
     }
-  }, [activityChange]);
+  }, [activityChange, handlefirebaseChange]);
 
   //useEffect在每次detailData變化後執行
   // useEffect(() => {
@@ -655,12 +658,12 @@ const Title = styled.div`
   padding: 10px;
   margin-bottom: 10px;
 `;
-const CloseTitle = styled.div`
-  position: absolute;
-  right: 0px;
-  bottom: 5px;
-  font-size: 16px;
-`;
+// const CloseTitle = styled.div`
+//   position: absolute;
+//   right: 0px;
+//   bottom: 5px;
+//   font-size: 16px;
+// `;
 const ItemField = styled.div`
   padding-left: 10px;
   @media (max-width: 888px) {
@@ -701,14 +704,6 @@ const FadeInOpacity = keyframes`
 	}
 	100% {
 		opacity: 1;
-	}
-`;
-const FlyIn = keyframes`
-	0% {
- transform: translateX(200%);
-	}
-	100% {
-transform: translateX(0);
 	}
 `;
 const ImageContainer = styled.div`
@@ -970,15 +965,15 @@ const AttendantsTitle = styled.div`
   padding: 10px;
   border-bottom: 1px solid #979797;
 `;
-const ProfileImg = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  /* background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%; */
-`;
+// const ProfileImg = styled.img`
+//   width: 120px;
+//   height: 120px;
+//   border-radius: 50%;
+//   object-fit: cover;
+//   /* background-size: cover;
+//   background-repeat: no-repeat;
+//   background-position: 50% 50%; */
+// `;
 
 const NoAttendantContainer = styled.div`
   margin: 20px auto;
@@ -1030,27 +1025,27 @@ const ImageLine = styled.div`
   }
 `;
 
-const ImageLine2 = styled.div`
-  height: 500px;
-  width: calc(100%);
-  /* height: 480px;
-  width: calc(100% - 20px); */
-  border: 3px solid white;
-  position: absolute;
-  /* top: 10px;
-  right: 10px; */
-  top: 20px;
-  right: 20px;
-  z-index: 5;
-  box-shadow: 0 0 15px #43e8d8, inset 0 0 10px #43e8d8;
+// const ImageLine2 = styled.div`
+//   height: 500px;
+//   width: calc(100%);
+//   /* height: 480px;
+//   width: calc(100% - 20px); */
+//   border: 3px solid white;
+//   position: absolute;
+//   /* top: 10px;
+//   right: 10px; */
+//   top: 20px;
+//   right: 20px;
+//   z-index: 5;
+//   box-shadow: 0 0 15px #43e8d8, inset 0 0 10px #43e8d8;
 
-  @media (max-width: 888px) {
-    right: 20px;
+//   @media (max-width: 888px) {
+//     right: 20px;
 
-    width: calc(100% - 40px);
-  }
-  @media (max-width: 576px) {
-    height: 280px;
-  }
-`;
+//     width: calc(100% - 40px);
+//   }
+//   @media (max-width: 576px) {
+//     height: 280px;
+//   }
+// `;
 export default Detail;

@@ -2,30 +2,24 @@
 import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
-import React, { useEffect, useState, useRef } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
-import MyComponent from "../../Map";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
-import { uploadImage, getAuthUser } from "../../utils/firebase";
-import exampleImg from "../../images/startgroupexample.png";
+import { uploadImage } from "../../utils/firebase";
+
 import concertImg from "../../images/concert1.jpg";
 import cloudUpload from "../../images/cloud-upload.svg";
 import { useSelector } from "react-redux";
 
-import CreateDetailForm from "./Formik";
+// import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
-import UsePlace from "./UsePlace";
 import Place from "./Place";
 import IsLoading from "../../Components/IsLoading";
 
 import CircularIndeterminate from "./CircularProgress";
-import {
-  SelectTypeWhiteHTML,
-  SelectRequireWhiteHTML,
-} from "../../Components/SelectComponent";
+import { SelectTypeWhiteHTML } from "../../Components/SelectComponent";
 import {
   MaterialUIPickersTime,
   MaterialUIPickersDate,
@@ -111,7 +105,6 @@ function Create(props) {
   //   const [requirement, setRequirement] = useState("");
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
-  const refContainer = useRef("");
 
   function addDays(date, days) {
     if (days === 0) {
@@ -133,21 +126,21 @@ function Create(props) {
     .toISOString()
     .substr(0, 10);
 
-  const convertDateTime = () => {
-    let formatDateYear = date.slice(0, 4);
-    let formatDateMonth = date.slice(5, 7);
-    let formatDateDate = date.slice(8, 10);
-    let formatTimeHour = time.slice(0, 2);
-    let formatTimeSecond = time.slice(3, 5);
+  // const convertDateTime = () => {
+  //   let formatDateYear = date.slice(0, 4);
+  //   let formatDateMonth = date.slice(5, 7);
+  //   let formatDateDate = date.slice(8, 10);
+  //   let formatTimeHour = time.slice(0, 2);
+  //   let formatTimeSecond = time.slice(3, 5);
 
-    return {
-      formatDateYear,
-      formatDateMonth,
-      formatDateDate,
-      formatTimeHour,
-      formatTimeSecond,
-    };
-  };
+  //   return {
+  //     formatDateYear,
+  //     formatDateMonth,
+  //     formatDateDate,
+  //     formatTimeHour,
+  //     formatTimeSecond,
+  //   };
+  // };
 
   // const checkUserIsLogin = async () => {
   //   const userUid = await getAuthUser();
@@ -163,7 +156,7 @@ function Create(props) {
     setDate(sat);
     setTime("16:00");
     currentNumber = 1;
-  }, []);
+  }, [sat]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -272,10 +265,6 @@ function Create(props) {
 
     let newTimestamp = new Date(`${date}T${time}`);
     let timestamp = new Date(`${date}T${time}`);
-    console.log(
-      "🚀 ~ file: Create.js ~ line 268 ~ clickCreate ~ timestamp",
-      timestamp
-    );
 
     // imageUrl = await uploadImage(imgSource);
 
@@ -456,10 +445,6 @@ function Create(props) {
   return (
     <MainContainer>
       <Container>
-        {/* <ProcessIntroContainer> */}
-        {/* <ProcessIntro>創立活動圖文說明</ProcessIntro> */}
-        {/* <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} /> */}
-        {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
           <CreateDetailTopBar></CreateDetailTopBar>
           <Tooltip title="回上頁" interactive>
@@ -721,7 +706,7 @@ const MainContainer = styled.div`
   position: relative;
   min-height: calc(100vh-180px);
 `;
-const MainContainerCanvas = styled.div``;
+
 const Container = styled.div`
   text-align: left;
   max-width: 1024px;
@@ -731,12 +716,6 @@ const Container = styled.div`
   /* border: 1px solid #979797; */
   /* padding: 50px 20px; */
 `;
-const ProcessIntroContainer = styled.div`
-  width: 960px;
-  height: 400px;
-  margin: 0 auto;
-`;
-const ProcessIntro = styled.div``;
 const CreateDetailTopBar = styled.div`
   width: 100%;
   height: 8px;
@@ -850,18 +829,18 @@ const Inputfield = styled.input`
     width: 90%;
   }
 `;
-const SelectType = styled.select`
-  padding: 5px;
-  width: 220px;
-  border-bottom: 1px solid #979797;
+// const SelectType = styled.select`
+//   padding: 5px;
+//   width: 220px;
+//   border-bottom: 1px solid #979797;
 
-  @media (max-width: 768px) {
-    width: 90%;
-  }
-  @media (max-width: 576px) {
-    width: 90%;
-  }
-`;
+//   @media (max-width: 768px) {
+//     width: 90%;
+//   }
+//   @media (max-width: 576px) {
+//     width: 90%;
+//   }
+// `;
 const InputTextArea = styled.textarea`
   width: 220px;
   height: 80px;

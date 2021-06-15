@@ -174,10 +174,16 @@ function InviteButton(props) {
 
   const renderAllUser = () => {
     const userAttend = allUserData.filter((item) => {
-      if (activityChange.attendants.includes(item.uid)) return item;
+      if (activityChange.attendants.includes(item.uid)) {
+        return item;
+      }
+      return null;
     });
     const userApply = allUserData.filter((item) => {
-      if (activityChange.applicants.includes(item.uid)) return item;
+      if (activityChange.applicants.includes(item.uid)) {
+        return item;
+      }
+      return null;
     });
 
     const excludeAttendants = allUserData.filter(
@@ -219,7 +225,7 @@ function InviteButton(props) {
   }, []);
   useEffect(() => {
     subscribe(setActivityChange, activityDetail.id);
-  }, []);
+  }, [activityDetail.id]);
   if (!allUserData) {
     return "isLoading";
   }
@@ -247,12 +253,10 @@ function InviteButton(props) {
           </CloseIconContainer>
 
           <AllMemberCol>
-            {/* <Title>發送邀請</Title> */}
             <TitleSub>在找哪種樂手?</TitleSub>
             {renderCheckboxField()}
 
             <MemberField>{renderAllUser()}</MemberField>
-            {/* <BtnClose onClick={toggleModal}>+</BtnClose> */}
           </AllMemberCol>
         </Container>
       </StyledModal>
@@ -287,12 +291,12 @@ const Container = styled.div`
   color: white;
   position: relative;
 `;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff00ff;
-  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-`;
+// const TopBar = styled.div`
+//   height: 6px;
+//   width: 100%;
+//   background: #ff00ff;
+//   box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+// `;
 const CloseIconContainer = styled.div`
   position: absolute;
   width: 30px;
@@ -342,10 +346,6 @@ const MemberField = styled.div`
   width: 100%;
   margin: 20px auto;
 `;
-const Title = styled.div`
-  padding: 10px;
-  border-bottom: 1px solid #979797;
-`;
 const TitleSub = styled.div`
   /* margin: 10px ; */
 `;
@@ -372,11 +372,7 @@ const EachUser = styled.div`
   text-align: center;
   margin-bottom: 20px;
 `;
-const ProfileImage = styled.div`
-  width: 80px;
-  height: 80px;
-  margin: auto;
-`;
+
 const ProfileImgDiv = styled.div`
   width: 80px;
   height: 80px;
@@ -412,13 +408,5 @@ const InviteEachButton = styled.button`
 
     transform: translateY(-2px);
   }
-`;
-const BtnClose = styled.button`
-  transform: rotate(0.125turn);
-  font-size: 28px;
-  position: absolute;
-  top: -20px;
-  right: 0px;
-  cursor: pointer;
 `;
 export default InviteButton;

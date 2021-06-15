@@ -1,7 +1,7 @@
 import "../../App.css";
 import "../../normalize.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import microphoneIcon from "../../images/instrumentIcon/microphone.svg";
 import acousticGuitarIcon from "../../images/instrumentIcon/acoustic-Guitar.svg";
 import electricGuitarIcon from "../../images/instrumentIcon/Electric-Guitar.svg";
