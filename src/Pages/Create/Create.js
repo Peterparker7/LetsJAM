@@ -16,7 +16,6 @@ import concertImg from "../../images/concert1.jpg";
 import cloudUpload from "../../images/cloud-upload.svg";
 import { useSelector } from "react-redux";
 
-// import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
 import Place from "./Place";
 import IsLoading from "../../Components/IsLoading";

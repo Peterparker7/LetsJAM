@@ -113,6 +113,7 @@ const Avatar = styled.img`
   border: 3px solid white;
   box-shadow: 0 0 20px #ff00ff;
   transition: 0.3s;
+  cursor: pointer;
 `;
 const AvatarName = styled.div`
   margin-top: 10px;
@@ -206,8 +207,8 @@ const YoutubeUrl = styled.div`
   padding-bottom: 30px;
 `;
 const Btn = styled.button`
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 180px;
   top: 0;
   left: 0;
 
