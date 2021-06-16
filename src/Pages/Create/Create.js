@@ -67,7 +67,7 @@ function Create(props) {
     "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
   );
   const [level, setLevel] = useState("");
-  const [location, setLocation] = useState("");
+  // const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(true);
   const [place, setPlace] = useState("");
@@ -79,9 +79,9 @@ function Create(props) {
   const [requirementStatus, setRequirementStatus] = useState(true);
   const [limitStatus, setLimitStatus] = useState(true);
   const [levelStatus, setLevelStatus] = useState(true);
-  const [locationStatus, setLocationStatus] = useState(true);
+  // const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
-  const [imageStatus, setImageStatus] = useState(true);
+  // const [imageStatus, setImageStatus] = useState(true);
   // const [userUid, setUserUid] = useState();
 
   const [requirement, setRequirement] = useState([]);
@@ -215,7 +215,7 @@ function Create(props) {
       setPlaceStatus(false);
     }
     if (!imgUrl) {
-      setImageStatus(false);
+      // setImageStatus(false);
     }
 
     if (
@@ -252,7 +252,7 @@ function Create(props) {
     console.log(date);
     console.log(type);
     console.log(place);
-    console.log(location);
+    // console.log(location);
     console.log(limit);
     // convertDateTime();
     // let timestamp = new Date(
@@ -376,10 +376,10 @@ function Create(props) {
       setLimitStatus(true);
       currentNumber = e.target.value;
     }
-    if (changeType === "location") {
-      setLocation(e.target.value);
-      setLocationStatus(true);
-    }
+    // if (changeType === "location") {
+    //   setLocation(e.target.value);
+    //   setLocationStatus(true);
+    // }
     if (changeType === "comment") {
       setComment(e.target.value);
     }
@@ -630,10 +630,10 @@ function Create(props) {
                   onChange={(e) => {
                     handleUploadImage(e);
                     if (e.target.value) {
-                      setImageStatus(true);
+                      // setImageStatus(true);
                     } else {
-                      setImageStatus(false);
-                      console.log("no input");
+                      // setImageStatus(false);
+                      // console.log("no input");
                     }
                   }}
                 ></InputfieldImage>

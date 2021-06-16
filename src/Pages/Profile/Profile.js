@@ -2,61 +2,38 @@ import "../../App.css";
 import "./swal2.css";
 import "../../normalize.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
 import {
-  getSpecificData,
   getUserData,
   getAuthUser,
-  updateUserData,
   getUserHostActivities,
   getUserJoinActivities,
   getUserApplyActivities,
-  agreeJoinActivity,
-  kickActivity,
-  deleteActivityData,
-  updateActivitiesData,
   logOut,
   cancelJoinActivities,
 } from "../../utils/firebase";
 
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
-import MultiSelect from "react-multi-select-component";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import EditProfileButton from "./EditProfileButton.js";
 import EditActivitiesButton from "./EditActivitiesButton.js";
 import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
-import MemberCard from "./MemberCard.js";
-import InviteButton from "./InviteButton.js";
+
 import amplifierImg from "../../images/amplifier-guitar.jpg";
-import recordImg from "../../images/retro-record.jpg";
-import Alert from "@material-ui/lab/Alert";
-import { AlertTitle } from "@material-ui/lab";
-import Collapse from "@material-ui/core/Collapse";
-import CircularIndeterminate from "../Create/CircularProgress";
+
+// import CircularIndeterminate from "../Create/CircularProgress";
 import IsLoading from "../../Components/IsLoading";
 import Swal from "sweetalert2";
-import { withTheme } from "@material-ui/core";
 import { Animated } from "react-animated-css";
 
-const StyledModal = Modal.styled`
-width: 20rem;
-height: 20rem;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background-color: white;
-opacity: ${(props) => props.opacity};
-transition : all 0.3s ease-in-out;`;
-
 function Profile(props) {
-  let userId = "vfjMHzp45ckI3o3kqDmO";
+  // let userId = "vfjMHzp45ckI3o3kqDmO";
   //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   const [userData, setUserData] = useState({});
   const [userActivities, setUserActivities] = useState();
@@ -74,22 +51,25 @@ function Profile(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   //fireauth
-  window.firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      // 使用者已登入，可以取得資料
-      var email = user.email;
-      var uid = user.uid;
-    } else {
-      // 使用者未登入
-    }
-  });
+  // window.firebase.auth().onAuthStateChanged(function (user) {
+  //   if (user) {
+  //     // 使用者已登入，可以取得資料
+  //     var email = user.email;
+  //     var uid = user.uid;
+  //   } else {
+  //     // 使用者未登入
+  //   }
+  // });
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    const data = await getUserData(userUid);
-    dispatch({ type: "UPDATE_USERDATA", data: data });
-    setUserData(data);
-  };
+  const checkUserIsLogin = useCallback(() => {
+    const checkingUserIsLogin = async () => {
+      const userUid = await getAuthUser();
+      const data = await getUserData(userUid);
+      dispatch({ type: "UPDATE_USERDATA", data: data });
+      setUserData(data);
+    };
+    checkingUserIsLogin();
+  }, [dispatch]);
 
   // const getUserProfileData = async () => {
   //   const data = await getUserData(userId);
@@ -98,23 +78,26 @@ function Profile(props) {
   //   setUserData(data);
   // };
 
-  const getUserActivitiesData = async () => {
-    const data = await getUserHostActivities(userData.uid);
-    dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
+  const getUserActivitiesData = useCallback(() => {
+    const gettingUserActivitiesData = async () => {
+      const data = await getUserHostActivities(userData.uid);
+      dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
 
-    const attendActivities = await getUserJoinActivities(userData.uid);
+      const attendActivities = await getUserJoinActivities(userData.uid);
 
-    const applyActivities = await getUserApplyActivities(userData.uid);
+      const applyActivities = await getUserApplyActivities(userData.uid);
 
-    setUserJoinActivities((a) => [...a, ...attendActivities]);
-    setUserJoinActivities((a) => [...a, ...applyActivities]);
-    dispatch({
-      type: "UPDATE_USERJOINACTIVITYDATA",
-      data: [...attendActivities, ...applyActivities],
-    });
+      setUserJoinActivities((a) => [...a, ...attendActivities]);
+      setUserJoinActivities((a) => [...a, ...applyActivities]);
+      dispatch({
+        type: "UPDATE_USERJOINACTIVITYDATA",
+        data: [...attendActivities, ...applyActivities],
+      });
 
-    setUserActivities(data);
-  };
+      setUserActivities(data);
+    };
+    gettingUserActivitiesData();
+  }, [dispatch, userData.uid]);
 
   const renderProfile = () => {
     // let requirementHTML = userDataRedux.skill.map((data) => {
@@ -141,16 +124,14 @@ function Profile(props) {
     );
   };
 
-  const handleEditProfile = () => {};
-
-  const handleOpenTag = (date) => {
-    let nowDate = Date.now();
-    if (nowDate < date) {
-      return <IsOpenTag></IsOpenTag>;
-    } else {
-      return <IsCloseTag></IsCloseTag>;
-    }
-  };
+  // const handleOpenTag = (date) => {
+  //   let nowDate = Date.now();
+  //   if (nowDate < date) {
+  //     return <IsOpenTag></IsOpenTag>;
+  //   } else {
+  //     return <IsCloseTag></IsCloseTag>;
+  //   }
+  // };
   const handleCancelJoin = async (activityId, userId) => {
     Swal.fire({
       title: "<span style=font-size:24px>確定要退出嗎?</span>",
@@ -158,7 +139,7 @@ function Profile(props) {
       // text: "刪除後將無法復原",
       // icon: "warning",
       background: "black",
-      // html: "<div style=color:white;>刪除後將無法復原</div>",
+      // html: "<div style=color:white;>若為已加入活動 退出後需重新申請</div>",
       showCancelButton: true,
       confirmButtonColor: "#43e8d8",
       cancelButtonColor: "#565656",
@@ -169,7 +150,7 @@ function Profile(props) {
       if (result.isConfirmed) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
 
-        let cancel = await cancelJoinActivities(activityId, userId);
+        await cancelJoinActivities(activityId, userId);
         let userJoin = userJoinActivityDataRedux;
         let newJoin = userJoin.filter((item) => item.id !== activityId);
         console.log(newJoin);
@@ -199,7 +180,7 @@ function Profile(props) {
           // Swal.fire("Deleted!", "Your file has been deleted.", "success");
           props.setIsLogIn(false);
 
-          const response = await logOut();
+          await logOut();
           //有bug
           // history.push("/");
 
@@ -235,14 +216,14 @@ function Profile(props) {
     checkUserIsLogin();
     //渲染頁面之前先清空，避免裡面有重複之前的data
     setUserJoinActivities([]);
-  }, []);
+  }, [checkUserIsLogin]);
 
   // useEffect(() => {
   //   getUserActivitiesData();
   // }, []);
   useEffect(() => {
     getUserActivitiesData();
-  }, [userData]);
+  }, [userData, getUserActivitiesData]);
 
   if (props.userUid === "") {
     return <IsLoading />;
@@ -353,6 +334,7 @@ function Profile(props) {
             </EachHistoryActivityContainer>
           );
         }
+        return null;
       });
       return activitiesHTML;
     } else {
@@ -449,6 +431,7 @@ function Profile(props) {
             </EachHistoryActivityContainer>
           );
         }
+        return null;
       });
       return joinActivitiesHTML;
     } else {
@@ -656,10 +639,7 @@ const ProfileItemIntro = styled(ProfileItem)`
   margin-bottom: 20px;
   white-space: pre-wrap;
 `;
-const Wrapper = styled.div`
-  text-align: left;
-  margin-bottom: 30px;
-`;
+
 const WrapperProfileName = styled.div`
   text-align: center;
   margin-bottom: 30px;
@@ -1030,23 +1010,23 @@ const StatusTag = styled.div`
   top: 10px;
   right: 5px;
 `;
-const EachActivitityIsOpen = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
-const IsOpenTag = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: green;
-`;
-const IsCloseTag = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: grey;
-`;
+// const EachActivitityIsOpen = styled.div`
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+// `;
+// const IsOpenTag = styled.div`
+//   width: 20px;
+//   height: 20px;
+//   border-radius: 50%;
+//   background: green;
+// `;
+// const IsCloseTag = styled.div`
+//   width: 20px;
+//   height: 20px;
+//   border-radius: 50%;
+//   background: grey;
+// `;
 const ApplyStatusTag = styled.div`
   /* width: 20px;
   height: 20px; */

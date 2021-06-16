@@ -8,11 +8,11 @@ import PlacesAutocomplete, {
 
 function Place(props) {
   const [address, setAddress] = useState("");
-  const [coordinates, setCoordinates] = useState({
-    lat: null,
-    lng: null,
-  });
-  const [placeone, setPlaceone] = useState("");
+  // const [coordinates, setCoordinates] = useState({
+  //   lat: null,
+  //   lng: null,
+  // });
+  // const [placeone, setPlaceone] = useState("");
 
   const handleSelect = async (value) => {
     const results = await geocodeByAddress(value);
@@ -22,17 +22,17 @@ function Place(props) {
     console.log(latLng);
 
     setAddress(value);
-    setCoordinates(latLng);
+    // setCoordinates(latLng);
   };
 
-  const center = { lat: 25, lng: 121 };
+  // const center = { lat: 25, lng: 121 };
   // Create a bounding box with sides ~10km away from the center point
-  const defaultBounds = {
-    north: center.lat + 0.1,
-    south: center.lat - 0.1,
-    east: center.lng + 0.1,
-    west: center.lng - 0.1,
-  };
+  // const defaultBounds = {
+  //   north: center.lat + 0.1,
+  //   south: center.lat - 0.1,
+  //   east: center.lng + 0.1,
+  //   west: center.lng - 0.1,
+  // };
   const searchOptions = {
     // bounds: defaultBounds,
     location: new window.google.maps.LatLng(25, 121),
@@ -44,11 +44,11 @@ function Place(props) {
 
   const handleClick = async (e) => {
     props.setPlace(e);
-    setPlaceone(e);
+    // setPlaceone(e);
     setAddress(e);
-    const results = await geocodeByAddress(e);
-    const latLng = await getLatLng(results[0]);
-    console.log(latLng);
+    // const results = await geocodeByAddress(e);
+    // const latLng = await getLatLng(results[0]);
+    // console.log(latLng);
   };
   console.log(address);
   props.setPlace(address);
