@@ -1,7 +1,10 @@
-// import "../../App.css";
 import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -27,7 +30,7 @@ import {
 import Tooltip from "@material-ui/core/Tooltip";
 import arrowLeft from "../../images/arrow-left-short.svg";
 
-const db = window.firebase.firestore();
+const db = firebase.firestore();
 // let checked = false;
 
 const StyledMultiSelect = styled(MultiSelect)`

@@ -3,9 +3,6 @@ import "./swal2.css";
 import "../../normalize.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useCallback } from "react";
-// import { useParams } from "react-router-dom";
-// import { getSpecificData } from "./utils/firebase";
-// import { joinActivity } from "./utils/firebase";
 import {
   getUserData,
   getAuthUser,
@@ -80,29 +77,28 @@ function Profile(props) {
 
   const getUserActivitiesData = useCallback(() => {
     const gettingUserActivitiesData = async () => {
-      const data = await getUserHostActivities(userData.uid);
-      dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
+      if (userData.uid) {
+        const data = await getUserHostActivities(userData.uid);
+        dispatch({ type: "UPDATE_USERHOSTACTIVITYDATA", data: data });
 
-      const attendActivities = await getUserJoinActivities(userData.uid);
+        const attendActivities = await getUserJoinActivities(userData.uid);
 
-      const applyActivities = await getUserApplyActivities(userData.uid);
+        const applyActivities = await getUserApplyActivities(userData.uid);
 
-      setUserJoinActivities((a) => [...a, ...attendActivities]);
-      setUserJoinActivities((a) => [...a, ...applyActivities]);
-      dispatch({
-        type: "UPDATE_USERJOINACTIVITYDATA",
-        data: [...attendActivities, ...applyActivities],
-      });
+        setUserJoinActivities((a) => [...a, ...attendActivities]);
+        setUserJoinActivities((a) => [...a, ...applyActivities]);
+        dispatch({
+          type: "UPDATE_USERJOINACTIVITYDATA",
+          data: [...attendActivities, ...applyActivities],
+        });
 
-      setUserActivities(data);
+        setUserActivities(data);
+      }
     };
     gettingUserActivitiesData();
   }, [dispatch, userData.uid]);
 
   const renderProfile = () => {
-    // let requirementHTML = userDataRedux.skill.map((data) => {
-    //   return <span>{data} &nbsp;</span>;
-    // });
     let skillArray = userDataRedux.skill;
     let skillArrayDelimiter = skillArray.join(", ");
     return (
@@ -114,7 +110,6 @@ function Profile(props) {
           </WrapperProfileName>
           <WrapperProfileDetail>
             <ProfileItemIntro>{userDataRedux.intro}</ProfileItemIntro>
-            {/* <ProfileItem>{userDataRedux.email}</ProfileItem> */}
             <ProfileItem>偏好類型：{userDataRedux.preferType}</ProfileItem>
             <ProfileItem>會的樂器：{skillArrayDelimiter}</ProfileItem>
             <div>{userDataRedux.favSinger}</div>
@@ -218,24 +213,18 @@ function Profile(props) {
     setUserJoinActivities([]);
   }, [checkUserIsLogin]);
 
-  // useEffect(() => {
-  //   getUserActivitiesData();
-  // }, []);
   useEffect(() => {
     getUserActivitiesData();
   }, [userData, getUserActivitiesData]);
 
   if (props.userUid === "") {
     return <IsLoading />;
-    // return null;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
   }
 
   if (!userActivities || !userJoinActivities) {
-    // return "isLoading";
-    // return <CircularIndeterminate />;
     return <IsLoading />;
   }
 

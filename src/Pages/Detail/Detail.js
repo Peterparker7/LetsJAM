@@ -799,6 +799,9 @@ const RWDShareButton = styled(Btn)`
   }
 `;
 const JoinButton = styled(Btn)`
+  .MuiCircularProgress-root {
+    color: #000;
+  }
   position: relative;
   color: black;
   font-weight: 600;

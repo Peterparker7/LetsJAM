@@ -1,4 +1,6 @@
 import "../../App.css";
+import firebase from "firebase/app";
+import "firebase/auth";
 import styled from "styled-components";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -6,7 +8,6 @@ import Swal from "sweetalert2";
 
 let userEmail = "";
 let userPassword = "";
-// let userInfo = {};
 
 function Login(props) {
   const [emailState, setEmailState] = useState(true);
@@ -33,8 +34,7 @@ function Login(props) {
 
   const handleLogin = () => {
     if (formCheck()) {
-      // //登入
-      window.firebase
+      firebase
         .auth()
         .signInWithEmailAndPassword(userEmail, userPassword)
         .then((result) => {
@@ -50,7 +50,6 @@ function Login(props) {
             timer: 2000,
           });
           history.push("/");
-          // window.location.href = "./";
         })
         .catch((error) => {
           console.log(error);
@@ -78,13 +77,7 @@ function Login(props) {
     }
   };
 
-  // console.log(userInfo);
-  // console.log(userEmail);
-  // console.log(userPassword);
-
   const formCheck = () => {
-    // userInfo = { ...userInfo, skill: skillArray };
-
     if (!emailValue) {
       setEmailState(false);
       return false;
@@ -183,7 +176,6 @@ const TestAccount = styled.div`
 `;
 const ItemFieldContainer = styled.div`
   margin: 0 auto;
-  /* width: 90%; */
 `;
 const ItemField = styled.div`
   display: flex;
@@ -219,7 +211,6 @@ const Warning = styled.div`
 `;
 
 const LoginButton = styled.button`
-  /* width: 90px; */
   padding: 12px 40px;
   align-items: center;
   margin: 0 auto;

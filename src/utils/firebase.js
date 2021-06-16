@@ -1,9 +1,7 @@
-// import { v4 as uuidv4 } from "uuid";
-// import { useHistory } from "react-router-dom";
-// import firebase from "firebase/app";
-// import "firebase/auth";
-// import "firebase/firestore";
-// import "firebase/storage";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
 
 var firebaseConfig = {
   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
@@ -15,10 +13,8 @@ var firebaseConfig = {
   measurementId: "G-MXQWY9WWZK",
 };
 // Initialize Firebase
-// var app = firebase.initializeApp(firebaseConfig);
-// const db = firebase.firestore();
-window.firebase.initializeApp(firebaseConfig);
-const db = window.firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 const getActivityData = async () => {
   const activityData = db.collection("activityData");
@@ -47,58 +43,28 @@ const deleteActivityData = async (id) => {
 
 const uploadImage = async (img) => {
   const path = img.name;
-  console.log("🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ path", path);
-  // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
-  const storageReference = window.firebase.storage().ref(path);
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 49 ~ uploadImage ~ storageReference",
-    storageReference
-  );
+  const storageReference = firebase.storage().ref(path);
 
   // .put() 方法把東西丟到該位置裡
   // const task = await storageReference.put(img);
   await storageReference.put(img);
-  const fileRef = window.firebase.storage().ref(path);
+  const fileRef = firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 58 ~ downloadUrl ~ downloadUrl",
-    downloadUrl
-  );
 
   return downloadUrl;
-
-  // const path = img.name;
-  // const imagePath = uuidv4();
-
-  // // 取得 storage 對應的位置
-  // const storageReference = window.firebase.storage().ref(imagePath);
-
-  // // .put() 方法把東西丟到該位置裡
-  // const task = await storageReference.put(img);
-  // const fileRef = window.firebase.storage().ref(imagePath);
-
-  // let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
-  //   return url;
-  // });
-  // return downloadUrl;
 };
-
-// const createActivity = async (data) => {
-//   const activityData = db.collection("activityData").doc();
-//   await activityData.set(data);
-// };
 
 const joinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   //firebase update方法
   await docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+      applicants: firebase.firestore.FieldValue.arrayUnion(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -111,8 +77,8 @@ const agreeJoinActivity = async (activityId, userId) => {
   //firebase update方法
   await docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
-      attendants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+      applicants: firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayUnion(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -124,7 +90,7 @@ const kickActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   await docRef
     .update({
-      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -154,36 +120,30 @@ const getAllUser = async () => {
 
 const getAuthUser = async () => {
   const promise = new Promise((resolve) => {
-    const unsubscribe = window.firebase
-      .auth()
-      .onAuthStateChanged(function (user) {
-        unsubscribe();
-        if (user) {
-          // 使用者已登入，可以取得資料
-          var email = user.email;
-          var uid = user.uid;
-          console.log(email, uid);
-          resolve(uid);
-        } else {
-          // 使用者未登入
-          console.log("you are not login");
-          resolve(false);
-        }
-      });
+    const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+      unsubscribe();
+      if (user) {
+        // 使用者已登入，可以取得資料
+        var email = user.email;
+        var uid = user.uid;
+        console.log(email, uid);
+        resolve(uid);
+      } else {
+        // 使用者未登入
+        console.log("you are not login");
+        resolve(false);
+      }
+    });
   });
   let response = await promise;
   return response;
 };
 
 const logOut = async () => {
-  window.firebase
+  firebase
     .auth()
     .signOut()
-    .then(function () {
-      // 登出後強制重整一次頁面
-      // alert("已登出");
-      // window.location.href = "./";
-    })
+    .then(function () {})
     .catch(function (error) {
       console.log(error.message);
     });
@@ -223,7 +183,6 @@ const updateUserData = async (newData, userId) => {
         skill: newData.skill,
         profileImage: newData.profileImage,
         youtubeUrl: newData.youtubeUrl,
-        //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
       },
       { merge: true }
     )
@@ -278,7 +237,7 @@ const cancelJoinActivities = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      applicants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -287,7 +246,7 @@ const cancelJoinActivities = async (activityId, userId) => {
 
   docRef
     .update({
-      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -306,12 +265,10 @@ const updateActivitiesData = async (data, activityId) => {
         newTimestamp: data.newTimestamp,
         timestamp: data.newTimestamp,
         location: data.location,
-        // geo: ["10", "10"],
         requirement: data.requirement,
         level: data.level,
         comment: data.comment,
         youtubeSource: data.youtubeSource,
-        // fileSource: imageUrl,
         date: data.date,
         time: data.time,
       },
@@ -328,7 +285,7 @@ const sendUserInvite = async (inviteInfo, userId) => {
   let docRef = db.collection("userData").doc(userId);
   await docRef
     .update({
-      invitation: window.firebase.firestore.FieldValue.arrayUnion(inviteInfo),
+      invitation: firebase.firestore.FieldValue.arrayUnion(inviteInfo),
     })
     .then(() => {})
     .catch((error) => {
@@ -344,9 +301,7 @@ const updateInvitation = async (newInviteArray, userId) => {
       },
       { merge: true }
     )
-    .then(() => {
-      console.log("??????");
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
