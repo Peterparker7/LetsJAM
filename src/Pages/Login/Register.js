@@ -36,8 +36,6 @@ const StyledMultiSelect = styled(MultiSelect)`
   }
 `;
 
-let userEmail = "";
-let userPassword = "";
 let userInfo = {};
 
 function Register(props) {
@@ -78,11 +76,9 @@ function Register(props) {
   });
 
   const handleEmailChange = (e) => {
-    userEmail = e;
     setEmailValue(e);
   };
   const handlePasswordChange = (e) => {
-    userPassword = e;
     setPasswordValue(e);
   };
 
@@ -90,17 +86,15 @@ function Register(props) {
     userInfo = { ...userInfo, skill: skillArray };
 
     if (formCheck()) {
-      console.log("pass");
       firebase
         .auth()
-        .createUserWithEmailAndPassword(userEmail, userPassword)
+        .createUserWithEmailAndPassword(emailValue, passwordValue)
         .then((result) => {
-          console.log("register firebase");
           return result.user.uid;
         })
         .then(async (uid) => {
           //這裡沒用await的話userData會來不及寫入
-          await newUser(userEmail, uid, userInfo);
+          await newUser(emailValue, uid, userInfo);
           props.props.setIsLogIn(true);
         })
         .then(() => {
@@ -115,7 +109,6 @@ function Register(props) {
           history.push("/");
         })
         .catch((error) => {
-          console.log(error);
           if (error.code === "auth/email-already-in-use")
             Swal.fire({
               title: "<span style=font-size:24px>此信箱已經註冊過囉</span>",
@@ -135,10 +128,6 @@ function Register(props) {
     };
     setUserInfoValue({ ...userInfoValue, [type]: e });
   };
-
-  console.log(userInfoValue);
-  console.log(userEmail);
-  console.log(userPassword);
 
   const WarningHTML = () => {
     setWarningDisplay(true);

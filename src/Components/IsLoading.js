@@ -50,8 +50,6 @@ const useStyles = makeStyles((theme) => ({
 export default function IsLoading(props) {
   const classes = useStyles();
 
-  console.log(props.circleColor);
-  console.log(props.loadingCircleStyle);
   if (props.loadingStyle === "normal") {
     return (
       <NormalStyleDiv className={classes.root}>

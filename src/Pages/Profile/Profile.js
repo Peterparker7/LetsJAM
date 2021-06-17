@@ -199,20 +199,6 @@ function Profile(props) {
       });
   };
 
-  const loadingCircleStyle = {
-    color: "#43e8d8",
-    size: 40,
-    marginTop: "20px",
-    width: "100%",
-    minHeight: "100vh",
-  };
-  //?? 應該是沒用到
-  function onEdit(arr) {
-    if (arr.length === userDataRedux.length) {
-      setUserActivities(arr);
-    }
-  }
-
   useEffect(() => {
     // getUserProfileData();
     checkUserIsLogin();
@@ -291,7 +277,6 @@ function Profile(props) {
                     data={data}
                     setUserActivities={setUserActivities}
                     confirmArray={confirmArray}
-                    onEdit={onEdit}
                   />
                   <EditActivitiesMemberButton
                     applicants={data.applicants}
@@ -526,7 +511,6 @@ const FadingBackground = styled(BaseModalBackground)`
 const MainContainer = styled.div`
   min-height: calc(100vh - 180px);
   background: #121212;
-  /* background: black; */
   background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.8)),
     url(${amplifierImg});
   background-size: cover;

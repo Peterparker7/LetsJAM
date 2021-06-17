@@ -308,7 +308,7 @@ function Create(props) {
   };
 
   let override = {
-    allItemsAreSelected: "我全都要",
+    allItemsAreSelected: "所有樂器",
     clearSearch: "Clear Search",
     noOptions: "No options",
     search: "搜尋",

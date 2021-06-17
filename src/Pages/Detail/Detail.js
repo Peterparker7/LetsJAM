@@ -291,7 +291,7 @@ function Detail() {
           { name: userName, uid: userUid },
         ],
       });
-    }, 60000);
+    }, 2000);
   };
   const handleVisitor = () => {
     Swal.fire({

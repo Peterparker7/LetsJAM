@@ -148,6 +148,16 @@ const getAuthUser = async () => {
   let response = await promise;
   return response;
 };
+// const getAuthUser = async (callback) => {
+//     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+//       if(user){
+//         callback(user)
+//       }else{
+//         console.log("you are not login");
+//       }
+//     })
+//     return unsubscribe();
+// };
 
 const logOut = async () => {
   firebase

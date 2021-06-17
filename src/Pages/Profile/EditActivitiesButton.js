@@ -133,22 +133,7 @@ function EditActivitiesButton(props) {
       level: userHostActivityDataRedux.level,
       location: userHostActivityDataRedux.location,
     });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   date: userHostActivityDataRedux.date,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   time: userHostActivityDataRedux.time,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   level: userHostActivityDataRedux.level,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   location: userHostActivityDataRedux.location,
-    // });
+
     setRequirement(requirementFormat);
     if (userHostActivityDataRedux.limit === 0) {
       setChecked(true);
@@ -240,14 +225,7 @@ function EditActivitiesButton(props) {
     console.log(data);
     if (inputValidation()) {
       updateActivitiesData(data, props.data.id);
-      // props.setUserActivities({ ...data, title: data.title });
-      // props.setUserActivities((prevState) => [...prevState, data.title]);
 
-      // props.confirmArray.push(data);
-
-      // const dataArr = [];
-      // dataArr.push(data);
-      // props.onEdit(dataArr);
       dispatch({
         type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
         data: data,
@@ -342,7 +320,6 @@ function EditActivitiesButton(props) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
         handleActivityInvitationDelete();
         deleteActivityData(props.data.id);
-        // alert("已刪除活動");
         dispatch({
           type: "DELETE_ACTIVITYDATA",
           data: props.data,
@@ -435,16 +412,6 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.date}
               handleActivityChange={handleActivityChange}
             />
-            {/* <InputFieldInput
-              id="date"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={userHostActivityDataRedux.date}
-              type="date"
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "date");
-              }}
-            ></InputFieldInput> */}
             {Warning.warningDateHTML(
               oneactivityData.date,
               userHostActivityDataRedux.date
@@ -457,16 +424,6 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.time}
               handleActivityChange={handleActivityChange}
             />
-            {/* <InputFieldInput
-              id="time"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={userHostActivityDataRedux.time}
-              type="time"
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "time");
-              }}
-            ></InputFieldInput> */}
             {Warning.warningTimeHTML(
               oneactivityData.date,
               oneactivityData.time
