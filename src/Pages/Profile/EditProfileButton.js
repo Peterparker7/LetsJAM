@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import settingIcon from "../../images/gear.svg";
 import xIcon from "../../images/x.svg";
 import { SelectTypeBlackEditHTML } from "../../Components/SelectComponent";
-import IsLoadingBlackSmall from "../../Components/IsLoadingBlackSmall";
+import IsLoading from "../../Components/IsLoading";
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
@@ -390,7 +390,11 @@ function EditProfileButton(props) {
             </ProfileDetail>
             <BtnField>
               <BtnConfirm onClick={editConfirm}>
-                {loadingStatus ? <IsLoadingBlackSmall /> : "儲存"}
+                {loadingStatus ? (
+                  <IsLoading loadingStyle={"buttonSmall"} />
+                ) : (
+                  "儲存"
+                )}
 
                 <ValidationResult
                   style={

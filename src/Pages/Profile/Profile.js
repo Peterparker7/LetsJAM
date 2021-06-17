@@ -24,7 +24,6 @@ import EditActivitiesMemberButton from "./EditActivitiesMemberButton.js";
 
 import amplifierImg from "../../images/amplifier-guitar.jpg";
 
-// import CircularIndeterminate from "../Create/CircularProgress";
 import IsLoading from "../../Components/IsLoading";
 import Swal from "sweetalert2";
 import { Animated } from "react-animated-css";
@@ -199,6 +198,14 @@ function Profile(props) {
         }
       });
   };
+
+  const loadingCircleStyle = {
+    color: "#43e8d8",
+    size: 40,
+    marginTop: "20px",
+    width: "100%",
+    minHeight: "100vh",
+  };
   //?? 應該是沒用到
   function onEdit(arr) {
     if (arr.length === userDataRedux.length) {
@@ -218,14 +225,14 @@ function Profile(props) {
   }, [userData, getUserActivitiesData]);
 
   if (props.userUid === "") {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
   }
 
   if (!userActivities || !userJoinActivities) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
 
   // handleOpenTag();

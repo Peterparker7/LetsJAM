@@ -212,11 +212,9 @@ const Btn = styled.button`
   top: 0;
   left: 0;
 
-  /* position: absolute; */
   &:hover ${Avatar} {
     transform: scale(1.05);
     transform: translateY(-3px);
-    /* border: 1px solid #ff00ff; */
     box-shadow: 0 0 50px #ff00ff;
   }
 `;

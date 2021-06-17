@@ -52,7 +52,6 @@ const NeonBox = styled.div`
   animation: ${NeonShine3} 10s 1s linear infinite;
   z-index: 4;
   @media (max-width: 576px) {
-    /* display: none; */
     width: 80px;
   }
 `;
@@ -66,7 +65,6 @@ const NeonText = styled.div`
     0 0 60px rgba(255, 65, 65, 1);
   /* animation: ${NeonShine} 10s 1s linear infinite; */
   @media (max-width: 576px) {
-    /* display: none; */
     font-size: 16px;
   }
 `;
@@ -85,7 +83,6 @@ const NeonBoxClose = styled.div`
   /* animation: ${NeonShine2} 10s 1s linear infinite; */
   z-index: 4;
   @media (max-width: 576px) {
-    /* display: none; */
     width: 80px;
   }
 `;
@@ -99,7 +96,6 @@ const NeonTextClose = styled.div`
     0 0 60px rgba(255, 65, 65, 1);
   animation: ${NeonShine} 10s 1s linear infinite;
   @media (max-width: 576px) {
-    /* display: none; */
     font-size: 16px;
   }
 `;

@@ -26,7 +26,6 @@ import neonGuitar1 from "../../images/neonGuitar1.png";
 import arrowRight from "../../images/arrow-right-short.svg";
 import Swal from "sweetalert2";
 
-// const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
 let allActivitiesArray = [];
 
@@ -334,10 +333,10 @@ function Main() {
   };
 
   if (!completePaginate) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
   if (!data) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
   //filter不到活動會卡住
   // if (allPaginateArray.length === 0) {

@@ -12,7 +12,6 @@ import { getUserData } from "../../utils/firebase";
 import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
 import { ModalProvider, BaseModalBackground } from "styled-react-modal";
-import IsLoadingBlack from "../../Components/IsLoadingBlack";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import Swal from "sweetalert2";
 import IsLoading from "../../Components/IsLoading";
@@ -292,7 +291,7 @@ function Detail() {
           { name: userName, uid: userUid },
         ],
       });
-    }, 2000);
+    }, 60000);
   };
   const handleVisitor = () => {
     Swal.fire({
@@ -401,7 +400,11 @@ function Detail() {
             handleJoin();
           }}
         >
-          {loadingStatus ? <IsLoadingBlack /> : "我要報名"}
+          {loadingStatus ? (
+            <IsLoading loadingStyle={"buttonLarge"} />
+          ) : (
+            "我要報名"
+          )}
         </JoinButton>
       );
     }
@@ -445,7 +448,7 @@ function Detail() {
 
   //防止第一次render抓不到東西，先return null跳出 (幫下面的renderDetail擋避免undifine)
   if (!detailData || !activityChange) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
   return (
     <ModalProvider backgroundComponent={FadingBackground}>

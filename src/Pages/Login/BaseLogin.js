@@ -14,7 +14,7 @@ function BaseLogin(props) {
   let history = useHistory();
 
   if (props.userUid === "") {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   } else if (props.userUid) {
     history.push("/");
     return "redirection";
