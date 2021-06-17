@@ -1,32 +1,27 @@
 import "../../App.css";
+import firebase from "firebase/app";
+import "firebase/auth";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
-
-let userEmail = "";
-let userPassword = "";
-let userInfo = {};
 
 function Login(props) {
   const [emailState, setEmailState] = useState(true);
   const [emailValue, setEmailValue] = useState();
   const [emailAuthState, setEmailAuthState] = useState(true);
   const [passwordState, setPasswordState] = useState(true);
-  const [passwordValue, setPasswordValue] = useState(true);
+  const [passwordValue, setPasswordValue] = useState();
   const [passwordAuthState, setPasswordAuthState] = useState(true);
 
   let history = useHistory();
 
   const handleEmailChange = (e) => {
-    userEmail = e;
     setEmailValue(e);
     setEmailState(true);
     setEmailAuthState(true);
   };
   const handlePasswordChange = (e) => {
-    userPassword = e;
     setPasswordValue(e);
     setPasswordState(true);
     setPasswordAuthState(true);
@@ -34,10 +29,9 @@ function Login(props) {
 
   const handleLogin = () => {
     if (formCheck()) {
-      // //登入
-      window.firebase
+      firebase
         .auth()
-        .signInWithEmailAndPassword(userEmail, userPassword)
+        .signInWithEmailAndPassword(emailValue, passwordValue)
         .then((result) => {
           console.log(result.uid);
           props.props.setIsLogIn(true);
@@ -51,7 +45,6 @@ function Login(props) {
             timer: 2000,
           });
           history.push("/");
-          // window.location.href = "./";
         })
         .catch((error) => {
           console.log(error);
@@ -79,13 +72,7 @@ function Login(props) {
     }
   };
 
-  // console.log(userInfo);
-  // console.log(userEmail);
-  // console.log(userPassword);
-
   const formCheck = () => {
-    // userInfo = { ...userInfo, skill: skillArray };
-
     if (!emailValue) {
       setEmailState(false);
       return false;
@@ -102,32 +89,16 @@ function Login(props) {
   };
   const warningEmailHTML = () => {
     if (!emailState) {
-      return (
-        <Warning style={{ display: "inline-block", color: "red" }}>
-          帳號不完整
-        </Warning>
-      );
+      return <Warning>帳號不完整</Warning>;
     } else if (!emailAuthState) {
-      return (
-        <Warning style={{ display: "inline-block", color: "red" }}>
-          無效帳號
-        </Warning>
-      );
+      return <Warning>無效帳號</Warning>;
     }
   };
   const warningPasswordHTML = () => {
     if (!passwordState) {
-      return (
-        <Warning style={{ display: "inline-block", color: "red" }}>
-          密碼不完整
-        </Warning>
-      );
+      return <Warning>密碼不完整</Warning>;
     } else if (!passwordAuthState) {
-      return (
-        <Warning style={{ display: "inline-block", color: "red" }}>
-          密碼錯誤
-        </Warning>
-      );
+      return <Warning>密碼錯誤</Warning>;
     }
   };
 
@@ -184,7 +155,6 @@ const TestAccount = styled.div`
 `;
 const ItemFieldContainer = styled.div`
   margin: 0 auto;
-  /* width: 90%; */
 `;
 const ItemField = styled.div`
   display: flex;
@@ -216,14 +186,17 @@ const Warning = styled.div`
   font-size: 12px;
   position: absolute;
   bottom: -20px;
-  left: 70px;
+  left: 80px;
+  color: red;
+  @media (max-width: 414px) {
+    left: 70px;
+  }
+  @media (max-width: 375px) {
+    left: 60px;
+  }
 `;
 
-const RequireField = styled.span`
-  color: red;
-`;
 const LoginButton = styled.button`
-  /* width: 90px; */
   padding: 12px 40px;
   align-items: center;
   margin: 0 auto;

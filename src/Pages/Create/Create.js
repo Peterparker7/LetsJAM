@@ -1,31 +1,27 @@
-// import "../../App.css";
 import "../../normalize.css";
 import "./Create.css";
 import styled from "styled-components";
-import React, { useEffect, useState, useRef } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
-import MyComponent from "../../Map";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MultiSelect from "react-multi-select-component";
-import { uploadImage, getAuthUser } from "../../utils/firebase";
-import exampleImg from "../../images/startgroupexample.png";
+import { uploadImage } from "../../utils/firebase";
+
 import concertImg from "../../images/concert1.jpg";
 import cloudUpload from "../../images/cloud-upload.svg";
 import { useSelector } from "react-redux";
 
-import CreateDetailForm from "./Formik";
 import * as Warning from "./Warning";
-import UsePlace from "./UsePlace";
 import Place from "./Place";
 import IsLoading from "../../Components/IsLoading";
 
 import CircularIndeterminate from "./CircularProgress";
-import {
-  SelectTypeWhiteHTML,
-  SelectRequireWhiteHTML,
-} from "../../Components/SelectComponent";
+import { SelectTypeWhiteHTML } from "../../Components/SelectComponent";
 import {
   MaterialUIPickersTime,
   MaterialUIPickersDate,
@@ -33,7 +29,7 @@ import {
 import Tooltip from "@material-ui/core/Tooltip";
 import arrowLeft from "../../images/arrow-left-short.svg";
 
-const db = window.firebase.firestore();
+const db = firebase.firestore();
 // let checked = false;
 
 const StyledMultiSelect = styled(MultiSelect)`
@@ -73,7 +69,7 @@ function Create(props) {
     "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
   );
   const [level, setLevel] = useState("");
-  const [location, setLocation] = useState("");
+  // const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(true);
   const [place, setPlace] = useState("");
@@ -85,9 +81,9 @@ function Create(props) {
   const [requirementStatus, setRequirementStatus] = useState(true);
   const [limitStatus, setLimitStatus] = useState(true);
   const [levelStatus, setLevelStatus] = useState(true);
-  const [locationStatus, setLocationStatus] = useState(true);
+  // const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
-  const [imageStatus, setImageStatus] = useState(true);
+  // const [imageStatus, setImageStatus] = useState(true);
   // const [userUid, setUserUid] = useState();
 
   const [requirement, setRequirement] = useState([]);
@@ -111,7 +107,6 @@ function Create(props) {
   //   const [requirement, setRequirement] = useState("");
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
-  const refContainer = useRef("");
 
   function addDays(date, days) {
     if (days === 0) {
@@ -133,21 +128,21 @@ function Create(props) {
     .toISOString()
     .substr(0, 10);
 
-  const convertDateTime = () => {
-    let formatDateYear = date.slice(0, 4);
-    let formatDateMonth = date.slice(5, 7);
-    let formatDateDate = date.slice(8, 10);
-    let formatTimeHour = time.slice(0, 2);
-    let formatTimeSecond = time.slice(3, 5);
+  // const convertDateTime = () => {
+  //   let formatDateYear = date.slice(0, 4);
+  //   let formatDateMonth = date.slice(5, 7);
+  //   let formatDateDate = date.slice(8, 10);
+  //   let formatTimeHour = time.slice(0, 2);
+  //   let formatTimeSecond = time.slice(3, 5);
 
-    return {
-      formatDateYear,
-      formatDateMonth,
-      formatDateDate,
-      formatTimeHour,
-      formatTimeSecond,
-    };
-  };
+  //   return {
+  //     formatDateYear,
+  //     formatDateMonth,
+  //     formatDateDate,
+  //     formatTimeHour,
+  //     formatTimeSecond,
+  //   };
+  // };
 
   // const checkUserIsLogin = async () => {
   //   const userUid = await getAuthUser();
@@ -163,14 +158,13 @@ function Create(props) {
     setDate(sat);
     setTime("16:00");
     currentNumber = 1;
-  }, []);
+  }, [sat]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   if (props.userUid === "") {
-    return <IsLoading />;
-    // return null;
+    return <IsLoading loadingStyle={"normal"} />;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";
@@ -222,7 +216,7 @@ function Create(props) {
       setPlaceStatus(false);
     }
     if (!imgUrl) {
-      setImageStatus(false);
+      // setImageStatus(false);
     }
 
     if (
@@ -259,7 +253,7 @@ function Create(props) {
     console.log(date);
     console.log(type);
     console.log(place);
-    console.log(location);
+    // console.log(location);
     console.log(limit);
     // convertDateTime();
     // let timestamp = new Date(
@@ -272,10 +266,6 @@ function Create(props) {
 
     let newTimestamp = new Date(`${date}T${time}`);
     let timestamp = new Date(`${date}T${time}`);
-    console.log(
-      "🚀 ~ file: Create.js ~ line 268 ~ clickCreate ~ timestamp",
-      timestamp
-    );
 
     // imageUrl = await uploadImage(imgSource);
 
@@ -318,7 +308,7 @@ function Create(props) {
   };
 
   let override = {
-    allItemsAreSelected: "我全都要",
+    allItemsAreSelected: "所有樂器",
     clearSearch: "Clear Search",
     noOptions: "No options",
     search: "搜尋",
@@ -387,10 +377,10 @@ function Create(props) {
       setLimitStatus(true);
       currentNumber = e.target.value;
     }
-    if (changeType === "location") {
-      setLocation(e.target.value);
-      setLocationStatus(true);
-    }
+    // if (changeType === "location") {
+    //   setLocation(e.target.value);
+    //   setLocationStatus(true);
+    // }
     if (changeType === "comment") {
       setComment(e.target.value);
     }
@@ -456,10 +446,6 @@ function Create(props) {
   return (
     <MainContainer>
       <Container>
-        {/* <ProcessIntroContainer> */}
-        {/* <ProcessIntro>創立活動圖文說明</ProcessIntro> */}
-        {/* <img src={`${exampleImg}`} alt="" style={{ width: "900px" }} /> */}
-        {/* </ProcessIntroContainer> */}
         <CreateDetailContainer>
           <CreateDetailTopBar></CreateDetailTopBar>
           <Tooltip title="回上頁" interactive>
@@ -645,10 +631,10 @@ function Create(props) {
                   onChange={(e) => {
                     handleUploadImage(e);
                     if (e.target.value) {
-                      setImageStatus(true);
+                      // setImageStatus(true);
                     } else {
-                      setImageStatus(false);
-                      console.log("no input");
+                      // setImageStatus(false);
+                      // console.log("no input");
                     }
                   }}
                 ></InputfieldImage>
@@ -721,7 +707,7 @@ const MainContainer = styled.div`
   position: relative;
   min-height: calc(100vh-180px);
 `;
-const MainContainerCanvas = styled.div``;
+
 const Container = styled.div`
   text-align: left;
   max-width: 1024px;
@@ -731,12 +717,6 @@ const Container = styled.div`
   /* border: 1px solid #979797; */
   /* padding: 50px 20px; */
 `;
-const ProcessIntroContainer = styled.div`
-  width: 960px;
-  height: 400px;
-  margin: 0 auto;
-`;
-const ProcessIntro = styled.div``;
 const CreateDetailTopBar = styled.div`
   width: 100%;
   height: 8px;
@@ -850,18 +830,18 @@ const Inputfield = styled.input`
     width: 90%;
   }
 `;
-const SelectType = styled.select`
-  padding: 5px;
-  width: 220px;
-  border-bottom: 1px solid #979797;
+// const SelectType = styled.select`
+//   padding: 5px;
+//   width: 220px;
+//   border-bottom: 1px solid #979797;
 
-  @media (max-width: 768px) {
-    width: 90%;
-  }
-  @media (max-width: 576px) {
-    width: 90%;
-  }
-`;
+//   @media (max-width: 768px) {
+//     width: 90%;
+//   }
+//   @media (max-width: 576px) {
+//     width: 90%;
+//   }
+// `;
 const InputTextArea = styled.textarea`
   width: 220px;
   height: 80px;

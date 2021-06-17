@@ -1,7 +1,7 @@
 // import "../../App.css";
 import "./EditActivitiesButton.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
@@ -13,13 +13,13 @@ import {
   updateInvitation,
 } from "../../utils/firebase";
 
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import Modal from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import * as Warning from "./Validate";
 
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+// import withReactContent from "sweetalert2-react-content";
 import xIconBlack from "../../images/xBlack.svg";
 import { SelectTypeWhiteEditHTML } from "../../Components/SelectComponent";
 import {
@@ -74,19 +74,21 @@ function EditActivitiesButton(props) {
   let limitInitial = 1;
   const [checked, setChecked] = useState();
 
-  const [titleStatus, setTitleStatus] = useState(true);
-  const [dateStatus, setDateStatus] = useState(true);
-  const [timeStatus, setTimeStatus] = useState(true);
-  const [requirementStatus, setRequirementStatus] = useState(true);
-  const [levelStatus, setLevelStatus] = useState(true);
-  const [locationStatus, setLocationStatus] = useState(true);
+  // const [titleStatus, setTitleStatus] = useState(true);
+  // const [dateStatus, setDateStatus] = useState(true);
+  // const [timeStatus, setTimeStatus] = useState(true);
+  // const [requirementStatus, setRequirementStatus] = useState(true);
+  // const [levelStatus, setLevelStatus] = useState(true);
+  // const [locationStatus, setLocationStatus] = useState(true);
   const [validationResult, setValidationResult] = useState(true);
-  let titlestate = "";
 
-  const getActivity = async () => {
-    const data = await getSpecificData(props.data.id);
-    setActivityData(data);
-  };
+  const getActivity = useCallback(() => {
+    const gettingActivity = async () => {
+      const data = await getSpecificData(props.data.id);
+      setActivityData(data);
+    };
+    gettingActivity();
+  }, [props.data.id]);
 
   //   const userHostActivityDataRedux = useSelector(
   //     (state) => state.userHostActivityData
@@ -108,9 +110,9 @@ function EditActivitiesButton(props) {
     } else if (userHostActivityDataRedux.limit !== 0) {
       setChecked(false);
     }
-  }, []);
+  }, [getActivity, userHostActivityDataRedux.limit]);
 
-  let activityData = props.data;
+  // let activityData = props.data;
 
   function toggleModal(e) {
     setOpacity(0);
@@ -122,7 +124,7 @@ function EditActivitiesButton(props) {
     setIsOpen(!isOpen);
     console.log(oneactivityData);
     console.log(userHostActivityDataRedux);
-    console.log(titleStatus);
+
     setActivityData({
       ...oneactivityData,
       title: userHostActivityDataRedux.title,
@@ -131,22 +133,7 @@ function EditActivitiesButton(props) {
       level: userHostActivityDataRedux.level,
       location: userHostActivityDataRedux.location,
     });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   date: userHostActivityDataRedux.date,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   time: userHostActivityDataRedux.time,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   level: userHostActivityDataRedux.level,
-    // });
-    // setActivityData({
-    //   ...oneactivityData,
-    //   location: userHostActivityDataRedux.location,
-    // });
+
     setRequirement(requirementFormat);
     if (userHostActivityDataRedux.limit === 0) {
       setChecked(true);
@@ -217,7 +204,7 @@ function EditActivitiesButton(props) {
     let date = oneactivityData.date;
     let time = oneactivityData.time;
     let newTimestamp = new Date(`${date}T${time}`);
-    let timestampformat = Date.parse(newTimestamp);
+    // let timestampformat = Date.parse(newTimestamp);
 
     let data = {
       id: props.data.id,
@@ -238,14 +225,7 @@ function EditActivitiesButton(props) {
     console.log(data);
     if (inputValidation()) {
       updateActivitiesData(data, props.data.id);
-      // props.setUserActivities({ ...data, title: data.title });
-      // props.setUserActivities((prevState) => [...prevState, data.title]);
 
-      // props.confirmArray.push(data);
-
-      // const dataArr = [];
-      // dataArr.push(data);
-      // props.onEdit(dataArr);
       dispatch({
         type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
         data: data,
@@ -323,8 +303,6 @@ function EditActivitiesButton(props) {
     // }
   };
 
-  const handleNolimtChange = () => {};
-
   const handleDelete = async () => {
     Swal.fire({
       title: "<div style=font-size:24px>確定要刪除嗎?</div>",
@@ -341,8 +319,7 @@ function EditActivitiesButton(props) {
       if (result.isConfirmed) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
         handleActivityInvitationDelete();
-        const deleteActivity = deleteActivityData(props.data.id);
-        // alert("已刪除活動");
+        deleteActivityData(props.data.id);
         dispatch({
           type: "DELETE_ACTIVITYDATA",
           data: props.data,
@@ -354,14 +331,15 @@ function EditActivitiesButton(props) {
   };
   const handleActivityInvitationDelete = async () => {
     const allUserData = await getAllUser();
-    const newAll = allUserData.map((item) => {
+    allUserData.forEach((item) => {
       const newItem = item.invitation.filter(
         (invitation) => invitation.id !== props.data.id
       );
       item.invitation = newItem;
 
-      const update = updateInvitation(newItem, item.uid);
-      return item;
+      updateInvitation(newItem, item.uid);
+      // const update = updateInvitation(newItem, item.uid);  update後面都沒使用
+      // return item;  因為不需要return 把map改成forEach
     });
   };
 
@@ -434,16 +412,6 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.date}
               handleActivityChange={handleActivityChange}
             />
-            {/* <InputFieldInput
-              id="date"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={userHostActivityDataRedux.date}
-              type="date"
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "date");
-              }}
-            ></InputFieldInput> */}
             {Warning.warningDateHTML(
               oneactivityData.date,
               userHostActivityDataRedux.date
@@ -456,16 +424,6 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.time}
               handleActivityChange={handleActivityChange}
             />
-            {/* <InputFieldInput
-              id="time"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={userHostActivityDataRedux.time}
-              type="time"
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "time");
-              }}
-            ></InputFieldInput> */}
             {Warning.warningTimeHTML(
               oneactivityData.date,
               oneactivityData.time
@@ -610,11 +568,9 @@ function EditActivitiesButton(props) {
           <CloseIconContainer>
             <CloseIcon src={xIconBlack} onClick={toggleCancel} />
           </CloseIconContainer>
-          {/* <TopBar></TopBar> */}
           <ContentTitle>編輯活動內容</ContentTitle>
           {renderEditActivityField()}
         </Container>
-        {/* <BtnClose onClick={toggleCancel}>+</BtnClose> */}
       </StyledModal>
     </div>
   );
@@ -626,11 +582,7 @@ const Container = styled.div`
   background: #f8f8ff;
   position: relative;
 `;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff0099;
-`;
+
 const ContentTitle = styled.div`
   color: black;
   font-size: 24px;
@@ -703,12 +655,12 @@ const LimitInputField = styled.input`
 const LimitCheckBoxField = styled.input`
   width: 30px;
 `;
-const SelectType = styled.select`
-  width: calc(100% - 80px);
-  padding: 5px;
-  height: 40px;
-  border-bottom: 1px solid #979797;
-`;
+// const SelectType = styled.select`
+//   width: calc(100% - 80px);
+//   padding: 5px;
+//   height: 40px;
+//   border-bottom: 1px solid #979797;
+// `;
 const EditActivityButtonDiv = styled.div`
   display: flex;
   justify-content: space-around;
@@ -795,14 +747,6 @@ const EditBtn = styled.button`
 
     height: 30px;
   }
-`;
-const BtnClose = styled.button`
-  position: absolute;
-  transform: rotate(0.125turn);
-  font-size: 28px;
-  top: 10px;
-  right: 30px;
-  cursor: pointer;
 `;
 
 export default EditActivitiesButton;

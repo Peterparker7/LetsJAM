@@ -3,39 +3,35 @@ import "../../normalize.css";
 import "../../Components/swal2.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import {
   getActivityData,
   getUserData,
   getAuthUser,
-  logOut,
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
-import InstrumentBanner from "./InstrumentBanner";
+// import InstrumentBanner from "./InstrumentBanner";
 import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
-import SelectTypeComponent from "../../Components/SelectComponent";
-import Select from "react-select";
+// import SelectTypeComponent from "../../Components/SelectComponent";
 import {
   SelectTypeHTML,
   SelectRequireHTML,
 } from "../../Components/SelectComponent";
 
 import { Animated } from "react-animated-css";
-import CircularIndeterminate from "../Create/CircularProgress";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import arrowRight from "../../images/arrow-right-short.svg";
 import Swal from "sweetalert2";
 
-const db = window.firebase.firestore();
 let allActivitiesArrayCopy = [];
 let allActivitiesArray = [];
 
 function Main() {
   const [data, setData] = useState([]);
-  const [currentPageData, setCurrentPageData] = useState([]);
+  // const [currentPageData, setCurrentPageData] = useState([]);
   const [userDataUid, setUserDataUid] = useState();
   const [page, setPage] = useState(1);
   const [pageNum, setPageNum] = useState(1);
@@ -69,7 +65,8 @@ function Main() {
 
   //   }))
 
-  const handlePagination = () => {
+  //eslint說要用useCallback
+  const handlePagination = useCallback(() => {
     let allPageArray = [];
 
     let currentTime = Date.now();
@@ -78,7 +75,7 @@ function Main() {
       return item.timestamp.toMillis() > currentTime;
     });
 
-    const pageArray = openActivityArray.slice(0, pageLen);
+    // const pageArray = openActivityArray.slice(0, pageLen);
     const pageNum = Math.ceil(openActivityArray.length / pageLen);
     setPageNum(pageNum);
     for (let i = 0; i < openActivityArray.length; i = i + pageLen) {
@@ -88,15 +85,15 @@ function Main() {
 
     setAllPaginateArray(allPageArray);
     setCompletePaginate(true);
-  };
+  }, [data, pageLen]);
 
-  const options = [
-    { label: "Vocal", value: "Vocal" },
-    { label: "吉他", value: "吉他" },
-    { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
-    { label: "電吉他", value: "電吉他" },
-  ];
+  // const options = [
+  //   { label: "Vocal", value: "Vocal" },
+  //   { label: "吉他", value: "吉他" },
+  //   { label: "木箱鼓", value: "木箱鼓" },
+  //   { label: "烏克麗麗", value: "烏克麗麗" },
+  //   { label: "電吉他", value: "電吉他" },
+  // ];
 
   // const activitiesFilterHTML = () => {};
 
@@ -104,7 +101,8 @@ function Main() {
     const userUid = await getAuthUser();
     if (userUid) {
       setUserDataUid(userUid);
-      const userData = await getUserData(userUid);
+      // const userData = await getUserData(userUid);
+      getUserData(userUid);
     }
   };
 
@@ -117,7 +115,7 @@ function Main() {
 
   useEffect(() => {
     handlePagination();
-  }, [data]);
+  }, [data, handlePagination]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -155,6 +153,7 @@ function Main() {
           if (item.requirement.includes(require)) {
             return item;
           }
+          return null;
         });
         setData(alltype);
         return;
@@ -163,6 +162,7 @@ function Main() {
         if (item.type.includes(e)) {
           return item;
         }
+        return null;
       });
       setData(iscontain);
       if (require === "所有樂器") {
@@ -172,6 +172,7 @@ function Main() {
           if (item.requirement.includes(require)) {
             return item;
           }
+          return null;
         });
         setData(bothcontain);
       }
@@ -186,6 +187,7 @@ function Main() {
           if (item.type.includes(type)) {
             return item;
           }
+          return null;
         });
         setData(allrequirement);
         return;
@@ -194,6 +196,7 @@ function Main() {
         if (item.requirement.includes(e)) {
           return item;
         }
+        return null;
       });
       if (type === "所有類型") {
         setData(iscontain);
@@ -202,6 +205,7 @@ function Main() {
           if (item.type.includes(type)) {
             return item;
           }
+          return null;
         });
         setData(bothcontain);
       }
@@ -277,7 +281,6 @@ function Main() {
   //   }
   // };
 
-  const handleRequirementFilter = () => {};
   const handleCreateNow = () => {
     if (userDataUid) {
       return (
@@ -330,10 +333,10 @@ function Main() {
   };
 
   if (!completePaginate) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
   if (!data) {
-    return <IsLoading />;
+    return <IsLoading loadingStyle={"normal"} />;
   }
   //filter不到活動會卡住
   // if (allPaginateArray.length === 0) {
@@ -378,7 +381,6 @@ function Main() {
                       <Type>{item.type}</Type>
                       <Requirement>{requirementHTML}</Requirement>
                       <Location>{item.location}</Location>
-                      {/* <Host>揪團主：{item.host.name}</Host> */}
                       <AttendantNum>{attendantsNum} 出席者</AttendantNum>
                       {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
                     </ActivityContent>
@@ -388,6 +390,7 @@ function Main() {
             </Animated>
           );
         }
+        return null;
       })
     ) : (
       <NoResultContainer>
@@ -504,17 +507,9 @@ function Main() {
       </PageControllContainer>
     </MainContainer>
   );
-  {
-    /* <iframe id="ytplayer" type="text/html" width="640" height="360"
-  src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
-  frameborder="0"></iframe>; */
-  }
 }
 const MainContainer = styled.main`
-  /* background-color: #846767; */
-  /* background-color: #7b7b7b; */
   background-color: #121212;
-  /* background-color: #4e3a3a; */
   min-height: calc(100vh - 180px);
   padding-bottom: 50px;
 `;
@@ -654,20 +649,18 @@ const JoinButton = styled.button`
     padding: 12px 48px;
   }
 `;
-const MainImgContainer = styled.div`
-  width: 500px;
-  height: 500px;
-  position: absolute;
-  right: 50px;
-  top: 50px;
-`;
-const MainImg = styled.img`
-  max-width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  /* object-fit: cover; */
-`;
+// const MainImgContainer = styled.div`
+//   width: 500px;
+//   height: 500px;
+//   position: absolute;
+//   right: 50px;
+//   top: 50px;
+// `;
+// const MainImg = styled.img`
+//   max-width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// `;
 
 const ActivityFilter = styled.div`
   display: flex;
@@ -692,15 +685,15 @@ const ActivityFilter = styled.div`
     justify-content: space-around;
   }
 `;
-const ActivityTitle = styled.div`
-  margin: 20px auto;
-  padding: 0 20px;
-  color: white;
-  font-size: 28px;
-  font-weight: 600;
-  text-align: left;
-  max-width: 1024px;
-`;
+// const ActivityTitle = styled.div`
+//   margin: 20px auto;
+//   padding: 0 20px;
+//   color: white;
+//   font-size: 28px;
+//   font-weight: 600;
+//   text-align: left;
+//   max-width: 1024px;
+// `;
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
@@ -848,9 +841,9 @@ const NoResultContainer = styled.div`
     width: 100%;
   }
 `;
-const NoResult = styled.div`
-  font-size: 20px;
-`;
+// const NoResult = styled.div`
+//   font-size: 20px;
+// `;
 const PageControllContainer = styled.div`
   margin: 30px auto;
   max-width: 1024px;
@@ -904,7 +897,6 @@ const Location = styled.div`
     display: none;
   }
 `;
-const Host = styled.div``;
 const AttendantNum = styled.div`
   font-size: 16px;
   @media (max-width: 768px) {
@@ -929,43 +921,6 @@ const ActivityImage = styled.img`
   @media (max-width: 768px) {
     width: 100%;
     height: 200px;
-  }
-`;
-
-const Neon = styled.div`
-  position: absolute;
-
-  top: 120px;
-  left: 120px;
-  margin: 0 auto;
-  padding: 0 20px;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  text-shadow: 0 0 20px #ff005b;
-  &:after {
-    position: absolute;
-
-    content: attr(data-text);
-    top: 0px;
-    left: 0px;
-
-    margin: 0 auto;
-    padding: 0 20px;
-    z-index: -1;
-    color: #ff005b;
-    filter: blur(15px);
-  }
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fe3a80;
-    z-index: -2;
-    opacity: 0.5;
-    filter: blur(100px);
   }
 `;
 

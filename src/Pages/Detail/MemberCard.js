@@ -1,14 +1,7 @@
 import "../../App.css";
 import Modal from "styled-react-modal";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import {
-  getSpecificData,
-  deleteActivityData,
-  updateActivitiesData,
-  getAllUser,
-  sendUserInvite,
-} from "../../utils/firebase";
+import React, { useState } from "react";
 import xIcon from "../../images/x.svg";
 
 const StyledModal = Modal.styled`
@@ -120,6 +113,7 @@ const Avatar = styled.img`
   border: 3px solid white;
   box-shadow: 0 0 20px #ff00ff;
   transition: 0.3s;
+  cursor: pointer;
 `;
 const AvatarName = styled.div`
   margin-top: 10px;
@@ -213,16 +207,14 @@ const YoutubeUrl = styled.div`
   padding-bottom: 30px;
 `;
 const Btn = styled.button`
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 180px;
   top: 0;
   left: 0;
 
-  /* position: absolute; */
   &:hover ${Avatar} {
     transform: scale(1.05);
     transform: translateY(-3px);
-    /* border: 1px solid #ff00ff; */
     box-shadow: 0 0 50px #ff00ff;
   }
 `;

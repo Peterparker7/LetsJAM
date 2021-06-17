@@ -3,16 +3,15 @@ import Main from "./Pages/Main/Main";
 import Create from "./Pages/Create/Create";
 import Detail from "./Pages/Detail/Detail";
 import Profile from "./Pages/Profile/Profile";
-import Login from "./Pages/Login/Login";
 import BaseLogin from "./Pages/Login/BaseLogin";
 import Header from "./Pages/Header";
 import Footer from "./Pages/Footer";
 import Error404 from "./Pages/Error404";
 import {
-  BrowserRouter as Router,
+  // BrowserRouter as Router,
   Switch,
   Route,
-  Link,
+  // Link,
   Redirect,
 } from "react-router-dom";
 import styled from "styled-components";

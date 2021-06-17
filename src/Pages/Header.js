@@ -1,11 +1,8 @@
 import "../App.css";
 import styled, { keyframes } from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import iconTaylorBlack from "../images/icon-Taylor-black.png";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import iconTaylorWhite from "../images/icon-Taylor-white.png";
-import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
-import iconPersonCircle from "../images/person-circle.svg";
 import iconPerson from "../images/person-fill.svg";
 import menuIcon from "../images/list.svg";
 import mailboxIcon from "../images/envelope.svg";
@@ -18,8 +15,8 @@ import {
   subscribeUser,
   updateInvitation,
 } from "../utils/firebase";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { Animated } from "react-animated-css";
+import { useSelector, useDispatch } from "react-redux";
+// import { Animated } from "react-animated-css";
 import Swal from "sweetalert2";
 
 import xIcon from "../images/x.svg";
@@ -34,22 +31,25 @@ function Header(props) {
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
+  const checkUserIsLogin = useCallback(() => {
+    const checkingUserIsLogin = async () => {
+      const userUid = await getAuthUser();
 
-    if (userUid) {
-      const data = await getUserData(userUid);
-      setUserData(data);
-      dispatch({ type: "UPDATE_USERDATA", data: data });
-    } else {
-      //沒有usedUid要把userData設回空的不然會留著之前的state
-      setUserData([]);
-    }
-  };
+      if (userUid) {
+        const data = await getUserData(userUid);
+        setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+      } else {
+        //沒有usedUid要把userData設回空的不然會留著之前的state
+        setUserData([]);
+      }
+    };
+    checkingUserIsLogin();
+  }, [dispatch]);
 
-  const handlefirebaseChange = () => {
+  const handlefirebaseChange = useCallback(() => {
     setUserData(userDataChange);
-  };
+  }, [userDataChange]);
   // window.onclick = function (e) {
   //   if (
   //   e.target.id !== "MailBoxDiv" &&
@@ -87,31 +87,34 @@ function Header(props) {
       timer: 1500,
     });
   };
-  const handleUserDataChange = () => {};
-  const arrangeInvitationData = async () => {
-    const invitation = userData.invitation;
-    if (!invitation) {
-      return "isLoading";
-    }
-    // 打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
-    const invitedArray = [];
-    invitation.forEach((item) => {
-      const promise = getSpecificData(item.id).then((data) => {
-        return data;
+
+  const arrangeInvitationData = useCallback(() => {
+    const arrangingInvitationData = async () => {
+      const invitation = userData.invitation;
+      if (!invitation) {
+        return "isLoading";
+      }
+      // 打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
+      const invitedArray = [];
+      invitation.forEach((item) => {
+        const promise = getSpecificData(item.id).then((data) => {
+          return data;
+        });
+        invitedArray.push(promise);
       });
-      invitedArray.push(promise);
-    });
-    const allInvitation = await Promise.all(invitedArray);
-    setInvitationData(allInvitation);
-  };
+      const allInvitation = await Promise.all(invitedArray);
+      setInvitationData(allInvitation);
+    };
+    arrangingInvitationData();
+  }, [userData.invitation]);
 
   useEffect(() => {
     checkUserIsLogin();
-  }, [props.userUid]);
+  }, [props.userUid, checkUserIsLogin]);
 
   useEffect(() => {
     arrangeInvitationData();
-  }, [userData]);
+  }, [userData, arrangeInvitationData]);
 
   useEffect(() => {
     subscribeUser(setUserDataChange, userDataRedux.uid);
@@ -120,7 +123,7 @@ function Header(props) {
     if (userDataChange) {
       handlefirebaseChange();
     }
-  }, [userDataChange]);
+  }, [userDataChange, handlefirebaseChange]);
   if (!userData) {
     return "isLoading";
   }
@@ -166,6 +169,7 @@ function Header(props) {
               </EachMailField>
             );
           }
+          return null;
         });
         return HTML;
       } else {
@@ -305,6 +309,7 @@ function Header(props) {
                   </EachMailField>
                 );
               }
+              return null;
             });
             return HTML;
           } else {
@@ -663,9 +668,6 @@ const SignInItem = styled.div`
   align-items: center;
 `;
 
-const Menu = styled.img`
-  width: 60px;
-`;
 const MailBoxIconContainer = styled.div`
   margin-left: 20px;
   position: relative;
@@ -760,10 +762,10 @@ const EachMailTitle = styled.div`
     font-size: 16px;
   }
 `;
-const EachMailMsg = styled.div`
-  font-size: 16px;
-  color: white;
-`;
+// const EachMailMsg = styled.div`
+//   font-size: 16px;
+//   color: white;
+// `;
 const IgnoreBtn = styled.button`
   transform: rotate(0.125turn);
   font-size: 28px;
@@ -800,40 +802,4 @@ const CloseIcon = styled.img`
   position: absolute;
 `;
 
-const Neon = styled.div`
-  position: absolute;
-
-  top: 120px;
-  left: 120px;
-  margin: 0 auto;
-  padding: 0 20px;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  text-shadow: 0 0 20px #ff005b;
-  &:after {
-    position: absolute;
-
-    content: attr(data-text);
-    top: 0px;
-    left: 0px;
-
-    margin: 0 auto;
-    padding: 0 20px;
-    z-index: -1;
-    color: #ff005b;
-    filter: blur(15px);
-  }
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fe3a80;
-    z-index: -2;
-    opacity: 0.5;
-    filter: blur(100px);
-  }
-`;
 export default Header;

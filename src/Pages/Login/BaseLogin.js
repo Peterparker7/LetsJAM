@@ -1,44 +1,24 @@
 import "../../App.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-// import { useParams } from "react-router-dom";
-import { getAuthUser } from "../../utils/firebase";
-import iconTaylorBlack from "../../images/icon-Taylor-black.png";
 import iconTaylorWhite from "../../images/icon-Taylor-white.png";
 
 import Login from "./Login";
 import Register from "./Register";
-import { useSelector, useDispatch } from "react-redux";
 import concert2 from "../../images/concert2.jpg";
 import IsLoading from "../../Components/IsLoading";
 
 function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
-  // const [userUid, setUserUid] = useState();
-  const userDataRedux = useSelector((state) => state.userData);
   let history = useHistory();
 
-  console.log(props.userUid);
-  // if (props.userUid) {
-  //   history.push("/");
-  //   return "redirection";
-  // }
-
   if (props.userUid === "") {
-    return <IsLoading />;
-    // return null;
+    return <IsLoading loadingStyle={"normal"} />;
   } else if (props.userUid) {
     history.push("/");
     return "redirection";
   }
-
-  // if (userDataRedux.length !== 0) {
-  //   // window.location.href = "/";
-  //   history.push("/");
-  //   return "redirection";
-  // }
 
   const baseHTML = () => {
     if (toggle) {
@@ -108,10 +88,7 @@ function BaseLogin(props) {
 }
 
 const PageContainer = styled.div`
-  /* height: ; */
-  /* min-height: calc(100vh - 180px); */
   min-height: 980px;
-  /* border: 1px solid #b7b7b7; */
   width: 100%;
   background: #f8f8ff;
   background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2)),

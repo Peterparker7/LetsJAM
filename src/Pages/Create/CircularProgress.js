@@ -1,13 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { makeStyles, withTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const StyleProgress = styled(CircularProgress)`
-  .MuiCircularProgress-root {
-    color: black;
-  }
-`;
 const StyleDiv = styled.div`
   .MuiCircularProgress-root {
     color: black;
