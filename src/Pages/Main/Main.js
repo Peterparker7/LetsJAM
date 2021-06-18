@@ -345,7 +345,6 @@ function Main() {
           return <EachInstrument key={data}>{data} </EachInstrument>;
         });
         let attendantsNum = item.attendants.length;
-        console.log(typeof (index * 100));
         if (firebaseTime > currentTime) {
           return (
             <Animated
@@ -354,8 +353,9 @@ function Main() {
               // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 100}
+              key={index}
             >
-              <Link to={`/activities/${item.id}`} key={index}>
+              <Link to={`/activities/${item.id}`}>
                 <ActivityItem
                 // style={{
                 //   backgroundImage: `url(${item.fileSource})`,

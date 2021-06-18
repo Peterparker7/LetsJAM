@@ -369,4 +369,3 @@ export { updateInvitation };
 export { subscribe };
 export { subscribeUser };
 export { onAuthStateChanged };
-// export { createActivity };

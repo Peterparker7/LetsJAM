@@ -13,12 +13,12 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <App />
+  // <React.StrictMode>
+  <Provider store={store}>
+    <Router>
+      <App />
 
-        {/* <Switch>
+      {/* <Switch>
           <Route exact path="/error404">
             <Error404 />
           </Route>
@@ -32,9 +32,9 @@ ReactDOM.render(
             <Error404 />
           </Route>
         </Switch> */}
-      </Router>
-    </Provider>
-  </React.StrictMode>,
+    </Router>
+  </Provider>,
+  // </React.StrictMode>
   document.getElementById("root")
 );
 

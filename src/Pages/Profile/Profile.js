@@ -360,6 +360,7 @@ function Profile(props) {
           return (
             // <Link to={`/activities/${data.id}`}>
             <Animated
+              key={data.id}
               animationIn="fadeIn"
               // animationOut="fadeOut"
               isVisible={true}
@@ -402,6 +403,7 @@ function Profile(props) {
         } else if (newFormatDate < nowDate) {
           return (
             <EachHistoryActivityContainer
+              key={data.id}
               style={
                 !toggleJoinFilter ? { display: "block" } : { display: "none" }
               }

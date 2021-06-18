@@ -20,6 +20,8 @@ const StyledDiv = styled.div`
       return buttonLarge;
     } else if (props.loadingStyle === "buttonSmall") {
       return buttonSmall;
+    } else {
+      return normal;
     }
   }}
 `;
@@ -48,10 +50,6 @@ const buttonSmall = `
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "0px auto",
-    // paddingTop: "50px",
-    // display: "flex",
-    // width: "40px",
-    // justifyContent: "center",
     "& > * + *": {
       marginLeft: theme.spacing(2),
     },
@@ -66,33 +64,4 @@ export default function IsLoading(props) {
       <CircularProgress size={props.size} />
     </StyledDiv>
   );
-
-  // if (props.loadingStyle === "normal") {
-  //   return (
-  //     <NormalStyleDiv className={classes.root} >
-  //       <CircularProgress size={40} />
-  //     </NormalStyleDiv>
-  //   );
-  // } else if (props.loadingStyle === "buttonLarge") {
-  //   return (
-  //     <ButtonLargeStyleDiv className={classes.root}>
-  //       <CircularProgress size={30} />
-  //     </ButtonLargeStyleDiv>
-  //   );
-  // } else if (props.loadingStyle === "buttonSmall") {
-  //   return (
-  //     <ButtonSmallStyleDiv className={classes.root}>
-  //       <CircularProgress size={30} />
-  //     </ButtonSmallStyleDiv>
-  //   );
-  // } else {
-  //   return (
-  //     <StyleDiv
-  //       className={classes.root}
-  //       loadingCircleStyle={props.loadingCircleStyle}
-  //     >
-  //       <CircularProgress size={props.loadingCircleStyle.size} />
-  //     </StyleDiv>
-  //   );
-  // }
 }

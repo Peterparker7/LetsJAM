@@ -390,7 +390,7 @@ function EditActivitiesButton(props) {
       <EditActivityCol>
         <EditActivityDetail>
           <InputFieldDiv>
-            <Label for="title">活動名稱</Label>
+            <Label htmlFor="title">活動名稱</Label>
             <InputFieldInput
               id="title"
               contentEditable="true"
@@ -407,7 +407,7 @@ function EditActivitiesButton(props) {
             )}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="date">活動日期</Label>
+            <Label htmlFor="date">活動日期</Label>
             <MaterialUIPickersDateActivity
               defaultValue={userHostActivityDataRedux.date}
               handleActivityChange={handleActivityChange}
@@ -418,7 +418,7 @@ function EditActivitiesButton(props) {
             )}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="time">活動時間</Label>
+            <Label htmlFor="time">活動時間</Label>
             <MaterialUIPickersTimeActivity
               defaultDate={userHostActivityDataRedux.date}
               defaultValue={userHostActivityDataRedux.time}
@@ -430,7 +430,7 @@ function EditActivitiesButton(props) {
             )}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="type">音樂類型</Label>
+            <Label htmlFor="type">音樂類型</Label>
             <SelectTypeWhiteEditHTML
               defaultValue={userHostActivityDataRedux.type}
               handleActivityChange={handleActivityChange}
@@ -447,7 +447,7 @@ function EditActivitiesButton(props) {
             </SelectType> */}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="limit">人數限制</Label>
+            <Label htmlFor="limit">人數限制</Label>
             {/* <InputFieldInput
               id="limit"
               contentEditable="true"
@@ -467,7 +467,7 @@ function EditActivitiesButton(props) {
               checked={checked}
               onChange={() => setChecked(!checked)}
             />
-            <label for="nolimit">無</label>
+            <label htmlFor="nolimit">無</label>
           </InputFieldDiv>
           <InputFieldDiv>
             <Label>樂器需求</Label>
@@ -483,7 +483,7 @@ function EditActivitiesButton(props) {
             {Warning.warningRequirementHTML(requirement)}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="level">建議程度</Label>
+            <Label htmlFor="level">建議程度</Label>
             <InputFieldInput
               id="level"
               contentEditable="true"
@@ -496,7 +496,7 @@ function EditActivitiesButton(props) {
             {Warning.warningLevelHTML(oneactivityData.level)}
           </InputFieldDiv>
           <InputFieldDiv>
-            <Label for="location">活動地點</Label>
+            <Label htmlFor="location">活動地點</Label>
             <InputFieldInput
               id="location"
               contentEditable="true"
@@ -509,7 +509,7 @@ function EditActivitiesButton(props) {
             {Warning.warningLocationHTML(oneactivityData.location)}
           </InputFieldDiv>
           <InputFieldDiv style={{ alignItems: "baseline" }}>
-            <Label for="comment">活動說明</Label>
+            <Label htmlFor="comment">活動說明</Label>
             <InputTextArea
               id="comment"
               contentEditable="true"

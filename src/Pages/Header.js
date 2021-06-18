@@ -33,7 +33,6 @@ function Header(props) {
   const dispatch = useDispatch();
 
   const { userUid } = useContext(MyContext);
-  console.log(userUid);
 
   // const checkUserIsLogin = useCallback(() => {
   //   const checkingUserIsLogin = async () => {
@@ -155,13 +154,13 @@ function Header(props) {
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
-        const HTML = invitationData.map((item) => {
+        const HTML = invitationData.map((item, index) => {
           // const messageObj = userData.invitation.filter(
           //   (data) => data.id === item.id
           // );
           if (item) {
             return (
-              <EachMailField key={item}>
+              <EachMailField key={index}>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
                     onClick={() => {
@@ -298,13 +297,13 @@ function Header(props) {
       if (userData.length !== 0) {
         const invitedActivityHTML = () => {
           if (invitationData.length !== 0) {
-            const HTML = invitationData.map((item) => {
+            const HTML = invitationData.map((item, index) => {
               // const messageObj = userData.invitation.filter(
               //   (data) => data.id === item.id
               // );
               if (item) {
                 return (
-                  <EachMailField key={item}>
+                  <EachMailField key={index}>
                     <Link to={`/activities/${item.id}`}>
                       <EachMailDiv
                         style={{

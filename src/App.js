@@ -7,13 +7,7 @@ import BaseLogin from "./Pages/Login/BaseLogin";
 import Header from "./Pages/Header";
 import Footer from "./Pages/Footer";
 import Error404 from "./Pages/Error404";
-import {
-  // BrowserRouter as Router,
-  Switch,
-  Route,
-  // Link,
-  Redirect,
-} from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { getAuthUser, onAuthStateChanged } from "./utils/firebase";
@@ -22,7 +16,6 @@ import { MyContext } from "./MyContext";
 function App() {
   const [userUid, setUserUid] = useState("");
   const [isLogIn, setIsLogIn] = useState(false);
-  const [user, setUser] = useState(false);
   const [userAuthValue, setUserAuthValue] = useState(false);
 
   // const checkUserIsLogin = async () => {
@@ -42,8 +35,6 @@ function App() {
     const unsubscribe = onAuthStateChanged(setUserUid, setIsLogIn);
     return unsubscribe;
   }, [isLogIn]);
-
-  console.log(user);
 
   console.log(userUid);
   console.log(isLogIn);

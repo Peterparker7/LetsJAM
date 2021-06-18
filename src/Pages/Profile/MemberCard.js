@@ -40,7 +40,6 @@ function MemberCard(props) {
   }
 
   const skillArrange = () => {
-    console.log(props.data.skill);
     let skillArray = props.data.skill;
     let skillArrayDelimiter = skillArray.join(`, `);
     return skillArrayDelimiter;

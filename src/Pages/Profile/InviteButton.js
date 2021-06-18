@@ -224,7 +224,8 @@ function InviteButton(props) {
     });
   }, []);
   useEffect(() => {
-    subscribe(setActivityChange, activityDetail.id);
+    const unsubscribe = subscribe(setActivityChange, activityDetail.id);
+    return unsubscribe;
   }, [activityDetail.id]);
   if (!allUserData) {
     return "isLoading";

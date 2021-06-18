@@ -51,7 +51,7 @@ function Place(props) {
     // console.log(latLng);
   };
   console.log(address);
-  props.setPlace(address);
+  // props.setPlace(address);
   return (
     <InputField>
       <PlacesAutocomplete
@@ -59,6 +59,7 @@ function Place(props) {
         value={address}
         onChange={(value) => {
           setAddress(value);
+          props.setPlace(value);
           props.setPlaceStatus(true);
         }}
         onSelect={handleSelect}
@@ -74,7 +75,7 @@ function Place(props) {
             />
             <PlaceOption className="autocomplete-dropdown-container">
               {loading && <div>Loading...</div>}
-              {suggestions.map((suggestion) => {
+              {suggestions.map((suggestion, index) => {
                 const className = suggestion.active
                   ? "suggestion-item--active"
                   : "suggestion-item";
@@ -84,6 +85,7 @@ function Place(props) {
                   : { backgroundColor: "#ffffff", cursor: "pointer" };
                 return (
                   <div
+                    key={index}
                     {...getSuggestionItemProps(suggestion, {
                       className,
                       style,
