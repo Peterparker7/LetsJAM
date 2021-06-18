@@ -2,7 +2,7 @@ import "../../App.css";
 import "./swal2.css";
 import "../../normalize.css";
 import styled from "styled-components";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   getUserData,
   getAuthUser,
@@ -27,6 +27,7 @@ import amplifierImg from "../../images/amplifier-guitar.jpg";
 import IsLoading from "../../Components/IsLoading";
 import Swal from "sweetalert2";
 import { Animated } from "react-animated-css";
+import { MyContext } from "../../MyContext";
 
 function Profile(props) {
   // let userId = "vfjMHzp45ckI3o3kqDmO";
@@ -36,6 +37,8 @@ function Profile(props) {
   const [userJoinActivities, setUserJoinActivities] = useState([]);
   const [toggleFilter, setToggleFilter] = useState(true);
   const [toggleJoinFilter, setToggleJoinFilter] = useState(true);
+  const { userUid } = useContext(MyContext);
+
   const userDataRedux = useSelector((state) => state.userData);
   const userHostActivityDataRedux = useSelector(
     (state) => state.userHostActivityData
@@ -46,26 +49,29 @@ function Profile(props) {
   const confirmArray = [];
   const dispatch = useDispatch();
   const history = useHistory();
-  //fireauth
-  // window.firebase.auth().onAuthStateChanged(function (user) {
-  //   if (user) {
-  //     // 使用者已登入，可以取得資料
-  //     var email = user.email;
-  //     var uid = user.uid;
-  //   } else {
-  //     // 使用者未登入
-  //   }
-  // });
 
-  const checkUserIsLogin = useCallback(() => {
-    const checkingUserIsLogin = async () => {
-      const userUid = await getAuthUser();
-      const data = await getUserData(userUid);
-      dispatch({ type: "UPDATE_USERDATA", data: data });
-      setUserData(data);
+  // const checkUserIsLogin = useCallback(() => {
+  //   const checkingUserIsLogin = async () => {
+  //     if (props.userUid) {
+  //       const userUid = await getAuthUser();
+  //       const data = await getUserData(userUid);
+  //       dispatch({ type: "UPDATE_USERDATA", data: data });
+  //       setUserData(data);
+  //     }
+  //   };
+  //   checkingUserIsLogin();
+  // }, [dispatch, props.userUid]);
+
+  const userDataGet = useCallback(() => {
+    const userDataGetting = async () => {
+      if (userUid) {
+        const data = await getUserData(userUid);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+        setUserData(data);
+      }
     };
-    checkingUserIsLogin();
-  }, [dispatch]);
+    userDataGetting();
+  }, [dispatch, userUid]);
 
   // const getUserProfileData = async () => {
   //   const data = await getUserData(userId);
@@ -201,10 +207,14 @@ function Profile(props) {
 
   useEffect(() => {
     // getUserProfileData();
-    checkUserIsLogin();
+    // checkUserIsLogin();
     //渲染頁面之前先清空，避免裡面有重複之前的data
     setUserJoinActivities([]);
-  }, [checkUserIsLogin]);
+  }, []);
+
+  useEffect(() => {
+    userDataGet();
+  }, [userDataGet]);
 
   useEffect(() => {
     getUserActivitiesData();

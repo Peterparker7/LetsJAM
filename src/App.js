@@ -16,36 +16,34 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getAuthUser } from "./utils/firebase";
+import { getAuthUser, onAuthStateChanged } from "./utils/firebase";
+import { MyContext } from "./MyContext";
 
 function App() {
   const [userUid, setUserUid] = useState("");
   const [isLogIn, setIsLogIn] = useState(false);
   const [user, setUser] = useState(false);
+  const [userAuthValue, setUserAuthValue] = useState(false);
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    setUserUid(userUid);
-    if (userUid) {
-      setIsLogIn(true);
-    }
-  };
+  // const checkUserIsLogin = async () => {
+  //   const userUid = await getAuthUser();
+  //   setUserUid(userUid);
+  //   if (userUid) {
+  //     setIsLogIn(true);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   console.log("HHHHH");
+  //   checkUserIsLogin();
+  // }, [isLogIn]);
 
   useEffect(() => {
-    console.log("HHHHH");
-    checkUserIsLogin();
+    const unsubscribe = onAuthStateChanged(setUserUid, setIsLogIn);
+    return unsubscribe;
   }, [isLogIn]);
 
-  // useEffect(()=>{
-  //       const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
-  //     if(user){
-  //       setUser(user)
-  //     }else{
-  //       console.log("you are not login");
-  //     }
-  //   })
-  //   return unsubscribe;
-  // })
+  console.log(user);
 
   console.log(userUid);
   console.log(isLogIn);
@@ -53,61 +51,62 @@ function App() {
     <div className="App">
       {/* <Router> */}
       {/* <Header userUid={userUid} /> */}
+      <MyContext.Provider value={{ userUid, setUserUid }}>
+        <MainDiv>
+          <Switch>
+            <Route exact path="/">
+              <Header userUid={userUid} />
 
-      <MainDiv>
-        <Switch>
-          <Route exact path="/">
-            <Header userUid={userUid} />
+              <Main />
+              <Footer />
+            </Route>
+            <Route exact path="/activities/login">
+              <Header userUid={userUid} />
 
-            <Main />
-            <Footer />
-          </Route>
-          <Route exact path="/activities/login">
-            <Header userUid={userUid} />
+              <BaseLogin userUid={userUid} setIsLogIn={setIsLogIn} />
+              <Footer />
+            </Route>
+            <Route exact path="/activities">
+              <Header userUid={userUid} />
 
-            <BaseLogin userUid={userUid} setIsLogIn={setIsLogIn} />
-            <Footer />
-          </Route>
-          <Route exact path="/activities">
-            <Header userUid={userUid} />
+              <Main userUid={userUid} />
+              <Footer />
+            </Route>
+            <Route exact path="/activities/create">
+              <Header userUid={userUid} />
 
-            <Main userUid={userUid} />
-            <Footer />
-          </Route>
-          <Route exact path="/activities/create">
-            <Header userUid={userUid} />
+              <Create userUid={userUid} />
+              <Footer />
+            </Route>
+            <Route exact path="/activities/profile">
+              <Header userUid={userUid} />
 
-            <Create userUid={userUid} />
-            <Footer />
-          </Route>
-          <Route exact path="/activities/profile">
-            <Header userUid={userUid} />
+              <Profile
+                userUid={userUid}
+                setIsLogIn={setIsLogIn}
+                isLogIn={isLogIn}
+              />
+              <Footer />
+            </Route>
+            <Route exact path="/error404">
+              <Error404 />
+            </Route>
+            <Route exact path="/activities/:id">
+              <Header userUid={userUid} />
 
-            <Profile
-              userUid={userUid}
-              setIsLogIn={setIsLogIn}
-              isLogIn={isLogIn}
-            />
-            <Footer />
-          </Route>
-          <Route exact path="/error404">
-            <Error404 />
-          </Route>
-          <Route exact path="/activities/:id">
-            <Header userUid={userUid} />
-
-            <Detail />
-            <Footer />
-          </Route>
-          {/* 
+              <Detail userUid={userUid} />
+              <Footer />
+            </Route>
+            {/* 
           <Route path="/">
             <Main />
           </Route> */}
-          <Redirect to="/error404" />
-        </Switch>
-      </MainDiv>
-      {/* <Footer /> */}
-      {/* </Router> */}
+            <Redirect to="/error404" />
+          </Switch>
+        </MainDiv>
+        {/* <Footer /> */}
+        {/* </Router> */}
+      </MyContext.Provider>
     </div>
   );
 }

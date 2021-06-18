@@ -1,6 +1,6 @@
 import "../../App.css";
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import iconTaylorWhite from "../../images/icon-Taylor-white.png";
 
@@ -8,9 +8,12 @@ import Login from "./Login";
 import Register from "./Register";
 import concert2 from "../../images/concert2.jpg";
 import IsLoading from "../../Components/IsLoading";
+import { MyContext } from "../../MyContext";
 
 function BaseLogin(props) {
   const [toggle, setToggle] = useState(true);
+  const { userAuthValue, setUserAuthValue } = useContext(MyContext);
+
   let history = useHistory();
 
   if (props.userUid === "") {

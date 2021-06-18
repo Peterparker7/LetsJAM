@@ -3,7 +3,7 @@ import "../../normalize.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { getSpecificData, subscribe } from "../../utils/firebase";
@@ -23,8 +23,9 @@ import {
   openlogo,
   closelogo,
 } from "./DetailIcon";
+import { MyContext } from "../../MyContext";
 
-function Detail() {
+function Detail(props) {
   let { id } = useParams();
   const [detailData, setDetailData] = useState();
   const [userUid, setUserUid] = useState();
@@ -35,14 +36,24 @@ function Detail() {
 
   const history = useHistory();
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    if (userUid) {
-      const userData = await getUserData(userUid);
-      setUserUid(userUid);
-      setUserName(userData.name);
-    }
-  };
+  // const checkUserIsLogin = async () => {
+  //   const userUid = await getAuthUser();
+  //   if (userUid) {
+  //     const userData = await getUserData(userUid);
+  //     setUserUid(userUid);
+  //     setUserName(userData.name);
+  //   }
+  // };
+  const userDataGet = useCallback(() => {
+    const userDataGetting = async () => {
+      if (props.userUid) {
+        const userData = await getUserData(props.userUid);
+        setUserUid(props.userUid);
+        setUserName(userData.name);
+      }
+    };
+    userDataGetting();
+  }, [props.userUid]);
 
   const getData = useCallback(() => {
     const gettingData = async () => {
@@ -420,12 +431,15 @@ function Detail() {
   }, [activityChange, getData]);
   //useEffect只在第一次render後執行
   useEffect(() => {
-    checkUserIsLogin();
+    // checkUserIsLogin();
 
     getData();
   }, [id, getData]);
   //網址有變化重新getData
 
+  useEffect(() => {
+    userDataGet();
+  }, [userDataGet]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
