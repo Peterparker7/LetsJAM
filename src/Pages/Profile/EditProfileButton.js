@@ -391,7 +391,7 @@ function EditProfileButton(props) {
             <BtnField>
               <BtnConfirm onClick={editConfirm}>
                 {loadingStatus ? (
-                  <IsLoading loadingStyle={"buttonSmall"} />
+                  <IsLoading loadingStyle={"buttonSmall"} size={30} />
                 ) : (
                   "儲存"
                 )}

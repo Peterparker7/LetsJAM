@@ -333,10 +333,10 @@ function Main() {
   };
 
   if (!completePaginate) {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   }
   if (!data) {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   }
   //filter不到活動會卡住
   // if (allPaginateArray.length === 0) {

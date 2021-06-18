@@ -401,7 +401,7 @@ function Detail() {
           }}
         >
           {loadingStatus ? (
-            <IsLoading loadingStyle={"buttonLarge"} />
+            <IsLoading loadingStyle={"buttonLarge"} size={30} />
           ) : (
             "我要報名"
           )}
@@ -432,7 +432,8 @@ function Detail() {
 
   //0607新增監聽 加入活動即時更新
   useEffect(() => {
-    subscribe(setActivityChange, id);
+    const unsubscribe = subscribe(setActivityChange, id);
+    return unsubscribe;
   }, [setActivityChange, id]);
 
   //0607新增監聽 加入活動即時更新
@@ -448,7 +449,7 @@ function Detail() {
 
   //防止第一次render抓不到東西，先return null跳出 (幫下面的renderDetail擋避免undifine)
   if (!detailData || !activityChange) {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   }
   return (
     <ModalProvider backgroundComponent={FadingBackground}>

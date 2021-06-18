@@ -156,7 +156,7 @@ const getAuthUser = async () => {
 //         console.log("you are not login");
 //       }
 //     })
-//     return unsubscribe();
+//     return unsubscribe;
 // };
 
 const logOut = async () => {

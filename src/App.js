@@ -21,6 +21,7 @@ import { getAuthUser } from "./utils/firebase";
 function App() {
   const [userUid, setUserUid] = useState("");
   const [isLogIn, setIsLogIn] = useState(false);
+  const [user, setUser] = useState(false);
 
   const checkUserIsLogin = async () => {
     const userUid = await getAuthUser();
@@ -34,6 +35,17 @@ function App() {
     console.log("HHHHH");
     checkUserIsLogin();
   }, [isLogIn]);
+
+  // useEffect(()=>{
+  //       const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+  //     if(user){
+  //       setUser(user)
+  //     }else{
+  //       console.log("you are not login");
+  //     }
+  //   })
+  //   return unsubscribe;
+  // })
 
   console.log(userUid);
   console.log(isLogIn);
