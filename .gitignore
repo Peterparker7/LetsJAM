@@ -3,6 +3,7 @@
 #firebase
 /.firebase
 .firebaserc
+firebase.json
 # dependencies
 /node_modules
 /.pnp
