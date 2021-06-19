@@ -1,6 +1,6 @@
 import "../App.css";
 import styled, { keyframes } from "styled-components";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
 import iconTaylorWhite from "../images/icon-Taylor-white.png";
 import iconPerson from "../images/person-fill.svg";
@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
 import xIcon from "../images/x.svg";
+import { MyContext } from "../MyContext";
 
 function Header(props) {
   const [userData, setUserData] = useState([]);
@@ -31,10 +32,26 @@ function Header(props) {
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
-  const checkUserIsLogin = useCallback(() => {
-    const checkingUserIsLogin = async () => {
-      const userUid = await getAuthUser();
+  const { userUid } = useContext(MyContext);
 
+  // const checkUserIsLogin = useCallback(() => {
+  //   const checkingUserIsLogin = async () => {
+  //     const userUid = await getAuthUser();
+
+  //     if (userUid) {
+  //       const data = await getUserData(userUid);
+  //       setUserData(data);
+  //       dispatch({ type: "UPDATE_USERDATA", data: data });
+  //     } else {
+  //       //沒有usedUid要把userData設回空的不然會留著之前的state
+  //       setUserData([]);
+  //     }
+  //   };
+  //   checkingUserIsLogin();
+  // }, [dispatch]);
+
+  const userDataGet = useCallback(() => {
+    const userDataGetting = async () => {
       if (userUid) {
         const data = await getUserData(userUid);
         setUserData(data);
@@ -44,8 +61,8 @@ function Header(props) {
         setUserData([]);
       }
     };
-    checkingUserIsLogin();
-  }, [dispatch]);
+    userDataGetting();
+  }, [dispatch, userUid]);
 
   const handlefirebaseChange = useCallback(() => {
     setUserData(userDataChange);
@@ -108,9 +125,13 @@ function Header(props) {
     arrangingInvitationData();
   }, [userData.invitation]);
 
+  // useEffect(() => {
+  //   checkUserIsLogin();
+  // }, [props.userUid, checkUserIsLogin]);
+
   useEffect(() => {
-    checkUserIsLogin();
-  }, [props.userUid, checkUserIsLogin]);
+    userDataGet();
+  }, [userUid, userDataGet]);
 
   useEffect(() => {
     arrangeInvitationData();
@@ -133,13 +154,13 @@ function Header(props) {
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
-        const HTML = invitationData.map((item) => {
+        const HTML = invitationData.map((item, index) => {
           // const messageObj = userData.invitation.filter(
           //   (data) => data.id === item.id
           // );
           if (item) {
             return (
-              <EachMailField key={item}>
+              <EachMailField key={index}>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
                     onClick={() => {
@@ -276,13 +297,13 @@ function Header(props) {
       if (userData.length !== 0) {
         const invitedActivityHTML = () => {
           if (invitationData.length !== 0) {
-            const HTML = invitationData.map((item) => {
+            const HTML = invitationData.map((item, index) => {
               // const messageObj = userData.invitation.filter(
               //   (data) => data.id === item.id
               // );
               if (item) {
                 return (
-                  <EachMailField key={item}>
+                  <EachMailField key={index}>
                     <Link to={`/activities/${item.id}`}>
                       <EachMailDiv
                         style={{

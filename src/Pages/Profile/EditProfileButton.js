@@ -300,7 +300,7 @@ function EditProfileButton(props) {
             </ProfileImageContainer>
             <ProfileDetail>
               <InputFieldContainer>
-                <Label for="name">名稱</Label>
+                <Label htmlFor="name">名稱</Label>
                 <InputFieldInput
                   id="name"
                   contentEditable="true"
@@ -318,7 +318,7 @@ function EditProfileButton(props) {
               <InputFieldContainer>
                 {handlePreferTypeDefault()}
 
-                <Label for="preferType">偏好類型</Label>
+                <Label htmlFor="preferType">偏好類型</Label>
                 <SelectTypeBlackEditHTML
                   defaultValue={defaultPreferType}
                   handleProfileChange={handleProfileChange}
@@ -335,7 +335,7 @@ function EditProfileButton(props) {
                 </SelectType> */}
               </InputFieldContainer>
               <InputFieldContainer>
-                <Label for="skill">會的樂器</Label>
+                <Label htmlFor="skill">會的樂器</Label>
                 <StyledMultiSelect
                   className="EditProfileMulti"
                   overrideStrings={override}
@@ -349,7 +349,7 @@ function EditProfileButton(props) {
                 {Warning.warningProfileSkillHTML(skill)}
               </InputFieldContainer>
               <InputFieldContainer style={{ alignItems: "unset" }}>
-                <Label for="intro">自我介紹</Label>
+                <Label htmlFor="intro">自我介紹</Label>
                 {/* <InputFieldInput
                 id="intro"
                 contentEditable="true"
@@ -373,7 +373,7 @@ function EditProfileButton(props) {
                 {Warning.warningProfileIntroHTML(userData.intro)}
               </InputFieldContainer>
               <InputFieldContainer>
-                <Label for="youtubeSource">YouTube</Label>
+                <Label htmlFor="youtubeSource">YouTube</Label>
                 <InputFieldInput
                   id="youtubeSource"
                   placeholder="可放練習影片youtube連結"
@@ -391,7 +391,7 @@ function EditProfileButton(props) {
             <BtnField>
               <BtnConfirm onClick={editConfirm}>
                 {loadingStatus ? (
-                  <IsLoading loadingStyle={"buttonSmall"} />
+                  <IsLoading loadingStyle={"buttonSmall"} size={30} />
                 ) : (
                   "儲存"
                 )}

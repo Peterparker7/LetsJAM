@@ -3,7 +3,7 @@ import "../../normalize.css";
 import "../../Components/swal2.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
 // import { useParams } from "react-router-dom";
 import {
@@ -25,6 +25,7 @@ import { Animated } from "react-animated-css";
 import neonGuitar1 from "../../images/neonGuitar1.png";
 import arrowRight from "../../images/arrow-right-short.svg";
 import Swal from "sweetalert2";
+import { MyContext } from "../../MyContext";
 
 let allActivitiesArrayCopy = [];
 let allActivitiesArray = [];
@@ -41,29 +42,14 @@ function Main() {
   new window.WOW().init();
   const [type, setType] = useState("所有類型");
   const [require, setRequire] = useState("所有樂器");
+  const { userUid } = useContext(MyContext);
+
   const getFirebaseData = async () => {
     const data = await getActivityData();
     setData(data);
     allActivitiesArray.push(...data);
     allActivitiesArrayCopy.push(...data);
-
-    //也顯示揪團主，待更改
-    //   data.forEach(async (item, index) => {
-    //     const eachHost = await getUserData(item.host).then((res) => {
-    //       // hostDetailArray.push(res);
-    //       data[index].host = res;
-
-    //       return res;
-    //     });
-    //   });
-
-    // setData(data);
-    // allActivitiesArray.push(...data);
-    // allActivitiesArrayCopy.push(...data);
   };
-  //Promise.all(promises.then((result)=>{
-
-  //   }))
 
   //eslint說要用useCallback
   const handlePagination = useCallback(() => {
@@ -87,31 +73,35 @@ function Main() {
     setCompletePaginate(true);
   }, [data, pageLen]);
 
-  // const options = [
-  //   { label: "Vocal", value: "Vocal" },
-  //   { label: "吉他", value: "吉他" },
-  //   { label: "木箱鼓", value: "木箱鼓" },
-  //   { label: "烏克麗麗", value: "烏克麗麗" },
-  //   { label: "電吉他", value: "電吉他" },
-  // ];
-
   // const activitiesFilterHTML = () => {};
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    if (userUid) {
-      setUserDataUid(userUid);
-      // const userData = await getUserData(userUid);
-      getUserData(userUid);
-    }
-  };
+  // const checkUserIsLogin = async () => {
+  //   const userUid = await getAuthUser();
+  //   if (userUid) {
+  //     setUserDataUid(userUid);
+  //     // const userData = await getUserData(userUid);
+  //     getUserData(userUid);
+  //   }
+  // };
+  const userDataGet = useCallback(() => {
+    const userDataGetting = async () => {
+      if (userUid) {
+        setUserDataUid(userUid);
+        getUserData(userUid);
+      }
+    };
+    userDataGetting();
+  }, [userUid]);
 
   useEffect(() => {
     //渲染頁面之前先把存活動的array清空，避免array裡面有重複之前的data
     allActivitiesArray = [];
-    checkUserIsLogin();
+    // checkUserIsLogin();
     getFirebaseData();
   }, []);
+  useEffect(() => {
+    userDataGet();
+  }, [userDataGet]);
 
   useEffect(() => {
     handlePagination();
@@ -333,10 +323,10 @@ function Main() {
   };
 
   if (!completePaginate) {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   }
   if (!data) {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   }
   //filter不到活動會卡住
   // if (allPaginateArray.length === 0) {
@@ -355,7 +345,6 @@ function Main() {
           return <EachInstrument key={data}>{data} </EachInstrument>;
         });
         let attendantsNum = item.attendants.length;
-
         if (firebaseTime > currentTime) {
           return (
             <Animated
@@ -364,8 +353,9 @@ function Main() {
               // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 100}
+              key={index}
             >
-              <Link to={`/activities/${item.id}`} key={index}>
+              <Link to={`/activities/${item.id}`}>
                 <ActivityItem
                 // style={{
                 //   backgroundImage: `url(${item.fileSource})`,
@@ -407,7 +397,7 @@ function Main() {
         </MainImgContainer> */}
         <Animated
           animationIn="fadeInLeft"
-          animationInDelay="500"
+          animationInDelay={500}
           // animationOut="fadeOut"
           isVisible={true}
         >
@@ -418,7 +408,7 @@ function Main() {
 
         <Animated
           animationIn="fadeIn"
-          animationInDelay="1500"
+          animationInDelay={1500}
           // animationOut="fadeOut"
           isVisible={true}
         >
@@ -435,7 +425,7 @@ function Main() {
 
         <Animated
           animationIn="fadeIn"
-          animationInDelay="500"
+          animationInDelay={500}
           // animationOut="fadeOut"
           isVisible={true}
         >

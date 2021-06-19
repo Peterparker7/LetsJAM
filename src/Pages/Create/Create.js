@@ -164,7 +164,7 @@ function Create(props) {
   }, []);
 
   if (props.userUid === "") {
-    return <IsLoading loadingStyle={"normal"} />;
+    return <IsLoading loadingStyle={"normal"} size={40} />;
   } else if (!props.userUid) {
     history.push("/");
     return "redirection";

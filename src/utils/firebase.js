@@ -148,16 +148,18 @@ const getAuthUser = async () => {
   let response = await promise;
   return response;
 };
-// const getAuthUser = async (callback) => {
-//     const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
-//       if(user){
-//         callback(user)
-//       }else{
-//         console.log("you are not login");
-//       }
-//     })
-//     return unsubscribe();
-// };
+const onAuthStateChanged = async (callback, callback2) => {
+  return firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      callback(user.uid);
+      callback2(true);
+    } else {
+      console.log("you are not login");
+      callback(false);
+      callback2(false);
+    }
+  });
+};
 
 const logOut = async () => {
   firebase
@@ -328,22 +330,20 @@ const updateInvitation = async (newInviteArray, userId) => {
 };
 
 const subscribe = (callback, activityId) => {
-  const unsubscribe = db
+  return db
     .collection("activityData")
     .doc(activityId)
     .onSnapshot((doc) => {
       callback(doc.data());
     });
-  return unsubscribe;
 };
 const subscribeUser = (callback, userId) => {
-  const unsubscribe = db
+  return db
     .collection("userData")
     .doc(userId)
     .onSnapshot((doc) => {
       callback(doc.data());
     });
-  return unsubscribe;
 };
 
 export { getActivityData };
@@ -368,4 +368,4 @@ export { sendUserInvite };
 export { updateInvitation };
 export { subscribe };
 export { subscribeUser };
-// export { createActivity };
+export { onAuthStateChanged };

@@ -3,16 +3,29 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const StyleDiv = styled.div`
-  width: ${(props) => props.loadingCircleStyle.width};
-  min-height: ${(props) => props.loadingCircleStyle.minHeight};
+// const StyleDiv = styled.div`
+//   width: ${(props) => props.loadingCircleStyle.width};
+//   min-height: ${(props) => props.loadingCircleStyle.minHeight};
 
-  .MuiCircularProgress-root {
-    color: ${(props) => props.loadingCircleStyle.color};
-    margin-top: ${(props) => props.loadingCircleStyle.marginTop};
-  }
+//   .MuiCircularProgress-root {
+//     color: ${(props) => props.loadingCircleStyle.color};
+//     margin-top: ${(props) => props.loadingCircleStyle.marginTop};
+//   }
+// `;
+const StyledDiv = styled.div`
+  ${(props) => {
+    if (props.loadingStyle === "normal") {
+      return normal;
+    } else if (props.loadingStyle === "buttonLarge") {
+      return buttonLarge;
+    } else if (props.loadingStyle === "buttonSmall") {
+      return buttonSmall;
+    } else {
+      return normal;
+    }
+  }}
 `;
-const NormalStyleDiv = styled.div`
+const normal = `
   width: 100%;
   min-height: 100vh;
 
@@ -21,13 +34,13 @@ const NormalStyleDiv = styled.div`
     margin-top: 50px;
   }
 `;
-const ButtonLargeStyleDiv = styled.div`
+const buttonLarge = `
   .MuiCircularProgress-root {
     color: #000;
     margin-top: 3px;
   }
 `;
-const ButtonSmallStyleDiv = styled.div`
+const buttonSmall = `
   .MuiCircularProgress-root {
     color: #000;
     margin-top: 7px;
@@ -37,10 +50,6 @@ const ButtonSmallStyleDiv = styled.div`
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "0px auto",
-    // paddingTop: "50px",
-    // display: "flex",
-    // width: "40px",
-    // justifyContent: "center",
     "& > * + *": {
       marginLeft: theme.spacing(2),
     },
@@ -50,32 +59,9 @@ const useStyles = makeStyles((theme) => ({
 export default function IsLoading(props) {
   const classes = useStyles();
 
-  if (props.loadingStyle === "normal") {
-    return (
-      <NormalStyleDiv className={classes.root}>
-        <CircularProgress size={40} />
-      </NormalStyleDiv>
-    );
-  } else if (props.loadingStyle === "buttonLarge") {
-    return (
-      <ButtonLargeStyleDiv className={classes.root}>
-        <CircularProgress size={30} />
-      </ButtonLargeStyleDiv>
-    );
-  } else if (props.loadingStyle === "buttonSmall") {
-    return (
-      <ButtonSmallStyleDiv className={classes.root}>
-        <CircularProgress size={30} />
-      </ButtonSmallStyleDiv>
-    );
-  } else {
-    return (
-      <StyleDiv
-        className={classes.root}
-        loadingCircleStyle={props.loadingCircleStyle}
-      >
-        <CircularProgress size={props.loadingCircleStyle.size} />
-      </StyleDiv>
-    );
-  }
+  return (
+    <StyledDiv className={classes.root} loadingStyle={props.loadingStyle}>
+      <CircularProgress size={props.size} />
+    </StyledDiv>
+  );
 }

@@ -114,7 +114,8 @@ function EditActivitiesMemberButton(props) {
     getAttendantsDetail();
   }, [initAttendantsData, getAttendantsDetail]);
   useEffect(() => {
-    subscribe(setActivityChange, props.data.id);
+    const unsubscribe = subscribe(setActivityChange, props.data.id);
+    return unsubscribe;
   }, [props.data.id]);
   useEffect(() => {
     if (activityChange) {
