@@ -1,6 +1,6 @@
 import React from "react";
-import { makeStyles, withTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+// import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
 import styled from "styled-components";
 

@@ -1,11 +1,8 @@
 import "../App.css";
 import styled, { keyframes } from "styled-components";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import iconTaylorBlack from "../images/icon-Taylor-black.png";
+import React, { useEffect, useState, useCallback, useContext } from "react";
+import { Link } from "react-router-dom";
 import iconTaylorWhite from "../images/icon-Taylor-white.png";
-import iconLifelogoWhite from "../images/icon-LifelogoEasy-white.png";
-import iconPersonCircle from "../images/person-circle.svg";
 import iconPerson from "../images/person-fill.svg";
 import menuIcon from "../images/list.svg";
 import mailboxIcon from "../images/envelope.svg";
@@ -18,9 +15,12 @@ import {
   subscribeUser,
   updateInvitation,
 } from "../utils/firebase";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { Animated } from "react-animated-css";
+import { useSelector, useDispatch } from "react-redux";
+// import { Animated } from "react-animated-css";
+import Swal from "sweetalert2";
+
 import xIcon from "../images/x.svg";
+import { MyContext } from "../MyContext";
 
 function Header(props) {
   const [userData, setUserData] = useState([]);
@@ -32,18 +32,41 @@ function Header(props) {
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
-  const checkUserIsLogin = async () => {
-    const userUid = await getAuthUser();
-    if (userUid) {
-      const data = await getUserData(userUid);
-      setUserData(data);
-      dispatch({ type: "UPDATE_USERDATA", data: data });
-    }
-  };
+  const { userUid } = useContext(MyContext);
 
-  const handlefirebaseChange = () => {
+  // const checkUserIsLogin = useCallback(() => {
+  //   const checkingUserIsLogin = async () => {
+  //     const userUid = await getAuthUser();
+
+  //     if (userUid) {
+  //       const data = await getUserData(userUid);
+  //       setUserData(data);
+  //       dispatch({ type: "UPDATE_USERDATA", data: data });
+  //     } else {
+  //       //沒有usedUid要把userData設回空的不然會留著之前的state
+  //       setUserData([]);
+  //     }
+  //   };
+  //   checkingUserIsLogin();
+  // }, [dispatch]);
+
+  const userDataGet = useCallback(() => {
+    const userDataGetting = async () => {
+      if (userUid) {
+        const data = await getUserData(userUid);
+        setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+      } else {
+        //沒有usedUid要把userData設回空的不然會留著之前的state
+        setUserData([]);
+      }
+    };
+    userDataGetting();
+  }, [dispatch, userUid]);
+
+  const handlefirebaseChange = useCallback(() => {
     setUserData(userDataChange);
-  };
+  }, [userDataChange]);
   // window.onclick = function (e) {
   //   if (
   //   e.target.id !== "MailBoxDiv" &&
@@ -72,40 +95,57 @@ function Header(props) {
     });
     updateInvitation(newInvitation, userDataRedux.uid);
   };
-  const handleUserDataChange = () => {};
-  const arrangeInvitationData = async () => {
-    const invitation = userData.invitation;
-    if (!invitation) {
-      return "isLoading";
-    }
-    // 打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
-    const invitedArray = [];
-    invitation.forEach((item) => {
-      const promise = getSpecificData(item.id).then((data) => {
-        return data;
-      });
-      invitedArray.push(promise);
+  const handleGallery = () => {
+    Swal.fire({
+      title: "<span style=font-size:24px>敬請期待！</span>",
+      customClass: "customSwal2Title",
+      background: "black",
+      showConfirmButton: false,
+      timer: 1500,
     });
-    const allInvitation = await Promise.all(invitedArray);
-    setInvitationData(allInvitation);
   };
 
+  const arrangeInvitationData = useCallback(() => {
+    const arrangingInvitationData = async () => {
+      const invitation = userData.invitation;
+      if (!invitation) {
+        return "isLoading";
+      }
+      // 打多次userData, 一次取得多個 attendants 的userData詳細資料，放進detailData 裡面以便之後取用
+      const invitedArray = [];
+      invitation.forEach((item) => {
+        const promise = getSpecificData(item.id).then((data) => {
+          return data;
+        });
+        invitedArray.push(promise);
+      });
+      const allInvitation = await Promise.all(invitedArray);
+      setInvitationData(allInvitation);
+    };
+    arrangingInvitationData();
+  }, [userData.invitation]);
+
+  // useEffect(() => {
+  //   checkUserIsLogin();
+  // }, [props.userUid, checkUserIsLogin]);
+
   useEffect(() => {
-    checkUserIsLogin();
-  }, [props.userUid]);
+    userDataGet();
+  }, [userUid, userDataGet]);
 
   useEffect(() => {
     arrangeInvitationData();
-  }, [userData]);
+  }, [userData, arrangeInvitationData]);
 
   useEffect(() => {
-    subscribeUser(setUserDataChange, userDataRedux.uid);
+    const unsubscribeUser = subscribeUser(setUserDataChange, userDataRedux.uid);
+    return unsubscribeUser;
   }, [userDataRedux]);
   useEffect(() => {
     if (userDataChange) {
       handlefirebaseChange();
     }
-  }, [userDataChange]);
+  }, [userDataChange, handlefirebaseChange]);
   if (!userData) {
     return "isLoading";
   }
@@ -115,13 +155,13 @@ function Header(props) {
   const mailboxHTML = () => {
     const invitedActivityHTML = () => {
       if (invitationData.length !== 0) {
-        const HTML = invitationData.map((item) => {
+        const HTML = invitationData.map((item, index) => {
           // const messageObj = userData.invitation.filter(
           //   (data) => data.id === item.id
           // );
           if (item) {
             return (
-              <EachMailField>
+              <EachMailField key={index}>
                 <Link to={`/activities/${item.id}`}>
                   <EachMailDiv
                     onClick={() => {
@@ -151,6 +191,7 @@ function Header(props) {
               </EachMailField>
             );
           }
+          return null;
         });
         return HTML;
       } else {
@@ -189,7 +230,8 @@ function Header(props) {
   };
   const showMenuSideBar = () => {
     const menuCreateHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <StyledLink to={`/activities/create`}>
             <MenuSideBarItem>我要開團</MenuSideBarItem>
@@ -200,7 +242,14 @@ function Header(props) {
           <StyledLink to={`/activities/login`}>
             <MenuSideBarItem
               onClick={() => {
-                alert("登入以使用開團功能");
+                Swal.fire({
+                  title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                  customClass: "customSwal2Title",
+                  background: "black",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
+                // alert("登入以使用開團功能");
               }}
             >
               我要開團
@@ -211,17 +260,19 @@ function Header(props) {
     };
 
     const menuLoginHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         return (
           <SideBarProfileContainer>
             <StyledLink to={`/activities/profile`}>
-              <SideBarIconUser
+              {/* <SideBarIconUser
                 style={{
                   background: `url(${userDataRedux.profileImage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "",
                 }}
-              ></SideBarIconUser>
+              ></SideBarIconUser> */}
+              <SideBarIconUser src={userDataRedux.profileImage} />
             </StyledLink>
             <StyledLink to={`/activities/profile`}>
               <MenuSideBarItem>{userDataRedux.name}</MenuSideBarItem>
@@ -243,16 +294,17 @@ function Header(props) {
     };
 
     const menuMailBoxHTML = () => {
-      if (userDataRedux.length !== 0) {
+      // if (userDataRedux.length !== 0) {
+      if (userData.length !== 0) {
         const invitedActivityHTML = () => {
           if (invitationData.length !== 0) {
-            const HTML = invitationData.map((item) => {
+            const HTML = invitationData.map((item, index) => {
               // const messageObj = userData.invitation.filter(
               //   (data) => data.id === item.id
               // );
               if (item) {
                 return (
-                  <EachMailField>
+                  <EachMailField key={index}>
                     <Link to={`/activities/${item.id}`}>
                       <EachMailDiv
                         style={{
@@ -279,6 +331,7 @@ function Header(props) {
                   </EachMailField>
                 );
               }
+              return null;
             });
             return HTML;
           } else {
@@ -286,10 +339,10 @@ function Header(props) {
           }
         };
         return (
-          <MenuSideBarItem>
+          <MenuSideBarItemInvite>
             邀請
             {invitedActivityHTML()}
-          </MenuSideBarItem>
+          </MenuSideBarItemInvite>
         );
       } else {
         return;
@@ -308,7 +361,13 @@ function Header(props) {
             />
           </CloseIconContainer>
           <MenuItem>{menuLoginHTML()}</MenuItem>
-          <MenuSideBarItem>成果牆</MenuSideBarItem>
+          <MenuSideBarItem
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </MenuSideBarItem>
           {menuCreateHTML()}
           {/* <MenuSideBarItem>邀請</MenuSideBarItem> */}
           {menuMailBoxHTML()}
@@ -331,7 +390,14 @@ function Header(props) {
         <StyledLink to={`/activities/login`}>
           <ItemTwo
             onClick={() => {
-              alert("登入以使用開團功能");
+              Swal.fire({
+                title: "<span style=font-size:24px>登入以使用開團功能</span>",
+                customClass: "customSwal2Title",
+                background: "black",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              // alert("登入以使用開團功能");
             }}
           >
             我要開團
@@ -388,7 +454,13 @@ function Header(props) {
           </StyledLink>
         </IconContainer>
         <NavItem>
-          <ItemOne>成果牆</ItemOne>
+          <ItemOne
+            onClick={() => {
+              handleGallery();
+            }}
+          >
+            成果牆
+          </ItemOne>
           {handleCreateHTML()}
           {handleLoginHTML()}
         </NavItem>
@@ -462,6 +534,10 @@ const IconUser = styled.img`
   margin-left: 10px;
   object-fit: cover;
   border-radius: 50%;
+  transition: 0.2s;
+  &:hover {
+    transform: translateY(-2px);
+  }
 `;
 
 const NavItem = styled.div`
@@ -480,6 +556,7 @@ const NavMenu = styled.div`
 const MenuIcon = styled.img`
   width: 40px;
   height: 40px;
+  cursor: pointer;
 `;
 const MenuSideBar = styled.div`
   position: fixed;
@@ -503,9 +580,16 @@ const MenuSideBarItem = styled.div`
   margin-left: 10px;
   color: #fff;
   font-weight: bold;
+  cursor: pointer;
   /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
     0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
 `;
+const MenuSideBarItemInvite = styled.div`
+  margin-left: 10px;
+  color: #fff;
+  font-weight: bold;
+`;
+
 const MenuItem = styled.div``;
 const SideBarProfileContainer = styled.div`
   display: flex;
@@ -516,12 +600,13 @@ const SideBarIconDefault = styled.img`
   height: 80px;
   margin-left: 70px;
 `;
-const SideBarIconUser = styled.div`
+const SideBarIconUser = styled.img`
   width: 80px;
   height: 80px;
   margin-left: 70px;
   border-radius: 50%;
-  background-position: 50% 50%;
+  /* background-position: 50% 50%; */
+  object-fit: cover;
 `;
 
 const NeonShine = keyframes`
@@ -570,6 +655,8 @@ const Item = styled.div`
   margin-right: 5px;
   margin-left: 20px;
   color: #fff;
+  transition: 0.2s;
+  cursor: pointer;
   &:hover {
     transform: translateY(-2px);
     text-shadow: 0 0 10px #4cffee, 0 0 40px #4cffee, 0 0 50px #4cffee,
@@ -603,14 +690,13 @@ const SignInItem = styled.div`
   align-items: center;
 `;
 
-const Menu = styled.img`
-  width: 60px;
-`;
 const MailBoxIconContainer = styled.div`
   margin-left: 20px;
   position: relative;
   z-index: 5;
   cursor: pointer;
+  transition: 0.2s;
+
   &:hover {
     transform: translateY(-3px);
   }
@@ -685,6 +771,9 @@ const EachMailDivCanvas = styled.div`
 `;
 const EachMailContent = styled.div`
   padding: 10px 20px;
+  @media (max-width: 768px) {
+    padding: 10px 10px;
+  }
 `;
 const EachMailTitle = styled.div`
   font-size: 20px;
@@ -695,10 +784,10 @@ const EachMailTitle = styled.div`
     font-size: 16px;
   }
 `;
-const EachMailMsg = styled.div`
-  font-size: 16px;
-  color: white;
-`;
+// const EachMailMsg = styled.div`
+//   font-size: 16px;
+//   color: white;
+// `;
 const IgnoreBtn = styled.button`
   transform: rotate(0.125turn);
   font-size: 28px;
@@ -732,42 +821,7 @@ const CloseIconContainer = styled.div`
 `;
 const CloseIcon = styled.img`
   width: 100%;
-`;
-
-const Neon = styled.div`
   position: absolute;
-
-  top: 120px;
-  left: 120px;
-  margin: 0 auto;
-  padding: 0 20px;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  text-shadow: 0 0 20px #ff005b;
-  &:after {
-    position: absolute;
-
-    content: attr(data-text);
-    top: 0px;
-    left: 0px;
-
-    margin: 0 auto;
-    padding: 0 20px;
-    z-index: -1;
-    color: #ff005b;
-    filter: blur(15px);
-  }
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fe3a80;
-    z-index: -2;
-    opacity: 0.5;
-    filter: blur(100px);
-  }
 `;
+
 export default Header;

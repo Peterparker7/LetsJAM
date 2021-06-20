@@ -1,14 +1,8 @@
 import "../../App.css";
 import Modal from "styled-react-modal";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import {
-  getSpecificData,
-  deleteActivityData,
-  updateActivitiesData,
-  getAllUser,
-  sendUserInvite,
-} from "../../utils/firebase";
+import React, { useState } from "react";
+import xIcon from "../../images/x.svg";
 
 const StyledModal = Modal.styled`
   width: 25rem;
@@ -47,7 +41,6 @@ function MemberCard(props) {
   }
 
   const skillArrange = () => {
-    console.log(props.data.skill);
     let skillArray = props.data.skill;
     let skillArrayDelimiter = skillArray.join(`, `);
     return skillArrayDelimiter;
@@ -88,6 +81,9 @@ function MemberCard(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
+          <CloseIconContainer>
+            <CloseIcon src={xIcon} onClick={toggleModal} />
+          </CloseIconContainer>
           <BackBar>
             <BackImg src={props.data.profileImage}></BackImg>
           </BackBar>
@@ -117,6 +113,7 @@ const Avatar = styled.img`
   border: 3px solid white;
   box-shadow: 0 0 20px #ff00ff;
   transition: 0.3s;
+  cursor: pointer;
 `;
 const AvatarName = styled.div`
   margin-top: 10px;
@@ -210,17 +207,33 @@ const YoutubeUrl = styled.div`
   padding-bottom: 30px;
 `;
 const Btn = styled.button`
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 180px;
   top: 0;
   left: 0;
 
-  /* position: absolute; */
   &:hover ${Avatar} {
     transform: scale(1.05);
     transform: translateY(-3px);
-    /* border: 1px solid #ff00ff; */
     box-shadow: 0 0 50px #ff00ff;
   }
+`;
+const CloseIconContainer = styled.div`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  top: 20px;
+  right: 10px;
+  z-index: 5;
+  cursor: pointer;
+  transition: 0.1s;
+
+  &:hover {
+    background: #2d2d2d;
+  }
+`;
+const CloseIcon = styled.img`
+  width: 100%;
 `;
 export default MemberCard;

@@ -1,25 +1,55 @@
 import React from "react";
 import styled from "styled-components";
-import { makeStyles, withTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const StyleProgress = styled(CircularProgress)`
+// const StyleDiv = styled.div`
+//   width: ${(props) => props.loadingCircleStyle.width};
+//   min-height: ${(props) => props.loadingCircleStyle.minHeight};
+
+//   .MuiCircularProgress-root {
+//     color: ${(props) => props.loadingCircleStyle.color};
+//     margin-top: ${(props) => props.loadingCircleStyle.marginTop};
+//   }
+// `;
+const StyledDiv = styled.div`
+  ${(props) => {
+    if (props.loadingStyle === "normal") {
+      return normal;
+    } else if (props.loadingStyle === "buttonLarge") {
+      return buttonLarge;
+    } else if (props.loadingStyle === "buttonSmall") {
+      return buttonSmall;
+    } else {
+      return normal;
+    }
+  }}
+`;
+const normal = `
+  width: 100%;
+  min-height: 100vh;
+
   .MuiCircularProgress-root {
-    color: black;
+    color: #43e8d8;
+    margin-top: 50px;
   }
 `;
-const StyleDiv = styled.div`
+const buttonLarge = `
   .MuiCircularProgress-root {
-    color: #4cffee;
+    color: #000;
+    margin-top: 3px;
+  }
+`;
+const buttonSmall = `
+  .MuiCircularProgress-root {
+    color: #000;
+    margin-top: 7px;
   }
 `;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "50px auto",
-    display: "flex",
-    width: "40px",
-    justifyContent: "center",
+    margin: "0px auto",
     "& > * + *": {
       marginLeft: theme.spacing(2),
     },
@@ -30,9 +60,8 @@ export default function IsLoading(props) {
   const classes = useStyles();
 
   return (
-    <StyleDiv className={classes.root}>
-      <CircularProgress size={40} />
-      {/* <StyleProgress /> */}
-    </StyleDiv>
+    <StyledDiv className={classes.root} loadingStyle={props.loadingStyle}>
+      <CircularProgress size={props.size} />
+    </StyledDiv>
   );
 }

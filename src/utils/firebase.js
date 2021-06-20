@@ -1,18 +1,30 @@
-import { v4 as uuidv4 } from "uuid";
-import { useHistory } from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
-  authDomain: "personalproject-33263.firebaseapp.com",
-  projectId: "personalproject-33263",
-  storageBucket: "personalproject-33263.appspot.com",
-  messagingSenderId: "966021952087",
-  appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
-  measurementId: "G-MXQWY9WWZK",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+// var firebaseConfig = {
+//   // apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+//   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
+//   authDomain: "personalproject-33263.firebaseapp.com",
+//   projectId: "personalproject-33263",
+//   storageBucket: "personalproject-33263.appspot.com",
+//   messagingSenderId: "966021952087",
+//   appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
+//   measurementId: "G-MXQWY9WWZK",
+// };
 // Initialize Firebase
-window.firebase.initializeApp(firebaseConfig);
-const db = window.firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 const getActivityData = async () => {
   const activityData = db.collection("activityData");
@@ -36,62 +48,33 @@ const getSpecificData = async (id) => {
 
 const deleteActivityData = async (id) => {
   let docRef = db.collection("activityData").doc(id);
-  docRef.delete().then(() => {});
+  await docRef.delete().then(() => {});
 };
 
 const uploadImage = async (img) => {
   const path = img.name;
-  console.log("🚀 ~ file: firebase.js ~ line 44 ~ uploadImage ~ path", path);
-  // const imagePath = uuidv4();
 
   // 取得 storage 對應的位置
-  const storageReference = window.firebase.storage().ref(path);
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 49 ~ uploadImage ~ storageReference",
-    storageReference
-  );
+  const storageReference = firebase.storage().ref(path);
 
   // .put() 方法把東西丟到該位置裡
-  const task = await storageReference.put(img);
-  const fileRef = window.firebase.storage().ref(path);
+  // const task = await storageReference.put(img);
+  await storageReference.put(img);
+  const fileRef = firebase.storage().ref(path);
 
   let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
     return url;
   });
-  console.log(
-    "🚀 ~ file: firebase.js ~ line 58 ~ downloadUrl ~ downloadUrl",
-    downloadUrl
-  );
 
   return downloadUrl;
-
-  // const path = img.name;
-  // const imagePath = uuidv4();
-
-  // // 取得 storage 對應的位置
-  // const storageReference = window.firebase.storage().ref(imagePath);
-
-  // // .put() 方法把東西丟到該位置裡
-  // const task = await storageReference.put(img);
-  // const fileRef = window.firebase.storage().ref(imagePath);
-
-  // let downloadUrl = await fileRef.getDownloadURL().then(function (url) {
-  //   return url;
-  // });
-  // return downloadUrl;
 };
-
-// const createActivity = async (data) => {
-//   const activityData = db.collection("activityData").doc();
-//   await activityData.set(data);
-// };
 
 const joinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   //firebase update方法
-  const data = await docRef
+  await docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+      applicants: firebase.firestore.FieldValue.arrayUnion(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -102,10 +85,10 @@ const joinActivity = async (activityId, userId) => {
 const agreeJoinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   //firebase update方法
-  const data = await docRef
+  await docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
-      attendants: window.firebase.firestore.FieldValue.arrayUnion(userId),
+      applicants: firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayUnion(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -115,9 +98,9 @@ const agreeJoinActivity = async (activityId, userId) => {
 
 const kickActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  const data = await docRef
+  await docRef
     .update({
-      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -147,36 +130,42 @@ const getAllUser = async () => {
 
 const getAuthUser = async () => {
   const promise = new Promise((resolve) => {
-    const unsubscribe = window.firebase
-      .auth()
-      .onAuthStateChanged(function (user) {
-        unsubscribe();
-        if (user) {
-          // 使用者已登入，可以取得資料
-          var email = user.email;
-          var uid = user.uid;
-          console.log(email, uid);
-          resolve(uid);
-        } else {
-          // 使用者未登入
-          console.log("you are not login");
-          resolve(false);
-        }
-      });
+    const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+      unsubscribe();
+      if (user) {
+        // 使用者已登入，可以取得資料
+        var email = user.email;
+        var uid = user.uid;
+        console.log(email, uid);
+        resolve(uid);
+      } else {
+        // 使用者未登入
+        console.log("you are not login");
+        resolve(false);
+      }
+    });
   });
   let response = await promise;
   return response;
 };
+const onAuthStateChanged = async (callback, callback2) => {
+  return firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      callback(user.uid);
+      callback2(true);
+    } else {
+      console.log("you are not login");
+      callback(false);
+      callback2(false);
+    }
+  });
+};
 
 const logOut = async () => {
-  window.firebase
+  firebase
     .auth()
     .signOut()
-    .then(function () {
-      // 登出後強制重整一次頁面
-      // alert("已登出");
-      window.location.href = "./";
-    })
+    .then(function () {})
     .catch(function (error) {
       console.log(error.message);
     });
@@ -184,7 +173,7 @@ const logOut = async () => {
 const newUser = async (userEmail, userUid, userInfo) => {
   let newCreate = db.collection("userData").doc(userUid);
 
-  const data = await newCreate
+  await newCreate
     .set({
       email: userEmail,
       uid: userUid,
@@ -207,7 +196,7 @@ const newUser = async (userEmail, userUid, userInfo) => {
 
 const updateUserData = async (newData, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .set(
       {
         name: newData.name,
@@ -216,7 +205,6 @@ const updateUserData = async (newData, userId) => {
         skill: newData.skill,
         profileImage: newData.profileImage,
         youtubeUrl: newData.youtubeUrl,
-        //   intro: window.firebase.firestore.FieldValue.arrayUnion(newData.intro),
       },
       { merge: true }
     )
@@ -229,7 +217,7 @@ const updateUserData = async (newData, userId) => {
 const getUserHostActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let hostActivitiesArray = [];
-  const hostActivities = await docRef
+  await docRef
     .where("host", "==", userId)
     .get()
     .then((data) => {
@@ -242,7 +230,7 @@ const getUserHostActivities = async (userId) => {
 const getUserJoinActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let joinActivitiesArray = [];
-  const joinActivities = await docRef
+  await docRef
     .where("attendants", "array-contains", userId)
     .get()
     .then((data) => {
@@ -256,7 +244,7 @@ const getUserJoinActivities = async (userId) => {
 const getUserApplyActivities = async (userId) => {
   let docRef = db.collection("activityData");
   let applyActivitiesArray = [];
-  const applyActivities = await docRef
+  await docRef
     .where("applicants", "array-contains", userId)
     .get()
     .then((data) => {
@@ -271,7 +259,7 @@ const cancelJoinActivities = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
   docRef
     .update({
-      applicants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      applicants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -280,7 +268,7 @@ const cancelJoinActivities = async (activityId, userId) => {
 
   docRef
     .update({
-      attendants: window.firebase.firestore.FieldValue.arrayRemove(userId),
+      attendants: firebase.firestore.FieldValue.arrayRemove(userId),
     })
     .then(() => {})
     .catch((error) => {
@@ -290,7 +278,7 @@ const cancelJoinActivities = async (activityId, userId) => {
 
 const updateActivitiesData = async (data, activityId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  const activitiesData = await docRef
+  await docRef
     .set(
       {
         title: data.title,
@@ -299,12 +287,10 @@ const updateActivitiesData = async (data, activityId) => {
         newTimestamp: data.newTimestamp,
         timestamp: data.newTimestamp,
         location: data.location,
-        // geo: ["10", "10"],
         requirement: data.requirement,
         level: data.level,
         comment: data.comment,
         youtubeSource: data.youtubeSource,
-        // fileSource: imageUrl,
         date: data.date,
         time: data.time,
       },
@@ -319,9 +305,9 @@ const updateActivitiesData = async (data, activityId) => {
 };
 const sendUserInvite = async (inviteInfo, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .update({
-      invitation: window.firebase.firestore.FieldValue.arrayUnion(inviteInfo),
+      invitation: firebase.firestore.FieldValue.arrayUnion(inviteInfo),
     })
     .then(() => {})
     .catch((error) => {
@@ -330,38 +316,34 @@ const sendUserInvite = async (inviteInfo, userId) => {
 };
 const updateInvitation = async (newInviteArray, userId) => {
   let docRef = db.collection("userData").doc(userId);
-  const data = await docRef
+  await docRef
     .set(
       {
         invitation: newInviteArray,
       },
       { merge: true }
     )
-    .then(() => {
-      console.log("??????");
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
 };
 
 const subscribe = (callback, activityId) => {
-  const unsubscribe = db
+  return db
     .collection("activityData")
     .doc(activityId)
     .onSnapshot((doc) => {
       callback(doc.data());
     });
-  return unsubscribe;
 };
 const subscribeUser = (callback, userId) => {
-  const unsubscribe = db
+  return db
     .collection("userData")
     .doc(userId)
     .onSnapshot((doc) => {
       callback(doc.data());
     });
-  return unsubscribe;
 };
 
 export { getActivityData };
@@ -386,4 +368,4 @@ export { sendUserInvite };
 export { updateInvitation };
 export { subscribe };
 export { subscribeUser };
-// export { createActivity };
+export { onAuthStateChanged };

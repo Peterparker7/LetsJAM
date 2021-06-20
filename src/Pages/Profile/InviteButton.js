@@ -54,7 +54,7 @@ function InviteButton(props) {
     return (
       <RequirementField>
         <RequirementDiv>
-          <Label for="vocal">Vocal</Label>
+          <Label htmlFor="vocal">Vocal</Label>
           <input
             id="vocal"
             type="radio"
@@ -66,7 +66,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="guitar">吉他</Label>
+          <Label htmlFor="guitar">吉他</Label>
           <input
             id="guitar"
             type="radio"
@@ -78,7 +78,7 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="electricguitar">電吉他</Label>
+          <Label htmlFor="electricguitar">電吉他</Label>
           <input
             id="electricguitar"
             type="radio"
@@ -90,36 +90,60 @@ function InviteButton(props) {
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="bass">Bass</Label>
+          <Label htmlFor="bass">貝斯</Label>
           <input
             id="bass"
             type="radio"
             name={"requireInstrument"}
-            value={"bass"}
+            value={"貝斯"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="piano">Piano</Label>
+          <Label htmlFor="piano">鍵盤</Label>
           <input
             id="piano"
             type="radio"
             name={"requireInstrument"}
-            value={"piano"}
+            value={"鍵盤"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
           />
         </RequirementDiv>
         <RequirementDiv>
-          <Label for="drum">木箱鼓</Label>
+          <Label htmlFor="cajon">木箱鼓</Label>
+          <input
+            id="cajon"
+            type="radio"
+            name={"requireInstrument"}
+            value={"木箱鼓"}
+            onChange={(e) => {
+              handleRequirement(e.target.value);
+            }}
+          />
+        </RequirementDiv>
+        <RequirementDiv>
+          <Label htmlFor="drum">爵士鼓</Label>
           <input
             id="drum"
             type="radio"
             name={"requireInstrument"}
-            value={"木箱鼓"}
+            value={"爵士鼓"}
+            onChange={(e) => {
+              handleRequirement(e.target.value);
+            }}
+          />
+        </RequirementDiv>
+        <RequirementDiv>
+          <Label htmlFor="flute">直笛</Label>
+          <input
+            id="flute"
+            type="radio"
+            name={"requireInstrument"}
+            value={"直笛"}
             onChange={(e) => {
               handleRequirement(e.target.value);
             }}
@@ -150,10 +174,16 @@ function InviteButton(props) {
 
   const renderAllUser = () => {
     const userAttend = allUserData.filter((item) => {
-      if (activityChange.attendants.includes(item.uid)) return item;
+      if (activityChange.attendants.includes(item.uid)) {
+        return item;
+      }
+      return null;
     });
     const userApply = allUserData.filter((item) => {
-      if (activityChange.applicants.includes(item.uid)) return item;
+      if (activityChange.applicants.includes(item.uid)) {
+        return item;
+      }
+      return null;
     });
 
     const excludeAttendants = allUserData.filter(
@@ -194,8 +224,9 @@ function InviteButton(props) {
     });
   }, []);
   useEffect(() => {
-    subscribe(setActivityChange, activityDetail.id);
-  }, []);
+    const unsubscribe = subscribe(setActivityChange, activityDetail.id);
+    return unsubscribe;
+  }, [activityDetail.id]);
   if (!allUserData) {
     return "isLoading";
   }
@@ -223,12 +254,10 @@ function InviteButton(props) {
           </CloseIconContainer>
 
           <AllMemberCol>
-            {/* <Title>發送邀請</Title> */}
             <TitleSub>在找哪種樂手?</TitleSub>
             {renderCheckboxField()}
 
             <MemberField>{renderAllUser()}</MemberField>
-            {/* <BtnClose onClick={toggleModal}>+</BtnClose> */}
           </AllMemberCol>
         </Container>
       </StyledModal>
@@ -246,9 +275,12 @@ const Btn = styled.div`
   margin: 10px;
   cursor: pointer;
   box-shadow: 0 0 10px #fffbaa;
+  transition: 0.3s;
 
   &:hover {
     background: #fff860;
+    box-shadow: 0 0 10px #fff860, 0 0 20px #fff860;
+
     color: black;
     transform: translateY(-3px);
   }
@@ -260,11 +292,12 @@ const Container = styled.div`
   color: white;
   position: relative;
 `;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff00ff;
-`;
+// const TopBar = styled.div`
+//   height: 6px;
+//   width: 100%;
+//   background: #ff00ff;
+//   box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+// `;
 const CloseIconContainer = styled.div`
   position: absolute;
   width: 30px;
@@ -306,15 +339,13 @@ const MemberField = styled.div`
   flex-wrap: wrap;
   justify-content: space-around; */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-rows: repeat(auto-fill, 170px);
+  /* grid-template-rows: 1fr 1fr 1fr 1fr 1fr; */
   justify-items: center;
   width: 100%;
   margin: 20px auto;
-`;
-const Title = styled.div`
-  padding: 10px;
-  border-bottom: 1px solid #979797;
 `;
 const TitleSub = styled.div`
   /* margin: 10px ; */
@@ -328,18 +359,21 @@ const RequirementField = styled.div`
   height: 30px;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 `;
-const RequirementDiv = styled.div``;
+const RequirementDiv = styled.div`
+  @media (max-width: 576px) {
+    width: 25%;
+  }
+`;
 const EachUser = styled.div`
-  width: 90px;
+  /* width: 90px; */
+  width: auto;
   height: 150px;
   text-align: center;
+  margin-bottom: 20px;
 `;
-const ProfileImage = styled.div`
-  width: 80px;
-  height: 80px;
-  margin: auto;
-`;
+
 const ProfileImgDiv = styled.div`
   width: 80px;
   height: 80px;
@@ -364,21 +398,16 @@ const InviteEachButton = styled.button`
   color: #ff00ff;
   /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff; */
+  cursor: pointer;
+  transition: 0.2s;
 
   &:hover {
     background: #ff00ff;
     box-shadow: 0 0 10px #ff00ff;
     color: white;
+    font-weight: 600;
 
     transform: translateY(-2px);
   }
-`;
-const BtnClose = styled.button`
-  transform: rotate(0.125turn);
-  font-size: 28px;
-  position: absolute;
-  top: -20px;
-  right: 0px;
-  cursor: pointer;
 `;
 export default InviteButton;

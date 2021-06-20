@@ -1,27 +1,36 @@
 import "../../App.css";
 import "./EditProfileButton.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
 import { getUserData, updateUserData, uploadImage } from "../../utils/firebase";
+import * as Warning from "./Validate";
 
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import Modal from "styled-react-modal";
 import MultiSelect from "react-multi-select-component";
 import { useSelector, useDispatch } from "react-redux";
 import settingIcon from "../../images/gear.svg";
 import xIcon from "../../images/x.svg";
+import { SelectTypeBlackEditHTML } from "../../Components/SelectComponent";
+import IsLoading from "../../Components/IsLoading";
 
 const StyledMultiSelect = styled(MultiSelect)`
-  /* border-bottom: 1px solid #979797; */
+  border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #121212;
-  --rmsc-hover: #ff00ff96;
+  /* --rmsc-hover: #ff00ff96; */
+  --rmsc-hover: #979797;
   --rmsc-selected: #43ede8a6;
   --rmsc-h: 40px !important;
+  --rmsc-main: none;
+
   color: white;
   text-align: left;
+  .dropdown-heading {
+    cursor: pointer;
+  }
 `;
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -30,17 +39,22 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background-color: white;
+background-color: #121212;
 opacity: ${(props) => props.opacity};
 transition : all 0.3s ease-in-out;
 overflow-y: scroll;
 border-radius: 4px;
+border-top: 6px solid #ff00ff;
+
 `;
 let imgSource = "";
 
 function EditProfileButton(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [opacity, setOpacity] = useState(0);
+
+  const [validationResult, setValidationResult] = useState(true);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
@@ -61,7 +75,6 @@ function EditProfileButton(props) {
   const [userData, setUserData] = useState();
   const [userProfileImage, setUserProfileImage] = useState();
   const [userProfileImageSource, setUserProfileImageSource] = useState();
-  const [imgCover, setImgCover] = useState(true);
 
   let override = {
     allItemsAreSelected: "我全都會",
@@ -75,15 +88,20 @@ function EditProfileButton(props) {
     { label: "Vocal", value: "Vocal" },
     { label: "吉他", value: "吉他" },
     { label: "木箱鼓", value: "木箱鼓" },
-    { label: "烏克麗麗", value: "烏克麗麗" },
     { label: "電吉他", value: "電吉他" },
+    { label: "貝斯", value: "貝斯" },
+    { label: "鍵盤", value: "鍵盤" },
+    { label: "爵士鼓", value: "爵士鼓" },
   ];
 
-  const getUserProfileData = async () => {
-    const data = await getUserData(userDataRedux.uid);
-    setUserData(data);
-    setUserProfileImage(data.profileImage);
-  };
+  const getUserProfileData = useCallback(() => {
+    const gettingUserProfileData = async () => {
+      const data = await getUserData(userDataRedux.uid);
+      setUserData(data);
+      setUserProfileImage(data.profileImage);
+    };
+    gettingUserProfileData();
+  }, [userDataRedux.uid]);
   //處理skill格式 讓default值可顯示於select
   userDataRedux.skill.forEach((data) => {
     let skill = {
@@ -95,40 +113,86 @@ function EditProfileButton(props) {
 
   useEffect(() => {
     getUserProfileData();
-  }, []);
+  }, [getUserProfileData]);
   if (!userData) {
     return "isLoading";
   }
 
   async function editConfirm(e) {
     if (userProfileImageSource) {
-      console.log("1");
-      console.log(userProfileImageSource);
+      //有變更照片，儲存時顯示isLoading
+      setLoadingStatus(true);
       imageUrl = await uploadImage(userProfileImageSource);
-      console.log(imageUrl);
-    } else {
-      console.log("2");
 
+      let data = {
+        uid: userData.uid,
+        name: userData.name,
+        intro: userData.intro,
+        preferType: userData.preferType,
+        skill: skillArray,
+        favSinger: userData.favSinger,
+        profileImage: imageUrl,
+        youtubeUrl: userData.youtubeUrl,
+      };
+
+      setLoadingStatus(false);
+
+      if (inputValidation()) {
+        await updateUserData(data, userDataRedux.uid);
+        // setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+
+        setOpacity(0);
+        setIsOpen(!isOpen);
+      }
+    } else {
       imageUrl = userDataRedux.profileImage;
+
+      let data = {
+        uid: userData.uid,
+        name: userData.name,
+        intro: userData.intro,
+        preferType: userData.preferType,
+        skill: skillArray,
+        favSinger: userData.favSinger,
+        profileImage: imageUrl,
+        youtubeUrl: userData.youtubeUrl,
+      };
+
+      if (inputValidation()) {
+        await updateUserData(data, userDataRedux.uid);
+        // setUserData(data);
+        dispatch({ type: "UPDATE_USERDATA", data: data });
+
+        setOpacity(0);
+        setIsOpen(!isOpen);
+      }
     }
 
-    let data = {
-      uid: userData.uid,
-      name: userData.name,
-      intro: userData.intro,
-      preferType: userData.preferType,
-      skill: skillArray,
-      favSinger: userData.favSinger,
-      profileImage: imageUrl,
-      youtubeUrl: userData.youtubeUrl,
-    };
-    console.log(data);
-    let updateToFirebase = await updateUserData(data, userDataRedux.uid);
-    // setUserData(data);
-    dispatch({ type: "UPDATE_USERDATA", data: data });
+    // setLoadingStatus(true);
+    // setTimeout(async () => {
+    //   setLoadingStatus(false);
+    //   let data = {
+    //     uid: userData.uid,
+    //     name: userData.name,
+    //     intro: userData.intro,
+    //     preferType: userData.preferType,
+    //     skill: skillArray,
+    //     favSinger: userData.favSinger,
+    //     profileImage: imageUrl,
+    //     youtubeUrl: userData.youtubeUrl,
+    //   };
+    //   console.log(data);
 
-    setOpacity(0);
-    setIsOpen(!isOpen);
+    //   if (inputValidation()) {
+    //     let updateToFirebase = await updateUserData(data, userDataRedux.uid);
+    //     // setUserData(data);
+    //     dispatch({ type: "UPDATE_USERDATA", data: data });
+
+    //     setOpacity(0);
+    //     setIsOpen(!isOpen);
+    //   }
+    // }, 1000);
   }
   //
   function handleProfileChange(e, type) {
@@ -148,9 +212,22 @@ function EditProfileButton(props) {
     imgSource = e.target.files[0];
     setUserProfileImage(URL.createObjectURL(imgSource));
     setUserProfileImageSource(imgSource);
-    console.log(imgSource);
-    console.log(userProfileImage);
-    setImgCover("cover");
+  }
+
+  function inputValidation() {
+    if (
+      userData.name.length === 0 ||
+      userData.name.length > 10 ||
+      userData.intro.length > 250 ||
+      skill.length === 0
+    ) {
+      console.log("valid fail");
+      setValidationResult(false);
+      return false;
+    } else {
+      setValidationResult(true);
+      return true;
+    }
   }
 
   function toggleModal(e) {
@@ -160,11 +237,13 @@ function EditProfileButton(props) {
   function toggleCancel(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
-
     //取消時把值設回Redux上的值
+    setValidationResult(true);
+
     setUserData(userDataRedux);
     setUserProfileImage(userDataRedux.profileImage);
     setSkill(skillFormat);
+    setUserProfileImageSource();
   }
 
   function afterOpen() {
@@ -187,43 +266,18 @@ function EditProfileButton(props) {
         isOpen={isOpen}
         afterOpen={afterOpen}
         beforeClose={beforeClose}
-        onBackgroundClick={toggleModal}
-        onEscapeKeydown={toggleModal}
+        onBackgroundClick={toggleCancel}
+        // onEscapeKeydown={}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
         <Container>
-          <TopBar></TopBar>
           <ContentTitle>個人檔案詳細資料</ContentTitle>
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleCancel} />
           </CloseIconContainer>
           <ContentContainer>
             <ProfileImageContainer>
-              {/* <label for="name">大頭照</label> */}
-              {/* <ProfileImage
-              // src={`${userProfileImage}`}
-              // src={`${userData.profileImage}`}
-              // alt=""
-              // style={{
-              //   background: `url(${userProfileImage})`,
-              //   backgroundSize: `${imgCover}`,
-              //   // backgroundPosition: "",
-              //   // backgroundPosition: "50% 50%",
-
-              // }}
-              style={
-                imgCover
-                  ? {
-                      background: `url(${userProfileImage})`,
-                      backgroundSize: "cover",
-                    }
-                  : {
-                      background: `url(${userProfileImage})`,
-                      backgroundSize: "cover",
-                    }
-              }
-            ></ProfileImage> */}
               <ProfileImg src={userProfileImage}></ProfileImg>
               <EditProfileImageField>
                 <input
@@ -246,7 +300,7 @@ function EditProfileButton(props) {
             </ProfileImageContainer>
             <ProfileDetail>
               <InputFieldContainer>
-                <Label for="name">名稱</Label>
+                <Label htmlFor="name">名稱</Label>
                 <InputFieldInput
                   id="name"
                   contentEditable="true"
@@ -258,13 +312,18 @@ function EditProfileButton(props) {
                 />
 
                 {/* </div> */}
+                {Warning.warningProfileNameHTML(userData.name)}
               </InputFieldContainer>
 
               <InputFieldContainer>
                 {handlePreferTypeDefault()}
 
-                <Label for="preferType">偏好類型</Label>
-                <SelectType
+                <Label htmlFor="preferType">偏好類型</Label>
+                <SelectTypeBlackEditHTML
+                  defaultValue={defaultPreferType}
+                  handleProfileChange={handleProfileChange}
+                />
+                {/* <SelectType
                   defaultValue={defaultPreferType}
                   onChange={(e) => {
                     handleProfileChange(e.target.value, "preferType");
@@ -273,22 +332,24 @@ function EditProfileButton(props) {
                   <option>流行</option>
                   <option>嘻哈</option>
                   <option>古典</option>
-                </SelectType>
+                </SelectType> */}
               </InputFieldContainer>
               <InputFieldContainer>
-                <Label for="skill">會的樂器</Label>
+                <Label htmlFor="skill">會的樂器</Label>
                 <StyledMultiSelect
                   className="EditProfileMulti"
                   overrideStrings={override}
+                  disableSearch={true}
                   style={{ width: "100px" }}
                   options={options}
                   value={skill}
                   onChange={setSkill}
                   labelledBy="Select"
                 />
+                {Warning.warningProfileSkillHTML(skill)}
               </InputFieldContainer>
               <InputFieldContainer style={{ alignItems: "unset" }}>
-                <Label for="intro">自我介紹</Label>
+                <Label htmlFor="intro">自我介紹</Label>
                 {/* <InputFieldInput
                 id="intro"
                 contentEditable="true"
@@ -309,9 +370,10 @@ function EditProfileButton(props) {
                   }}
                   defaultValue={userDataRedux.intro}
                 ></IntroTextArea>
+                {Warning.warningProfileIntroHTML(userData.intro)}
               </InputFieldContainer>
               <InputFieldContainer>
-                <Label for="youtubeSource">YouTube</Label>
+                <Label htmlFor="youtubeSource">YouTube</Label>
                 <InputFieldInput
                   id="youtubeSource"
                   placeholder="可放練習影片youtube連結"
@@ -327,8 +389,23 @@ function EditProfileButton(props) {
               </InputFieldContainer>
             </ProfileDetail>
             <BtnField>
-              {/* <BtnCancel onClick={toggleCancel}>取消</BtnCancel> */}
-              <BtnConfirm onClick={editConfirm}>儲存</BtnConfirm>
+              <BtnConfirm onClick={editConfirm}>
+                {loadingStatus ? (
+                  <IsLoading loadingStyle={"buttonSmall"} size={30} />
+                ) : (
+                  "儲存"
+                )}
+
+                <ValidationResult
+                  style={
+                    !validationResult
+                      ? { display: "block" }
+                      : { display: "none" }
+                  }
+                >
+                  請檢查所有欄位是否正確
+                </ValidationResult>
+              </BtnConfirm>
             </BtnField>
           </ContentContainer>
         </Container>
@@ -345,11 +422,6 @@ const Container = styled.div`
   height: 100%;
   background: #121212;
   color: white;
-`;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff0099;
 `;
 const CloseIconContainer = styled.div`
   position: absolute;
@@ -388,6 +460,11 @@ const ProfileDetail = styled.div`
   /* text-align: left; */
   max-width: 400px;
   margin: 20px auto;
+  @media (max-width: 576px) {
+    margin: 20px auto;
+
+    width: 90%;
+  }
 `;
 const Label = styled.label`
   width: 80px;
@@ -396,6 +473,7 @@ const InputFieldContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
+  position: relative;
 `;
 
 const InputFieldInput = styled.input`
@@ -416,11 +494,11 @@ const IntroTextArea = styled.textarea`
   color: white;
 `;
 
-const SelectType = styled.select`
-  width: calc(100% - 80px);
-  color: white;
-  padding: 5px;
-`;
+// const SelectType = styled.select`
+//   width: calc(100% - 80px);
+//   color: white;
+//   padding: 5px;
+// `;
 
 const BtnField = styled.div`
   display: flex;
@@ -430,20 +508,18 @@ const BtnField = styled.div`
   margin: 30px auto;
 `;
 
-const BtnCancel = styled.div`
-  border: 1px solid #000;
-  border-radius: 20px;
-  width: 100px;
-  padding: 5px;
-  cursor: pointer;
-`;
 const BtnConfirm = styled.div`
   border: 1px solid #43e8d8;
   border-radius: 8px;
   /* width: 100px; */
-  padding: 12px 40px;
-  align-items: center;
+  /* padding: 12px 40px; */
+  /* 按鈕內要放isloading */
+  width: 120px;
+  height: 44px;
+  line-height: 44px;
 
+  align-items: center;
+  position: relative;
   cursor: pointer;
   color: #000;
   background: #43e8d8;
@@ -456,16 +532,19 @@ const BtnConfirm = styled.div`
     box-shadow: 0 0 20px #43e8d8;
   }
 `;
-const ProfileImage = styled.div`
-  margin: 0 auto;
-  width: 180px;
-  height: 180px;
-  margin-bottom: 20px;
-  border-radius: 50%;
-  background-size: cover;
-
-  background-position: 50% 50%;
+const ValidationResult = styled.div`
+  position: absolute;
+  color: white;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+  width: auto;
+  font-size: 14px;
+  width: 160px;
+  bottom: -40px;
+  left: -24px;
+  @media (max-width: 576px) {
+  }
 `;
+
 const ProfileImg = styled.img`
   object-fit: cover;
   width: 200px;
@@ -486,8 +565,9 @@ const EditImageIcon = styled.img`
   top: 0px;
   right: 0px;
   cursor: pointer;
+  transition: 0.3s;
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 `;
 const EditBtn = styled.button`

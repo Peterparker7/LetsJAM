@@ -1,6 +1,6 @@
 import "../../App.css";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import { useParams } from "react-router-dom";
 // import { getSpecificData } from "./utils/firebase";
 // import { joinActivity } from "./utils/firebase";
@@ -11,12 +11,11 @@ import {
   subscribe,
 } from "../../utils/firebase";
 
-import Modal, { ModalProvider, BaseModalBackground } from "styled-react-modal";
+import Modal from "styled-react-modal";
 import InviteButton from "./InviteButton.js";
 import MemberCard from "./MemberCard.js";
-import { setIn } from "formik";
 import xIcon from "../../images/x.svg";
-import { Animated } from "react-animated-css";
+// import { Animated } from "react-animated-css";
 
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -47,34 +46,46 @@ function EditActivitiesMemberButton(props) {
   const [initAttendantsData, setInitAttendantsData] = useState(
     props.data.attendants
   );
-  let applicantsArray = [];
-  let attendantsArray = [];
 
-  const getApplicantsDetail = async () => {
-    initApplicantsData.forEach((applicant) => {
-      const promise = getUserData(applicant).then((data) => {
-        return data;
-      });
-      applicantsArray.push(promise);
-    });
-    const allApplicants = await Promise.all(applicantsArray);
-    setApplicantsData(allApplicants);
-  };
-  const getAttendantsDetail = async () => {
-    initAttendantsData.forEach((attendant) => {
-      const promise = getUserData(attendant).then((data) => {
-        return data;
-      });
-      attendantsArray.push(promise);
-    });
-    const allAttendants = await Promise.all(attendantsArray);
-    setAttendantsData(allAttendants);
-  };
+  const getApplicantsDetail = useCallback(() => {
+    let applicantsArray = [];
 
-  const handlefirebaseChange = async () => {
-    setInitApplicantsData(activityChange.applicants);
-    setInitAttendantsData(activityChange.attendants);
-  };
+    const gettingApplicantsDetail = async () => {
+      initApplicantsData.forEach((applicant) => {
+        const promise = getUserData(applicant).then((data) => {
+          return data;
+        });
+        applicantsArray.push(promise);
+      });
+      const allApplicants = await Promise.all(applicantsArray);
+      setApplicantsData(allApplicants);
+    };
+    gettingApplicantsDetail();
+  }, [initApplicantsData]);
+
+  const getAttendantsDetail = useCallback(() => {
+    let attendantsArray = [];
+
+    const gettingAttendantsDetail = async () => {
+      initAttendantsData.forEach((attendant) => {
+        const promise = getUserData(attendant).then((data) => {
+          return data;
+        });
+        attendantsArray.push(promise);
+      });
+      const allAttendants = await Promise.all(attendantsArray);
+      setAttendantsData(allAttendants);
+    };
+    gettingAttendantsDetail();
+  }, [initAttendantsData]);
+
+  const handlefirebaseChange = useCallback(() => {
+    const handlingfirebaseChange = async () => {
+      setInitApplicantsData(activityChange.applicants);
+      setInitAttendantsData(activityChange.attendants);
+    };
+    handlingfirebaseChange();
+  }, [activityChange]);
 
   const handleAgree = (e) => {
     agreeJoinActivity(props.activityId, e.uid);
@@ -91,26 +102,28 @@ function EditActivitiesMemberButton(props) {
 
     const index = attendantsData.findIndex((data) => data.uid === e.uid);
     const newAttendantsData = [...attendantsData];
-    const removedAttendant = newAttendantsData.splice(index, 1);
+    // const removedAttendant = newAttendantsData.splice(index, 1);
+    newAttendantsData.splice(index, 1);
     setAttendantsData(newAttendantsData);
   };
 
   useEffect(() => {
     getApplicantsDetail();
-  }, [initApplicantsData]);
+  }, [initApplicantsData, getApplicantsDetail]);
   useEffect(() => {
     getAttendantsDetail();
-  }, [initAttendantsData]);
+  }, [initAttendantsData, getAttendantsDetail]);
   useEffect(() => {
-    subscribe(setActivityChange, props.data.id);
-  }, []);
+    const unsubscribe = subscribe(setActivityChange, props.data.id);
+    return unsubscribe;
+  }, [props.data.id]);
   useEffect(() => {
     if (activityChange) {
       if (activityChange.applicants || activityChange.attendants) {
         handlefirebaseChange();
       }
     }
-  }, [activityChange]);
+  }, [activityChange, handlefirebaseChange]);
 
   function toggleModal(e) {
     setOpacity(0);
@@ -151,13 +164,14 @@ function EditActivitiesMemberButton(props) {
           //   isVisible={true}
           //   animationInDelay={index * 50}
           // >
-          <EachMemberDiv>
+          <EachMemberDiv key={item}>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
 
-              <MemberName>{item.name}</MemberName>
               <MemberCard data={item} />
             </MemberContainer>
+            <MemberName>{item.name}</MemberName>
+
             <BtnAccept
               onClick={() => {
                 handleAgree(item);
@@ -179,12 +193,12 @@ function EditActivitiesMemberButton(props) {
     if (attendantsData.length !== 0) {
       const attendantsHTML = attendantsData.map((item) => {
         return (
-          <EachMemberDiv>
+          <EachMemberDiv key={item}>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
-              <MemberName>{item.name}</MemberName>
               <MemberCard data={item} />
             </MemberContainer>
+            <MemberName>{item.name}</MemberName>
 
             <BtnKick
               onClick={() => {
@@ -216,7 +230,6 @@ function EditActivitiesMemberButton(props) {
       >
         <Container>
           {/* <ContentContainer> */}
-          {/* <TopBar></TopBar> */}
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleModal} />
           </CloseIconContainer>
@@ -229,7 +242,6 @@ function EditActivitiesMemberButton(props) {
             <AttendantTitle>已加入成員</AttendantTitle>
             <MemberDivField>{renderAttendants()}</MemberDivField>
 
-            {/* <BtnClose onClick={toggleModal}>+</BtnClose> */}
             <InviteButtonContainer>
               找不到成員？ 試試
               <InviteButton data={props} />
@@ -247,11 +259,7 @@ const Container = styled.div`
   height: 100%;
   position: relative;
 `;
-const TopBar = styled.div`
-  height: 6px;
-  width: 100%;
-  background: #ff00ff;
-`;
+
 const CloseIconContainer = styled.div`
   position: absolute;
   width: 30px;
@@ -370,14 +378,6 @@ const BtnKick = styled(Btn)`
 
     transform: translateY(-2px);
   }
-`;
-const BtnClose = styled.button`
-  transform: rotate(0.125turn);
-  font-size: 28px;
-  position: absolute;
-  top: -10px;
-  right: -30px;
-  cursor: pointer;
 `;
 const InviteButtonContainer = styled.div`
   padding-bottom: 50px;

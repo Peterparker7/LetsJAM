@@ -1,14 +1,7 @@
 import "../../App.css";
 import Modal from "styled-react-modal";
 import styled from "styled-components";
-import React, { useEffect, useState } from "react";
-import {
-  getSpecificData,
-  deleteActivityData,
-  updateActivitiesData,
-  getAllUser,
-  sendUserInvite,
-} from "../../utils/firebase";
+import React, { useState } from "react";
 
 const StyledModal = Modal.styled`
   width: 25rem;
@@ -47,7 +40,6 @@ function MemberCard(props) {
   }
 
   const skillArrange = () => {
-    console.log(props.data.skill);
     let skillArray = props.data.skill;
     let skillArrayDelimiter = skillArray.join(`, `);
     return skillArrayDelimiter;

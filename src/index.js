@@ -5,6 +5,7 @@ import App from "./App";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./Redux/reducer";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const store = createStore(
   reducer,
@@ -12,11 +13,28 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <Router>
       <App />
-    </Provider>
-  </React.StrictMode>,
+
+      {/* <Switch>
+          <Route exact path="/error404">
+            <Error404 />
+          </Route>
+          <Route path="/activities">
+            <App />
+          </Route>
+          <Route exact path="/">
+            <App />
+          </Route>
+          <Route>
+            <Error404 />
+          </Route>
+        </Switch> */}
+    </Router>
+  </Provider>,
+  /* </React.StrictMode> */
   document.getElementById("root")
 );
 
