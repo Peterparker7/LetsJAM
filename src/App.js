@@ -96,8 +96,8 @@ function App() {
           </Switch>
         </MainDiv>
         {/* <Footer /> */}
-        {/* </Router> */}
       </MyContext.Provider>
+      {/* </Router> */}
     </div>
   );
 }

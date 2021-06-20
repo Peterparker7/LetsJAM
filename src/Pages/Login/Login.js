@@ -89,7 +89,7 @@ function Login(props) {
   };
   const warningEmailHTML = () => {
     if (!emailState) {
-      return <Warning>帳號不完整</Warning>;
+      return <Warning data-testid="emailWarning">帳號不完整</Warning>;
     } else if (!emailAuthState) {
       return <Warning>無效帳號</Warning>;
     }
@@ -138,7 +138,9 @@ function Login(props) {
         </ItemField>
         <TestAccount>Test Account : test@gmail.com/000000</TestAccount>
 
-        <LoginButton onClick={(e) => handleLogin()}>登入</LoginButton>
+        <LoginButton onClick={(e) => handleLogin()} data-testid="loginButton">
+          登入
+        </LoginButton>
       </ItemFieldContainer>
     );
   };

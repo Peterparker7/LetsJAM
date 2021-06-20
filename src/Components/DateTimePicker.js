@@ -80,6 +80,7 @@ function MaterialUIPickersTime(props) {
         KeyboardButtonProps={{
           "aria-label": "change time",
         }}
+        data-testid="pickerTime"
       />
     </MuiPickersUtilsProvider>
   );
@@ -127,6 +128,7 @@ function MaterialUIPickersDate(props) {
         KeyboardButtonProps={{
           "aria-label": "change date",
         }}
+        data-testid="pickerDate"
       />
     </MuiPickersUtilsProvider>
   );
