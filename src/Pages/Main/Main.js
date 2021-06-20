@@ -5,17 +5,14 @@ import styled from "styled-components";
 import { keyframes } from "styled-components";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
-// import { useParams } from "react-router-dom";
 import {
   getActivityData,
   getUserData,
   getAuthUser,
 } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
-// import InstrumentBanner from "./InstrumentBanner";
 import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
-// import SelectTypeComponent from "../../Components/SelectComponent";
 import {
   SelectTypeHTML,
   SelectRequireHTML,
@@ -73,16 +70,6 @@ function Main() {
     setCompletePaginate(true);
   }, [data, pageLen]);
 
-  // const activitiesFilterHTML = () => {};
-
-  // const checkUserIsLogin = async () => {
-  //   const userUid = await getAuthUser();
-  //   if (userUid) {
-  //     setUserDataUid(userUid);
-  //     // const userData = await getUserData(userUid);
-  //     getUserData(userUid);
-  //   }
-  // };
   const userDataGet = useCallback(() => {
     const userDataGetting = async () => {
       if (userUid) {
@@ -392,13 +379,9 @@ function Main() {
   return (
     <MainContainer>
       <Carosul>
-        {/* <MainImgContainer>
-          <MainImg src={neonBand} alt="" />
-        </MainImgContainer> */}
         <Animated
           animationIn="fadeInLeft"
           animationInDelay={500}
-          // animationOut="fadeOut"
           isVisible={true}
         >
           <Slogan>
@@ -406,12 +389,7 @@ function Main() {
           </Slogan>
         </Animated>
 
-        <Animated
-          animationIn="fadeIn"
-          animationInDelay={1500}
-          // animationOut="fadeOut"
-          isVisible={true}
-        >
+        <Animated animationIn="fadeIn" animationInDelay={1500} isVisible={true}>
           <SubSlogan>遇見更多音樂同好、即刻成團</SubSlogan>
           <LearnMore
             onClick={() => {
@@ -423,23 +401,12 @@ function Main() {
           </LearnMore>
         </Animated>
 
-        <Animated
-          animationIn="fadeIn"
-          animationInDelay={500}
-          // animationOut="fadeOut"
-          isVisible={true}
-        >
+        <Animated animationIn="fadeIn" animationInDelay={500} isVisible={true}>
           <JoinButtonContainer>{sloganButtonHTML()}</JoinButtonContainer>
         </Animated>
       </Carosul>
-      {/* <Neon data-text="成果牆">成果牆</Neon> */}
-      {/* <div>
-        <InstrumentBanner />
-      </div> */}
-      {/* <ActivityTitle>活動一覽</ActivityTitle> */}
       <ActivityFilter>
         <FilterTitle>篩選</FilterTitle>
-        {/* <SelectTypeComponent /> */}
         <SelectTypeHTML setType={setType} handleFilter={handleFilter} />
         <SelectRequireHTML
           setRequire={setRequire}
@@ -483,15 +450,6 @@ function Main() {
       </ActivityFilter>
 
       <ActivitiesContainer>{ActivityHTML}</ActivitiesContainer>
-      {/* <Link to={`./`}>
-        <button
-          onClick={(e) => {
-            logOut();
-          }}
-        >
-          logout
-        </button>
-      </Link> */}
       <PageControllContainer>
         <PaginationControlled count={pageNum} page={page} setPage={setPage} />
       </PageControllContainer>
@@ -784,6 +742,7 @@ const ActivityItem = styled.div`
     width: 90%;
     height: 200px;
     margin: 0 auto;
+    margin-bottom: 10px;
   }
 `;
 

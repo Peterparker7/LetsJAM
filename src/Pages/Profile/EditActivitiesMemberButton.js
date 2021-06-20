@@ -85,7 +85,7 @@ function EditActivitiesMemberButton(props) {
       setInitAttendantsData(activityChange.attendants);
     };
     handlingfirebaseChange();
-  }, [activityChange.applicants, activityChange.attendants]);
+  }, [activityChange]);
 
   const handleAgree = (e) => {
     agreeJoinActivity(props.activityId, e.uid);

@@ -50,7 +50,6 @@ function Place(props) {
     // const latLng = await getLatLng(results[0]);
     // console.log(latLng);
   };
-  console.log(address);
   // props.setPlace(address);
   return (
     <InputField>

@@ -1,10 +1,6 @@
-// import "../../App.css";
 import "./EditActivitiesButton.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useCallback } from "react";
-// import { useParams } from "react-router-dom";
-// import { getSpecificData } from "./utils/firebase";
-// import { joinActivity } from "./utils/firebase";
 import {
   getSpecificData,
   deleteActivityData,
@@ -19,7 +15,6 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import * as Warning from "./Validate";
 
 import Swal from "sweetalert2";
-// import withReactContent from "sweetalert2-react-content";
 import xIconBlack from "../../images/xBlack.svg";
 import { SelectTypeWhiteEditHTML } from "../../Components/SelectComponent";
 import {
@@ -315,17 +310,23 @@ function EditActivitiesButton(props) {
       cancelButtonColor: "#565656",
       confirmButtonText: "<span  style=color:#000>確定刪除</span",
       cancelButtonText: "取消",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        handleActivityInvitationDelete();
-        deleteActivityData(props.data.id);
+        setOpacity(0);
+        setIsOpen(!isOpen);
+        Swal.fire({
+          title: "<span style=font-size:24px>已刪除</span>",
+          customClass: "customTitle",
+          background: "black",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        await handleActivityInvitationDelete();
+        await deleteActivityData(props.data.id);
         dispatch({
           type: "DELETE_ACTIVITYDATA",
           data: props.data,
         });
-        setOpacity(0);
-        setIsOpen(!isOpen);
       }
     });
   };

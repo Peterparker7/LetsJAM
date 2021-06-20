@@ -3,13 +3,12 @@ import "../../normalize.css";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
 
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { getSpecificData, subscribe } from "../../utils/firebase";
 import { joinActivity } from "../../utils/firebase";
 import { getUserData } from "../../utils/firebase";
-import { getAuthUser } from "../../utils/firebase";
 import MemberCard from "./MemberCard";
 import { ModalProvider, BaseModalBackground } from "styled-react-modal";
 import neonGuitar1 from "../../images/neonGuitar1.png";
@@ -23,7 +22,6 @@ import {
   openlogo,
   closelogo,
 } from "./DetailIcon";
-import { MyContext } from "../../MyContext";
 
 function Detail(props) {
   let { id } = useParams();
@@ -36,14 +34,6 @@ function Detail(props) {
 
   const history = useHistory();
 
-  // const checkUserIsLogin = async () => {
-  //   const userUid = await getAuthUser();
-  //   if (userUid) {
-  //     const userData = await getUserData(userUid);
-  //     setUserUid(userUid);
-  //     setUserName(userData.name);
-  //   }
-  // };
   const userDataGet = useCallback(() => {
     const userDataGetting = async () => {
       if (props.userUid) {
@@ -200,7 +190,6 @@ function Detail(props) {
               alt=""
             ></ActivityImage>
             <ImageLine></ImageLine>
-            {/* <ImageLine2></ImageLine2> */}
             <ButtonField>
               <ShareButton
                 disabled={!activityStatus}
@@ -867,27 +856,4 @@ const ImageLine = styled.div`
   }
 `;
 
-// const ImageLine2 = styled.div`
-//   height: 500px;
-//   width: calc(100%);
-//   /* height: 480px;
-//   width: calc(100% - 20px); */
-//   border: 3px solid white;
-//   position: absolute;
-//   /* top: 10px;
-//   right: 10px; */
-//   top: 20px;
-//   right: 20px;
-//   z-index: 5;
-//   box-shadow: 0 0 15px #43e8d8, inset 0 0 10px #43e8d8;
-
-//   @media (max-width: 888px) {
-//     right: 20px;
-
-//     width: calc(100% - 40px);
-//   }
-//   @media (max-width: 576px) {
-//     height: 280px;
-//   }
-// `;
 export default Detail;
