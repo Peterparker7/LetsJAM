@@ -138,7 +138,8 @@ function Header(props) {
   }, [userData, arrangeInvitationData]);
 
   useEffect(() => {
-    subscribeUser(setUserDataChange, userDataRedux.uid);
+    const unsubscribeUser = subscribeUser(setUserDataChange, userDataRedux.uid);
+    return unsubscribeUser;
   }, [userDataRedux]);
   useEffect(() => {
     if (userDataChange) {

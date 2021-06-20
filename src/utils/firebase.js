@@ -48,7 +48,7 @@ const getSpecificData = async (id) => {
 
 const deleteActivityData = async (id) => {
   let docRef = db.collection("activityData").doc(id);
-  docRef.delete().then(() => {});
+  await docRef.delete().then(() => {});
 };
 
 const uploadImage = async (img) => {

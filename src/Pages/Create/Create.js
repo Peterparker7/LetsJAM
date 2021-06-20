@@ -98,12 +98,6 @@ function Create(props) {
 
   const userDataRedux = useSelector((state) => state.userData);
 
-  console.log(titleStatus);
-  console.log(dateStatus);
-  console.log(timeStatus);
-  console.log(requirementStatus);
-  console.log(placeStatus);
-
   //   const [requirement, setRequirement] = useState("");
   // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;

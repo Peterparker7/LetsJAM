@@ -102,7 +102,9 @@ export default function Error404() {
         <NeonText>Page Not Found</NeonText>
       </NeonBox>
       <ButtonField>
-        <MainPageBtn onClick={backToHome}>回Let's JAM</MainPageBtn>
+        <MainPageBtn onClick={backToHome} data-testid="homeButton">
+          回Let's JAM
+        </MainPageBtn>
       </ButtonField>
     </Container>
   );
