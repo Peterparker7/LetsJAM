@@ -58,7 +58,10 @@ const warningNameHTML = (name, warningDisplay) => {
     if (name) {
       if (name.length > 10) {
         return (
-          <Warning style={{ display: "inline-block", color: "red" }}>
+          <Warning
+            style={{ display: "inline-block", color: "red" }}
+            data-testid="nameWarning"
+          >
             名稱最多10字
           </Warning>
         );
