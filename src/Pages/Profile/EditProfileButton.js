@@ -2,9 +2,6 @@ import "../../App.css";
 import "./EditProfileButton.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useCallback } from "react";
-// import { useParams } from "react-router-dom";
-// import { getSpecificData } from "./utils/firebase";
-// import { joinActivity } from "./utils/firebase";
 import { getUserData, updateUserData, uploadImage } from "../../utils/firebase";
 import * as Warning from "./Validate";
 
@@ -20,7 +17,6 @@ const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
   --rmsc-border: unset !important;
   --rmsc-bg: #121212;
-  /* --rmsc-hover: #ff00ff96; */
   --rmsc-hover: #979797;
   --rmsc-selected: #43ede8a6;
   --rmsc-h: 40px !important;
@@ -59,8 +55,6 @@ function EditProfileButton(props) {
   const userDataRedux = useSelector((state) => state.userData);
   const dispatch = useDispatch();
 
-  // let userId = "vfjMHzp45ckI3o3kqDmO";
-  //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   let defaultPreferType = "";
   let skillFormat = [];
   let skillArray = [];
@@ -139,7 +133,6 @@ function EditProfileButton(props) {
 
       if (inputValidation()) {
         await updateUserData(data, userDataRedux.uid);
-        // setUserData(data);
         dispatch({ type: "UPDATE_USERDATA", data: data });
 
         setOpacity(0);
@@ -161,48 +154,19 @@ function EditProfileButton(props) {
 
       if (inputValidation()) {
         await updateUserData(data, userDataRedux.uid);
-        // setUserData(data);
         dispatch({ type: "UPDATE_USERDATA", data: data });
 
         setOpacity(0);
         setIsOpen(!isOpen);
       }
     }
-
-    // setLoadingStatus(true);
-    // setTimeout(async () => {
-    //   setLoadingStatus(false);
-    //   let data = {
-    //     uid: userData.uid,
-    //     name: userData.name,
-    //     intro: userData.intro,
-    //     preferType: userData.preferType,
-    //     skill: skillArray,
-    //     favSinger: userData.favSinger,
-    //     profileImage: imageUrl,
-    //     youtubeUrl: userData.youtubeUrl,
-    //   };
-    //   console.log(data);
-
-    //   if (inputValidation()) {
-    //     let updateToFirebase = await updateUserData(data, userDataRedux.uid);
-    //     // setUserData(data);
-    //     dispatch({ type: "UPDATE_USERDATA", data: data });
-
-    //     setOpacity(0);
-    //     setIsOpen(!isOpen);
-    //   }
-    // }, 1000);
   }
-  //
+
   function handleProfileChange(e, type) {
     setUserData({ ...userData, [type]: e });
   }
   function handlePreferTypeDefault() {
     defaultPreferType = userDataRedux.preferType;
-    // if (userDataRedux.preferType === "流行") {
-    //   defaultPreferType = "流行";
-    // }
   }
   function handleClickToUpload() {
     const uploadProfileImage = document.querySelector("#uploadProfileImage");
@@ -221,7 +185,6 @@ function EditProfileButton(props) {
       userData.intro.length > 250 ||
       skill.length === 0
     ) {
-      console.log("valid fail");
       setValidationResult(false);
       return false;
     } else {
@@ -267,7 +230,6 @@ function EditProfileButton(props) {
         afterOpen={afterOpen}
         beforeClose={beforeClose}
         onBackgroundClick={toggleCancel}
-        // onEscapeKeydown={}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
@@ -311,7 +273,6 @@ function EditProfileButton(props) {
                   defaultValue={userDataRedux.name}
                 />
 
-                {/* </div> */}
                 {Warning.warningProfileNameHTML(userData.name)}
               </InputFieldContainer>
 
@@ -323,16 +284,6 @@ function EditProfileButton(props) {
                   defaultValue={defaultPreferType}
                   handleProfileChange={handleProfileChange}
                 />
-                {/* <SelectType
-                  defaultValue={defaultPreferType}
-                  onChange={(e) => {
-                    handleProfileChange(e.target.value, "preferType");
-                  }}
-                >
-                  <option>流行</option>
-                  <option>嘻哈</option>
-                  <option>古典</option>
-                </SelectType> */}
               </InputFieldContainer>
               <InputFieldContainer>
                 <Label htmlFor="skill">會的樂器</Label>
@@ -350,16 +301,6 @@ function EditProfileButton(props) {
               </InputFieldContainer>
               <InputFieldContainer style={{ alignItems: "unset" }}>
                 <Label htmlFor="intro">自我介紹</Label>
-                {/* <InputFieldInput
-                id="intro"
-                contentEditable="true"
-                placeholder="寫點描述"
-                suppressContentEditableWarning={true}
-                onInput={(e) => {
-                  handleProfileChange(e.target.value, "intro");
-                }}
-                defaultValue={userDataRedux.intro}
-              /> */}
                 <IntroTextArea
                   id="intro"
                   contentEditable="true"
@@ -384,8 +325,6 @@ function EditProfileButton(props) {
                   }}
                   defaultValue={userDataRedux.youtubeUrl}
                 />
-
-                {/* </div> */}
               </InputFieldContainer>
             </ProfileDetail>
             <BtnField>
@@ -452,12 +391,8 @@ const ContentContainer = styled.div`
   width: 100%;
   background: #121212;
   padding-bottom: 40px;
-
-  /* text-align: center; */
 `;
 const ProfileDetail = styled.div`
-  /* text-align: center; */
-  /* text-align: left; */
   max-width: 400px;
   margin: 20px auto;
   @media (max-width: 576px) {
@@ -493,12 +428,6 @@ const IntroTextArea = styled.textarea`
   letter-spacing: 1px;
   color: white;
 `;
-
-// const SelectType = styled.select`
-//   width: calc(100% - 80px);
-//   color: white;
-//   padding: 5px;
-// `;
 
 const BtnField = styled.div`
   display: flex;
@@ -550,7 +479,6 @@ const ProfileImg = styled.img`
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  /* margin-bottom: 20px; */
 `;
 const ProfileImageContainer = styled.div`
   align-items: center;
@@ -573,7 +501,6 @@ const EditImageIcon = styled.img`
 const EditBtn = styled.button`
   border: 1px solid none;
   border-radius: 8px;
-  /* background: #00ffff; */
   background: #43e8d8;
   padding: 10px;
   cursor: pointer;

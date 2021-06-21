@@ -137,16 +137,6 @@ function Create(props) {
     let a = time.split(":");
     let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
     let deviation = 8 * 60 * 60000;
-    console.log(nowDate);
-    console.log(Date.parse(date) + milliseconds - deviation);
-    console.log(titleStatus);
-    console.log(dateStatus);
-    console.log(timeStatus);
-    console.log(requirementStatus);
-    console.log(placeStatus);
-    console.log(levelStatus);
-    console.log(imgUrl);
-    console.log(checked);
 
     if (!title || title.length > 10) {
       setTitleStatus(false);
@@ -166,14 +156,10 @@ function Create(props) {
     if (!limit && !checked) {
       setLimitStatus(false);
     }
-    // if (!level) {
-    //   setLevelStatus(false);
-    // }
     if (!place) {
       setPlaceStatus(false);
     }
     if (!imgUrl) {
-      // setImageStatus(false);
     }
 
     if (
@@ -191,7 +177,6 @@ function Create(props) {
       place.length > 30 ||
       !imgUrl
     ) {
-      console.log("Validation fail");
       return false;
     } else {
       return true;
@@ -199,12 +184,8 @@ function Create(props) {
   };
 
   const clickCreate = async () => {
-    console.log(currentNumber);
-
     let newTimestamp = new Date(`${date}T${time}`);
     let timestamp = new Date(`${date}T${time}`);
-
-    // imageUrl = await uploadImage(imgSource);
 
     const activityData = db.collection("activityData").doc();
 
@@ -220,14 +201,13 @@ function Create(props) {
         title: title,
         type: type,
         limit: currentNumber,
-        // limit: limit,
         newTimestamp: newTimestamp, //改這個存放到redux才不會有問題
         timestamp: timestamp, //firebase內建timestamp
         location: place,
         geo: ["10", "10"],
         requirement: requirementArray,
         level: level,
-        host: host, //or id?
+        host: host,
         attendants: [],
         applicants: [],
         comment: comment,
@@ -239,7 +219,6 @@ function Create(props) {
       };
       await activityData.set(newData);
       history.push("/");
-      // window.location.replace("./");
       currentNumber = 1;
     }
   };
@@ -281,7 +260,6 @@ function Create(props) {
     }
     if (changeType === "date") {
       setDate(e);
-      console.log(e);
       setDateStatus(true);
       if (nowDate >= Date.parse(e) + 16 * 60 * 60000) {
         setDateStatus(false);
@@ -290,7 +268,6 @@ function Create(props) {
     if (changeType === "time") {
       let a = e.split(":");
       let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
-      console.log("kkk");
       setTime(e);
       setTimeStatus(true);
       if (nowDate >= Date.parse(date) + milliseconds - deviation) {
@@ -303,10 +280,8 @@ function Create(props) {
     }
     if (changeType === "level") {
       setLevel(e.target.value);
-      // setLevelStatus(true);
     }
     if (changeType === "limit") {
-      // setLimit(e.target.value);
       setLimitStatus(true);
       currentNumber = e.target.value;
     }
@@ -325,10 +300,7 @@ function Create(props) {
             defaultValue=""
             disabled={checked}
             style={{ opacity: 0.3 }}
-            onChange={(e) => {
-              // limitinit = e.target.value;
-              // handleChange(e, "limit");
-            }}
+            onChange={(e) => {}}
           />
         </div>
       );
@@ -338,7 +310,6 @@ function Create(props) {
           <LimitInputField
             type="number"
             defaultValue={currentNumber}
-            // defaultValue={limit}
             min="1"
             max="20"
             onChange={(e) => {
@@ -351,19 +322,13 @@ function Create(props) {
   };
 
   async function handleUploadImage(e) {
-    // setIsLoading(true);
     if (e.target.value) {
       setIsLoading(true);
 
-      console.log(e.target.value);
-      console.log("handleUploadImage");
       imgSource = e.target.files[0];
-      console.log(imgSource);
-      // console.log(imgSource);
       imageUrl = await uploadImage(imgSource);
 
       setimgUrl(imageUrl);
-      console.log(imageUrl);
       setTimeout(() => {
         setIsLoading(false);
       }, 3000);
@@ -407,40 +372,22 @@ function Create(props) {
                 <RequireField>*</RequireField>
                 <Label>日期</Label>
 
-                <MaterialUIPickersDate
-                  handleChange={handleChange}
-                  // time={time}
-                  // datesat={date}
-                />
+                <MaterialUIPickersDate handleChange={handleChange} />
                 {Warning.warningDateHTML(date, dateStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>時間</Label>
 
-                <MaterialUIPickersTime
-                  handleChange={handleChange}
-                  // time={time}
-                  // datesat={date}
-                />
+                <MaterialUIPickersTime handleChange={handleChange} />
                 {Warning.warningTimeHTML(date, time, timeStatus)}
               </InputFieldDiv>
               <InputFieldDiv>
                 <Label>音樂類型</Label>
                 <SelectTypeWhiteHTML setType={setType} />
 
-                {/* <SelectType
-                  onChange={(e) => {
-                    handleChange(e, "type");
-                  }}
-                >
-                  <option>流行</option>
-                  <option>嘻哈</option>
-                  <option>古典</option>
-                </SelectType> */}
                 {Warning.warningTypeHTML(type, typeStatus)}
               </InputFieldDiv>
-              {/* <SelectRequireWhiteHTML setRequirement={setRequirement} /> */}
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>樂器需求</Label>
@@ -471,8 +418,6 @@ function Create(props) {
                       onChange={() => {
                         setChecked(!checked);
                         setLimitStatus(true);
-
-                        console.log(checked);
                         //第一次按下還沒有值，在這邊先設定不然到送出時limit會是空的
                         if (!checked) {
                           setLimit(0);
@@ -497,7 +442,6 @@ function Create(props) {
                   onChange={(e) => {
                     handleChange(e, "level");
                     if (e.target.value.length > 20) {
-                      console.log("too many");
                       setLevelStatus(false);
                     } else {
                       setLevelStatus(true);
@@ -509,14 +453,6 @@ function Create(props) {
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>地點</Label>
-                {/* <Inputfield
-                  defaultValue={place}
-                  placeholder="請輸入詳細地址"
-                  class="location"
-                  onChange={(e) => {
-                    handleChange(e, "location");
-                  }}
-                ></Inputfield> */}
                 <Place setPlace={setPlace} setPlaceStatus={setPlaceStatus} />
                 {Warning.warningLocationHTML(
                   place,
@@ -530,7 +466,6 @@ function Create(props) {
                   placeholder={"請填活動說明"}
                   onChange={(e) => {
                     handleChange(e, "comment");
-                    // comment = e.target.value;
                   }}
                 ></InputTextArea>
               </InputFieldDiv>
@@ -544,10 +479,7 @@ function Create(props) {
                   onChange={(e) => {
                     handleUploadImage(e);
                     if (e.target.value) {
-                      // setImageStatus(true);
                     } else {
-                      // setImageStatus(false);
-                      // console.log("no input");
                     }
                   }}
                 ></InputfieldImage>
@@ -559,18 +491,7 @@ function Create(props) {
                   <UploadImageIcon src={cloudUpload} />
                   <UploadImageText>上傳</UploadImageText>
                 </UploadImageContainer>
-                {/* {Warning.warningImageHTML(imageUrl, imageStatus)} */}
               </InputFieldDiv>
-
-              {/* <InputFieldDiv>
-                <Label>上傳Youtube連結</Label>
-                <Inputfield
-                  type="url"
-                  onChange={(e) => {
-                    youtubeUrl = e.target.value;
-                  }}
-                ></Inputfield>
-              </InputFieldDiv> */}
             </CreateDetailContent>
             <CreateDetailImageContainer>
               <CreateDetailImage src={imgUrl} />
@@ -587,9 +508,6 @@ function Create(props) {
               }}
             >
               建立活動
-              {/* <CircularIndeterminate
-              style={!isLoading ? { display: "block" } : { display: "none" }}
-            /> */}
             </Button>
             <Button
               disabled={!isLoading}
@@ -627,8 +545,6 @@ const Container = styled.div`
   margin: 0 auto;
   height: 100%;
   position: relative;
-  /* border: 1px solid #979797; */
-  /* padding: 50px 20px; */
 `;
 const CreateDetailTopBar = styled.div`
   width: 100%;
@@ -652,11 +568,9 @@ const BackArrow = styled.img`
 const CreateDetailContainer = styled.div`
   max-width: 888px;
   margin: 0 auto;
-  /* margin-top: 20px; */
   margin-bottom: 20px;
   color: black;
   background: #f8f8ff;
-  /* padding: 20px; */
   padding-top: 0px;
   padding-bottom: 50px;
   @media (max-width: 768px) {
@@ -668,7 +582,6 @@ const CreateDetailContainer = styled.div`
 `;
 const CreateDetail = styled.div`
   display: flex;
-  /* flex-direction: column; */
   line-height: 30px;
   margin: 0px 20px;
   padding: 20px;
@@ -692,10 +605,8 @@ const CreateDetailImageContainer = styled.div`
     margin-left: 0px;
     width: 100%;
     padding-left: 0px;
-    /* display: none; */
   }
   @media (max-width: 576px) {
-    /* max-height: 300px; */
   }
 `;
 const CreateDetailImage = styled.img`
@@ -703,11 +614,9 @@ const CreateDetailImage = styled.img`
   object-fit: cover;
   width: 100%;
   height: 100%;
-  /* margin-left: 20px; */
   @media (max-width: 768px) {
     max-height: 300px;
     margin-left: 0px;
-    /* display: none; */
   }
 `;
 const Title = styled.div`
@@ -725,8 +634,6 @@ const InputFieldDiv = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  /* height: 40px; */
-  /* text-align: center; */
 `;
 const Inputfield = styled.input`
   border-bottom: 1px solid #979797;
@@ -743,18 +650,6 @@ const Inputfield = styled.input`
     width: 90%;
   }
 `;
-// const SelectType = styled.select`
-//   padding: 5px;
-//   width: 220px;
-//   border-bottom: 1px solid #979797;
-
-//   @media (max-width: 768px) {
-//     width: 90%;
-//   }
-//   @media (max-width: 576px) {
-//     width: 90%;
-//   }
-// `;
 const InputTextArea = styled.textarea`
   width: 220px;
   height: 80px;
@@ -783,7 +678,6 @@ const UploadImageContainer = styled.button`
   display: flex;
   width: 220px;
   height: 40px;
-  /* border: 1px solid #979797; */
   border-radius: 8px;
   background: #dedede;
 
@@ -794,7 +688,6 @@ const UploadImageContainer = styled.button`
   cursor: pointer;
   &:hover {
     transform: translateY(-3px);
-    /* border: 1px solid #979797; */
     background: #bdbdbd;
   }
   @media (max-width: 768px) {
@@ -847,11 +740,9 @@ const ButtonField = styled.div`
   text-align: center;
 `;
 const Button = styled.button`
-  /* border: 1px solid #979797; */
   padding: 5px;
   border-radius: 8px;
   padding: 12px 40px;
-  /*按鈕大一點才可包住spinner */
   width: 200px;
   height: 50px;
   font-size: 20px;
@@ -875,8 +766,5 @@ const RequireField = styled.span`
   position: absolute;
   left: -10px;
 `;
-// const Warning = styled.div`
-//   width: 120px;
-//   font-size: 12px;
-// `;
+
 export default Create;

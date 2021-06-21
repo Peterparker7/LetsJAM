@@ -438,7 +438,6 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   background-color: white;
   z-index: 5;
-  /* position: fixed; */
 `;
 const HeaderDiv = styled.div`
   width: 100%;
@@ -563,22 +562,8 @@ const NeonShineThree = keyframes`
   65% {opacity: 1}
   100% {opacity: 1}
 `;
-const NeonShineCircle = keyframes`
-  0% {opacity: 1}
-  1%{opacity:0;}
-  2%{opacity:1;}
-  5%{opacity:1;}
-  6%{opacity:0;}
-  7%{opacity:1;}
-  9%{opacity:0;}
-  10%{opacity:1;}
-  67% {opacity: 1}
-  68% {opacity: 0}
-  69% {opacity: 1}
-  90% {opacity: 1}
-`;
+
 const Item = styled.div`
-  /* width: 90px; */
   font-weight: bold;
   margin-right: 5px;
   margin-left: 20px;
@@ -592,22 +577,16 @@ const Item = styled.div`
   }
 `;
 const ItemOne = styled(Item)`
-  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
     0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShine} 3s linear infinite;
 `;
 const ItemTwo = styled(Item)`
-  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
     0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShineTwo} 5s linear infinite;
 `;
 const ItemThree = styled(Item)`
-  /* text-shadow: 0 0 5px rgba(255, 65, 65, 1), 0 0 10px rgba(255, 65, 65, 1),
-    0 0 20px rgba(255, 65, 65, 1), 0 0 40px rgba(255, 65, 65, 1); */
   text-shadow: 0 0 5px rgba(67, 232, 216, 1), 0 0 10px rgba(67, 232, 216, 1),
     0 0 20px rgba(67, 232, 216, 1), 0 0 40px rgba(67, 232, 216, 1);
   animation: ${NeonShineThree} 5s linear infinite;
@@ -641,7 +620,6 @@ const MailBoxIconCircle = styled.div`
   color: white;
   box-shadow: 0 2px 5px #ff00ff, 0 -2px 5px #ff00ff, 2px 2px 10px #ff00ff,
     2px -2px 10px #ff00ff;
-  /* animation: ${NeonShineCircle} 10s linear infinite; */
 
   bottom: 2px;
   right: -2px;
@@ -650,14 +628,6 @@ const MailBoxDiv = styled.div`
   position: absolute;
   top: 0px;
   right: 0px;
-  /* position: absolute;
-  width: 400px;
-  height: 600px;
-  background: white;
-  top: 80px;
-  right: 0px;
-  z-index: 5;
-  text-align: left; */
 `;
 const MailBoxDivWrapper = styled.div`
   position: absolute;
@@ -685,8 +655,6 @@ const EachMailDiv = styled.div`
   position: relative;
   width: 100%;
   height: 90px;
-  /* margin-left: 20px; */
-  /* border: 1px solid; */
 `;
 const EachMailDivCanvas = styled.div`
   position: absolute;

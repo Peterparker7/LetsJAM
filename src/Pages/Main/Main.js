@@ -5,11 +5,7 @@ import styled from "styled-components";
 import { keyframes } from "styled-components";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link } from "react-router-dom";
-import {
-  getActivityData,
-  getUserData,
-  getAuthUser,
-} from "../../utils/firebase";
+import { getActivityData, getUserData } from "../../utils/firebase";
 import neonBand from "../../images/neon-band.jpg";
 import PaginationControlled from "./PaginationControlled";
 import IsLoading from "../../Components/IsLoading";
@@ -29,14 +25,12 @@ let allActivitiesArray = [];
 
 function Main() {
   const [data, setData] = useState([]);
-  // const [currentPageData, setCurrentPageData] = useState([]);
   const [userDataUid, setUserDataUid] = useState();
   const [page, setPage] = useState(1);
   const [pageNum, setPageNum] = useState(1);
   const [allPaginateArray, setAllPaginateArray] = useState([]);
   const [completePaginate, setCompletePaginate] = useState();
   let pageLen = 6;
-  // new window.WOW().init();
   const [type, setType] = useState("所有類型");
   const [require, setRequire] = useState("所有樂器");
   const { userUid } = useContext(MyContext);
@@ -48,7 +42,6 @@ function Main() {
     allActivitiesArrayCopy.push(...data);
   };
 
-  //eslint說要用useCallback
   const handlePagination = useCallback(() => {
     let allPageArray = [];
 
@@ -58,7 +51,6 @@ function Main() {
       return item.timestamp.toMillis() > currentTime;
     });
 
-    // const pageArray = openActivityArray.slice(0, pageLen);
     const pageNum = Math.ceil(openActivityArray.length / pageLen);
     setPageNum(pageNum);
     for (let i = 0; i < openActivityArray.length; i = i + pageLen) {
@@ -83,7 +75,6 @@ function Main() {
   useEffect(() => {
     //渲染頁面之前先把存活動的array清空，避免array裡面有重複之前的data
     allActivitiesArray = [];
-    // checkUserIsLogin();
     getFirebaseData();
   }, []);
   useEffect(() => {
@@ -97,16 +88,7 @@ function Main() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  // if (!data) {
-  //   return "isLoading";
-  // }
-  // if (!data) {
-  //   return "Loading";
-  // }
 
-  // if (!data || allPaginateArray.length <= 0) {
-  //   return <div style={{ minHeight: `calc(100vh - 180px) ` }}>Loading</div>;
-  // }
   const handleGallery = () => {
     Swal.fire({
       title: "<span style=font-size:24px>敬請期待！</span>",
@@ -118,8 +100,6 @@ function Main() {
   };
 
   const handleFilter = (e, filter) => {
-    // const selectType = document.querySelector("#selectType");
-    // const selectRequirement = document.querySelector("#selectRequirement");
     if (filter === "type") {
       if (e === "所有類型") {
         if (require === "所有樂器") {
@@ -186,77 +166,8 @@ function Main() {
         });
         setData(bothcontain);
       }
-
-      // allActivitiesArray = iscontain;
     }
   };
-  // const handleFilter = (e, filter) => {
-  //   const selectType = document.querySelector("#selectType");
-  //   const selectRequirement = document.querySelector("#selectRequirement");
-  //   if (filter === "type") {
-  //     if (e === "所有類型") {
-  //       if (selectRequirement.value === "所有樂器") {
-  //         setData(allActivitiesArray);
-  //         return;
-  //       }
-  //       const alltype = allActivitiesArray.filter((item) => {
-  //         if (item.requirement.includes(selectRequirement.value)) {
-  //           return item;
-  //         }
-  //       });
-  //       setData(alltype);
-  //       return;
-  //     }
-  //     const iscontain = allActivitiesArray.filter((item) => {
-  //       if (item.type.includes(e)) {
-  //         return item;
-  //       }
-  //     });
-  //     setData(iscontain);
-  //     if (selectRequirement.value === "所有樂器") {
-  //       setData(iscontain);
-  //     } else {
-  //       const bothcontain = iscontain.filter((item) => {
-  //         if (item.requirement.includes(selectRequirement.value)) {
-  //           return item;
-  //         }
-  //       });
-  //       setData(bothcontain);
-  //     }
-  //   }
-  //   if (filter === "requirement") {
-  //     if (e === "所有樂器") {
-  //       if (selectType.value === "所有類型") {
-  //         setData(allActivitiesArray);
-  //         return;
-  //       }
-  //       const allrequirement = allActivitiesArray.filter((item) => {
-  //         if (item.type.includes(selectType.value)) {
-  //           return item;
-  //         }
-  //       });
-  //       setData(allrequirement);
-  //       return;
-  //     }
-  //     const iscontain = allActivitiesArray.filter((item) => {
-  //       if (item.requirement.includes(e)) {
-  //         return item;
-  //       }
-  //     });
-  //     if (selectType.value === "所有類型") {
-  //       setData(iscontain);
-  //     } else {
-  //       const bothcontain = iscontain.filter((item) => {
-  //         if (item.type.includes(selectType.value)) {
-  //           return item;
-  //         }
-  //       });
-  //       setData(bothcontain);
-  //     }
-
-  //     // allActivitiesArray = iscontain;
-  //   }
-  // };
 
   const handleCreateNow = () => {
     if (userDataUid) {
@@ -303,7 +214,6 @@ function Main() {
           </NoActivitiesImageContainer>
           <NoActivities>無符合條件的活動~</NoActivities>
           {handleCreateNow()}
-          {/* <JoinButton></JoinButton> */}
         </NoActivitiesContainer>
       );
     }
@@ -315,10 +225,6 @@ function Main() {
   if (!data) {
     return <IsLoading loadingStyle={"normal"} size={40} />;
   }
-  //filter不到活動會卡住
-  // if (allPaginateArray.length === 0) {
-  //   return <IsLoading />;
-  // }
 
   const ActivityHTML =
     allPaginateArray.length > 0 ? (
@@ -335,19 +241,13 @@ function Main() {
         if (firebaseTime > currentTime) {
           return (
             <Animated
-              // className="wow"
               animationIn="bounceInLeft"
-              // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 100}
               key={index}
             >
               <Link to={`/activities/${item.id}`}>
-                <ActivityItem
-                // style={{
-                //   backgroundImage: `url(${item.fileSource})`,
-                // }}
-                >
+                <ActivityItem>
                   <ActivityImage src={item.fileSource} />
                   <Canvas>
                     {/* <div>{item.id}</div> */}
@@ -359,7 +259,6 @@ function Main() {
                       <Requirement>{requirementHTML}</Requirement>
                       <Location>{item.location}</Location>
                       <AttendantNum>{attendantsNum} 出席者</AttendantNum>
-                      {/* <ActivityImage src={item.fileSource} alt=""></ActivityImage> */}
                     </ActivityContent>
                   </Canvas>
                 </ActivityItem>
@@ -370,10 +269,7 @@ function Main() {
         return null;
       })
     ) : (
-      <NoResultContainer>
-        {/* <NoResult>無符合條件的活動</NoResult> */}
-        {noActivitiesHTML()}
-      </NoResultContainer>
+      <NoResultContainer>{noActivitiesHTML()}</NoResultContainer>
     );
 
   return (
@@ -522,7 +418,6 @@ const SubSlogan = styled.div`
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    /* top: 47%; */
     top: 24%;
   }
 `;
@@ -545,7 +440,6 @@ const LearnMore = styled.div`
   @media (max-width: 576px) {
     font-size: 16px;
     left: 60px;
-    /* top: 57%; */
     top: 30%;
   }
 `;
@@ -570,8 +464,6 @@ const JoinButtonContainer = styled.div`
 `;
 const JoinButton = styled.button`
   border-radius: 30px;
-  /* background: #43e8d8; */
-  /* background: #ff00ff; */
   border: 3px solid #fff;
 
   padding: 12px 60px;
@@ -597,23 +489,10 @@ const JoinButton = styled.button`
     padding: 12px 48px;
   }
 `;
-// const MainImgContainer = styled.div`
-//   width: 500px;
-//   height: 500px;
-//   position: absolute;
-//   right: 50px;
-//   top: 50px;
-// `;
-// const MainImg = styled.img`
-//   max-width: 100%;
-//   height: 100%;
-//   object-fit: cover;
-// `;
 
 const ActivityFilter = styled.div`
   display: flex;
   margin: 50px auto;
-  /* margin-top: 20px; */
   max-width: 1024px;
   justify-content: flex-end;
   padding: 0 20px;
@@ -624,7 +503,6 @@ const ActivityFilter = styled.div`
     max-width: 700px;
   }
   @media (max-width: 768px) {
-    /* margin: 50px 20px; */
     width: 90%;
   }
   @media (max-width: 576px) {
@@ -633,15 +511,7 @@ const ActivityFilter = styled.div`
     justify-content: space-around;
   }
 `;
-// const ActivityTitle = styled.div`
-//   margin: 20px auto;
-//   padding: 0 20px;
-//   color: white;
-//   font-size: 28px;
-//   font-weight: 600;
-//   text-align: left;
-//   max-width: 1024px;
-// `;
+
 const FilterTitle = styled.div`
   font-size: 16px;
   padding-left: 10px;
@@ -686,11 +556,9 @@ const FilterBar = styled.div`
 const ActivitiesContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  /* grid-template-rows: 1fr 1fr 1fr; */
   grid-template-rows: 1fr 1fr;
   grid-column-gap: 20px;
   grid-row-gap: 40px;
-  /* flex-wrap: wrap; */
   margin: 0 auto;
   margin: 0 auto;
   max-width: 1024px;
@@ -718,15 +586,10 @@ const ActivitiesContainer = styled.div`
 `;
 
 const ActivityItem = styled.div`
-  /* border: 1px solid #979797; */
   width: 300px;
   height: 300px;
   border-radius: 4px;
   background: #000;
-  /* margin-bottom: 40px; */
-  /* text-align: left; */
-  /* padding-top: 20px;
-  padding-left: 30px; */
   line-height: 30px;
   color: #fff;
   align-items: center;
@@ -754,14 +617,8 @@ const Canvas = styled.div`
   height: 300px;
   border-radius: 4px;
 
-  background: rgba(0, 0, 0, 0.6);
-  /* &:hover {
-    background: rgba(0, 0, 0, 0.8);
-    color: black;
-    transform: scale(1.05);
-  } */
+  background: rgba(0, 0, 0, 0.65);
   pointer-events: none;
-  /* z-index: -1; */
 
   @media (max-width: 768px) {
     width: 100%;
@@ -775,10 +632,7 @@ const ActivityContent = styled.div`
   padding: 10px;
   position: relative;
   @media (max-width: 768px) {
-    /* margin-top: 10px;
-    margin-left: 20px; */
     max-height: 180px;
-    /* text-align: left; */
   }
 `;
 const NoResultContainer = styled.div`
@@ -790,9 +644,7 @@ const NoResultContainer = styled.div`
     width: 100%;
   }
 `;
-// const NoResult = styled.div`
-//   font-size: 20px;
-// `;
+
 const PageControllContainer = styled.div`
   margin: 30px auto;
   max-width: 1024px;
@@ -840,6 +692,7 @@ const Location = styled.div`
   height: 40px;
   line-height: 20px;
   margin-bottom: 10px;
+  font-weight: 500;
 
   @media (max-width: 768px) {
     margin-top: 10px;
@@ -861,7 +714,6 @@ const ActivityImage = styled.img`
   height: 300px;
   object-fit: cover;
   border-radius: 4px;
-  /* background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.5)); */
 
   transition: all 0.5s ease 0s;
   &:hover {
@@ -905,14 +757,11 @@ const CreateNow = styled.button`
   position: absolute;
   top: 100px;
   left: 25px;
-  /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
-    0 0 40px #ff00ff; */
   box-shadow: 0 0 5px #ff00ff;
 
   transition: 0.3s;
   cursor: pointer;
   &:hover {
-    /* background: #fff05c; */
     background: #ff00ff;
     box-shadow: 0 0 10px #ff00ff;
 

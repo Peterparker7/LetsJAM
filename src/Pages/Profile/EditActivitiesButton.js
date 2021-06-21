@@ -117,8 +117,6 @@ function EditActivitiesButton(props) {
   function toggleCancel(e) {
     setOpacity(0);
     setIsOpen(!isOpen);
-    console.log(oneactivityData);
-    console.log(userHostActivityDataRedux);
 
     setActivityData({
       ...oneactivityData,
@@ -136,17 +134,6 @@ function EditActivitiesButton(props) {
       props.data.limit = userHostActivityDataRedux.limit;
       setChecked(false);
     }
-
-    let date = oneactivityData.date;
-    let time = oneactivityData.time;
-    let newTimestamp = new Date(`${date}T${time}`);
-    let timestampformat = Date.parse(newTimestamp);
-
-    console.log(date);
-    console.log(time);
-    console.log(newTimestamp);
-    console.log(`${date}T${time}`);
-    console.log(timestampformat);
   }
 
   function afterOpen() {
@@ -177,11 +164,9 @@ function EditActivitiesButton(props) {
       oneactivityData.location.length === 0 ||
       oneactivityData.location.length > 30
     ) {
-      console.log("valid fail");
       setValidationResult(false);
       return false;
     } else {
-      console.log("pass");
       setValidationResult(true);
 
       return true;
@@ -189,17 +174,14 @@ function EditActivitiesButton(props) {
   };
 
   const editConfirm = async () => {
-    console.log(oneactivityData.type);
     if (checked) {
       oneactivityData.limit = 0;
     } else if (!checked && oneactivityData.limit === 0) {
       oneactivityData.limit = 1;
     }
-    console.log(oneactivityData.limit);
     let date = oneactivityData.date;
     let time = oneactivityData.time;
     let newTimestamp = new Date(`${date}T${time}`);
-    // let timestampformat = Date.parse(newTimestamp);
 
     let data = {
       id: props.data.id,
@@ -217,7 +199,6 @@ function EditActivitiesButton(props) {
       requirement: requirementArray,
       youtubeSource: oneactivityData.youtubeSource,
     };
-    console.log(data);
     if (inputValidation()) {
       updateActivitiesData(data, props.data.id);
 
@@ -225,7 +206,6 @@ function EditActivitiesButton(props) {
         type: "UPDATE_ONEUSERHOSTACTIVITYDATA",
         data: data,
       });
-      console.log(userHostActivityDataRedux);
 
       setOpacity(0);
       setIsOpen(!isOpen);
@@ -399,7 +379,6 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.title}
               onInput={(e) => {
                 handleActivityChange(e.target.value, "title");
-                console.log(oneactivityData.title);
               }}
             ></InputFieldInput>
             {Warning.warningTitleHTML(

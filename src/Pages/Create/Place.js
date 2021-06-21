@@ -91,7 +91,6 @@ function Place(props) {
                     })}
                     onClick={(e) => {
                       handleClick(suggestion.description);
-                      console.log(suggestion.description);
                     }}
                   >
                     <span>{suggestion.description}</span>
