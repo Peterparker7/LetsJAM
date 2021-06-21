@@ -30,7 +30,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import arrowLeft from "../../images/arrow-left-short.svg";
 
 const db = firebase.firestore();
-// let checked = false;
 
 const StyledMultiSelect = styled(MultiSelect)`
   border-bottom: 1px solid #979797;
@@ -69,7 +68,6 @@ function Create(props) {
     "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/travis-yewell-F-B7kWlkxDQ-unsplash.jpg?alt=media&token=f3254958-e279-4e31-8175-faea930a1532"
   );
   const [level, setLevel] = useState("");
-  // const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
   const [checked, setChecked] = useState(true);
   const [place, setPlace] = useState("");
@@ -81,25 +79,19 @@ function Create(props) {
   const [requirementStatus, setRequirementStatus] = useState(true);
   const [limitStatus, setLimitStatus] = useState(true);
   const [levelStatus, setLevelStatus] = useState(true);
-  // const [locationStatus, setLocationStatus] = useState(true);
   const [placeStatus, setPlaceStatus] = useState(true);
-  // const [imageStatus, setImageStatus] = useState(true);
-  // const [userUid, setUserUid] = useState();
 
   const [requirement, setRequirement] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   let history = useHistory();
-  // let limitinit = 0;
-  // let comment = "";
+
   let youtubeUrl = "";
   let imgSource = "";
   let imageUrl = "";
 
   const userDataRedux = useSelector((state) => state.userData);
 
-  //   const [requirement, setRequirement] = useState("");
-  // const host = "vfjMHzp45ckI3o3kqDmO";
   const host = userDataRedux.uid;
 
   function addDays(date, days) {
@@ -114,41 +106,12 @@ function Create(props) {
   }
 
   let nowDate = new Date();
-  // console.log(nowDate.getDay());
-  // let sat = nowDate.addDays(6 - nowDate.getDay());
-  // console.log(sat);
 
   let sat = addDays(nowDate, 6 - nowDate.getDay())
     .toISOString()
     .substr(0, 10);
 
-  // const convertDateTime = () => {
-  //   let formatDateYear = date.slice(0, 4);
-  //   let formatDateMonth = date.slice(5, 7);
-  //   let formatDateDate = date.slice(8, 10);
-  //   let formatTimeHour = time.slice(0, 2);
-  //   let formatTimeSecond = time.slice(3, 5);
-
-  //   return {
-  //     formatDateYear,
-  //     formatDateMonth,
-  //     formatDateDate,
-  //     formatTimeHour,
-  //     formatTimeSecond,
-  //   };
-  // };
-
-  // const checkUserIsLogin = async () => {
-  //   const userUid = await getAuthUser();
-  //   setUserUid(userUid);
-  //   if (!userUid) {
-  //     history.push("/");
-  //     return "redirection";
-  //   }
-  // };
-
   useEffect(() => {
-    // checkUserIsLogin();
     setDate(sat);
     setTime("16:00");
     currentNumber = 1;
@@ -237,26 +200,6 @@ function Create(props) {
 
   const clickCreate = async () => {
     console.log(currentNumber);
-    // if (checked) {
-    //   setLimit(0);
-    //   currentNumber = 0;
-    // } else {
-    //   setLimit(currentNumber);
-    // }
-    console.log(time);
-    console.log(date);
-    console.log(type);
-    console.log(place);
-    // console.log(location);
-    console.log(limit);
-    // convertDateTime();
-    // let timestamp = new Date(
-    //   convertDateTime().formatDateYear,
-    //   convertDateTime().formatDateMonth - 1,
-    //   convertDateTime().formatDateDate,
-    //   convertDateTime().formatTimeHour,
-    //   convertDateTime().formatTimeSecond
-    // );
 
     let newTimestamp = new Date(`${date}T${time}`);
     let timestamp = new Date(`${date}T${time}`);
@@ -327,9 +270,7 @@ function Create(props) {
   if (!userDataRedux) {
     return "isloading";
   }
-  // if (!userUid) {
-  //   return "isLoading";
-  // }
+
   function handleChange(e, changeType) {
     let nowDate = Date.now();
     let deviation = 8 * 60 * 60000;
@@ -348,11 +289,9 @@ function Create(props) {
     }
     if (changeType === "time") {
       let a = e.split(":");
-      // let a = e.target.value.split(":");
       let milliseconds = a[0] * 60 * 60000 + a[1] * 60000;
       console.log("kkk");
       setTime(e);
-      // setTime(e.target.value);
       setTimeStatus(true);
       if (nowDate >= Date.parse(date) + milliseconds - deviation) {
         setTimeStatus(false);
@@ -371,10 +310,7 @@ function Create(props) {
       setLimitStatus(true);
       currentNumber = e.target.value;
     }
-    // if (changeType === "location") {
-    //   setLocation(e.target.value);
-    //   setLocationStatus(true);
-    // }
+
     if (changeType === "comment") {
       setComment(e.target.value);
     }
@@ -406,10 +342,7 @@ function Create(props) {
             min="1"
             max="20"
             onChange={(e) => {
-              // limitinit = e.target.value;
-              // setLimit(e.target.value);
               handleChange(e, "limit");
-              // limit = e.target.value;
             }}
           />
         </div>
@@ -473,13 +406,7 @@ function Create(props) {
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>日期</Label>
-                {/* <Inputfield
-                  defaultValue={sat}
-                  type="date"
-                  onChange={(e) => {
-                    handleChange(e, "date");
-                  }}
-                ></Inputfield> */}
+
                 <MaterialUIPickersDate
                   handleChange={handleChange}
                   // time={time}
@@ -490,15 +417,7 @@ function Create(props) {
               <InputFieldDiv>
                 <RequireField>*</RequireField>
                 <Label>時間</Label>
-                {/* <Inputfield
-                  defaultValue="16:00:00"
-                  type="time"
-                  onChange={(e) => {
-                    handleChange(e, "time");
-                    console.log(e.target.value);
-                  }}
-                  step={300}
-                ></Inputfield> */}
+
                 <MaterialUIPickersTime
                   handleChange={handleChange}
                   // time={time}
