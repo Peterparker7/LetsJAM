@@ -385,7 +385,7 @@ function Main() {
           isVisible={true}
         >
           <Slogan>
-            整個城市<br></br>都是我的練團室!!
+            整個城市<br></br>都是我的練團室
           </Slogan>
         </Animated>
 
