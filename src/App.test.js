@@ -1,12 +1,29 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Router, Route, Switch } from "react-router-dom";
+import { createMemoryHistory } from "history";
 
 import renderer from "react-test-renderer";
 import App from "./App";
 
 describe("App", () => {
   xit("should render correctly", () => {
-    const tree = renderer.create(<App />).toJSON();
+    const tree = renderer
+      .create(
+        <Router>
+          <App />
+        </Router>
+      )
+      .toJSON();
     expect(tree).toMatchSnapshot();
+  });
+  xit("should render correctly2", () => {
+    const history = createMemoryHistory();
+
+    render(
+      <Router history={history}>
+        <App />
+      </Router>
+    );
   });
   //
   // jest.mock("./firebase", () => {

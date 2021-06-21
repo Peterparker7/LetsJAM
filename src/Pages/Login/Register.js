@@ -195,6 +195,7 @@ function Register(props) {
             onChange={(e) => {
               handleChange(e.target.value, "name");
             }}
+            data-testid="registerInputName"
           ></InputField>
           {LoginValidate.warningNameHTML(userInfoValue.name, warningDisplay)}
         </ItemField>
@@ -226,7 +227,10 @@ function Register(props) {
 
           {LoginValidate.warningSkillHTML(skill, warningDisplay)}
         </ItemField>
-        <RegisterButton onClick={() => handleRegister()}>
+        <RegisterButton
+          onClick={() => handleRegister()}
+          data-testid="registerButton"
+        >
           馬上加入
         </RegisterButton>
       </Container>

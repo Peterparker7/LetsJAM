@@ -555,6 +555,8 @@ const ProfileCol = styled.div`
   /* border: 2px solid #ff0099; */
   height: 100%;
   @media (max-width: 1024px) {
+    padding: 30px 30px;
+
     width: 100%;
     /* height: 300px; */
     margin: 0 auto;
@@ -596,8 +598,8 @@ const ProfileImg = styled.img`
 `;
 const ProfileTextField = styled.div`
   @media (max-width: 1024px) {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
     width: 320px;
   }
   @media (max-width: 768px) {
@@ -933,6 +935,7 @@ const ProfileButtonField = styled.div`
   @media (max-width: 414px) {
     justify-content: space-between;
     padding: unset;
+    margin-top: 20px;
   }
 `;
 const CheckActivityButtonField = styled(ButtonField)`

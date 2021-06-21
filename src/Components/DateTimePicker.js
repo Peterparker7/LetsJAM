@@ -67,7 +67,6 @@ function MaterialUIPickersTime(props) {
   useEffect(() => {
     setSelectedDate(new Date(`${sat}T16:00`));
   }, [sat]);
-
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersTime
@@ -101,18 +100,21 @@ function MaterialUIPickersDate(props) {
   }
   let nowDate = new Date();
 
-  let satOri = addDays(nowDate, 6 - nowDate.getDay()).toString();
+  let satOri = addDays(nowDate, 6 - nowDate.getDay())
+    .toISOString()
+    .substr(0, 10);
+  // let satOri = addDays(nowDate, 6 - nowDate.getDay()).toString();  會一直變化導致setOri不斷渲染，所以只截取日期部分
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-
     let dateFormat = date.toISOString().slice(0, 10);
 
     props.handleChange(dateFormat, "date");
   };
   useEffect(() => {
-    setSelectedDate(new Date(`${satOri}`));
+    setSelectedDate(new Date(`${satOri}T16:00`));
   }, [satOri]);
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersDate
@@ -120,9 +122,7 @@ function MaterialUIPickersDate(props) {
         disableToolbar
         variant="inline"
         format="MM/dd/yyyy"
-        // margin="normal"
         id="date-picker-inline"
-        // label="日期"
         value={selectedDate}
         onChange={handleDateChange}
         KeyboardButtonProps={{
@@ -152,9 +152,7 @@ function MaterialUIPickersDateActivity(props) {
         disableToolbar
         variant="inline"
         format="MM/dd/yyyy"
-        // margin="normal"
         id="date-picker-inline"
-        // label="日期"
         value={selectedDate}
         onChange={handleDateChange}
         KeyboardButtonProps={{
