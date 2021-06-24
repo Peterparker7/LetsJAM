@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# Let's JAM
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A website that allows users to organize music groups, bring people with similar tastes in music together.
 
-## Available Scripts
+## Demo
 
-In the project directory, you can run:
+![image](./README/main-page-2.png)
 
-### `npm start`
+<a href="https://personalproject-33263.web.app/"><strong>View Website »</strong></a>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Test Account:<br>
+User: test@gmail.com<br>
+Password: 000000
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Technologies
 
-### `npm test`
+### Front-End Fundamental
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- HTML / CSS / JavaScript
+- RWD
 
-### `npm run build`
+### Front-End Frameworks
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- React (Hook)
+- React Router
+- Redux
+- Styled Component
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Firebase Services
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Authentication
+- Firestore Database
+- Storage
 
-### `npm run eject`
+## Flow Chart
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![image](./README/user-flow-chart.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Features
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Applied React / React Router for SPA, and applied state management by Redux.
+- Used Firebase Authentication, Firestore, Storage for data management.
+- Applied Google Place Autocomplete in searching places, and deployed automatically date/time picker to deliver an efficient experience when creating an event.
+- Implemented filter for activities and members by using data tag, which helps the user pick up an appropriate group and approach suitable bandsman.
+- Adopted event pages by utilizing pagination for better user experience.
+- Created mobile-friendly interface by RWD.
+- Optimized component style by customizing Material-UI for design consistency.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Website Demo
 
-## Learn More
+### Main Page
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![image](./README/main-page-gif.gif)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Activity Detail Page
 
-### Code Splitting
+![image](./README/detail-gif.gif)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Show Activity Info
+- Show Attendants Info
 
-### Analyzing the Bundle Size
+### Profile Page
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+![image](./README/profile-gif.gif)
 
-### Making a Progressive Web App
+- Check User's Activity
+- Edit Portfolio
+- Edit Activity Info Host by User
+- Send Invitation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Future Features
 
-### Advanced Configuration
+- Activity Gallery
+- Create customized message when send invitation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contact
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Email: peter840101@gmail.com
