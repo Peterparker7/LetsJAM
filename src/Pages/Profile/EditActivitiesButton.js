@@ -69,12 +69,6 @@ function EditActivitiesButton(props) {
   let limitInitial = 1;
   const [checked, setChecked] = useState();
 
-  // const [titleStatus, setTitleStatus] = useState(true);
-  // const [dateStatus, setDateStatus] = useState(true);
-  // const [timeStatus, setTimeStatus] = useState(true);
-  // const [requirementStatus, setRequirementStatus] = useState(true);
-  // const [levelStatus, setLevelStatus] = useState(true);
-  // const [locationStatus, setLocationStatus] = useState(true);
   const [validationResult, setValidationResult] = useState(true);
 
   const getActivity = useCallback(() => {
@@ -85,9 +79,6 @@ function EditActivitiesButton(props) {
     gettingActivity();
   }, [props.data.id]);
 
-  //   const userHostActivityDataRedux = useSelector(
-  //     (state) => state.userHostActivityData
-  //   );
   const userHostActivityDataRedux = useSelector(
     (state) =>
       state.userHostActivityData.find((m) => {
@@ -106,8 +97,6 @@ function EditActivitiesButton(props) {
       setChecked(false);
     }
   }, [getActivity, userHostActivityDataRedux.limit]);
-
-  // let activityData = props.data;
 
   function toggleModal(e) {
     setOpacity(0);
@@ -134,6 +123,7 @@ function EditActivitiesButton(props) {
       props.data.limit = userHostActivityDataRedux.limit;
       setChecked(false);
     }
+    setValidationResult(true);
   }
 
   function afterOpen() {
@@ -248,13 +238,6 @@ function EditActivitiesButton(props) {
     if (type === "title") {
       setActivityData({ ...oneactivityData, title: e });
     }
-    // if (type === "limit") {
-    //   if (checked) {
-    //     activityData.limit = 0;
-    //   } else {
-    //     activityData.limit = e;
-    //   }
-    // }
     if (type === "date") {
       setActivityData({ ...oneactivityData, date: e });
     }
@@ -273,18 +256,13 @@ function EditActivitiesButton(props) {
     if (type === "comment") {
       setActivityData({ ...oneactivityData, comment: e });
     }
-    // if (type === "limit") {
-    //   setActivityData({ ...oneactivityData, comment: e });
-    // }
   };
 
   const handleDelete = async () => {
     Swal.fire({
       title: "<div style=font-size:24px>確定要刪除嗎?</div>",
-      // text: "刪除後將無法復原",
       customClass: "customTitle",
       background: "black",
-      // html: "<div style=color:#595959;>刪除後將無法復原</div>",
       showCancelButton: true,
       confirmButtonColor: "#43e8d8",
       cancelButtonColor: "#565656",
@@ -319,8 +297,6 @@ function EditActivitiesButton(props) {
       item.invitation = newItem;
 
       updateInvitation(newItem, item.uid);
-      // const update = updateInvitation(newItem, item.uid);  update後面都沒使用
-      // return item;  因為不需要return 把map改成forEach
     });
   };
 
@@ -340,9 +316,6 @@ function EditActivitiesButton(props) {
             defaultValue={limitInitial}
             disabled={checked}
             style={{ opacity: 0.3 }}
-            // onChange={(e) => {
-            //   oneactivityData.limit = 0;
-            // }}
           ></LimitInputField>
         </div>
       );
@@ -415,31 +388,9 @@ function EditActivitiesButton(props) {
               defaultValue={userHostActivityDataRedux.type}
               handleActivityChange={handleActivityChange}
             />
-            {/* <SelectType
-              defaultValue={userHostActivityDataRedux.type}
-              onChange={(e) => {
-                handleActivityChange(e.target.value, "type");
-              }}
-            >
-              <option>流行</option>
-              <option>嘻哈</option>
-              <option>古典</option>
-            </SelectType> */}
           </InputFieldDiv>
           <InputFieldDiv>
             <Label htmlFor="limit">人數限制</Label>
-            {/* <InputFieldInput
-              id="limit"
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              defaultValue={props.data.limit}
-              type="number"
-              min="1"
-              max="20"
-              onInput={(e) => {
-                handleActivityChange(e.target.value, "limit");
-              }}
-            ></InputFieldInput> */}
             {LimitboxHTML()}
             <LimitCheckBoxField
               id="nolimit"
@@ -500,10 +451,6 @@ function EditActivitiesButton(props) {
               }}
             ></InputTextArea>
           </InputFieldDiv>
-          {/* <InputFieldDiv>
-            <Label for="activityImage">上傳照片</Label>
-            <InputFieldInput type="file" id="activityImage"></InputFieldInput>
-          </InputFieldDiv> */}
         </EditActivityDetail>
         <EditActivityButtonDiv>
           <BtnConfirm
@@ -540,7 +487,6 @@ function EditActivitiesButton(props) {
         afterOpen={afterOpen}
         beforeClose={beforeClose}
         onBackgroundClick={toggleCancel}
-        // onEscapeKeydown={toggleCancel}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
@@ -590,7 +536,6 @@ const CloseIcon = styled.img`
 `;
 
 const InputFieldDiv = styled.div`
-  /* text-align: left; */
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -621,8 +566,6 @@ const EditActivityCol = styled.div`
   }
 `;
 const EditActivityDetail = styled.div`
-  /* text-align: left;
-  width: 300px; */
   max-width: 400px;
   margin: 20px auto;
 `;
@@ -635,12 +578,7 @@ const LimitInputField = styled.input`
 const LimitCheckBoxField = styled.input`
   width: 30px;
 `;
-// const SelectType = styled.select`
-//   width: calc(100% - 80px);
-//   padding: 5px;
-//   height: 40px;
-//   border-bottom: 1px solid #979797;
-// `;
+
 const EditActivityButtonDiv = styled.div`
   display: flex;
   justify-content: space-around;
@@ -665,9 +603,7 @@ const ValidationResult = styled.div`
   }
 `;
 const Label = styled.label`
-  /* margin-right: 10px; */
   width: 80px;
-  /* display: inline-block; */
 `;
 
 const Btn = styled.button`
@@ -705,12 +641,10 @@ const BtnCancel = styled(Btn)`
   }
 `;
 const EditBtn = styled.button`
-  /* border: 1px solid #979797; */
   border-radius: 8px;
   width: 90px;
   height: 40px;
   padding: 5px;
-  /* background: #ff00ff; */
   background: #565656;
   color: #fff;
   cursor: pointer;

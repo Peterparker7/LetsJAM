@@ -122,7 +122,7 @@ function MaterialUIPickersDate(props) {
         disableToolbar
         variant="inline"
         format="MM/dd/yyyy"
-        id="date-picker-inline"
+        id="date-picker"
         value={selectedDate}
         onChange={handleDateChange}
         KeyboardButtonProps={{
@@ -177,7 +177,7 @@ function MaterialUIPickersTimeActivity(props) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StylePickersTimeActivity
         className={"customTimeStyleActivity"}
-        id="date-picker-inline"
+        id="time-picker-inline"
         value={selectedDate}
         onChange={handleDateChange}
         KeyboardButtonProps={{
