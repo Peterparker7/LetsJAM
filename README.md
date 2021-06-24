@@ -32,6 +32,14 @@ Password: 000000
 - Firestore Database
 - Storage
 
+### Others
+
+- Material UI components
+- styled-react-modal
+- react-multi-select-component
+- react-animated-css
+- react-places-autocomplete
+
 ## Flow Chart
 
 ![image](./README/user-flow-chart.png)
