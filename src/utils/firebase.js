@@ -5,23 +5,14 @@ import "firebase/storage";
 
 var firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  authDomain: "personalproject-33263.firebaseapp.com",
+  projectId: "personalproject-33263",
+  storageBucket: "personalproject-33263.appspot.com",
+  messagingSenderId: "966021952087",
+  appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
+  measurementId: "G-MXQWY9WWZK",
 };
-// var firebaseConfig = {
-//   // apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-//   apiKey: "AIzaSyDEsAz0oLPwZ-JQbDGGnq3CQAJK1d7714k",
-//   authDomain: "personalproject-33263.firebaseapp.com",
-//   projectId: "personalproject-33263",
-//   storageBucket: "personalproject-33263.appspot.com",
-//   messagingSenderId: "966021952087",
-//   appId: "1:966021952087:web:5c52cfb31b031cdf6a6912",
-//   measurementId: "G-MXQWY9WWZK",
-// };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -71,7 +62,6 @@ const uploadImage = async (img) => {
 
 const joinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  //firebase update方法
   await docRef
     .update({
       applicants: firebase.firestore.FieldValue.arrayUnion(userId),
@@ -84,7 +74,6 @@ const joinActivity = async (activityId, userId) => {
 
 const agreeJoinActivity = async (activityId, userId) => {
   let docRef = db.collection("activityData").doc(activityId);
-  //firebase update方法
   await docRef
     .update({
       applicants: firebase.firestore.FieldValue.arrayRemove(userId),
@@ -134,13 +123,10 @@ const getAuthUser = async () => {
       unsubscribe();
       if (user) {
         // 使用者已登入，可以取得資料
-        var email = user.email;
         var uid = user.uid;
-        console.log(email, uid);
         resolve(uid);
       } else {
         // 使用者未登入
-        console.log("you are not login");
         resolve(false);
       }
     });
@@ -154,7 +140,6 @@ const onAuthStateChanged = async (callback, callback2) => {
       callback(user.uid);
       callback2(true);
     } else {
-      console.log("you are not login");
       callback(false);
       callback2(false);
     }
@@ -166,9 +151,7 @@ const logOut = async () => {
     .auth()
     .signOut()
     .then(function () {})
-    .catch(function (error) {
-      console.log(error.message);
-    });
+    .catch(function (error) {});
 };
 const newUser = async (userEmail, userUid, userInfo) => {
   let newCreate = db.collection("userData").doc(userUid);
@@ -186,9 +169,7 @@ const newUser = async (userEmail, userUid, userInfo) => {
         "https://firebasestorage.googleapis.com/v0/b/personalproject-33263.appspot.com/o/istockphoto-1246254218-612x612.jpg?alt=media&token=2c69d8b3-25e8-46e7-a85d-1371db23086c",
       youtubeUrl: "",
     })
-    .then(() => {
-      console.log("create new user");
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });
@@ -296,9 +277,7 @@ const updateActivitiesData = async (data, activityId) => {
       },
       { merge: true }
     )
-    .then(() => {
-      console.log("update to firebase");
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error writing document: ", error);
     });

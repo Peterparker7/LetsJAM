@@ -3,15 +3,6 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-// const StyleDiv = styled.div`
-//   width: ${(props) => props.loadingCircleStyle.width};
-//   min-height: ${(props) => props.loadingCircleStyle.minHeight};
-
-//   .MuiCircularProgress-root {
-//     color: ${(props) => props.loadingCircleStyle.color};
-//     margin-top: ${(props) => props.loadingCircleStyle.marginTop};
-//   }
-// `;
 const StyledDiv = styled.div`
   ${(props) => {
     if (props.loadingStyle === "normal") {

@@ -247,7 +247,6 @@ function InviteButton(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
-          {/* <TopBar></TopBar> */}
           <ContentTitle>發送邀請</ContentTitle>
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleModal} />
@@ -265,13 +264,11 @@ function InviteButton(props) {
   );
 }
 const Btn = styled.div`
-  /* border: 1px solid #ff0099; */
   border: 1px solid #fff200;
   padding: 6px 8px;
   border-radius: 8px;
   color: #000;
   background: #fff200;
-  /* color: #ff0099; */
   margin: 10px;
   cursor: pointer;
   box-shadow: 0 0 10px #fffbaa;
@@ -292,12 +289,7 @@ const Container = styled.div`
   color: white;
   position: relative;
 `;
-// const TopBar = styled.div`
-//   height: 6px;
-//   width: 100%;
-//   background: #ff00ff;
-//   box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-// `;
+
 const CloseIconContainer = styled.div`
   position: absolute;
   width: 30px;
@@ -324,34 +316,23 @@ const ContentTitle = styled.div`
   text-align: left;
   margin: 20px;
   padding: 10px;
-  /* border-bottom: 1px solid #979797; */
 `;
 const AllMemberCol = styled.div`
   position: relative;
   text-align: left;
-  /* width: 95%;
-  height: 90%; */
   margin: 20px 20px;
   padding: 10px;
 `;
 const MemberField = styled.div`
-  /* display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around; */
   display: grid;
-  /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   grid-template-rows: repeat(auto-fill, 170px);
-  /* grid-template-rows: 1fr 1fr 1fr 1fr 1fr; */
   justify-items: center;
   width: 100%;
   margin: 20px auto;
 `;
-const TitleSub = styled.div`
-  /* margin: 10px ; */
-`;
+const TitleSub = styled.div``;
 const Label = styled.label`
-  /* margin-left: 20px; */
   margin-right: 5px;
 `;
 const RequirementField = styled.div`
@@ -394,10 +375,7 @@ const InviteEachButton = styled.button`
   border-radius: 8px;
   padding: 6px 10px;
   margin: 5px 0;
-  /* background: #ff00ff; */
   color: #ff00ff;
-  /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
-    0 0 40px #ff00ff; */
   cursor: pointer;
   transition: 0.2s;
 

@@ -149,7 +149,6 @@ function Register(props) {
       !userInfoValue.preferType ||
       skill.length === 0
     ) {
-      console.log("not pass");
       return false;
     } else {
       return true;
@@ -166,7 +165,6 @@ function Register(props) {
             placeholder="example@gmail.com"
             onChange={(e) => {
               handleEmailChange(e.target.value);
-              // setWarningDisplay(false);
             }}
           ></InputField>
           {LoginValidate.warningEmailHTML(emailValue, warningDisplay)}

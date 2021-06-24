@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React from "react";
-// import error404 from "../images/404-error.svg";
 import { useHistory } from "react-router-dom";
 import { keyframes } from "styled-components";
 
@@ -26,22 +25,6 @@ const Container = styled.div`
   height: 100vh;
   padding-top: 100px;
 `;
-// const ErrorIconContainer = styled.div`
-//   width: 250px;
-//   height: 250px;
-//   margin: 0px auto;
-//   align-items: center;
-// `;
-
-// const ErrorIcon = styled.img`
-//   width: 100%;
-// `;
-// const ErrorText = styled.div`
-//   color: white;
-//   font-size: 24px;
-//   font-weight: 700;
-//   text-align: center;
-// `;
 const ButtonField = styled.div`
   margin: 20px auto;
   width: 200px;
@@ -93,10 +76,6 @@ export default function Error404() {
   }
   return (
     <Container>
-      {/* <ErrorIconContainer>
-        <ErrorIcon src={error404} alt="" />
-      </ErrorIconContainer>
-      <ErrorText>Oops~ 找不到此頁</ErrorText> */}
       <NeonBox>
         <NeonText>404</NeonText>
         <NeonText>Page Not Found</NeonText>

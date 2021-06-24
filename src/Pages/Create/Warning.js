@@ -80,11 +80,6 @@ const warningLevelHTML = (level, status) => {
       </Warning>
     );
   }
-  // if (!status) {
-  //   return (
-  //     <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
-  //   );
-  // }
 };
 const warningLocationHTML = (location, status, setPlaceStatus) => {
   if (!status) {
@@ -102,8 +97,6 @@ const warningLocationHTML = (location, status, setPlaceStatus) => {
 };
 const warningImageHTML = (image, status) => {
   if (!status) {
-    console.log("warnIMage");
-
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );

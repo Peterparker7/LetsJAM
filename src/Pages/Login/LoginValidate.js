@@ -16,7 +16,6 @@ const warningEmailHTML = (email, warningDisplay) => {
         );
       }
       if (email.length > 32) {
-        console.log("!!");
         return (
           <Warning style={{ display: "inline-block", color: "red" }}>
             email太長
@@ -53,7 +52,6 @@ const warningPasswordHTML = (password, warningDisplay) => {
   }
 };
 const warningNameHTML = (name, warningDisplay) => {
-  console.log(name);
   if (warningDisplay) {
     if (name) {
       if (name.length > 10) {
@@ -76,7 +74,6 @@ const warningNameHTML = (name, warningDisplay) => {
   }
 };
 const warningTypeHTML = (type, warningDisplay) => {
-  console.log(type);
   if (warningDisplay) {
     if (type) {
     } else {
@@ -89,8 +86,6 @@ const warningTypeHTML = (type, warningDisplay) => {
   }
 };
 const warningSkillHTML = (skill, warningDisplay) => {
-  console.log(skill);
-  console.log(skill.length);
   if (warningDisplay) {
     if (skill.length === 0) {
       return (
