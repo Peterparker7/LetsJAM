@@ -5,7 +5,6 @@ import styled from "styled-components";
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import {
   getUserData,
-  getAuthUser,
   getUserHostActivities,
   getUserJoinActivities,
   getUserApplyActivities,
@@ -30,8 +29,6 @@ import { Animated } from "react-animated-css";
 import { MyContext } from "../../MyContext";
 
 function Profile(props) {
-  // let userId = "vfjMHzp45ckI3o3kqDmO";
-  //   let userId = "SM7VM6CFOJOZwIDA6fjB";
   const [userData, setUserData] = useState({});
   const [userActivities, setUserActivities] = useState();
   const [userJoinActivities, setUserJoinActivities] = useState([]);
@@ -50,18 +47,6 @@ function Profile(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  // const checkUserIsLogin = useCallback(() => {
-  //   const checkingUserIsLogin = async () => {
-  //     if (props.userUid) {
-  //       const userUid = await getAuthUser();
-  //       const data = await getUserData(userUid);
-  //       dispatch({ type: "UPDATE_USERDATA", data: data });
-  //       setUserData(data);
-  //     }
-  //   };
-  //   checkingUserIsLogin();
-  // }, [dispatch, props.userUid]);
-
   const userDataGet = useCallback(() => {
     const userDataGetting = async () => {
       if (userUid) {
@@ -72,13 +57,6 @@ function Profile(props) {
     };
     userDataGetting();
   }, [dispatch, userUid]);
-
-  // const getUserProfileData = async () => {
-  //   const data = await getUserData(userId);
-  //   dispatch({ type: "UPDATE_USERDATA", data: data });
-
-  //   setUserData(data);
-  // };
 
   const getUserActivitiesData = useCallback(() => {
     const gettingUserActivitiesData = async () => {
@@ -124,22 +102,11 @@ function Profile(props) {
     );
   };
 
-  // const handleOpenTag = (date) => {
-  //   let nowDate = Date.now();
-  //   if (nowDate < date) {
-  //     return <IsOpenTag></IsOpenTag>;
-  //   } else {
-  //     return <IsCloseTag></IsCloseTag>;
-  //   }
-  // };
   const handleCancelJoin = async (activityId, userId) => {
     Swal.fire({
       title: "<span style=font-size:24px>確定要退出嗎?</span>",
       customClass: "customSwal2Title",
-      // text: "刪除後將無法復原",
-      // icon: "warning",
       background: "black",
-      // html: "<div style=color:white;>若為已加入活動 退出後需重新申請</div>",
       showCancelButton: true,
       confirmButtonColor: "#43e8d8",
       cancelButtonColor: "#565656",
@@ -148,12 +115,9 @@ function Profile(props) {
       iconColor: "white",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-
         await cancelJoinActivities(activityId, userId);
         let userJoin = userJoinActivityDataRedux;
         let newJoin = userJoin.filter((item) => item.id !== activityId);
-        console.log(newJoin);
         dispatch({
           type: "UPDATE_USERJOINACTIVITYDATA",
           data: [...newJoin],
@@ -175,14 +139,10 @@ function Profile(props) {
       cancelButtonText: "取消",
     })
       .then(async (result) => {
-        console.log(props.isLogIn);
         if (result.isConfirmed) {
-          // Swal.fire("Deleted!", "Your file has been deleted.", "success");
           props.setIsLogIn(false);
 
           await logOut();
-          //有bug
-          // history.push("/");
 
           Swal.fire({
             title: "<span style=font-size:24px>已登出</span>",
@@ -194,20 +154,14 @@ function Profile(props) {
         }
       })
       .then(() => {
-        console.log(props.isLogIn);
-
-        console.log(props.isLogIn);
         //跑不進來, 因為isLogIn還是true, 是靠app.js傳進來的props.uid redirect到首頁
         if (props.isLogIn === false) {
-          console.log("isLogin = false");
           history.push("/");
         }
       });
   };
 
   useEffect(() => {
-    // getUserProfileData();
-    // checkUserIsLogin();
     //渲染頁面之前先清空，避免裡面有重複之前的data
     setUserJoinActivities([]);
   }, []);
@@ -231,8 +185,6 @@ function Profile(props) {
     return <IsLoading loadingStyle={"normal"} size={40} />;
   }
 
-  // handleOpenTag();
-
   const renderHostActivities = () => {
     if (userHostActivityDataRedux.length !== 0) {
       const activitiesHTML = userHostActivityDataRedux.map((data, index) => {
@@ -243,7 +195,6 @@ function Profile(props) {
 
         let activityTime = newFormatDate.toString();
         let showTime = activityTime.toString().slice(0, 21);
-        // let showTime = data.newTimestamp.toString().slice(0, 21);
         let requirementHTML = data.requirement.map((data) => {
           return <span key={data}>{data} </span>;
         });
@@ -253,7 +204,6 @@ function Profile(props) {
             <Animated
               key={data.id}
               animationIn="fadeIn"
-              // animationOut="fadeOut"
               isVisible={true}
               animationInDelay={index * 50}
             >
@@ -266,15 +216,9 @@ function Profile(props) {
                   <ActivityImage src={data.fileSource} />
                   <Canvas>
                     <EachActivityField className="Field">
-                      {/* <EachActivitityIsOpen>
-                      {handleOpenTag(newFormatDate)}
-                    </EachActivitityIsOpen> */}
                       <EachActivityContent>
-                        {/* <div>{data.host}</div> */}
                         <Time>{showTime}</Time>
                         <Title>{data.title}</Title>
-
-                        {/* <div>{data.id}</div> */}
                         <Requirement>{requirementHTML}</Requirement>
                       </EachActivityContent>
                     </EachActivityField>
@@ -308,15 +252,9 @@ function Profile(props) {
                 <ActivityImage src={data.fileSource} />
                 <Canvas>
                   <EachActivityField className="Field">
-                    {/* <EachActivitityIsOpen>
-                      {handleOpenTag(newFormatDate)}
-                    </EachActivitityIsOpen> */}
                     <EachActivityContent>
-                      {/* <div>{data.host}</div> */}
                       <Time>{showTime}</Time>
                       <Title>{data.title}</Title>
-
-                      {/* <div>{data.id}</div> */}
                       <Requirement>{requirementHTML}</Requirement>
                     </EachActivityContent>
                   </EachActivityField>
@@ -358,13 +296,7 @@ function Profile(props) {
 
         if (newFormatDate > nowDate) {
           return (
-            // <Link to={`/activities/${data.id}`}>
-            <Animated
-              key={data.id}
-              animationIn="fadeIn"
-              // animationOut="fadeOut"
-              isVisible={true}
-            >
+            <Animated key={data.id} animationIn="fadeIn" isVisible={true}>
               <EachActivityContainer
                 style={
                   toggleJoinFilter ? { display: "block" } : { display: "none" }
@@ -386,7 +318,6 @@ function Profile(props) {
                 </Link>
 
                 <CheckActivityButtonField>
-                  {/* <Link to={`/activities/${data.id}`}> */}
                   <CheckActivityBtn
                     onClick={() => {
                       handleCancelJoin(data.id, userDataRedux.uid);
@@ -394,11 +325,9 @@ function Profile(props) {
                   >
                     退出活動
                   </CheckActivityBtn>
-                  {/* </Link> */}
                 </CheckActivityButtonField>
               </EachActivityContainer>
             </Animated>
-            // </Link>
           );
         } else if (newFormatDate < nowDate) {
           return (
@@ -505,9 +434,7 @@ function Profile(props) {
             {renderProfile()}
             <ProfileButtonField>
               <EditProfileButton data={userData} />
-              {/* <Link to={"./"}> */}
               <LogoutBtn onClick={() => handleLogOut()}>登出</LogoutBtn>
-              {/* </Link> */}
             </ProfileButtonField>
           </ProfileCol>
         </ProfilePageContainer>
@@ -552,13 +479,11 @@ const ProfileCol = styled.div`
   padding: 30px 50px;
   margin: 25px 30px;
   background: #121212;
-  /* border: 2px solid #ff0099; */
   height: 100%;
   @media (max-width: 1024px) {
     padding: 30px 30px;
 
     width: 100%;
-    /* height: 300px; */
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -627,7 +552,6 @@ const ProfileItem = styled.div`
 `;
 
 const ProfileItemIntro = styled(ProfileItem)`
-  /* padding: 10px 10px; */
   letter-spacing: 1px;
   line-height: 20px;
   margin-bottom: 20px;
@@ -648,7 +572,6 @@ const LogoutBtn = styled.button`
   height: 40px;
   padding: 10px;
   color: #fff;
-  /* background: #ff00ff; */
   cursor: pointer;
   transition: 0.2s;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
@@ -721,33 +644,12 @@ const MyHost = styled.div`
     width: 100%;
   }
 `;
-// const MyJoin = styled.div`
-//   /* width: 100%; */
-//   display: flex;
-
-//   flex-wrap: wrap;
-//   justify-content: space-between;
-//   padding: 0 20px;
-//   position: relative;
-//   min-height: 270px;
-
-//   @media (max-width: 1024px) {
-//     display: grid;
-//     grid-template-columns: 1fr 1fr;
-//     justify-items: center;
-//   }
-//   @media (max-width: 768px) {
-//     display: flex;
-//     flex-direction: column;
-//   }
-// `;
 const MyJoin = styled.div`
-  /* width: 100%; */
   display: flex;
 
   flex-wrap: wrap;
   justify-content: flex-start;
-  /* margin-right: 30px; */
+
   padding: 0;
   position: relative;
   min-height: 285px;
@@ -855,7 +757,6 @@ const Canvas = styled.div`
 `;
 
 const EachActivityContent = styled.div`
-  /* text-align: left; */
   padding: 10px;
   margin: 10px;
   line-height: 30px;
@@ -903,7 +804,6 @@ const Requirement = styled.div`
 `;
 const ButtonField = styled.div`
   display: flex;
-  /* padding: 0 30px; */
   justify-content: space-around;
   gap: 20px;
   position: absolute;
@@ -939,8 +839,6 @@ const ProfileButtonField = styled.div`
   }
 `;
 const CheckActivityButtonField = styled(ButtonField)`
-  /* max-width: 90px;
-  left: 80px; */
   width: 100%;
   @media (max-width: 768px) {
     left: unset;
@@ -953,15 +851,11 @@ const CheckActivityButtonField = styled(ButtonField)`
     width: 100px;
   }
 `;
-// const CheckActivityButtonField = styled.div`
-//   padding: 0 30px;
-// `;
+
 const CheckActivityBtn = styled.button`
-  /* border: 1px solid #43e8d8; */
   border-radius: 8px;
   width: 90px;
   height: 40px;
-  /* padding: 12px 40px; */
   background: #565656;
   color: #fff;
   margin: 0 auto;
@@ -1005,29 +899,8 @@ const StatusTag = styled.div`
   top: 10px;
   right: 5px;
 `;
-// const EachActivitityIsOpen = styled.div`
-//   position: absolute;
-//   top: 10px;
-//   right: 10px;
-// `;
-// const IsOpenTag = styled.div`
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50%;
-//   background: green;
-// `;
-// const IsCloseTag = styled.div`
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50%;
-//   background: grey;
-// `;
-const ApplyStatusTag = styled.div`
-  /* width: 20px;
-  height: 20px; */
-  /* border-radius: 50%; */
-  /* background: white; */
-`;
+
+const ApplyStatusTag = styled.div``;
 const ApplyStatusTagJoin = styled(ApplyStatusTag)`
   color: white;
   transform: rotate(0.1turn);

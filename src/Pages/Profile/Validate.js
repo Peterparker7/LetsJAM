@@ -3,15 +3,12 @@ import React from "react";
 
 const warningTitleHTML = (title, initValue, setStatus) => {
   if (title.length > 10) {
-    // setStatus(false);
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
         活動名稱最多10個字
       </Warning>
     );
   } else if (title.length === 0) {
-    // setStatus(false);
-
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
@@ -21,22 +18,13 @@ const warningTitleHTML = (title, initValue, setStatus) => {
 const warningDateHTML = (date, initValue, setStatus) => {
   let nowDate = new Date();
   if (nowDate >= Date.parse(date) + 16 * 60 * 60000) {
-    // setStatus(false);
-
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
         過期了
       </Warning>
     );
   } else {
-    // setStatus(true);
   }
-
-  //   if (!status) {
-  //     return (
-  //       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
-  //     );
-  //   }
 };
 const warningTimeHTML = (date, time, setStatus) => {
   let nowDate = Date.now();
@@ -45,22 +33,13 @@ const warningTimeHTML = (date, time, setStatus) => {
   let deviation = 8 * 60 * 60000;
 
   if (nowDate >= Date.parse(date) + milliseconds - deviation) {
-    // setStatus(false);
-
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>
         過期了
       </Warning>
     );
   } else {
-    // setStatus(true);
   }
-
-  //   if (!status && !time) {
-  //     return (
-  //       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
-  //     );
-  //   }
 };
 const warningTypeHTML = (type, status) => {
   if (!status) {
@@ -75,11 +54,6 @@ const warningRequirementHTML = (requirement, status) => {
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );
   }
-  //   if (!status) {
-  //     return (
-  //       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
-  //     );
-  //   }
 };
 const warningLimitHTML = (limit, status) => {
   if (!status) {
@@ -96,11 +70,6 @@ const warningLevelHTML = (level, status) => {
       </Warning>
     );
   }
-  // if (!status) {
-  //   return (
-  //     <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
-  //   );
-  // }
 };
 const warningLocationHTML = (location, status, setPlaceStatus) => {
   if (location.length === 0) {
@@ -118,8 +87,6 @@ const warningLocationHTML = (location, status, setPlaceStatus) => {
 };
 const warningImageHTML = (image, status) => {
   if (!status) {
-    console.log("warnIMage");
-
     return (
       <Warning style={{ display: "inline-block", color: "red" }}>必填</Warning>
     );

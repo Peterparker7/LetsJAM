@@ -30,8 +30,6 @@ const FooterDiv = styled.div`
 const Item = styled.div`
   align-items: center;
   color: white;
-  /* margin-top: 40px;
-  margin-left: 40px; */
   @media (max-width: 576px) {
   }
 `;

@@ -10,38 +10,20 @@ import Error404 from "./Pages/Error404";
 import { Switch, Route, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { getAuthUser, onAuthStateChanged } from "./utils/firebase";
+import { onAuthStateChanged } from "./utils/firebase";
 import { MyContext } from "./MyContext";
 
 function App() {
   const [userUid, setUserUid] = useState("");
   const [isLogIn, setIsLogIn] = useState(false);
-  const [userAuthValue, setUserAuthValue] = useState(false);
-
-  // const checkUserIsLogin = async () => {
-  //   const userUid = await getAuthUser();
-  //   setUserUid(userUid);
-  //   if (userUid) {
-  //     setIsLogIn(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log("HHHHH");
-  //   checkUserIsLogin();
-  // }, [isLogIn]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(setUserUid, setIsLogIn);
     return unsubscribe;
   }, [isLogIn]);
 
-  console.log(userUid);
-  console.log(isLogIn);
   return (
     <div className="App">
-      {/* <Router> */}
-      {/* <Header userUid={userUid} /> */}
       <MyContext.Provider value={{ userUid, setUserUid }}>
         <MainDiv>
           <Switch>
@@ -88,16 +70,10 @@ function App() {
               <Detail userUid={userUid} />
               <Footer />
             </Route>
-            {/* 
-          <Route path="/">
-            <Main />
-          </Route> */}
             <Redirect to="/error404" />
           </Switch>
         </MainDiv>
-        {/* <Footer /> */}
       </MyContext.Provider>
-      {/* </Router> */}
     </div>
   );
 }
@@ -105,7 +81,6 @@ function App() {
 const MainDiv = styled.div`
   min-height: calc(100vh);
   background: black;
-  /* padding-top: 1px; */
 `;
 
 export default App;

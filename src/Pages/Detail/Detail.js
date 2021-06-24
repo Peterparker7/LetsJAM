@@ -413,11 +413,10 @@ function Detail(props) {
   //0607新增監聽 加入活動即時更新
   const handlefirebaseChange = useCallback(() => {
     const handlingfirebaseChange = async () => {
-      console.log(activityChange);
       getData();
     };
     handlingfirebaseChange();
-  }, [activityChange, getData]);
+  }, [getData]);
   //useEffect只在第一次render後執行
   useEffect(() => {
     // checkUserIsLogin();
@@ -558,7 +557,6 @@ const FadeInOpacity = keyframes`
 `;
 const ImageContainer = styled.div`
   width: calc(100% - 300px);
-  /* width: 600px; */
   height: 500px;
   margin: 20px 0;
   position: relative;
@@ -742,9 +740,7 @@ const MemberHostField = styled.div`
 `;
 const ProfileBlock = styled.div`
   text-align: center;
-  /* margin: 20px 18px; */
   position: relative;
-  /* margin-bottom: 40px; */
 `;
 
 const ImageIntroBlock = styled.div`

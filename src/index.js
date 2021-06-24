@@ -17,21 +17,6 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <App />
-
-      {/* <Switch>
-          <Route exact path="/error404">
-            <Error404 />
-          </Route>
-          <Route path="/activities">
-            <App />
-          </Route>
-          <Route exact path="/">
-            <App />
-          </Route>
-          <Route>
-            <Error404 />
-          </Route>
-        </Switch> */}
     </Router>
   </Provider>,
   /* </React.StrictMode> */

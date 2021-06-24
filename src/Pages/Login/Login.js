@@ -33,7 +33,6 @@ function Login(props) {
         .auth()
         .signInWithEmailAndPassword(emailValue, passwordValue)
         .then((result) => {
-          console.log(result.uid);
           props.props.setIsLogIn(true);
         })
         .then(() => {
@@ -47,8 +46,6 @@ function Login(props) {
           history.push("/");
         })
         .catch((error) => {
-          console.log(error);
-          console.log(error.message);
           if (error.code === "auth/wrong-password") {
             setPasswordAuthState(false);
             return;

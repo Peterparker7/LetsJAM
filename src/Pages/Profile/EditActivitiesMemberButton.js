@@ -1,9 +1,7 @@
 import "../../App.css";
 import styled from "styled-components";
 import React, { useEffect, useState, useCallback } from "react";
-// import { useParams } from "react-router-dom";
-// import { getSpecificData } from "./utils/firebase";
-// import { joinActivity } from "./utils/firebase";
+
 import {
   getUserData,
   agreeJoinActivity,
@@ -15,7 +13,6 @@ import Modal from "styled-react-modal";
 import InviteButton from "./InviteButton.js";
 import MemberCard from "./MemberCard.js";
 import xIcon from "../../images/x.svg";
-// import { Animated } from "react-animated-css";
 
 const StyledModal = Modal.styled`
 width: 35rem;
@@ -102,7 +99,6 @@ function EditActivitiesMemberButton(props) {
 
     const index = attendantsData.findIndex((data) => data.uid === e.uid);
     const newAttendantsData = [...attendantsData];
-    // const removedAttendant = newAttendantsData.splice(index, 1);
     newAttendantsData.splice(index, 1);
     setAttendantsData(newAttendantsData);
   };
@@ -146,10 +142,7 @@ function EditActivitiesMemberButton(props) {
   if (!applicantsData || !attendantsData) {
     return "isLoading";
   }
-  //加了下面 刪除活動時查看申請button會出現isLoading
-  // if (!activityChange) {
-  //   return "isLoading";
-  // }
+
   if (!initApplicantsData) {
     return "isLoading";
   }
@@ -158,12 +151,6 @@ function EditActivitiesMemberButton(props) {
     if (applicantsData.length !== 0) {
       const applicantsHTML = applicantsData.map((item, index) => {
         return (
-          // <Animated
-          //   animationIn="fadeIn"
-          //   // animationOut="fadeOut"
-          //   isVisible={true}
-          //   animationInDelay={index * 50}
-          // >
           <EachMemberDiv key={item}>
             <MemberContainer>
               <MemberImg src={`${item.profileImage}`} alt="" />
@@ -180,7 +167,6 @@ function EditActivitiesMemberButton(props) {
               同意
             </BtnAccept>
           </EachMemberDiv>
-          // </Animated>
         );
       });
       return applicantsHTML;
@@ -229,7 +215,6 @@ function EditActivitiesMemberButton(props) {
         backgroundProps={{ opacity }}
       >
         <Container>
-          {/* <ContentContainer> */}
           <CloseIconContainer>
             <CloseIcon src={xIcon} onClick={toggleModal} />
           </CloseIconContainer>
@@ -247,7 +232,6 @@ function EditActivitiesMemberButton(props) {
               <InviteButton data={props} />
             </InviteButtonContainer>
           </EditMemberCol>
-          {/* </ContentContainer> */}
         </Container>
       </StyledModal>
     </div>
@@ -277,9 +261,7 @@ const CloseIconContainer = styled.div`
 const CloseIcon = styled.img`
   width: 100%;
 `;
-// const ContentContainer = styled.div`
-//   height: 100%;
-// `;
+
 const ContentTitle = styled.div`
   color: white;
   font-size: 24px;
@@ -366,10 +348,7 @@ const BtnAccept = styled(Btn)`
 `;
 const BtnKick = styled(Btn)`
   border: 1px solid #ff00ff;
-  /* background: #ff00ff; */
   color: #ff00ff;
-  /* text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
-    0 0 40px #ff00ff; */
 
   &:hover {
     background: #ff00ff;
@@ -391,15 +370,13 @@ const CheckApplicantBtn = styled.button`
   height: 40px;
   padding: 5px;
   color: white;
-  /* background: #ffff00; */
-  /* background: #ffe700; */
+
   box-shadow: 0 0 5px #ff00ff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 40px #ff00ff;
   transition: 0.3s;
   cursor: pointer;
   &:hover {
-    /* background: #fff05c; */
     background: #ff00ff;
     color: white;
     transform: translateY(-2px);

@@ -123,9 +123,6 @@ const ProfileImageField = styled.div`
   border: 5px solid #fffc;
 
   top: 50px;
-  /* @media (max-width: 414px) {
-    width: 90%;
-  } */
 `;
 const ProfileImg = styled.img`
   width: 195px;
@@ -137,8 +134,6 @@ const Name = styled.div`
   margin: 30px 10px 40px 215px;
   font-size: 28px;
   font-weight: 600;
-  /* text-align: right; */
-  /* height: 120px; */
 
   display: grid;
   align-items: center;
@@ -153,7 +148,6 @@ const IntroTitle = styled.div`
   font-weight: 600;
 `;
 const Intro = styled.div`
-  /* width: 100%; */
   text-align: left;
   padding: 10px 0px;
   padding-bottom: 20px;
@@ -179,10 +173,8 @@ const VideoTitle = styled.div`
   font-size: 24px;
   font-weight: 600;
   padding-bottom: 10px;
-  /* border-bottom: 1px solid #979797; */
 `;
 const YoutubeUrl = styled.div`
-  /* width: 90%; */
   margin: 0 30px;
   padding-bottom: 30px;
 `;

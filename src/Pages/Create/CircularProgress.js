@@ -11,7 +11,6 @@ const StyleDiv = styled.div`
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // position: "absolute",
     margin: "0 auto",
     display: "flex",
     width: "40px",
@@ -28,7 +27,6 @@ export default function CircularIndeterminate(props) {
   return (
     <StyleDiv className={classes.root}>
       <CircularProgress size={30} />
-      {/* <StyleProgress /> */}
     </StyleDiv>
   );
 }
