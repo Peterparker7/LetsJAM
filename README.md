@@ -50,18 +50,18 @@ Password: 000000
 
 ### Main Page
 
-![image](./README/main-page-gif.gif)
+![image](./README/main-10fps-33.gif)
 
 ### Activity Detail Page
 
-![image](./README/detail-gif.gif)
+![image](./README/detail-10fps-33.gif)
 
 - Show Activity Info
 - Show Attendants Info
 
 ### Profile Page
 
-![image](./README/profile-gif.gif)
+![image](./README/profile-10fps-50.gif)
 
 - Check User's Activity
 - Edit Portfolio
