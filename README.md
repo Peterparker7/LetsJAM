@@ -78,8 +78,9 @@ Password: 000000
 
 ## Future Features
 
-- Activity Gallery
+- Gallery and Event Feed
 - Create customized message when send invitation
+- Chat Box
 
 ## Contact
 
