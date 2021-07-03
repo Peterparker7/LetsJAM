@@ -167,6 +167,7 @@ function Main() {
         setData(bothcontain);
       }
     }
+    setPage(1);
   };
 
   const handleCreateNow = () => {
