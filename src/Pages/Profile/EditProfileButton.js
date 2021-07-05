@@ -179,11 +179,14 @@ function EditProfileButton(props) {
   }
 
   function inputValidation() {
+    let validRule =
+      /^(http(s)??:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/;
     if (
       userData.name.length === 0 ||
       userData.name.length > 10 ||
       userData.intro.length > 250 ||
-      skill.length === 0
+      skill.length === 0 ||
+      (userData.youtubeUrl.search(validRule) === -1 && userData.youtubeUrl)
     ) {
       setValidationResult(false);
       return false;
@@ -229,7 +232,6 @@ function EditProfileButton(props) {
         isOpen={isOpen}
         afterOpen={afterOpen}
         beforeClose={beforeClose}
-        onBackgroundClick={toggleCancel}
         opacity={opacity}
         backgroundProps={{ opacity }}
       >
@@ -325,6 +327,7 @@ function EditProfileButton(props) {
                   }}
                   defaultValue={userDataRedux.youtubeUrl}
                 />
+                {Warning.warningYoutubeHTML(userData.youtubeUrl)}
               </InputFieldContainer>
             </ProfileDetail>
             <BtnField>
