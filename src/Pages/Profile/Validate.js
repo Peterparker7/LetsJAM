@@ -127,6 +127,17 @@ const warningProfileIntroHTML = (intro) => {
     );
   }
 };
+const warningYoutubeHTML = (url) => {
+  let validRule =
+    /^(http(s)??:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/;
+  if (url && url.search(validRule) === -1) {
+    return (
+      <WarningNeon style={{ display: "inline-block", color: "white" }}>
+        YouTube網址無效
+      </WarningNeon>
+    );
+  }
+};
 const Warning = styled.div`
   width: auto;
   font-size: 12px;
@@ -159,3 +170,4 @@ export { warningImageHTML };
 export { warningProfileNameHTML };
 export { warningProfileSkillHTML };
 export { warningProfileIntroHTML };
+export { warningYoutubeHTML };
